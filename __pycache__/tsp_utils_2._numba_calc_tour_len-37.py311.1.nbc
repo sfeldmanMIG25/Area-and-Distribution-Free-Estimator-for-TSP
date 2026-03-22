@@ -1,0 +1,162 @@
+":"iCloud Photo: {{name}}","pb":"iCloud Video: {{name}}","gb":"inactive","Ib":"1 item","xb":"{{itemCount}} items","hb":"Dimensions","mb":"{{width}} x {{height}}","_b":"{{width}} Ã— {{height}}","vb":"Include a screenshot?","Eb":"Layout","Ab":"Learn more","Lb":"Less options","kb":"LIVE","Mb":"An error occurred, please try again later","Rb":"Location","Cb":"Languages and subtitles","Ob":"Through the years","wb":"Last Week","Pb":"Loading ...","Tb":"Local Photo with tags: ","Fb":"Local Video with tags: ","Ub":"Local Photo: {{name}}","Hb":"Local Video: {{name}}","Nb":"Manage storage","Bb":"Waterfall","jb":"Relive the moment","Vb":"Memories","zb":"Moments","Gb":"More","Kb":"More options","Wb":"MOTION","qb":"My files","Yb":"New album","Jb":"Next Page","Xb":"Off","Zb":"Not available offline","$b":"Five","ec":"Four","tc":"Three","nc":"Two","ic":"Low quality. Check your internet connection and try again.","ac":"We can\\u0027t get to this image right now. Check your internet connection and try again.","rc":"Ok","cc":"One Drive Icon","oc":"Through the years","sc":"On this day","uc":"Open in new window","dc":"Edit with Designer","H":"Create a video with Microsoft Clipchamp","lc":"Open in File Explorer","fc":"Pause","mc":"People list","_c":"People","hc":"All people","pc":"People","Dc":"Photo","xc":"Places list","Cc":"Places","Oc":"Play","Ec":"{{month}} Moments","Ac":"Previous Page","Lc":"Print","bc":"{{count}} items","vc":"Photo with tags: ","yc":"{{count}}+ items","gc":"Photo directory","Sc":"Size","Ic":"Photos list","kc":"Your privacy is important to us","Mc":"Range selected","Tc":"Recent Highlights","Pc":"From the last few days","Uc":"Recent photos","Fc":"Recent places","Hc":"Remove","Bc":"Report a concern","jc":"River","Vc":"Roomy","zc":"Save","Gc":"Screenshot","Kc":"Search","Wc":"Search results list","Yc":"See all","qc":"See all people","Qc":"See all places","Jc":"See all things","Xc":"Select all photos for {{date}}","ed":"{{selectionCount}} selected","$c":"[[{{selectionCount}}]] selected","Zc":"Select layout","td":"Set as lock screen","nd":"Set as background","ad":"Settings","id":"Share","od":"Shared by {{ownerName}}","ld":"Show file names","gd":"Skip","vd":"Sort","yb":"Info","U":"Edit","sd":"Everyone","cd":"Shared","dd":"Subtitles","ud":"Show detailed information","fd":"{{size}} B","md":"{{size}} KB","_d":"{{size}} MB","pd":"{{size}} GB","bd":"{{size}} TB","hd":"{{size}} PB","yd":"Submit","Sd":"A photo being edited with AI.","Id":"Enhance this image with AI","Dd":"Remove unwanted objects, blur background, and more with Designer","xd":"Things list","Cd":"Things","Od":"This year","Pd":"Timeline","wd":"d","Ed":"hr","Ad":"m","Ld":"s","kd":"w","Md":"y","Ud":"Toggle fullscreen","Td":"Toggle Compact View","Hd":"Unspecified language","Fd":"An unknown error has occurred","Nd":"Upload","Bd":"Load subtitle file (*.vtt)","Vd":"Photos and videos","jd":"Folder","zd":"{{failedCount}} of {{totalCount}} photos failed to upload","Wd":"Uploaded {0} to {1}","Kd":"{{itemCount}} items","Gd":"Gallery","Rd":"Upgrade now","oe":"Video","qd":"Video, {{videoName}}, {{videoLength}}","Jd":"OneDrive doesn\\u0027t support playing this video","Yd":"OneDrive can\\u0027t play this video right now. Make sure your device is connected to the internet","Xd":"This video appears to be corrupted.","Zd":"Playback for this video is blocked in your region","$d":"Video with tags: ","ee":"Muted","te":"Your browser doesn\\u0027t support video.","ne":"Change automatically","ae":"{{currentTime}} of {{duration}} seconds","re":"If playback doesn\\u0027t begin shortly, try re-opening the video.","ie":"If playback doesn\\u0027t resume shortly, try re-opening the video.","se":"Sorry, we\\u0027re having trouble playing this video. Try re-opening the video.","ce":"An unhandled error occured attempting to play your video.","Qd":"Playback for this video has been disabled due to accessibility compliance issues.","de":"View as","le":"{{volume}} volume","ue":"One year ago","fe":"{{yearsAgo}} years ago","pe":"{{zoomButton}}, photo zoom level at {{zoomLevel}} pixels","me":"Zoom controls","_e":"Zoom in","he":"Photo zoom level","be":"Zoom out","rd":"Share feedback","wc":"Thumbs up","Qb":"Thumbs down"}')}
+,3077:a=>{a.exports=JSON.parse('{"a":"Add more photos","b":"Add photos","c":"Photos list, select photos to add to the album","g":"Create","d":"Create album","e":"Create Album Gallery Layout","f":"Create album","i":"Go to Gallery to upload photos","j":"Add photos to OneDrive","k":"An album with the same name already exists. Please choose a different name.","l":"Name your album","m":"Name your new album","n":"Next","p":"Remove {{photoName}}","o":"Remove photo","q":"Select photos","r":"{{itemCount}} selected","s":"Selected photos","u":"Type album name","v":"Update album","w":"Update album","h":"Album name already exists. Choose a different name.","t":"Album names shouldn\\u0027t contain the following characters \\u0027<>:?|\\\\/*\\u0027 or end with a period."}')}
+,1886:a=>{a.exports=JSON.parse('{"g":"Photo Layout","a":"Show the photos with very little spacing.","b":"Show compact photos","c":"Group photos to help de-clutter your view.","d":"Group photos","e":"Include a date header above the first photo for a given day.","f":"Show inline date headers"}')}
+,3460:a=>{a.exports=JSON.parse('{"a":"Not available for the selected layout."}')}
+,3526:a=>{a.exports=JSON.parse('{"a":"Your photos are loading - {{percentage}}% complete.","b":"We are bringing in images from the {{folderName}} folder.","c":"Dismiss info message","e":"Revisit your favorite moments by turning on notifications for new On this day memories","d":"Go to notifications","f":"Your storage is almost full ({{percentage}}%).","h":"Your storage is full ({{percentage}}%).","g":"You can\\u0027t upload new files or send and receive email for this account.","i":"You\\u0027re over halfway there!","j":"You have used up {{size}}. Upgrade to get the best experience and more space for your files.","l":"You\\u0027re running low on storage ({{percentage}}%)","k":"When you run out of storage, you won\\u0027t be able to upload new files or send and receive email for this account.","m":"You\\u0027re over your storage limit ({{percentage}}%)."}')}
+,1884:a=>{a.exports=JSON.parse('{"a":"The Permission and password is not matched."}')}
+,3462:a=>{a.exports=JSON.parse('{"a":"{{date}} Â· {{time}}"}')}
+,1881:a=>{a.exports=JSON.parse('{"b":"Adding to Favorites","a":"Adding to Favorites failed","d":"Adding tag \\u0027{{tag}}\\u0027","c":"Adding tags: {{tags}}","e":"Completing download","f":"Deleting media","h":"Deleting tag \\u0027{{tag}}\\u0027","g":"Deleting tags: {{tags}}","i":"Downloading one or more of the files failed, please try again","k":"Downloading media","j":"Please wait for the browser to start downloading","l":"File type is not supported for uploading","m":"+{{count}} more","n":"Ignoring files","o":"The files being downloaded are large. To help ensure we can successfully download all the files, multiple zip files are being created.","q":"Removing from Favorites","p":"Removing from Favorites failed","r":"Uploading files"}')}
+,3461:a=>{a.exports=JSON.parse('{"b":"This photo was grouped with {{photoCount}} others.","a":"Group of {{photoCount}} photos"}')}
+,1476:a=>{a.exports=JSON.parse('{"a":"Got it","b":"Search introduction","c":"Soccer on the beach","d":"Camping in the mountains","e":"Welcome to your new search","f":"Search like you speak"}')}
+,3524:a=>{a.exports=JSON.parse('{"a":"Clear the search box","b":"Search your photos"}')}
+,3525:a=>{a.exports=JSON.parse('{"a":"Soon you\\u0027ll see all the photos from your OneDrive cloud storage.","b":"Soon you\\u0027ll see all the photos youâ€™ve added from this PC.","c":"Adding photosâ€¦"}')}
+,1887:a=>{a.exports=JSON.parse('{"a":"Dark","b":"Light"}')}
+,1253:a=>{a.exports=JSON.parse('{"a":"Something went wrong","c":"Try refreshing the page","b":"Something went wrong and we couldn\\u0027t get the page to display."}')}
+,346:a=>{a.exports=JSON.parse('{"b":"Only available when online","a":"{0}. Disabled while offline"}')}
+,741:a=>{a.exports=JSON.parse('{"a":"Your OneDrive account is not provisioned"}')}
+,909:a=>{a.exports=JSON.parse('{"a":"Skip to main content"}')}
+,774:a=>{a.exports=JSON.parse('{"f":"{0} TB","c":"{0} GB","e":"{0} MB","d":"{0} KB","a":"{0} bytes","b":"1 byte","g":"< 0.1 GB"}')}
+,916:a=>{a.exports=JSON.parse('{"b":"Looking for a specific memory?","a":"Pick a year and month to quickly move your gallery to that moment in time. ","h":"See your memories come to life","g":"Discover curated photo collections of recent moments, shared memories, and highlights from your gallery","l":"Customize and share feedback","k":"Switch between Light and Dark mode, and let us know how we can make your photos experience even better","d":"Find and upload photos","n":"New photos experience","m":"Explore a refreshed way to view, organize, and enjoy your photos.","c":"Searching for photos is front and center. To upload, select the + button to add to OneDrive.","f":"Your tools, always within reach","e":"Take action on your selected photos from this bottom bar","j":"New! A dedicated place for your photos","i":"Explore a fresh photos experience with new ways to browse, organize, and relive memories"}')}
+,1496:a=>{a.exports=JSON.parse('{"a":"Manage or cancel subscription"}')}
+,1495:a=>{a.exports=JSON.parse('{"CopyrightFormat":"&copy; {0} Microsoft","Developers":"Developers","Jobs":"Jobs","MSConfidential":"Microsoft Confidential","ChangeLanguage":"Change language","langname_ar":"Arabic","langname_en":"English (United States)","langname_en_us":"English (United States)","langname_fr":"French","langname_fr_ca":"French (Canada)","Privacy":"Privacy & Cookies","ReportAbuse":"Report a Concern","Terms":"Terms","langname_af":"Afrikaans","langname_am":"Amharic","langname_ar_ploc_sa":"ar-ploc-sa","langname_as":"Assamese","langname_az_latn_az":"Azerbaijani (Latin)","langname_be":"Belarusian","langname_bg":"Bulgarian","langname_bn_bd":"Bangla (Bangladesh)","langname_bn_in":"Bangla (India)","langname_bs_latn_ba":"Bosnian (Latin)","langname_ca":"Catalan","langname_ca_es_valencia":"Valencian","langname_chr_cher_us":"Cherokee (Cherokee)","langname_cs":"Czech","langname_cy":"Welsh","langname_da":"Danish","langname_de":"German","langname_el":"Greek","langname_en_gb":"English (United Kingdom)","langname_en_locr_us":"en-locr-us","langname_es":"Spanish","langname_es_mx":"Spanish (Mexico)","langname_et":"Estonian","langname_eu":"Basque (Basque)","langname_fa":"Persian","langname_fi":"Finnish","langname_fil":"Filipino","langname_ga":"Irish","langname_gd":"Scottish Gaelic","langname_gl":"Galician","langname_gu":"Gujarati","langname_ha_latn_ng":"Hausa","langname_he":"Hebrew","langname_hi":"Hindi","langname_hr":"Croatian","langname_hu":"Hungarian","langname_hy":"Armenian","langname_id":"Indonesian","langname_ig":"Igbo","langname_is":"Icelandic","langname_it":"Italian","langname_iu_latn_ca":"Inuktitut (Latin)","langname_ja":"Japanese","langname_ja_ploc_jp":"ja-ploc-jp","langname_ka":"Georgian","langname_kk":"Kazakh","langname_km":"Khmer","langname_kn":"Kannada","langname_ko":"Korean","langname_kok":"Konkani","langname_ku_arab_iq":"Central Kurdish","langname_ky":"Kyrgyz","langname_lb":"Luxembourgish","langname_lt":"Lithuanian","langname_lo":"Lao","langname_lv":"Latvian","langname_mi":"Maori","langname_mk":"Macedonian","langname_ml":"Malayalam","langname_mn":"Mongolian (Cyrillic)","langname_mr":"Marathi","langname_ms":"Malay","langname_mt":"Maltese","langname_ne":"Nepali","langname_nl":"Dutch","langname_nn":"Norwegian (Nynorsk)","langname_no":"Norwegian (BokmÃ¥l)","langname_nso":"Sesotho sa Leboa","langname_or":"Odia","langname_pa":"Punjabi (Gurmukhi)","langname_pa_arab_pk":"Punjabi (Pakistan)","langname_pl":"Polish","langname_prs_af":"Dari","langname_pt_br":"Portuguese (Brazil)","langname_pt_pt":"Portuguese (Portugal)","langname_qut":"K\\u0027iche\\u0027","langname_quz":"Quechua","langname_ro":"Romanian","langname_ru":"Russian","langname_rw":"Kinyarwanda","langname_sd_arab_pk":"Sindhi","langname_si":"Sinhala","langname_sk":"Slovak","langname_sl":"Slovenian","langname_sq":"Albanian","langname_sr":"Serbian (Serbia, Montenegro)","langname_sr_cyrl":"Serbian (Serbia, Montenegro)","langname_sr_cyrl_ba":"Serbian (Bosnia and Herzegovina)","langname_sr_latn":"Serbian (Serbia, Montenegro)","langname_sv":"Swedish","langname_sw":"Kiswahili","langname_ta":"Tamil","langname_te":"Telugu","langname_tg_cyrl_tj":"Tajik","langname_th":"Thai","langname_ti":"Tigrinya","langname_tk":"Turkmen","langname_tn":"Setswana","langname_tr":"Turkish","langname_tt":"Tatar","langname_ug":"Uyghur","langname_uk":"Ukrainian","langname_ur":"Urdu","langname_uz_latn_uz":"Uzbek (Latin)","langname_vi":"Vietnamese","langname_wo":"Wolof","langname_xh":"isiXhosa","langname_yo":"Yoruba","langname_zh_hans":"Simplified Chinese","langname_zh_hant":"Traditional Chinese","langname_zu":"isiZulu"}')}
+,1494:a=>{a.exports=JSON.parse('{"h":"Options","l":"Upgrade","c":"Provide feedback to Microsoft","e":"Help","i":"Sign in","j":"Sign out","g":"OneDrive","f":"OneDrive settings","k":"Contact support","a":"Click to learn more about plans and upgrades","d":"Get the OneDrive apps","b":"Import cloud photos and files"}')}
+,406:a=>{a.exports=JSON.parse('{"x":"Search","q":"Search box; Use the Up and Down arrow keys to see quick matches, and Enter to launch the full search results page.","t":"Search results for \\u0022{0}\\u0022","i":"Filtered search results for \\u0022{0}\\u0022","w":"Photos results for \\u0022{0}\\u0022","s":"Largest files in your OneDrive","v":"Search everything","u":"Search photos","r":"Results from","h":"Filtered results from","n":"My files","o":"{0}\\u0027s files","k":"All files","p":"Site","m":"Library","b":"Current folder","e":"Current library","g":"Current site","a":"All sites in hub","d":"Current hub","c":"Current hub and sites","f":"Current list","y":"Whole organization","l":"Showing what we think you are looking for. Search for items that exactly match: ","j":"Advanced search options"}')}
+,499:a=>{a.exports=JSON.parse('{"lb":"used of {0} ({1}%)","y":"Get more storage","K":"Learn more","d":"Get 1 TB (1000 GB) of storage and the latest Microsoft 365 apps for PC or Mac.","b":"Get storage for all your files and photos.","c":"Buy storage","q":"Your account is frozen.","bb":"Unfreeze your account","Db":"Upgrade","Sb":"Upgrade now","P":"Not now","e":"Free up space","M":"Manage storage","j":"You\\u0027re over halfway there!","i":"You have used up {0}. Upgrade to get the best experience and more space for your files.","w":"Your OneDrive is full","u":"Your storage is full","v":"Your storage is full ({0}%)","t":"Get more storage to continue uploading files to OneDrive.","s":"Get more storage to keep adding files to OneDrive.","O":"There\\u0027s no space for more files.","R":"Get more storage","L":"Learn more about M365 plans.","U":"{0}% used","T":"{0}% remaining","db":"Quota Progress Bar","Ib":"You can\\u0027t upload or create new items until you get back within your storage limit.","xb":"Your OneDrive will be frozen","S":"Your OneDrive is out of space","h":"Your files will be deleted on or after {0} unless you get back within your storage limit. You can buy more storage to get below your storage limit.","gb":"Unfreeze your account to temporarily acess your files","g":"Are you sure?","hb":"Unfreezing your files","_b":"It could take up to 24 hours to unfreeze your account.","r":"Your OneDrive is frozen","f":"close","V":"You unfroze your account on {0}. Have questions?","J":"Welcome back","I":"While you were away, your account was frozen. Unfreeze your account by {0} to avoid automatic deletion.","cb":"You\\u0027re over your storage limit and your account will be frozen on {0}","sb":"Your account is frozen until you take action","rb":"Your files are about to be deleted","ob":"Your files will be deleted in {0} day||Your files will be deleted in {0} days","W":"To protect your files, get more storage or delete files before {0}","$":"1||2-","Y":"{0}You can\\u0027t upload or create new items until you get back within your storage limit.{1} You can buy more storage or remove files from your OneDrive to get below your storage limit.","X":"{0}You\\u0027re over your storage limit and your files will be deleted on or after {1}{2} unless you get back within your storage limit. While over your storage limit you will not be able to create or edit OneDrive content. You can buy more storage or remove files from your OneDrive to get below your storage limit.","_":"{0}It could take up to 24 hours to unfreeze your account.{1} You will not be able to create or edit OneDrive content until after your account has been unfrozen.","Z":"{0}Your account is temporarily unfrozen. You can\\u0027t upload or create new items until you get back within your storage limit.{1} You can buy more storage or remove files from your OneDrive to get below your storage limit. You won\\u0027t be able to temporarily unfreeze your account if you get frozen again.","nb":"Locked","ub":"Warning","vb":"We\\u0027ll unfreeze your files for 30 days. If you don\\u0027t get more storage or delete excess files within 30 days, your OneDrive will be frozen again.","a":"I understand","yb":"Type {0} below:","pb":"Start unfreeze","Q":"Cancel","x":"Something went wrong.","fb":"Submitting unfreeze request...","A":"You\\u0027re almost out of free storage","B":"Your storage is almost full ({0}%)","z":"You may not be able to upload new files soonâ€”get more storage for as low as {0}","G":"You\\u0027re out of free storage","E":"To continue uploading new files to OneDrive, get additional storage for as low as {0}","F":"You can\\u0027t upload new files or send and receive email for this account","D":"You\\u0027re over your free storage limit","C":"Get additional storage for as low as {0} to continue using OneDrive","H":"When you run out of storage, you won\\u0027t be able to upload new files or send and receive email for this account.","tb":"You\\u0027re over your storage limit ({0}%)","eb":"You can\\u0027t upload new files or send and receive email for this account","ab":"Your files will be deleted on {0} unless you buy more storage or delete files","ib":"As you\\u0027re over your storage limit, your files will be deleted on {0} unless you buy more storage or delete files","mb":"Storage","m":"Your files will be deleted in {0} days","l":"Your files will be deleted today","k":"To keep your files, get more storage or delete files now","N":"You\\u0027re running low on storage ({0}%)","n":"Start your trial now to get more storage for all your files and photos.","o":"Get 100 GB free for a month","p":"Start free trial"}')}
+,312:a=>{a.exports=JSON.parse('{"d":"Files upload","e":"Folder upload","a":"Create or upload","c":"You don\\u0027t have permission to add items in this folder.","b":"You need more storage to create or upload files"}')}
+,809:a=>{a.exports=JSON.parse('{"c":"Copilot","a":"{0}","b":"Start research project"}')}
+,1511:a=>{a.exports=JSON.parse('{"f":"Windows data settings","a":"Legal","b":"Your Privacy Choices","c":"Privacy & Cookies","d":"Report a Concern","e":"Contact Support"}')}
+,146:a=>{a.exports=JSON.parse('{"n":"Word document","f":"Excel workbook","k":"PowerPoint presentation","j":"OneNote notebook","i":"Forms survey","h":"Forms for Excel","m":"Visio drawing","g":"Excel survey","l":"Text Document","c":"Folder","a":"Clipchamp video","e":"Link","b":"Copilot agent","d":"List"}')}
+,904:a=>{a.exports=JSON.parse('{"a":"Exclamation mark","i":"Network offline","f":"Sorry, something went wrong","e":"We can\\u0027t connect to OneDrive","h":"Connect to the internet to open this page","b":"Unknown render failure.","c":"Check your internet connection and try again.","d":"Reconnect to the internet to open this page.","g":"Can\\u0027t open this page offline right now. Please try again later."}')}
+,1513:a=>{a.exports=JSON.parse('{"c":"Get more storage","d":"Low on storage ({0}%)","a":"Storage almost full ({0}%)","b":"Storage is full","e":"Over storage limit","f":"Settings"}')}
+,1503:a=>{a.exports=JSON.parse('{"c":"Photos","b":"Files","a":"App launcher"}')}
+,1504:a=>{a.exports=JSON.parse('{"b":"Search","a":"Expand search","c":"Sign In"}')}
+,1501:a=>{a.exports=JSON.parse('{"a":"Account manager for {0}"}')}
+,1510:a=>{a.exports=JSON.parse('{"a":"Files","b":"Photos"}')}
+,768:a=>{a.exports=JSON.parse('{"b":"Only available when online","a":"{0}. Disabled while offline"}')}
+,764:a=>{a.exports=JSON.parse('{"a":"Loading..."}')}
+,318:a=>{a.exports=JSON.parse('{"a":"EnvironmentType is invalid","b":"Invalid GUID string: \\u0022{0}\\u0022","f":"The value for \\u0022{0}\\u0022 is false","g":"The value for \\u0022{0}\\u0022 must not be null","h":"The value for \\u0022{0}\\u0022 must not be undefined","e":"The value for \\u0022{0}\\u0022 must not be an empty string","d":"The \\u0022{0}\\u0022 object cannot be used because it has been disposed.","c":"Invalid version string: \\u0022{0}\\u0022","j":"Cannot consume services because the scope is not finished yet","k":"Cannot consume services during ServiceScope autocreation","i":"The ServiceScope is already finished","l":"Cannot register service because the scope is already finished","m":"The service key \\u0022{0}\\u0022 has already been registered in this scope","o":"INNERERROR:","n":"CALLSTACK:","p":"LOGPROPERTIES:"}')}
+,1478:a=>{a.exports=JSON.parse('{"a":"To view the information on this page, you need to verify your identity.","b":"To view the information on this page, ask a Global or SharePoint Administrator in your organization to go to the API management page in the new SharePoint admin center."}')}
+}]),define("odc-photos-2.resx",[],{});ØA—Eoúô   ´ç        
+
+GETµÈ " 
+access-control-allow-origin*"V
+access-control-expose-headers5date,Akamai-Request-BC,X-Cdn-Provider,X-Ms-Request-Id"
+
+ak-networkFF"%
+akamai-cache-statusHit from child"Q
+akamai-request-bc<[a=23.39.209.232,b=955766971,c=g,n=US_CA_LOSANGELES,o=20940]"5
+alt-svc*h3=":443"; ma=93600,h3-29=":443"; ma=93600"*
+cache-controlpublic, max-age=630720000"
+content-encodingbr"
+content-length7167"&
+content-typeapplication/javascript"%
+dateSun, 11 Jan 2026 23:40:42 GMT".
+last-modifiedTue, 09 Dec 2025 21:24:39 GMT"‚
+nel{{"report_to":"NelM365CDNUpload1","max_age":604800,"include_subdomains":true,"failure_fraction":1.0,"success_fraction":0.01}"
+quic-version
+0x00000001"ß
+	report-toÑ{"group":"NelM365CDNUpload1","max_age":604800,"endpoints":[{"url":"https://M365CDN.nel.measure.office.net/api/report?FrontEnd=AkamaiCDNWorldWide&DestinationEndpoint=LOSANGELES&ASN=20940&Country=US&Region=CA&RequestIdentifier=0.e8d12717.1768174842.38f7d8bb&TotalRTCDNTime=29&CompressionType=br&FileSize=7167"}],"include_subdomains ":true}"R
+server-timingAclientrtt; dur=29, clienttt; dur=, origin; dur=0 , cdntime; dur=0"@
+strict-transport-security#max-age=31536000; includeSubDomains"
+timing-allow-origin*"
+x-cdn-providerAkamai"!
+x-content-type-optionsnosniff"5
+x-ms-meta-sourcebuildodsp-web-prod_2025-12-05.008"X
+x-ms-meta-sourceidBF2B4DBAFB06DAF982CEF1B0DBFAD370257673EC6CEE209D9C19CE5E75E86C98F00"7
+x-ms-request-id$59567e3f-301e-0070-573e-7dd1f70000000êÝ®¹×é:Akamai-Request-BC:date:X-Cdn-Provider:X-Ms-Request-IdBjhttps://res-1.cdn.office.net/files/odsp-web-prod_2025-12-05.008/onedrivedesktop/en-us/odc-photos-2.resx.jsP(Zh3`japplication/javascriptrGETx € ˆ ì¹ª¹×éæ%ÓkK]f§âú¯„„€[«›ù4Õb'Hïìš³Ìå0ØA—Eoúô   jyYÈ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {
+    "instance_name": "N20_D5_G1000_clus_11",
+    "n_customers": 20,
+    "dimension": 5,
+    "grid_size": 1000,
+    "distribution_type": "clus",
+    "generation_seed": 1121939,
+    "coordinates": [
+        [
+            920,
+            483,
+            671,
+            732,
+            555
+        ],
+        [
+            968,
+            691,
+            694,
+            575,
+            451
+        ],
+        [
+            893,
+            413,
+            616,
+            734,
+            523
+        ],
+        [
+            840,
+            561,
+            738,
+            750,
+            457
+        ],
+        [
+            868,
+            477,
+            775,
+            710,
+            629
+        ],
+        [
+            933,
+            441,
+            577,
+            663,
+            588
+        ],
+        [
+            854,
+            405,
+            673,
+            665,
+            597
+        ],
+        [
+            931,
+            383,
+            722,
+            760,
+            449
+        ],
+        [
+            814,
+            464,
+            723,
+            752,
+            578
+        ],
+        [
+            951,
+            487,
+            629,
+            672,
+            292
+        ],
+        [
+            1000,
+            396,
+            670,
+            640,
+            570
+        ],
+        [
+            1000,
+            490,
+            799,
+            672,
+            459
+        ],
+        [
+            927,
+            435,
+            777,
+    
