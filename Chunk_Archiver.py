@@ -11,7 +11,7 @@ from tqdm import tqdm
 # ==========================================
 
 # MODE: 'pack', 'unpack', 'upload', or 'push'
-MODE = 'push'
+MODE = 'upload'
 
 # DELETE_RAW: Delete original files after zipping? (Only for 'pack' and 'upload')
 DELETE_RAW = True
@@ -25,7 +25,10 @@ TARGET_DIRS = [
     os.path.join("instances"),
     os.path.join("solutions"),
     os.path.join("visuals", "instances"),
-    os.path.join("visuals", "solutions")
+    os.path.join("visuals", "solutions"),
+    os.path.join("Generalized_TSP_Analysis", "instances"),
+    os.path.join("Generalized_TSP_Analysis", "solutions"),
+    os.path.join("Generalized_TSP_Analysis", "visualizations")
 ]
 
 VALID_EXTENSIONS = {'.json', '.bin', '.png', '.jpg', '.txt', '.sol'}
