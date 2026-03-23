@@ -6,9 +6,9 @@ import multiprocessing
 import subprocess
 from tqdm import tqdm
 
-# ==========================================
+======================================
 # --- USER CONFIGURATION ---
-# ==========================================
+======================================
 
 # MODE: 'pack', 'unpack', 'upload', or 'push'
 MODE = 'upload'
@@ -19,7 +19,7 @@ DELETE_RAW = True
 # CHUNK SIZE: Target size in MB
 CHUNK_SIZE_MB = 50 
 
-# ==========================================
+======================================
 
 TARGET_DIRS = [
     os.path.join("instances"),
@@ -31,7 +31,7 @@ TARGET_DIRS = [
     os.path.join("Generalized_TSP_Analysis", "visualizations")
 ]
 
-VALID_EXTENSIONS = {'.json', '.bin', '.png', '.jpg', '.txt', '.sol'}
+
 MAX_BYTES = CHUNK_SIZE_MB * 1024 * 1024
 
 def get_file_size(filepath):
