@@ -1,19 +1,19 @@
 import os
 import zipfile
 import glob
-import argparse
-from tqdm import tqdm
 import concurrent.futures
 import multiprocessing
+import subprocess
+from tqdm import tqdm
 
 # ==========================================
 # --- USER CONFIGURATION ---
 # ==========================================
 
-# MODE: 'pack' or 'unpack'
-MODE = 'pack'  
+# MODE: 'pack', 'unpack', 'upload', or 'push'
+MODE = 'push'
 
-# DELETE_RAW: Delete original files after zipping? (Only for 'pack')
+# DELETE_RAW: Delete original files after zipping? (Only for 'pack' and 'upload')
 DELETE_RAW = True
 
 # CHUNK SIZE: Target size in MB
@@ -36,81 +36,63 @@ def get_file_size(filepath):
 
 # --- WORKER FUNCTIONS (Must be top-level for multiprocessing) ---
 
-def _pack_worker(args):
-    """
-    Worker process to create a single zip chunk.
-    """
+def pack_worker(args):
     zip_path, batch_files, base_directory, delete_raw = args
     
-    try:
-        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-            for file_path in batch_files:
-                # Store relative to the specific directory
-                arcname = os.path.relpath(file_path, base_directory)
-                zf.write(file_path, arcname)
-        
-        if delete_raw:
-            for file_path in batch_files:
-                try:
-                    os.remove(file_path)
-                except OSError:
-                    pass
-        return True
-    except Exception as e:
-        print(f"Error packing {zip_path}: {e}")
-        return False
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zip_file_context:
+        for file_path in batch_files:
+            relative_name = os.path.relpath(file_path, base_directory)
+            zip_file_context.write(file_path, relative_name)
+    
+    if delete_raw:
+        for file_path in batch_files:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                
+    return True
 
-def _unpack_worker(args):
-    """
-    Worker process to extract a single zip chunk.
-    """
+def unpack_worker(args):
     zip_path, extract_dir = args
-    try:
-        with zipfile.ZipFile(zip_path, 'r') as zf:
-            zf.extractall(extract_dir)
-        return True
-    except Exception as e:
-        print(f"Error unpacking {zip_path}: {e}")
-        return False
+    
+    with zipfile.ZipFile(zip_path, 'r') as zip_file_context:
+        zip_file_context.extractall(extract_dir)
+        
+    return True
 
 # --- MAIN LOGIC ---
 
 def get_packing_tasks(root_dir):
     tasks = []
-    print("\n[SCANNING] Generating file batches...")
     
-    for rel_path in TARGET_DIRS:
-        directory = os.path.join(root_dir, rel_path)
+    for relative_path in TARGET_DIRS:
+        directory = os.path.join(root_dir, relative_path)
         if not os.path.exists(directory):
             continue
 
-        # 1. Gather files
         all_files = []
         for root, _, files in os.walk(directory):
-            for f in files:
-                ext = os.path.splitext(f)[1].lower()
-                if ext in VALID_EXTENSIONS:
-                    all_files.append(os.path.join(root, f))
+            for file_name in files:
+                extension = os.path.splitext(file_name)[1].lower()
+                if extension in VALID_EXTENSIONS:
+                    all_files.append(os.path.join(root, file_name))
         
         if not all_files:
             continue
             
-        all_files.sort() # Deterministic order
+        all_files.sort()
 
-        # 2. Batching
         current_batch = []
         current_size = 0
-        batch_idx = 0
+        batch_index = 0
         
-        # Naming logic
         dir_name = os.path.basename(directory.rstrip(os.sep))
         parent_name = os.path.basename(os.path.dirname(directory).rstrip(os.sep))
         prefix = f"visuals_{dir_name}" if parent_name == "visuals" else dir_name
 
-        for f_path in all_files:
-            f_size = get_file_size(f_path)
-            if current_size + f_size > MAX_BYTES and current_batch:
-                zip_name = f"{prefix}_part_{batch_idx}.zip"
+        for file_path in all_files:
+            file_size = get_file_size(file_path)
+            if current_size + file_size > MAX_BYTES and current_batch:
+                zip_name = f"{prefix}_part_{batch_index}.zip"
                 tasks.append((
                     os.path.join(directory, zip_name),
                     current_batch,
@@ -119,13 +101,13 @@ def get_packing_tasks(root_dir):
                 ))
                 current_batch = []
                 current_size = 0
-                batch_idx += 1
+                batch_index += 1
             
-            current_batch.append(f_path)
-            current_size += f_size
+            current_batch.append(file_path)
+            current_size += file_size
             
         if current_batch:
-            zip_name = f"{prefix}_part_{batch_idx}.zip"
+            zip_name = f"{prefix}_part_{batch_index}.zip"
             tasks.append((
                 os.path.join(directory, zip_name),
                 current_batch,
@@ -137,54 +119,71 @@ def get_packing_tasks(root_dir):
 
 def get_unpacking_tasks(root_dir):
     tasks = []
-    for rel_path in TARGET_DIRS:
-        directory = os.path.join(root_dir, rel_path)
+    
+    for relative_path in TARGET_DIRS:
+        directory = os.path.join(root_dir, relative_path)
         if not os.path.exists(directory):
             continue
             
-        zips = glob.glob(os.path.join(directory, "*.zip"))
-        for z in zips:
-            tasks.append((z, directory))
+        zip_files = glob.glob(os.path.join(directory, "*.zip"))
+        for zip_file in zip_files:
+            tasks.append((zip_file, directory))
+            
     return tasks
+
+def execute_git_lfs_upload():
+    print("\nStarting Git LFS tracking and upload process...")
+    subprocess.run(["git", "lfs", "install"], check=True)
+    subprocess.run(["git", "lfs", "track", "*.zip"], check=True)
+    subprocess.run(["git", "add", ".gitattributes"], check=True)
+    
+    for relative_path in TARGET_DIRS:
+        if os.path.exists(relative_path):
+            subprocess.run(["git", "add", relative_path], check=True)
+            
+    subprocess.run(["git", "commit", "-m", "Automated upload of packed archive chunks"], check=True)
+    subprocess.run(["git", "push"], check=True)
 
 def main():
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    num_cores = os.cpu_count()
-    print(f"--- Chunk Archiver (Mode: {MODE.upper()} | Cores: {num_cores}) ---")
+    number_of_cores = os.cpu_count()
+    print(f"--- Chunk Archiver (Mode: {MODE.upper()} | Cores: {number_of_cores}) ---")
     
     tasks = []
-    
-    if MODE == 'pack':
+    if MODE in ['pack', 'upload']:
         tasks = get_packing_tasks(root_dir)
-        worker_func = _pack_worker
-        desc = "Packing Archives"
+        worker_function = pack_worker
+        description = "Packing Archives"
     elif MODE == 'unpack':
         tasks = get_unpacking_tasks(root_dir)
-        worker_func = _unpack_worker
-        desc = "Extracting Archives"
+        worker_function = unpack_worker
+        description = "Extracting Archives"
+    elif MODE == 'push':
+        print("Skipping packaging/extraction tasks. Proceeding directly to Git LFS upload...")
     else:
         print(f"Invalid mode: {MODE}")
         return
 
-    if not tasks:
-        print("No tasks found.")
+    # Only run the ProcessPoolExecutor if there are tasks to process
+    if tasks:
+        print(f"Starting execution on {len(tasks)} tasks...")
+        
+        with concurrent.futures.ProcessPoolExecutor(max_workers=number_of_cores) as executor:
+            list(tqdm(
+                executor.map(worker_function, tasks), 
+                total=len(tasks), 
+                desc=description,
+                unit="file"
+            ))
+    elif MODE != 'push':
+        print("No eligible files or tasks found.")
         return
 
-    print(f"Starting execution on {len(tasks)} tasks...")
-    
-    # Parallel Execution
-    with concurrent.futures.ProcessPoolExecutor(max_workers=num_cores) as executor:
-        # Use list(tqdm(...)) to force iteration and display progress
-        results = list(tqdm(
-            executor.map(worker_func, tasks), 
-            total=len(tasks), 
-            desc=desc,
-            unit="file"
-        ))
-
+    if MODE in ['upload', 'push']:
+        execute_git_lfs_upload()
+        
     print("\nDone.")
 
 if __name__ == "__main__":
-    # Windows support for multiprocessing requires freeze_support
     multiprocessing.freeze_support()
     main()
