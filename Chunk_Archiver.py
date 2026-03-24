@@ -6,9 +6,7 @@ import multiprocessing
 import subprocess
 from tqdm import tqdm
 
-======================================
 # --- USER CONFIGURATION ---
-======================================
 
 # MODE: 'pack', 'unpack', 'upload', or 'push'
 MODE = 'upload'
@@ -19,8 +17,6 @@ DELETE_RAW = True
 # CHUNK SIZE: Target size in MB
 CHUNK_SIZE_MB = 50 
 
-======================================
-
 TARGET_DIRS = [
     os.path.join("instances"),
     os.path.join("solutions"),
@@ -30,7 +26,7 @@ TARGET_DIRS = [
     os.path.join("Generalized_TSP_Analysis", "solutions"),
     os.path.join("Generalized_TSP_Analysis", "visualizations")
 ]
-
+VALID_EXTENSIONS = {'.json', '.bin', '.png', '.jpg', '.txt', '.sol'}
 
 MAX_BYTES = CHUNK_SIZE_MB * 1024 * 1024
 
@@ -135,7 +131,7 @@ def get_unpacking_tasks(root_dir):
     return tasks
 
 def execute_git_lfs_upload():
-    print("\nStarting Git LFS tracking and upload process...")
+    print("\nStarting Git LFS tracking and upload process. ..")
     subprocess.run(["git", "lfs", "install"], check=True)
     subprocess.run(["git", "lfs", "track", "*.zip"], check=True)
     subprocess.run(["git", "add", ".gitattributes"], check=True)
@@ -162,14 +158,14 @@ def main():
         worker_function = unpack_worker
         description = "Extracting Archives"
     elif MODE == 'push':
-        print("Skipping packaging/extraction tasks. Proceeding directly to Git LFS upload...")
+        print("Skipping packaging/extraction tasks. Proceeding directly to Git LFS upload. ..")
     else:
         print(f"Invalid mode: {MODE}")
         return
 
     # Only run the ProcessPoolExecutor if there are tasks to process
     if tasks:
-        print(f"Starting execution on {len(tasks)} tasks...")
+        print(f"Starting execution on {len(tasks)} tasks. ..")
         
         with concurrent.futures.ProcessPoolExecutor(max_workers=number_of_cores) as executor:
             list(tqdm(
