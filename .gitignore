@@ -1,0 +1,7 @@
+# Ignore unpacked instance and solution data
+# These files are large and can be regenerated from compressed archives
+instances/
+solutions/
+
+# Keep the compressed archives (tracked via Git LFS)
+!*.zip
