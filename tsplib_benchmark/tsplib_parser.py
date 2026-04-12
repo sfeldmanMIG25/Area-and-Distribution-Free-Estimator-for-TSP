@@ -292,10 +292,14 @@ def parse_tsplib_file(path) -> Dict:
         dim_for_coords = 3 if "3D" in ewt else 2
         raw_coords, _ = _read_node_coords(lines, body_idx, n, dim=dim_for_coords)
 
-        if ewt == "EUC_2D":
-            dist_matrix = _dist_euc_2d(raw_coords)
-        elif ewt == "CEIL_2D":
-            dist_matrix = _dist_ceil_2d(raw_coords)
+        if ewt in _NATIVE_EUCLIDEAN_TYPES:
+            # For native Euclidean types the benchmark uses the raw coordinates
+            # directly (the estimator computes its own MST internally). Building
+            # the full (n, n) distance matrix is unnecessary and impossible for
+            # very large instances (e.g. pla85900 with n=85900 would need 55 GiB).
+            # We skip it here; downstream code that needs it (MDS path) won't
+            # reach this branch anyway.
+            dist_matrix = None
         elif ewt == "ATT":
             dist_matrix = _dist_att(raw_coords)
         elif ewt == "GEO":

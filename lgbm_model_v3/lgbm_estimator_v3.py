@@ -13,7 +13,9 @@ import numpy as np
 import pandas as pd
 import lightgbm as lgb
 from collections import deque
+from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
+from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
 from tqdm import tqdm
@@ -111,9 +113,35 @@ class TSP_V3_LGBM_Estimator:
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
         # MST Block
-        dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32)
-        np.fill_diagonal(dist_mat, 0)
-        mst_csr = minimum_spanning_tree(dist_mat)
+        # In 2D, the MST is a subgraph of the Delaunay triangulation (O(n)
+        # edges), so we build a sparse graph from Delaunay edges instead of
+        # the full O(n^2) distance matrix. This reduces memory from O(n^2) to
+        # O(n) and is critical for large instances (n > 10000).
+        # For d >= 3 we fall back to the dense distance matrix since Delaunay
+        # in high dimensions can produce O(n^ceil(d/2)) simplices.
+        if d == 2 and n >= 4:
+            tri = Delaunay(coords)
+            edges_set = set()
+            for simplex in tri.simplices:
+                for i in range(3):
+                    for j in range(i + 1, 3):
+                        a, b = simplex[i], simplex[j]
+                        if a > b:
+                            a, b = b, a
+                        edges_set.add((a, b))
+            rows_d, cols_d, dists_d = [], [], []
+            for a, b in edges_set:
+                dist_ab = float(np.sqrt(np.sum((coords[a] - coords[b]) ** 2)))
+                rows_d.append(a); cols_d.append(b); dists_d.append(dist_ab)
+                rows_d.append(b); cols_d.append(a); dists_d.append(dist_ab)
+            sparse_graph = csr_matrix(
+                (dists_d, (rows_d, cols_d)), shape=(n, n)
+            )
+            mst_csr = minimum_spanning_tree(sparse_graph)
+        else:
+            dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32)
+            np.fill_diagonal(dist_mat, 0)
+            mst_csr = minimum_spanning_tree(dist_mat)
         edges = mst_csr.data
         mst_len = np.sum(edges)
         
