@@ -1,0 +1,443 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{float}
+\title{Mathematical Formulations of TSP Estimators}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\section{Model Training and Hyperparameter Optimization}
+
+The predictive model employed for estimating the $\alpha$ parameter is a Light Gradient Boosting Machine (LightGBM) regressor using a Gradient Boosting Decision Tree (GBDT) backbone. We formulated the training process as a regression problem minimizing the L2 loss (Mean Squared Error), with Root Mean Squared Error (RMSE) serving as the primary evaluation metric.
+
+\subsection{Training Procedure}
+The dataset was partitioned into training, validation, and test sets based on a pre-defined split. To ensure robust hyperparameter selection, we utilized the Optuna optimization framework. The optimization process consisted of 75 trials, exploring a wide search space for key architectural parameters, including learning rate, tree depth (via number of leaves), and regularization terms ($\lambda_{L1}$ and $\lambda_{L2}$).
+
+During the optimization phase, the model was trained on the training split and evaluated on the validation split. We employed early stopping with a patience of 100 rounds to prevent overfitting; training ceased if the validation RMSE did not improve for 100 consecutive iterations.
+
+Following the identification of the optimal hyperparameters, a two-step final training strategy was executed:
+\begin{enumerate}
+    \item \textbf{Optimal Stopping Identification:} The model was retrained with the best hyperparameter configuration to determine the optimal number of boosting rounds (trees) via early stopping.
+    \item \textbf{Final Fit:} The final model was trained on the combined training and validation datasets using the optimal number of trees determined in the previous step. This ensures the model utilizes the maximum amount of available data before final evaluation on the held-out test set.
+\end{enumerate}
+
+\subsection{Hyperparameter Configuration}
+The optimal hyperparameters identified via the Optuna study are detailed in Table \ref{tab:hyperparams}. The model utilizes a relatively high number of leaves (230) combined with a low learning rate ($\approx 0.011$), suggesting a fine-grained approximation of the loss manifold. Regularization is applied via both L1 and L2 penalties, alongside stochastic feature and bagging fractions to enhance generalization.
+
+\begin{table}[h]
+    \centering
+    \caption{Optimal Hyperparameters for LightGBM Alpha Model (V3)}
+    \label{tab:hyperparams}
+    \begin{tabular}{@{}llp{6cm}@{}}
+        \toprule
+        \textbf{Hyperparameter} & \textbf{Value} & \textbf{Description} \\ \midrule
+        \texttt{learning\_rate} & 0.0110 & Step size shrinkage used in update to prevent overfitting. \\
+        \texttt{num\_leaves} & 230 & Max number of leaves in one tree. \\
+        \texttt{lambda\_l1} & 0.0016 & L1 regularization term on weights. \\
+        \texttt{lambda\_l2} & 0.1124 & L2 regularization term on weights. \\
+        \texttt{feature\_fraction} & 0.4930 & Fraction of features selected in each iteration. \\
+        \texttt{bagging\_fraction} & 0.5620 & Fraction of data to be used for each iteration. \\
+        \texttt{bagging\_freq} & 7 & Frequency for bagging (k-means clustering). \\
+        \texttt{min\_child\_samples} & 32 & Minimum number of data needed in a child (leaf). \\
+        \texttt{objective} & regression\_l2 & Optimization objective function. \\
+        \texttt{boosting\_type} & gbdt & Gradient Boosting Decision Tree. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Structural Complexity Analysis}
+Post-training analysis was conducted to quantify the computational cost of inference. The final ensemble consists of 2,948 decision trees. To estimate the run-time cost, we calculated the \textit{Average Prediction Complexity}, defined as the total number of split operations (conditional checks) required to generate a single prediction. This is calculated by summing the expected depth of every tree in the ensemble, weighted by the sample distribution across leaves.
+
+Table \ref{tab:complexity} summarizes the structural statistics of the final model.
+
+\begin{table}[h]
+    \centering
+    \caption{Model Structural Statistics and Complexity}
+    \label{tab:complexity}
+    \begin{tabular}{@{}lr@{}}
+        \toprule
+        \textbf{Metric} & \textbf{Value} \\ \midrule
+        Total Trees (Estimators) & 2,948 \\
+        Total Leaves (Model Size) & 678,040 \\
+        Total Decision Splits & 675,092 \\
+        Average Leaves per Tree & 230.00 \\ \midrule
+        \textbf{Avg. Prediction Complexity (Splits)} & \textbf{43,913.18} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Although the model contains nearly 3,000 trees with a maximum allowance of 230 leaves each, the average prediction requires approximately 43,913 split evaluations. This yields an average operational depth of approximately $14.9$ splits per tree ($43,913 / 2,948$), which is well within manageable limits for real-time inference on modern hardware. This metric provides a more accurate representation of latency than raw tree counts, as it accounts for the actual depth traversed during the decision path.
+
+
+\section{Heuristic and Analytical Estimators}
+
+This section details the mathematical formulations and implementation constants used in the estimator utility library.
+
+\subsection{Vinel \& Silva Estimator ($\hat{T}_{VS}$)}
+\textbf{Source:} Vinel \& Silva (2018) \cite{vinel2018}.
+
+This estimator is a simplification of the asymptotic BHH theorem, specifically tuned for 2D instances using the Convex Hull area to approximate the density of points. It assumes that for uniform distributions, the tour length scales with the square root of the area occupied by the points.
+
+\begin{equation}
+    \hat{T}_{VS} = b \sqrt{n \cdot A_{hull}}
+\end{equation}
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item $b = 0.768$ (Empirically derived scaling constant)
+\end{itemize}
+
+\subsection{Çavdar \& Sokol Estimator ($\hat{T}_{CS}$)}
+\textbf{Source:} Çavdar \& Sokol (2015) \cite{cavdar2015}.
+
+This estimator decomposes the TSP tour into an ``interior'' component (traveling between points inside the cluster) and a ``boundary'' component (traveling along the perimeter). It utilizes statistical deviation metrics of the coordinates.
+
+\begin{equation}
+    \hat{T}_{raw} = \underbrace{a_0 \sqrt{n \cdot \sigma_{cx} \sigma_{cy}}}_{\text{Interior Term}} + \underbrace{a_1 \sqrt{\frac{n \cdot \sigma_x \sigma_y \cdot A_{hull}}{\bar{c}_x \bar{c}_y}}}_{\text{Boundary Term}}
+\end{equation}
+
+\noindent Where:
+\begin{itemize}
+    \item $\sigma_{x}, \sigma_{y}$: Standard deviation of coordinates.
+    \item $\bar{c}_{x}, \bar{c}_{y}$: Mean absolute deviation from the centroid.
+    \item $\sigma_{cx}, \sigma_{cy}$: Central deviations (standard deviation of the absolute deviations).
+    \item $A_{hull}$: Area of the Convex Hull.
+\end{itemize}
+
+\noindent \textbf{Small $n$ Correction:} For $n < 1000$, a correction factor is applied:
+\begin{equation}
+    \text{Corr}(n) = 0.9325 e^{0.00005298 n} - 0.2972 e^{-0.01452 n}
+\end{equation}
+\begin{equation}
+    \hat{T}_{CS} = \frac{\hat{T}_{raw}}{\text{Corr}(n)}
+\end{equation}
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item $a_0 = 2.791$
+    \item $a_1 = 0.2669$
+\end{itemize}
+
+\subsection{Beardwood-Halton-Hammersley Estimator ($\hat{T}_{BHH}$)}
+\textbf{Source:} Beardwood, Halton, \& Hammersley (1959) \cite{beardwood1959}.
+
+The BHH theorem provides the asymptotic limit for the TSP length as $n \to \infty$. This estimator generalizes the area-based approach to any dimension $d$.
+
+\begin{equation}
+    \hat{T}_{BHH} = \beta_d \cdot n^{1 - \frac{1}{d}} \cdot V^{\frac{1}{d}}
+\end{equation}
+
+\noindent Where $V$ is the volume (or area in 2D) of the Convex Hull bounding the points.
+
+\noindent \textbf{Implementation Constants ($\beta_d$):}
+\begin{itemize}
+    \item 2D ($d=2$): $\beta_2 = 0.7124$
+    \item 3D ($d=3$): $\beta_3 = 0.6979$
+    \item High Dimensions ($d > 3$): $\beta_d = \sqrt{\frac{d}{2\pi e}}$
+\end{itemize}
+
+\subsection{Fixed-Ratio MST Estimator ($\hat{T}_{MST}$)}
+\textbf{Source:} Steele (1987) \cite{steele1987}.
+
+In Euclidean space, the ratio $\rho(d) = \frac{TSP(S)}{MST(S)}$ is remarkably stable for random point sets. This estimator relies on the structural correlation between the Minimum Spanning Tree and the optimal tour.
+
+\begin{equation}
+    \hat{T}_{MST} = \rho(d) \cdot L_{MST}
+\end{equation}
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item 2D ($d=2$): $\rho(2) \approx 1.075$ (on average).
+    \item High Dimensions ($d \to \infty$): $\rho(d) \to 1.0$.
+\end{itemize}
+
+\subsection{Extreme Value Theory Estimator ($\hat{T}_{EVT}$)}
+\textbf{Source:} Golden \& Alt (1979) \cite{golden1979}.
+
+This statistical estimator applies the \textbf{Fisher-Tippett-Gnedenko theorem}, which posits that the minimum of a large set of independent, identically distributed random variables converges to one of the Generalized Extreme Value distributions. For TSP, the distribution of random tour lengths is bounded below by zero (or the optimal length), implying convergence to a \textbf{Weibull distribution}.
+
+\begin{equation}
+    \hat{T}_{EVT} = \text{Loc}(\text{Weibull}(\{L_{rand}^{(1)}, \dots, L_{rand}^{(k)}\}))
+\end{equation}
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item Sample Count $k = 200$
+    \item Distribution: 2-parameter Weibull
+\end{itemize}
+
+\subsection{2-Opt Distribution Estimator ($\hat{T}_{2OPT}$)}
+\textbf{Source:} Reeves (1995) \cite{reeves1995}.
+
+This method relies on the landscape analysis of combinatorial problems. Reeves showed that the distribution of \textit{local optima} (tours that cannot be improved by a single 2-opt move) approximates a Gaussian or Gamma distribution. Instead of sampling purely random tours, the strategy samples a small number of 2-opt local optima to infer the global minimum.
+
+\begin{equation}
+    \hat{T}_{2OPT} = \mu_{local} - 3 \cdot \sigma_{local}
+\end{equation}
+
+\noindent Where $\mu_{local}$ and $\sigma_{local}$ are the mean and standard deviation of the local optima costs.
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item Sample Count = 20
+    \item Sigma Multiplier = 3.0
+    \item Max 2-Opt Iterations = 100
+\end{itemize}
+
+\subsection{Basel-Willemain Estimator ($\hat{T}_{BW}$)}
+\textbf{Source:} Basel \& Willemain (2001) \cite{basel2001}.
+
+This regression-based estimator establishes a power-law relationship between the standard deviation of random tour lengths and the optimal tour length. Unlike the mean of random tours (which scales linearly with $n$), the standard deviation $\sigma_{rand}$ captures the asymptotic scaling behavior ($\Theta(\sqrt{n})$) of the optimal tour in Euclidean space. The estimator uses a log-log regression model derived from 17 benchmark problems with known optima.
+
+\begin{equation}
+    \ln(\hat{T}_{BW}) = 1.798 + 0.927 \cdot \ln(\sigma_{rand})
+\end{equation}
+
+\noindent Which corresponds to the power law:
+\begin{equation}
+    \hat{T}_{BW} = 6.037 \cdot (\sigma_{rand})^{0.927}
+\end{equation}
+
+\noindent \textbf{Implementation Details:}
+\begin{itemize}
+    \item \textbf{Sampling:} $\sigma_{rand}$ is calculated from $k=10,000$ random tours to ensure statistical stability.
+    \item \textbf{Coefficients:} Hardcoded based on the "known optimal" dataset regression from the original paper (Eq. 3.1 in source).
+\end{itemize}
+
+\subsection{Chien Estimator ($\hat{T}_{Chien}$)}
+\textbf{Source:} Chien (1992) \cite{chien1992}.
+
+The Chien estimator is a hybrid geometric heuristic that combines a radial "star-graph" component with an area-based density component. Originally designed for supply chain problems with a specific depot, it is adapted here for general TSP by treating the geometric centroid of the points as the reference center.
+
+\begin{equation}
+    \hat{T}_{Chien} = 2 \bar{D} + 0.57 \sqrt{A \cdot n}
+\end{equation}
+
+\noindent Where:
+\begin{itemize}
+    \item $\bar{D}$: The average Euclidean distance from the geometric centroid of the instance to all $n$ points.
+    \item $A$: The area of the bounding box enclosing all points ($A = \Delta x \cdot \Delta y$).
+    \item $0.57$: Empirical scaling constant derived by Chien.
+\end{itemize}
+
+% --- BIBLIOGRAPHY UPDATES ---
+\begin{thebibliography}{9}
+
+\bibitem{basel2001}
+Basel, J., \& Willemain, T. R. (2001). 
+Random tours in the traveling salesman problem: Analysis and application. 
+\textit{Computational Optimization and Applications}, 20(2), 211-217.
+
+\bibitem{chien1992}
+Chien, T. W. (1992). 
+Operational estimators for the length of a traveling salesman tour. 
+\textit{Computers \& Operations Research}, 19(6), 469-478.
+
+\end{thebibliography}
+
+\subsection{Hilbert Curve Estimator ($\hat{T}_{HC}$)}
+\textbf{Source:} Bartholdi \& Platzman (1982) \cite{bartholdi1982}.
+
+This is a constructive heuristic that maps 2D coordinates to a 1D space-filling Hilbert curve. The points are sorted according to their position on the curve $H(x,y)$, and the tour is formed by visiting points in this sorted order.
+
+\begin{equation}
+    \hat{T}_{HC} = \sum_{i=1}^{n-1} d(p_{\pi(i)}, p_{\pi(i+1)}) + d(p_{\pi(n)}, p_{\pi(1)})
+\end{equation}
+
+\noindent Where $\pi$ is the permutation index such that $H(p_{\pi(i)}) \le H(p_{\pi(i+1)})$.
+
+\noindent \textbf{Implementation Constants:}
+\begin{itemize}
+    \item Grid Resolution: $2^{16} \times 2^{16}$ ($N_{grid} = 65536$)
+\end{itemize}
+
+\section{Composite and Machine Learning Models}
+
+\subsection{Best Composite Estimator ($\hat{T}_{BCE}$)}
+This estimator combines multiple classical heuristics based on the problem size $n$ to balance speed and accuracy, bounded by the MST.
+
+\begin{equation}
+    \hat{T}_{BCE} = \max(L_{MST}, \min(2 L_{MST}, \hat{T}_{select}))
+\end{equation}
+
+\noindent \textbf{Switching Logic:}
+\begin{itemize}
+    \item $n \le 10$: Held-Karp (Exact) \cite{held1962}
+    \item $10 < n < 100$: $\hat{T}_{VS}$ (Vinel \& Silva)
+    \item $n \ge 100$: $\hat{T}_{CS}$ (Çavdar \& Sokol)
+\end{itemize}
+
+\subsection{CMLA Estimator ($\hat{T}_{CMLA}$)}
+The CMLA (Composite Machine Learning Alpha) framework utilizes a trained regressor (Gradient Boosted Trees or Neural Networks) to predict the specific ratio ($\alpha$) between the optimal tour and the MST for a given instance.
+
+\begin{equation}
+    \hat{T}_{CMLA} = \hat{\alpha}(X_{feat}) \cdot L_{MST}
+\end{equation}
+
+\noindent Where $X_{feat}$ includes geometric, topological (MST), and distribution features. The model learns the correction factor $\alpha \in [1.0, 2.0]$ required to transform the MST length into the TSP length.
+\begin{longtable}{p{4cm} p{2.5cm} p{8.5cm}}
+\toprule
+\textbf{Feature Name} & \textbf{Complexity} & \textbf{Description \& Theoretical Basis} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Feature Name} & \textbf{Complexity} & \textbf{Description \& Theoretical Basis} \\
+\midrule
+\endhead
+
+\multicolumn{3}{c}{\textbf{Group 1: Basic Descriptors}} \\
+\midrule
+\texttt{n\_customers} & $O(1)$ & The number of nodes ($N$) in the instance. Primary scaling factor for path length as defined by the BHH Theorem \cite{beardwood1959}. \\
+\texttt{dimension} & $O(1)$ & The Euclidean dimension ($d$) of the coordinate space. Determines the asymptotic constant $\beta_d$ in the BHH formula. \\
+\midrule
+
+\multicolumn{3}{c}{\textbf{Group 2: Geometric Spread (BHH Proxies)}} \\
+\midrule
+\texttt{bounding\_hypervolume} & $O(N \cdot d)$ & The volume of the hyper-rectangle bounding the points. Used as a computationally cheap proxy for the Convex Hull volume $V$ required by the BHH Theorem \cite{beardwood1959}. \\
+\texttt{node\_density} & $O(1)$ & The density of points within the bounding box ($N / V_{box}$). Proxy for the spatial intensity $\rho(x)$ used in asymptotic analysis. \\
+\texttt{aspect\_ratio} & $O(N \cdot d)$ & Ratio of the largest dimension extent to the smallest. Indicates if the instance is "narrow" or "strip-like," which affects the BHH boundary correction terms \cite{percus1996}. \\
+\texttt{centroid\_dist\_mean} & $O(N \cdot d)$ & Mean Euclidean distance from points to the geometric centroid. Measures the central tendency of the distribution. \\
+\texttt{centroid\_dist\_std} & $O(N \cdot d)$ & Standard deviation of distances to centroid. Indicates dispersion (e.g., uniform vs. clustered around center). \\
+\texttt{centroid\_dist\_max} & $O(N \cdot d)$ & Maximum distance to centroid. Approximates the radius of the point cloud. \\
+\texttt{centroid\_dist\_iqr} & $O(N \cdot d)$ & Interquartile range of distances to centroid. A robust measure of dispersion unaffected by outliers. \\
+\midrule
+
+\multicolumn{3}{c}{\textbf{Group 3: Topological Structure (MST Proxies)}} \\
+\midrule
+\texttt{mst\_total\_length} & $O(N^2 \cdot d)$ & The sum of all edge weights in the Minimum Spanning Tree. Steele \cite{steele1987} proved this is strictly proportional to $L_{TSP}$ ($L_{TSP} \approx \rho \cdot L_{MST}$), making it the single strongest predictor. \\
+\texttt{mst\_edge\_mean} & $O(N)$ & The average weight of an edge in the MST. Represents the characteristic local spacing between neighbors. \\
+\texttt{mst\_edge\_std} & $O(N)$ & Standard deviation of MST edge weights. High values indicate variable density (e.g., clusters separated by voids). \\
+\texttt{mst\_edge\_skew} & $O(N)$ & Skewness of the edge weight distribution. Positive skew indicates a few very long edges (outliers). \\
+\texttt{mst\_edge\_kurtosis} & $O(N)$ & Kurtosis of edge weights. Measures the "tailedness" of the local distance distribution. \\
+\texttt{mst\_edge\_max} & $O(N)$ & The longest single edge in the MST. Often corresponds to the "bottleneck" distance between distinct clusters. \\
+\texttt{mst\_edge\_q10} & $O(N \log N)$ & 10th percentile of edge weights. Represents very short connections within dense sub-clusters. \\
+\texttt{mst\_edge\_q25} & $O(N \log N)$ & 25th percentile of MST edge weights. \\
+\texttt{mst\_edge\_q50} & $O(N \log N)$ & Median MST edge weight. Robust estimator of typical neighbor distance. \\
+\texttt{mst\_edge\_q75} & $O(N \log N)$ & 75th percentile of MST edge weights. \\
+\texttt{mst\_edge\_q90} & $O(N \log N)$ & 90th percentile of MST edge weights. Captures the transition to sparse connectivity. \\
+\texttt{mst\_degree\_mean} & $O(N)$ & Average vertex degree in the MST. For any tree, this is always $2(N-1)/N \approx 2$. Included for consistency. \\
+\texttt{mst\_degree\_std} & $O(N)$ & Standard deviation of vertex degrees. High deviation indicates "hub" nodes (star-like topology) versus "path-like" topology. \\
+\texttt{mst\_degree\_max} & $O(N)$ & Maximum vertex degree in the MST. Identifies central hubs. A high max degree correlates with a higher TSP/MST ratio. \\
+\texttt{mst\_diameter} & $O(N)$ & The length (number of edges) of the longest path in the MST. Distinguishes "stringy" graphs (high diameter) from "compact" graphs (low diameter). \\
+\texttt{large\_edge\_count} & $O(N)$ & Count of edges exceeding $\mu + \sigma$. A proxy for the number of distinct clusters or separations in the instance. \\
+\bottomrule
+\end{longtable}
+
+\section{Hyperparameter Tuning and Configuration}
+
+The LightGBM model configuration was selected to balance high model complexity with aggressive regularization. This approach allows the model to capture non-linear interactions between topological features while preventing overfitting on the geometric noise inherent in random graphs.
+
+\subsection{Hyperparameter Configuration}
+
+Table \ref{tab:hyperparams} details the optimal hyperparameters identified during the tuning process.
+
+\begin{longtable}{p{3.5cm} p{2cm} p{9cm}}
+\caption{Optimal Hyperparameter Configuration (V3)} \label{tab:hyperparams} \\
+\toprule
+\textbf{Hyperparameter} & \textbf{Value} & \textbf{Description \& Role} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{Hyperparameter} & \textbf{Value} & \textbf{Description \& Role} \\
+\midrule
+\endhead
+
+\texttt{learning\_rate} & 0.0128 & \textbf{Step Size.} A low learning rate (approx. 1.2\%) forces the model to learn slowly using thousands of trees, ensuring robust convergence and generalization. \\
+\texttt{num\_leaves} & 142 & \textbf{Tree Complexity.} Defines the maximum number of leaves per tree. While lower than the upper bound of the search space, 142 is significantly higher than the default (31), allowing the capture of complex interactions between MST structure and point density. \\
+\texttt{lambda\_l1} & $8.49 \times 10^{-8}$ & \textbf{L1 Regularization.} The optimizer converged to a negligible L1 penalty, indicating that sparsity (feature selection via lasso-style regularization) was less critical than weight smoothing for this dataset. \\
+\texttt{lambda\_l2} & 1.4318 & \textbf{L2 Regularization.} A moderate L2 penalty restricts the magnitude of leaf weights, preventing any single node from dominating predictions and reducing sensitivity to outliers. \\
+\texttt{feature\_fraction} & 0.6575 & \textbf{Column Subsampling.} Each tree is constructed using $\approx 66\%$ of the available features. This reduces correlation between trees and prevents over-reliance on dominant features like \texttt{centroid\_dist\_std}. \\
+\texttt{bagging\_fraction} & 0.4324 & \textbf{Row Subsampling.} Each tree sees only $\approx 43\%$ of the training instances. This aggressive bagging strategy significantly increases ensemble diversity and reduces variance. \\
+\texttt{bagging\_freq} & 5 & \textbf{Bagging Frequency.} Performing row subsampling (bagging) every 5 iterations. \\
+\texttt{min\_child\_samples} & 22 & \textbf{Leaf Stability.} A lower threshold for data samples per leaf allows the model to capture finer local patterns in the feature space without fitting pure noise. \\
+\texttt{n\_estimators} & 3,224 & \textbf{Number of Trees.} Determined dynamically via early stopping to minimize validation RMSE. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Tuning Methodology}
+
+The hyperparameters were optimized using **Optuna**, a Bayesian optimization framework, employing a two-stage strategy to maximize efficiency and performance.
+
+\subsubsection{Stage 1: Bayesian Optimization Search}
+The initial search focused on exploring the hyperparameter space to minimize the **Root Mean Squared Error (RMSE)** on a stratified validation set. The process involved 75 trials, exploring a wide range of values for complexity (e.g., \texttt{num\_leaves} $\in [64, 512]$) and regularization. Unpromising trials were pruned efficiently using early stopping with a patience of 100 rounds.
+
+\subsubsection{Stage 2: Final Model Refinement}
+Once the optimal hyperparameters were identified, a final refinement step was executed:
+\begin{enumerate}
+    \item \textbf{Optimal Tree Count Identification:} A temporary model was trained using the best parameters and a high ceiling for \texttt{n\_estimators} (5000). Early stopping pinpointed the validation loss stabilization point.
+    \item \textbf{Full Retraining:} The final production model was retrained on the combined dataset (Training + Validation) using the discovered hyperparameters and the optimal number of trees.
+\end{enumerate}
+
+\subsection{Model Complexity Analysis}
+
+Post-training analysis of the final estimator (V3) highlights the computational depth required to approximate the $\alpha$ constant accurately. 
+
+\begin{itemize}
+    \item \textbf{Ensemble Size:} The model converged at \textbf{3,224 trees}.
+    \item \textbf{Structural Complexity:} The ensemble contains a total of \textbf{457,808 leaves} and makes \textbf{454,584 decision splits} across the entire forest.
+    \item \textbf{Prediction Cost:} The average prediction complexity is approximately \textbf{33,148 operations} (splits) per inference. This indicates a high-fidelity model that leverages deep interaction checks to distinguish between subtle variations in graph topology.
+\end{itemize}
+
+
+
+\newpage
+% --- BIBLIOGRAPHY ---
+\begin{thebibliography}{9}
+
+\bibitem{vinel2018}
+Vinel, A., \& Silva, D. (2018). 
+A new area-based estimator for the Traveling Salesman Problem. 
+\textit{Computers \& Industrial Engineering}, 126, 691-699.
+
+\bibitem{cavdar2015}
+Çavdar, B., \& Sokol, J. (2015). 
+A new heuristic for the traveling salesperson problem. 
+\textit{Management Science Letters}, 5(5), 483-490.
+
+\bibitem{beardwood1959}
+Beardwood, J., Halton, J. H., \& Hammersley, J. M. (1959). 
+The shortest path through many points. 
+\textit{Mathematical Proceedings of the Cambridge Philosophical Society}, 55(4), 299-327.
+
+\bibitem{steele1987}
+Steele, J. M. (1987). 
+Subadditive Euclidean functionals and nonlinear growth in geometric probability. 
+\textit{Annals of Probability}, 9(3), 365-376.
+
+\bibitem{golden1979}
+Golden, B. L., \& Alt, F. B. (1979). 
+Interval estimation of the best parameter of a distribution. 
+\textit{Naval Research Logistics Quarterly}, 26(2), 325-331.
+
+\bibitem{reeves1995}
+Reeves, C. R. (1995). 
+Landscapes, operators and heuristic search. 
+\textit{Annals of Operations Research}, 55(1), 313-334.
+
+\bibitem{basel2000}
+Basel, J., \& Willemain, T. R. (2000). 
+Random tours and the traveling salesman. 
+\textit{Computers \& Operations Research}, 27(13), 1259-1266.
+
+\bibitem{bartholdi1982}
+Bartholdi, J. J., \& Platzman, L. K. (1982). 
+An O(N log N) planar traveling salesman heuristic based on spacefilling curves. 
+\textit{Operations Research Letters}, 1(4), 121-125.
+
+\bibitem{held1962}
+Held, M., \& Karp, R. M. (1962). 
+A dynamic programming approach to sequencing problems. 
+\textit{Journal of the Society for Industrial and Applied Mathematics}, 10(1), 196-210.
+
+\end{thebibliography}
+
+\end{document}
