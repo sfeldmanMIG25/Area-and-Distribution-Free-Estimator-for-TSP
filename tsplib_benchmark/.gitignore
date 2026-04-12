@@ -1,0 +1,2 @@
+# Downloaded TSPLIB instances (large, regenerable via download_tsplib.py)
+instances/*.tsp
