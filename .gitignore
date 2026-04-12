@@ -2,6 +2,6 @@
 # These files are large and can be regenerated from compressed archives
 instances/
 solutions/
-
+visualizations/
 # Keep the compressed archives (tracked via Git LFS)
 !*.zip
