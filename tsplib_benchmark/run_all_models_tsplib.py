@@ -12,9 +12,10 @@ Models tested:
   Academic:     BHH, Cavdar, Chien, Vinel, Composite, MST_Ratio, Hilbert
   Baselines:    Fixed_Alpha (optimal alpha=1.136 from TSPLIB fit)
 
-Non-Euclidean instances (GEO, ATT, EXPLICIT) use the hybrid MDS approach
-for ML models and are skipped for academic estimators (which require 2D
-Euclidean coordinates).
+For native 2D Euclidean instances, the LGBM estimator uses Delaunay
+triangulation for O(n)-edge MST construction, enabling instances up to
+n=85,900+.  Non-Euclidean instances (GEO, ATT, EXPLICIT) use hybrid MDS
+with Delaunay-accelerated MST when the MDS embedding is 2D.
 
 Usage:
     python tsplib_benchmark/run_all_models_tsplib.py [--max-n N] [--workers N]
@@ -58,6 +59,8 @@ import joblib
 # Hybrid estimation support
 from lgbm_estimator_v3 import _fast_centroid_stats, compute_mst_degrees
 from scipy.sparse.csgraph import minimum_spanning_tree
+from scipy.sparse import csr_matrix
+from scipy.spatial import Delaunay
 from scipy import stats
 from collections import deque
 
@@ -116,9 +119,35 @@ def _hybrid_estimate_generic(estimator, original_dist_matrix, mds_coords, d_feat
     feats["centroid_dist_iqr"] = float(np.subtract(*np.percentile(c_raw, [75, 25])))
 
     # MST features from ORIGINAL distance matrix
-    D = original_dist_matrix.astype(np.float64)
-    np.fill_diagonal(D, 0)
-    mst_csr = minimum_spanning_tree(D)
+    # Use Delaunay triangulation for 2D embeddings (O(n) edges vs O(n^2))
+    if d_feat == 2 and n >= 4:
+        try:
+            tri = Delaunay(coords)
+            edges_set = set()
+            for simplex in tri.simplices:
+                for ii in range(3):
+                    for jj in range(ii + 1, 3):
+                        a, b = simplex[ii], simplex[jj]
+                        if a > b:
+                            a, b = b, a
+                        edges_set.add((a, b))
+            rows_d, cols_d, dists_d = [], [], []
+            for a, b in edges_set:
+                # Use original distance matrix for edge weights (preserves true scale)
+                dist_ab = float(original_dist_matrix[a, b])
+                rows_d.append(a); cols_d.append(b); dists_d.append(dist_ab)
+                rows_d.append(b); cols_d.append(a); dists_d.append(dist_ab)
+            sparse_graph = csr_matrix((dists_d, (rows_d, cols_d)), shape=(n, n))
+            mst_csr = minimum_spanning_tree(sparse_graph)
+        except Exception:
+            # Fallback to dense matrix if Delaunay fails
+            D = original_dist_matrix.astype(np.float64)
+            np.fill_diagonal(D, 0)
+            mst_csr = minimum_spanning_tree(D)
+    else:
+        D = original_dist_matrix.astype(np.float64)
+        np.fill_diagonal(D, 0)
+        mst_csr = minimum_spanning_tree(D)
     edges = mst_csr.data
     mst_len = float(np.sum(edges))
 
@@ -326,7 +355,7 @@ def run_benchmark(max_n=None, workers=None):
         # 1. ML models (work on all instances via hybrid)
         for model_name, model_obj in ml_models.items():
             # GART 1.0 only works on 2D Euclidean; skip large instances (dense MST)
-            if model_name == "GART_1.0" and (not is_2d or n > 2000):
+            if model_name == "GART_1.0" and (not is_2d or n > 5000):
                 continue
 
             try:
@@ -367,6 +396,7 @@ def run_benchmark(max_n=None, workers=None):
                     "concorde_time_s": concorde_t,
                     "speedup_vs_concorde": speedup,
                     "mode": "native" if is_native else "hybrid",
+                    "feature_dim": mds_dim if not is_native else (coords_2d.shape[1] if coords_2d is not None else 2),
                 })
             except Exception as exc:
                 print(f"  {model_name} FAILED on {name}: {exc}")
@@ -392,10 +422,11 @@ def run_benchmark(max_n=None, workers=None):
                 "concorde_time_s": concorde_times.get(name, None),
                 "speedup_vs_concorde": None,
                 "mode": "native" if is_native else "hybrid",
+                "feature_dim": mds_dim if not is_native else (coords_2d.shape[1] if coords_2d is not None else 2),
             })
 
-        # 3. Academic estimators (2D Euclidean only, skip for n>2000 to avoid O(n^2) blowup)
-        if is_2d and coords_2d is not None and n <= 2000:
+        # 3. Academic estimators (2D Euclidean only, skip for n>5000 to avoid O(n^2) blowup)
+        if is_2d and coords_2d is not None and n <= 5000:
             for est_name, est_func in academic_estimators.items():
                 try:
                     t0 = time.perf_counter()
@@ -423,13 +454,13 @@ def run_benchmark(max_n=None, workers=None):
                         "concorde_time_s": concorde_t,
                         "speedup_vs_concorde": speedup,
                         "mode": "native",
+                        "feature_dim": 2,  # academic estimators are 2D native only
                     })
                 except Exception as exc:
                     print(f"  {est_name} FAILED on {name}: {exc}")
 
-    # --- Save results ---
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_path = RESULTS_DIR / f"all_models_tsplib_{ts}.csv"
+    # --- Save results (fixed filename, overwrites previous run) ---
+    out_path = RESULTS_DIR / "all_models_tsplib.csv"
     df = pd.DataFrame(results)
     df.to_csv(out_path, index=False)
     print(f"\nSaved {len(df)} results to {out_path}")

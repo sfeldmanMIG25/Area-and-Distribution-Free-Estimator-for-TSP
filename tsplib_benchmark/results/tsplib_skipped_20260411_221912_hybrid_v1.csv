@@ -1,5 +1,0 @@
-instance,reason
-brd14051,"estimate error: Unable to allocate 753. MiB for an array with shape (197416550,) and data type float32"
-usa13509,"estimate error: Unable to allocate 174. MiB for an array with shape (13509, 13509) and data type bool"
-d15112,"estimate error: Unable to allocate 1.70 GiB for an array with shape (228357432, 1) and data type int64"
-pla85900,"estimate error: Unable to allocate 27.5 GiB for an array with shape (85900, 85900) and data type float32"

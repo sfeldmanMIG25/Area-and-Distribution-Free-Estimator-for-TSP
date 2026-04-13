@@ -3,5 +3,13 @@
 instances/
 solutions/
 visualizations/
+.claude/
+.opencode/
+.continue/
+.aider.tags.cache.v4/
+graphify-out/
+paper_reference/
+.claudeignore
+Claude
 # Keep the compressed archives (tracked via Git LFS)
 !*.zip
