@@ -127,8 +127,13 @@ def load_2d():
     return pd.read_csv(PATHS["2d_benchmark"])
 
 def load_nd():
-    """ND benchmark (94,482 rows, 18 models, d=2–5, has Concorde times)."""
-    return pd.read_csv(PATHS["nd_benchmark"])
+    """ND benchmark (185,504 rows, 22 models, d=2–100, has optimal solver times)."""
+    df = pd.read_csv(PATHS["nd_benchmark"], low_memory=False)
+    for col in ("optimal_solve_time_s", "prediction_time_s", "feature_time_s",
+                "inference_time_s", "speedup_pct"):
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+    return df
 
 def load_extended():
     """Extended-dims benchmark (10,800 rows, LGBM_V3 + MST_Ratio, d=2–100)."""
