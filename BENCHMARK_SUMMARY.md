@@ -1,7 +1,7 @@
-# GART 3.0 Benchmark Summary
+# GART 2.0 Benchmark Summary
 
 ## Overview
-GART 3.0 (LGBM_V3) was benchmarked on three datasets against classical TSP tour-length estimators.
+GART 2.0 (LGBM_V3) was benchmarked on three datasets against classical TSP tour-length estimators.
 All results compare predicted tour length against verified optimal solutions (Concorde / LKH-3).
 
 ---
@@ -12,7 +12,7 @@ All results compare predicted tour length against verified optimal solutions (Co
 
 | Model | MAPE (%) | R^2 |
 |-------|----------|-----|
-| **GART 3.0** | **3.23** | **0.998** |
+| **GART 2.0** | **3.23** | **0.998** |
 | MST Ratio | 12.45 | 0.992 |
 | Cavdar | 19.82 | 0.909 |
 | BHH | 23.82 | 0.943 |
@@ -37,7 +37,7 @@ All results compare predicted tour length against verified optimal solutions (Co
 
 | Model | MAPE (%) |
 |-------|----------|
-| **GART 3.0** | **0.92** |
+| **GART 2.0** | **0.92** |
 | MST Ratio | 9.25 |
 | GART 1.0 | 11.85 |
 | Hilbert | 29.12 |
@@ -45,7 +45,7 @@ All results compare predicted tour length against verified optimal solutions (Co
 | Chien | 57.14 |
 | BHH | 62.61 |
 
-### GART 3.0 by Dimension x Size
+### GART 2.0 by Dimension x Size
 | Size | d=2 | d=3 | d=4 | d=5 |
 |------|-----|-----|-----|-----|
 | [5, 30] | 2.56% | 2.18% | 2.48% | 2.38% |
@@ -71,7 +71,7 @@ All results compare predicted tour length against verified optimal solutions (Co
 
 | Model | Instances | MAPE (%) |
 |-------|-----------|----------|
-| **GART 3.0** | **111** | **5.45** |
+| **GART 2.0** | **111** | **5.45** |
 | MST Ratio | 72 | 5.63 |
 | GART 1.0 | 72 | 8.33 |
 | Cavdar | 72 | 23.09 |
@@ -101,7 +101,7 @@ All results compare predicted tour length against verified optimal solutions (Co
 
 ## Key Findings
 
-1. **GART 3.0 is the most accurate estimator** across all three benchmarks, beating classical methods by 6-68x in MAPE
+1. **GART 2.0 is the most accurate estimator** across all three benchmarks, beating classical methods by 6-68x in MAPE
 2. **Dimensional robustness**: sub-1% MAPE across d=2 to d=5; classical methods degrade to 30-63%
 3. **Scalability**: 300-3000x faster than Concorde for n >= 500, sub-second prediction
 4. **Non-Euclidean capability**: only estimator validated on full TSPLIB95 including GEO/EXPLICIT via MDS embedding

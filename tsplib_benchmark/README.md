@@ -1,8 +1,8 @@
-# TSPLIB95 Benchmark for GART 3.0
+# TSPLIB95 Benchmark for GART 2.0
 
-This module evaluates the GART 3.0 (LGBM V3) estimator against the full
+This module evaluates the GART 2.0 (LGBM V3) estimator against the full
 TSPLIB95 symmetric TSP benchmark library (Reinelt, 1991). It tests whether
-GART 3.0 — trained exclusively on synthetic instances — generalizes to
+GART 2.0 — trained exclusively on synthetic instances — generalizes to
 real-world and structured problem instances with known optimal solutions.
 
 ## Directory structure
@@ -84,7 +84,7 @@ class that no Euclidean embedding can faithfully represent.
 
 **EUC_2D performance is strong.** At 3.45% MAPE across 78 instances spanning
 n=14 to n=18512, the model trained on synthetic data generalizes well to
-real-world Euclidean instances. The positive bias suggests GART 3.0 slightly
+real-world Euclidean instances. The positive bias suggests GART 2.0 slightly
 overestimates — a conservative property useful for planning applications.
 Extrapolation beyond n=1000 (the training cap) adds only ~1% MAPE.
 

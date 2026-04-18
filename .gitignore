@@ -10,7 +10,6 @@ visualizations/
 graphify-out/
 .graphify_*
 .graphify/
-paper_reference/
 .claude/
 .claudeignore
 Claude

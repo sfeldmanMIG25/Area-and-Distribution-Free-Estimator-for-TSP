@@ -1,4 +1,4 @@
-# LGBM V3 (GART 3.0) - LightGBM Alpha Estimator
+# LGBM V3 (GART 2.0) - LightGBM Alpha Estimator
 
 The primary model for TSP tour length estimation. Predicts an adjustment
 coefficient alpha = optimal_cost / MST_length, enabling fast tour length

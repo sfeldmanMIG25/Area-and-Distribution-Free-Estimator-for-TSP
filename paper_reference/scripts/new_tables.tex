@@ -1,0 +1,285 @@
+======================================================================
+TABLE: tab:2d_by_size
+======================================================================
+\begin{table}[!ht]
+\centering
+\caption{2D diverse benchmark by instance size (2{,}580 instances). The \textit{Optimal solver} row shows mean wall-clock time of the ground-truth solver per bucket (\textsc{Concorde} or \textsc{LKH-3}, whichever produced the training tour).}
+\label{tab:2d_by_size}
+\resizebox{\textwidth}{!}{%
+\footnotesize
+\begin{tabular}{@{}ll rrrrrrr@{}}
+\toprule
+$n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) \\
+\midrule
+    \multirow{7}{*}{$[5,10]$}
+    & GART 2.0 & 360 & \textbf{4.53} & \textbf{5.52} & 3.80 & 0.993 & 0.936 & 132 \\
+    & MST Ratio & 360 & 28.95 & 9.98 & 29.17 & 0.785 & --- & 9.84 \\
+    & Cavdar & 360 & 17.37 & 14.23 & 13.18 & 0.904 & --- & 6.67 \\
+    & BHH & 360 & 59.32 & 9.72 & 57.70 & 0.203 & --- & 7.81 \\
+    & Chien & 360 & 25.81 & 7.22 & 26.24 & 0.842 & --- & 1.14 \\
+    & Hilbert & 360 & 8.35 & 8.83 & 5.79 & 0.965 & --- & 3.63 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.8\times 10^{2}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[11,50]$}
+    & GART 2.0 & 480 & \textbf{4.18} & \textbf{5.86} & 2.77 & 0.994 & 0.925 & 133 \\
+    & MST Ratio & 480 & 15.16 & 9.65 & 13.63 & 0.949 & --- & 15.2 \\
+    & Cavdar & 480 & 12.73 & 16.26 & 8.45 & 0.943 & --- & 8.85 \\
+    & BHH & 480 & 28.38 & 9.27 & 27.64 & 0.817 & --- & 8.94 \\
+    & Chien & 480 & 19.64 & 18.66 & 17.88 & 0.888 & --- & 1.29 \\
+    & Hilbert & 480 & 27.18 & 10.36 & 26.95 & 0.804 & --- & 3.04 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.2\times 10^{2}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[51,100]$}
+    & GART 2.0 & 630 & \textbf{3.57} & \textbf{5.53} & 2.05 & 0.995 & 0.915 & 173 \\
+    & MST Ratio & 630 & 11.45 & 8.59 & 9.34 & 0.975 & --- & 29.4 \\
+    & Cavdar & 630 & 19.07 & 29.37 & 7.45 & 0.897 & --- & 8.59 \\
+    & BHH & 630 & 16.22 & 13.07 & 14.98 & 0.912 & --- & 11.0 \\
+    & Chien & 630 & 23.38 & 30.71 & 16.69 & 0.853 & --- & 0.56 \\
+    & Hilbert & 630 & 34.23 & 9.81 & 34.08 & 0.734 & --- & 3.87 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $4.3\times 10^{2}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[101,200]$}
+    & GART 2.0 & 120 & \textbf{2.86} & \textbf{5.01} & 1.30 & 0.996 & 0.929 & 196 \\
+    & MST Ratio & 120 & 8.31 & 7.03 & 6.72 & 0.989 & --- & 32.7 \\
+    & Cavdar & 120 & 18.70 & 40.86 & 3.36 & 0.911 & --- & 7.86 \\
+    & BHH & 120 & 11.82 & 20.14 & 6.85 & 0.946 & --- & 10.2 \\
+    & Chien & 120 & 25.75 & 42.76 & 15.23 & 0.853 & --- & 0.30 \\
+    & Hilbert & 120 & 36.61 & 10.44 & 36.48 & 0.717 & --- & 7.39 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.8\times 10^{3}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[201,500]$}
+    & GART 2.0 & 380 & \textbf{2.48} & \textbf{4.21} & 1.14 & 0.997 & 0.897 & 215 \\
+    & MST Ratio & 380 & 7.19 & 6.04 & 5.94 & 0.992 & --- & 82.9 \\
+    & Cavdar & 380 & 26.11 & 55.53 & 3.21 & 0.867 & --- & 14.3 \\
+    & BHH & 380 & 15.35 & 32.00 & 4.26 & 0.928 & --- & 9.72 \\
+    & Chien & 380 & 30.90 & 55.96 & 14.49 & 0.823 & --- & 5.74 \\
+    & Hilbert & 380 & 38.59 & 9.93 & 38.21 & 0.717 & --- & 39.0 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $6.1\times 10^{3}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[501,1000]$}
+    & GART 2.0 & 610 & \textbf{1.92} & \textbf{3.16} & 0.95 & 0.997 & 0.912 & 424 \\
+    & MST Ratio & 610 & 5.71 & 4.54 & 5.00 & 0.994 & --- & 237 \\
+    & Cavdar & 610 & 23.93 & 58.49 & 3.39 & 0.872 & --- & 25.3 \\
+    & BHH & 610 & 14.75 & 33.62 & 5.08 & 0.931 & --- & 15.9 \\
+    & Chien & 610 & 29.90 & 59.29 & 14.07 & 0.823 & --- & 14.0 \\
+    & Hilbert & 610 & 38.24 & 11.16 & 38.21 & 0.728 & --- & 93.9 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $3.5\times 10^{4}$~ms \\
+    \midrule
+    \multirow{7}{*}{\textbf{TOTAL}}
+    & \textbf{GART 2.0} & \textbf{2{,}580} & \textbf{3.23} & \textbf{4.94} & \textbf{1.73} & \textbf{0.998} & \textbf{0.937} & \textbf{226} \\
+    & MST Ratio & 2{,}580 & 12.45 & 11.05 & 8.16 & 0.992 & --- & 81.1 \\
+    & Cavdar & 2{,}580 & 19.82 & 42.03 & 6.13 & 0.909 & --- & 13.1 \\
+    & BHH & 2{,}580 & 23.82 & 32.04 & 15.55 & 0.943 & --- & 11.1 \\
+    & Chien & 2{,}580 & 25.78 & 42.55 & 17.25 & 0.874 & --- & 4.71 \\
+    & Hilbert & 2{,}580 & 31.01 & 14.23 & 34.99 & 0.801 & --- & 30.3 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $9.5\times 10^{3}$~ms \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+======================================================================
+TABLE: tab:nd_by_size
+======================================================================
+\begin{table}[!ht]
+\centering
+\caption{ND benchmark by instance size (16{,}907 instances). Same data as Table~\ref{tab:nd_by_dim}. \textit{Optimal solver} row = mean \textsc{Concorde}/\textsc{LKH-3} wall time per bucket.}
+\label{tab:nd_by_size}
+\resizebox{\textwidth}{!}{%
+\footnotesize
+\begin{tabular}{@{}ll rrrrrrr@{}}
+\toprule
+$n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) \\
+\midrule
+    \multirow{4}{*}{$[5,10]$}
+    & GART 2.0 & 4{,}227 & \textbf{1.36} & \textbf{1.90} & 0.99 & 1.000 & 0.971 & 211 \\
+    & MST Ratio & 4{,}227 & 18.89 & 5.44 & 17.89 & 0.966 & --- & 13.3 \\
+    & Hilbert & 4{,}227 & 8.11 & 7.45 & 5.75 & 0.995 & --- & 31.3 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.6\times 10^{2}$~ms \\
+    \midrule
+    \multirow{4}{*}{$[11,50]$}
+    & GART 2.0 & 2{,}816 & \textbf{0.88} & \textbf{1.17} & 0.73 & 1.000 & 0.965 & 235 \\
+    & MST Ratio & 2{,}816 & 7.45 & 2.89 & 6.94 & 0.996 & --- & 34.5 \\
+    & Hilbert & 2{,}816 & 19.59 & 12.35 & 15.60 & 0.981 & --- & 75.7 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.2\times 10^{2}$~ms \\
+    \midrule
+    \multirow{4}{*}{$[51,100]$}
+    & GART 2.0 & 3{,}522 & \textbf{0.66} & \textbf{0.79} & 0.58 & 1.000 & 0.979 & 271 \\
+    & MST Ratio & 3{,}522 & 5.33 & 2.13 & 4.80 & 0.998 & --- & 56.8 \\
+    & Hilbert & 3{,}522 & 24.38 & 14.10 & 20.18 & 0.973 & --- & 147 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.0\times 10^{2}$~ms \\
+    \midrule
+    \multirow{4}{*}{$[101,200]$}
+    & GART 2.0 & 703 & \textbf{0.55} & \textbf{0.63} & 0.47 & 1.000 & 0.986 & 338 \\
+    & MST Ratio & 703 & 4.44 & 1.74 & 4.12 & 0.999 & --- & 95.0 \\
+    & Hilbert & 703 & 27.03 & 13.60 & 23.40 & 0.965 & --- & 311 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $3.7\times 10^{2}$~ms \\
+    \midrule
+    \multirow{4}{*}{$[201,500]$}
+    & GART 2.0 & 2{,}115 & \textbf{0.50} & \textbf{0.56} & 0.39 & 1.000 & 0.987 & 388 \\
+    & MST Ratio & 2{,}115 & 4.06 & 1.50 & 3.80 & 0.999 & --- & 152 \\
+    & Hilbert & 2{,}115 & 28.26 & 12.75 & 26.22 & 0.960 & --- & 477 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.4\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$[501,1000]$}
+    & GART 2.0 & 3{,}524 & \textbf{0.48} & \textbf{0.54} & 0.31 & 1.000 & 0.986 & 570 \\
+    & MST Ratio & 3{,}524 & 3.82 & 1.32 & 3.63 & 0.999 & --- & 426 \\
+    & Hilbert & 3{,}524 & 29.97 & 12.77 & 28.71 & 0.953 & --- & 2056 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $6.9\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{\textbf{TOTAL}}
+    & \textbf{GART 2.0} & \textbf{16{,}907} & \textbf{0.81} & \textbf{1.17} & \textbf{0.63} & \textbf{1.000} & \textbf{0.989} & \textbf{330} \\
+    & MST Ratio & 16{,}907 & 8.56 & 6.89 & 5.61 & 0.999 & --- & 133 \\
+    & Hilbert & 16{,}907 & 21.28 & 14.55 & 16.22 & 0.962 & --- & 552 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.7\times 10^{3}$~ms \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+======================================================================
+TABLE: tab:nd_by_dim
+======================================================================
+\begin{table}[!ht]
+\centering
+\caption{ND benchmark by dimension. Same 16{,}907 instances as Table~\ref{tab:nd_by_size}. $d = 100$ is outside the training range (extrapolation). \textit{Optimal solver} row shows mean \textsc{Concorde}/\textsc{LKH-3} wall time.}
+\label{tab:nd_by_dim}
+\resizebox{\textwidth}{!}{%
+\footnotesize
+\begin{tabular}{@{}ll rrrrrrr@{}}
+\toprule
+$d$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) \\
+\midrule
+    \multirow{4}{*}{$d=2$}
+    & GART 2.0 & 647 & \textbf{1.82} & \textbf{2.75} & 0.99 & 1.000 & 0.977 & 317 \\
+    & MST Ratio & 647 & 13.19 & 10.69 & 8.95 & 0.995 & --- & 98.0 \\
+    & Hilbert & 647 & 30.36 & 16.40 & 35.31 & 0.804 & --- & 82.8 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $6.3\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$d=3$--$5$}
+    & GART 2.0 & 1{,}941 & \textbf{1.16} & \textbf{1.83} & 0.64 & 1.000 & 0.981 & 319 \\
+    & MST Ratio & 1{,}941 & 11.72 & 8.06 & 8.02 & 0.996 & --- & 97.6 \\
+    & Hilbert & 1{,}941 & 35.53 & 15.82 & 39.96 & 0.737 & --- & 105 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $2.8\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$d=6$--$10$}
+    & GART 2.0 & 3{,}240 & \textbf{0.83} & \textbf{1.28} & 0.48 & 1.000 & 0.986 & 323 \\
+    & MST Ratio & 3{,}240 & 10.27 & 6.64 & 7.19 & 0.997 & --- & 103 \\
+    & Hilbert & 3{,}240 & 32.78 & 14.34 & 36.20 & 0.789 & --- & 157 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.8\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$d=15$--$25$}
+    & GART 2.0 & 1{,}944 & \textbf{0.55} & \textbf{0.84} & 0.31 & 1.000 & 0.992 & 328 \\
+    & MST Ratio & 1{,}944 & 8.72 & 6.01 & 5.70 & 0.998 & --- & 114 \\
+    & Hilbert & 1{,}944 & 24.73 & 11.81 & 26.33 & 0.846 & --- & 295 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.5\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$d=30$--$50$}
+    & GART 2.0 & 3{,}236 & \textbf{0.36} & \textbf{0.58} & 0.20 & 1.000 & 0.996 & 330 \\
+    & MST Ratio & 3{,}236 & 7.63 & 5.90 & 4.60 & 0.999 & --- & 127 \\
+    & Hilbert & 3{,}236 & 17.14 & 7.98 & 18.13 & 0.924 & --- & 494 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.2\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{$d=100^{*}$}
+    & GART 2.0 & 5{,}899 & \textbf{0.90} & \textbf{0.50} & 0.89 & 1.000 & 0.997 & 339 \\
+    & MST Ratio & 5{,}899 & 6.54 & 5.93 & 3.43 & 0.999 & --- & 173 \\
+    & Hilbert & 5{,}899 & 10.40 & 4.60 & 11.08 & 0.971 & --- & 1084 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.2\times 10^{3}$~ms \\
+    \midrule
+    \multirow{4}{*}{\textbf{TOTAL}}
+    & \textbf{GART 2.0} & \textbf{16{,}907} & \textbf{0.81} & \textbf{1.17} & \textbf{0.63} & \textbf{1.000} & \textbf{0.989} & \textbf{330} \\
+    & MST Ratio & 16{,}907 & 8.56 & 6.89 & 5.61 & 0.999 & --- & 133 \\
+    & Hilbert & 16{,}907 & 21.28 & 14.55 & 16.22 & 0.962 & --- & 552 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.7\times 10^{3}$~ms \\
+\bottomrule
+\multicolumn{9}{l}{\footnotesize $^{*}$ $d = 100$ is outside the training range; included to test extrapolation.}
+\end{tabular}%
+}
+\end{table}
+[info] loaded fresh solver times from solver_wall_times.csv: {'$[51,150]$': np.float64(0.6564512608695652), '$[151,400]$': np.float64(3.6127672499999997), '$[401,1500]$': np.float64(21.7276151)}
+
+======================================================================
+TABLE: tab:tsplib_by_size
+======================================================================
+\begin{table}[!ht]
+\centering
+\caption{TSPLIB95 EUC\_2D benchmark by instance size (78 instances, four balanced buckets). \textit{Optimal solver} row shows the faster of \textsc{Concorde} and \textsc{LKH-3} (when both find the same optimum) per bucket, measured on this machine for $n \le 1000$; larger buckets use the training-pipeline records (\textsc{Concorde} where available).}
+\label{tab:tsplib_by_size}
+\resizebox{\textwidth}{!}{%
+\footnotesize
+\begin{tabular}{@{}ll rrrrrrr@{}}
+\toprule
+$n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) \\
+\midrule
+    \multirow{7}{*}{$[51,150]$}
+    & GART 2.0 & 23 & \textbf{2.83} & \textbf{3.21} & 1.71 & 0.996 & 0.704 & 9.33 \\
+    & MST Ratio & 23 & 6.93 & 3.97 & 6.12 & 0.978 & --- & 0.93 \\
+    & Cavdar & 23 & 10.00 & 14.05 & 6.44 & 0.936 & --- & 0.71 \\
+    & BHH & 23 & 16.09 & 15.64 & 13.59 & 0.958 & --- & 0.73 \\
+    & Chien & 23 & 18.45 & 14.25 & 17.84 & 0.948 & --- & 0.11 \\
+    & Hilbert & 23 & 39.91 & 11.20 & 38.92 & 0.758 & --- & 0.72 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $6.6\times 10^{2}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[151,400]$}
+    & GART 2.0 & 16 & \textbf{2.89} & \textbf{3.13} & 2.50 & 0.997 & 0.841 & 18.4 \\
+    & MST Ratio & 16 & 5.94 & 5.09 & 4.93 & 0.986 & --- & 4.45 \\
+    & Cavdar & 16 & 19.60 & 25.98 & 11.29 & 0.577 & --- & 0.66 \\
+    & BHH & 16 & 16.06 & 22.55 & 6.53 & 0.793 & --- & 0.87 \\
+    & Chien & 16 & 21.22 & 25.08 & 16.22 & 0.860 & --- & 0.14 \\
+    & Hilbert & 16 & 44.39 & 7.04 & 42.42 & 0.596 & --- & 1.61 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $3.6\times 10^{3}$~ms \\
+    \midrule
+    \multirow{7}{*}{$[401,1500]$}
+    & GART 2.0 & 20 & \textbf{3.60} & \textbf{3.82} & 2.25 & 0.999 & 0.666 & 34.5 \\
+    & MST Ratio & 20 & 4.85 & 3.42 & 5.65 & 0.993 & --- & 102 \\
+    & Cavdar & 20 & 28.84 & 35.99 & 14.19 & 0.825 & --- & 1.11 \\
+    & BHH & 20 & 34.04 & 47.92 & 14.70 & 0.831 & --- & 1.57 \\
+    & Chien & 20 & 30.75 & 43.25 & 18.33 & 0.943 & --- & 0.43 \\
+    & Hilbert & 20 & 48.57 & 10.54 & 46.95 & 0.278 & --- & 5.99 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $2.2\times 10^{4}$~ms \\
+    \midrule
+    \multirow{7}{*}{$n > 1500$}
+    & GART 2.0 & 19 & \textbf{4.47} & \textbf{3.19} & 3.50 & 1.000 & 0.486 & 87.5 \\
+    & MST Ratio & 19 & 2.93 & 3.43 & 2.21 & 0.998 & --- & 588 \\
+    & Cavdar & 19 & 35.25 & 52.32 & 18.58 & 0.821 & --- & 4.57 \\
+    & BHH & 19 & 34.45 & 49.12 & 25.11 & 0.872 & --- & 4.48 \\
+    & Chien & 19 & 26.16 & 42.99 & 13.70 & 0.930 & --- & 3.07 \\
+    & Hilbert & 19 & 48.76 & 14.08 & 49.11 & 0.597 & --- & 63.3 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $1.3\times 10^{9}$~ms \\
+    \midrule
+    \multirow{7}{*}{\textbf{TOTAL}}
+    & \textbf{GART 2.0} & \textbf{78} & \textbf{3.44} & \textbf{3.50} & \textbf{2.37} & \textbf{1.000} & \textbf{0.727} & \textbf{36.7} \\
+    & MST Ratio & 78 & 5.22 & 4.51 & 4.96 & 0.998 & --- & 171 \\
+    & Cavdar & 78 & 22.95 & 36.06 & 11.44 & 0.832 & --- & 1.74 \\
+    & BHH & 78 & 25.16 & 40.48 & 13.41 & 0.880 & --- & 1.89 \\
+    & Chien & 78 & 24.05 & 35.60 & 16.84 & 0.934 & --- & 0.92 \\
+    & Hilbert & 78 & 45.20 & 11.76 & 44.60 & 0.623 & --- & 17.5 \\
+    & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $5.9\times 10^{8}$~ms \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+======================================================================
+TABLE: tab:tsplib_nonEuc
+======================================================================
+\begin{table}[!ht]
+\centering
+\caption{GART 2.0 on non-Euclidean TSPLIB95 (32 instances). $r_\alpha$ = Pearson correlation; undefined when $N < 3$ (ATT). Embedded dimension $k$ chosen by MDS variance retention. \textsc{Concorde} is inapplicable to non-Euclidean distance types; solver time is unavailable.}
+\label{tab:tsplib_nonEuc}
+\resizebox{\textwidth}{!}{%
+\footnotesize
+\begin{tabular}{@{}l r r r r r r c@{}}
+\toprule
+Distance type & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $r_\alpha$ & Time (ms) & Embed.\ $k$ (avg [range]) \\
+\midrule
+CEIL\_2D & 4 & 7.11 & 5.66 & 6.96 & $-0.323$ & 581 & 2 [2,2] \\
+ATT & 2 & 4.40 & 0.83 & 4.40 & --- & 16.6 & 53 [6,100] \\
+GEO & 10 & 4.44 & 2.61 & 4.95 & 0.971 & 16.5 & 16 [2,61] \\
+EXPLICIT-metric & 16 & 5.94 & 5.85 & 5.19 & 0.838 & 12.3 & 37 [8,100] \\
+\midrule
+\textbf{TOTAL} & \textbf{32} & \textbf{5.52} & \textbf{5.74} & \textbf{5.12} & \textbf{0.857} & \textbf{84.9} & --- \\\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

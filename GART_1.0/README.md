@@ -12,5 +12,5 @@ LGBM model with the V1 feature set (2D-only, fewer features).
 ## Notes
 
 This model is retained for backward compatibility and benchmark comparisons.
-GART 3.0 (lgbm_model_v3) supersedes it with a dimension-agnostic feature set
+GART 2.0 (lgbm_model_v3) supersedes it with a dimension-agnostic feature set
 and improved accuracy.
