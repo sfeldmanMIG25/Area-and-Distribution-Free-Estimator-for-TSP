@@ -8,8 +8,25 @@ visualizations/
 .continue/
 .aider.tags.cache.v4/
 graphify-out/
+.graphify_*
+.graphify/
 paper_reference/
+.claude/
 .claudeignore
 Claude
+
+# LaTeX build artifacts (kept in paper_reference/ during authoring)
+paper_reference/*.aux
+paper_reference/*.log
+paper_reference/*.out
+paper_reference/*.bbl
+paper_reference/*.blg
+paper_reference/*.toc
+paper_reference/*.lof
+paper_reference/*.lot
+paper_reference/*.fls
+paper_reference/*.fdb_latexmk
+paper_reference/*.synctex.gz
+paper_reference/_minted-*
 # Keep the compressed archives (tracked via Git LFS)
 !*.zip
