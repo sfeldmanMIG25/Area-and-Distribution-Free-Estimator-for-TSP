@@ -12,8 +12,8 @@ graphify-out/
 .graphify/
 .claude/
 .claudeignore
-Claude
-
+Claude/
+logs/
 # LaTeX build artifacts (kept in paper_reference/ during authoring)
 paper_reference/*.aux
 paper_reference/*.log
