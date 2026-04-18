@@ -10,7 +10,9 @@ import pandas as pd
 import numpy as np
 import joblib
 import lightgbm as lgb
-import optuna
+# optuna is only required when retuning hyperparameters. We reuse the committed
+# best_params_v3.json when present, so the import is deferred to the branch
+# that actually needs it.
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
 import json
@@ -166,30 +168,35 @@ if __name__ == '__main__':
             categorical_features
         ) = preprocess_result
         
-        print(f"\n--- 2. Running Optuna Hyperparameter Tuning ({OPTUNA_N_TRIALS} trials) ---")
-        # Optuna verbosity
-        optuna.logging.set_verbosity(optuna.logging.INFO)
-        
-        objective_func = lambda trial: optuna_objective(
-            trial, X_train, y_train, X_val, y_val, categorical_features
-        )
-        
-        study = optuna.create_study(direction="minimize")
-        study.optimize(objective_func, n_trials=OPTUNA_N_TRIALS, show_progress_bar=True)
-        
-        print(f"\nOptuna tuning complete. Best RMSE: {study.best_value:.6f}")
-        print("Best parameters found:")
-        print(study.best_params)
+        # Reuse the committed best_params_v3.json when present (skip Optuna).
+        # Retraining against a regenerated feature CSV should not re-do the
+        # hyperparameter search — the committed params are authoritative.
+        if os.path.exists(PARAMS_OUTPUT_FILE):
+            print(f"\n--- 2. Loading committed best params from {PARAMS_OUTPUT_FILE} (skipping Optuna) ---")
+            with open(PARAMS_OUTPUT_FILE, 'r') as f:
+                best_params = json.load(f)
+            print("Loaded parameters:")
+            print(best_params)
+        else:
+            import optuna  # only needed when retuning
+            print(f"\n--- 2. Running Optuna Hyperparameter Tuning ({OPTUNA_N_TRIALS} trials) ---")
+            optuna.logging.set_verbosity(optuna.logging.INFO)
+            objective_func = lambda trial: optuna_objective(
+                trial, X_train, y_train, X_val, y_val, categorical_features
+            )
+            study = optuna.create_study(direction="minimize")
+            study.optimize(objective_func, n_trials=OPTUNA_N_TRIALS, show_progress_bar=True)
+            print(f"\nOptuna tuning complete. Best RMSE: {study.best_value:.6f}")
+            print("Best parameters found:")
+            print(study.best_params)
 
-        print(f"\n--- 3. Saving Best Parameters ---")
-        with open(PARAMS_OUTPUT_FILE, 'w') as f:
-            json.dump(study.best_params, f, indent=4)
-        print(f"Parameters saved to {PARAMS_OUTPUT_FILE}")
+            print(f"\n--- 3. Saving Best Parameters ---")
+            with open(PARAMS_OUTPUT_FILE, 'w') as f:
+                json.dump(study.best_params, f, indent=4)
+            print(f"Parameters saved to {PARAMS_OUTPUT_FILE}")
+            best_params = study.best_params
 
         print("\n--- 4. Training Final Model ---")
-        
-        # 1. Get the best hyperparameters from the study
-        best_params = study.best_params
         
         # 2. Find the optimal n_estimators using these params on the split data
         print("Finding optimal number of trees using early stopping...")

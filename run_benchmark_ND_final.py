@@ -26,14 +26,11 @@ sys.path.append(str(SCRIPT_DIR / "nn_est_alpha_v3"))
 sys.path.append(str(SCRIPT_DIR / "interpretable_model_v3"))
 sys.path.append(str(SCRIPT_DIR / "GART_1.0"))
 
-# --- IMPORTS ---
+# --- IMPORTS (strict — missing modules halt the pipeline so the bug is visible) ---
 from tsp_utils import parse_tsp_instance, parse_tsp_solution
 import tsp_utils_2 as academic
-
-# Import V3 Estimators
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
-from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 
 ROOT_DIR = SCRIPT_DIR
@@ -77,40 +74,38 @@ def get_test_set_instances():
     return set(test_df['instance_name'].tolist())
 
 def extract_base_info(inst_name):
+    """Strict ground-truth extraction. Missing files are explicitly skipped
+    (returns None); any other I/O or parse error bubbles up."""
     inst_path = INSTANCES_DIR / f"{inst_name}.json"
     sol_path = SOLUTIONS_DIR / f"{inst_name}.sol.json"
-    
+
     if not inst_path.exists() or not sol_path.exists():
         return None
-        
-    try:
-        inst_data = parse_tsp_instance(inst_path)
-        sol_data = parse_tsp_solution(sol_path)
-        
-        # Lazy loading
-        coords = inst_data.coordinates
-        mst_len, _ = academic.get_mst_length(coords)
-        
-        opt_solver = sol_data.get('optimal_solver')
-        opt_time = 0.0
-        if opt_solver == 'concorde': 
-            opt_time = sol_data.get('concorde_time_s', 0.0)
-        elif opt_solver in ['lkh', 'lkh_only', 'lkh_only_timed']: 
-            opt_time = sol_data.get('lkh_time_s', 0.0)
-            
-        return {
-            "instance": inst_name,
-            "file_path": str(inst_path),
-            "n_customers": inst_data['n_customers'],
-            "dimension": inst_data['dimension'],
-            "grid_size": inst_data.get('grid_size', 1000),
-            "distribution": inst_data.get('distribution_type', 'unknown'),
-            "true_cost": sol_data['optimal_cost'],
-            "mst_length": mst_len,
-            "optimal_solve_time_s": opt_time
-        }
-    except:
-        return None
+
+    inst_data = parse_tsp_instance(inst_path)
+    sol_data = parse_tsp_solution(sol_path)
+
+    coords = inst_data.coordinates
+    mst_len, _ = academic.get_mst_length(coords)
+
+    opt_solver = sol_data.get('optimal_solver')
+    opt_time = 0.0
+    if opt_solver == 'concorde':
+        opt_time = sol_data.get('concorde_time_s', 0.0)
+    elif opt_solver in ['lkh', 'lkh_only', 'lkh_only_timed']:
+        opt_time = sol_data.get('lkh_time_s', 0.0)
+
+    return {
+        "instance": inst_name,
+        "file_path": str(inst_path),
+        "n_customers": inst_data['n_customers'],
+        "dimension": inst_data['dimension'],
+        "grid_size": inst_data.get('grid_size', 1000),
+        "distribution": inst_data.get('distribution_type', 'unknown'),
+        "true_cost": sol_data['optimal_cost'],
+        "mst_length": mst_len,
+        "optimal_solve_time_s": opt_time,
+    }
 
 def generate_base_dataframe(instance_names):
     base_file = CHECKPOINT_DIR / "base_ground_truth_nd.csv"
@@ -134,35 +129,22 @@ def generate_base_dataframe(instance_names):
 # 2. Model Execution Logic
 # =============================================================================
 def worker_run_estimator(row_dict, model_name, estimator_obj):
+    """Strict worker. No exception handling — errors halt the pipeline."""
     inst_path = Path(row_dict['file_path'])
-    try:
-        inst_data = parse_tsp_instance(inst_path)
-    except:
-        return None
-        
+    inst_data = parse_tsp_instance(inst_path)
     coords = inst_data.coordinates
     d = row_dict['dimension']
     grid_size = row_dict['grid_size']
-    
-    t_feat = 0.0
-    t_inf = 0.0
-    pred_cost = 0.0
-    
-    try:
-        if hasattr(estimator_obj, 'estimate'):
-            # V3 Models and GART
-            res = estimator_obj.estimate(coords, d, grid_size)
-            pred_cost = res['estimate']
-            t_feat = res.get('feature_time', 0.0)
-            t_inf = res.get('inference_time', 0.0)
-        else:
-            # Academic Estimators
-            pred_cost, t_total = estimator_obj(coords)
-            t_feat = t_inf = t_total / 2
-    except Exception as e:
-        print(f"Error in {model_name} for {inst_path.stem}: {e}")
-        return None
-        
+
+    if hasattr(estimator_obj, 'estimate'):
+        res = estimator_obj.estimate(coords, d, grid_size)
+        pred_cost = res['estimate']
+        t_feat = res.get('feature_time', 0.0)
+        t_inf = res.get('inference_time', 0.0)
+    else:
+        pred_cost, t_total = estimator_obj(coords)
+        t_feat = t_inf = t_total / 2.0
+
     return {
         'model': model_name,
         'instance': row_dict['instance'],
@@ -171,7 +153,8 @@ def worker_run_estimator(row_dict, model_name, estimator_obj):
         'prediction_time_s': t_feat + t_inf,
         'feature_time_s': t_feat,
         'inference_time_s': t_inf,
-        'optimal_solve_time_s': row_dict['optimal_solve_time_s']
+        'optimal_solve_time_s': row_dict['optimal_solve_time_s'],
+        'status': 'ok',
     }
 
 def process_model(model_name, factory, base_df):

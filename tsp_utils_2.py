@@ -173,11 +173,8 @@ def estimate_tsp_christofides(nodes_coords):
         w = dist_matrix[u, v]
         M.add_edge(u, v, weight=w)
         
-    try: 
-        eulerian_circuit = list(nx.eulerian_circuit(M, source=0))
-    except nx.NetworkXError: 
-        return 0.0, time.perf_counter() - start_time
-        
+    eulerian_circuit = list(nx.eulerian_circuit(M, source=0))
+
     visited = [False] * n
     tour = []
     for u, v in eulerian_circuit:
@@ -265,23 +262,13 @@ def estimate_tsp_hilbert(nodes_coords, p=16):
     hc = HilbertCurve(p, d)
     points_list = int_coords.tolist()
     
-    # --- ROBUST API CHECK ---
-    # Prioritize 'distances_from_points' (current pip version)
+    # Current hilbertcurve (>=2.x) exposes distances_from_points; older 2.0 used distances_from_coordinates.
     if hasattr(hc, 'distances_from_points'):
         hilbert_indices = hc.distances_from_points(points_list)
     elif hasattr(hc, 'distances_from_coordinates'):
-        # v2.0 (Early)
         hilbert_indices = hc.distances_from_coordinates(points_list)
-    elif hasattr(hc, 'distance_from_coordinates'):
-        # v1.x (Singular) - might not support batch processing
-        try:
-            # Try batch first (some intermediate versions)
-            hilbert_indices = hc.distance_from_coordinates(points_list)
-        except (TypeError, ValueError, AttributeError):
-            # Fallback to loop
-            hilbert_indices = [hc.distance_from_coordinates(pt) for pt in points_list]
     else:
-        raise AttributeError("Installed 'hilbertcurve' library has unknown API. Check version.")
+        raise AttributeError("Installed 'hilbertcurve' library has unsupported API; require >=2.0.")
     
     # 5. Sort Points by Hilbert Index
     sort_idx = np.argsort(hilbert_indices)
@@ -308,11 +295,10 @@ def estimate_tsp_evt(nodes_coords, samples=50):
     
     local_optima = [_run_2opt_fast(coords, n) for _ in range(samples)]
     local_optima.sort()
-    try:
-        shape, loc, scale = weibull_min.fit(local_optima)
-        estimated_min = loc
-        if estimated_min < 0 or estimated_min > local_optima[0]: estimated_min = local_optima[0]
-    except: estimated_min = local_optima[0]
+    shape, loc, scale = weibull_min.fit(local_optima)
+    estimated_min = loc
+    if estimated_min < 0 or estimated_min > local_optima[0]:
+        estimated_min = local_optima[0]
     return estimated_min, time.perf_counter() - start_time
 
 def estimate_tsp_2opt_distribution(nodes_coords, samples=20):
@@ -338,10 +324,8 @@ def estimate_tsp_basel_willemain(nodes_coords):
     lengths = [_get_random_tour_len(coords, n) for _ in range(BATCH_SIZE)]
     sigma = np.std(lengths)
     if sigma < 1e-9: return 0.0, time.perf_counter() - start_time
-    try:
-        log_opt = 1.798 + 0.927 * np.log(sigma)
-        est = np.exp(log_opt)
-    except: est = 0.0
+    log_opt = 1.798 + 0.927 * np.log(sigma)
+    est = np.exp(log_opt)
     return est, time.perf_counter() - start_time
 
 # ====================================================================
@@ -365,9 +349,8 @@ def estimate_tsp_chien(nodes_coords):
     ranges[ranges < 1e-9] = 1e-9 
     V = np.prod(ranges)
     
-    try: geom_length_scale = math.pow(V, 1/d)
-    except ValueError: geom_length_scale = 0.0
-        
+    geom_length_scale = math.pow(V, 1.0 / d)
+
     centroid = np.mean(coords, axis=0)
     dists = np.linalg.norm(coords - centroid, axis=1)
     D_avg = np.mean(dists)
@@ -390,16 +373,13 @@ def estimate_tsp_bhh(nodes_coords):
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
 
-    try:
-        if n > d + 1:
-            vol = ConvexHull(coords).volume
-        else:
-            raise Exception("Hull fail")
-    except:
+    if n > d + 1:
+        vol = ConvexHull(coords).volume
+    else:
         ranges = np.ptp(coords, axis=0).astype(float)
         ranges[ranges < 1e-9] = 1e-9
-        vol = np.prod(ranges)
-        
+        vol = float(np.prod(ranges))
+
     if d == 2: beta = BETA_2D
     elif d == 3: beta = BETA_3D
     else: beta = math.sqrt(d / (2 * math.pi * math.e))
@@ -414,18 +394,15 @@ def estimate_tsp_vinel(nodes_coords, b=0.768):
     n = len(coords)
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
-    
-    try:
-        if n > d + 1:
-            vol = ConvexHull(coords).volume
-        else:
-            raise Exception("Hull fail")
-    except:
+
+    if n > d + 1:
+        vol = ConvexHull(coords).volume
+    else:
         ranges = np.ptp(coords, axis=0).astype(float)
         ranges[ranges < 1e-9] = 1e-9
-        vol = np.prod(ranges)   
-        
-    geom_len_scale = math.pow(vol, 1/d)
+        vol = float(np.prod(ranges))
+
+    geom_len_scale = math.pow(vol, 1.0 / d)
     n_scale = math.pow(n, (d - 1) / d)
     estimated_cost = b * n_scale * geom_len_scale
     return estimated_cost, time.perf_counter() - start_time
@@ -436,17 +413,14 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
     n = len(coords)
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
-    
-    try:
-        if n > d + 1:
-            vol = ConvexHull(coords).volume
-        else:
-            raise Exception("Hull fail")
-    except:
+
+    if n > d + 1:
+        vol = ConvexHull(coords).volume
+    else:
         ranges = np.ptp(coords, axis=0).astype(float)
         ranges[ranges < 1e-9] = 1e-9
-        vol = np.prod(ranges)
-        
+        vol = float(np.prod(ranges))
+
     mu = coords.mean(axis=0)
     stdev = coords.std(axis=0)
     abs_dev = np.abs(coords - mu)
@@ -477,6 +451,9 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
             
     return estimated_cost, time.perf_counter() - start_time
 
+KWON_CALIBRATION_N_MAX = 300  # Kwon, Golden, Wasil (1995) calibration range upper bound.
+
+
 def estimate_tsp_kwon(nodes_coords):
     """
     Kwon, Golden, Wasil (1995) TSP/VRP tour-length estimator.
@@ -488,12 +465,23 @@ def estimate_tsp_kwon(nodes_coords):
     back by the original diagonal. This is the same "rescale then apply" wrapper
     used when Cavdar-Sokol (2015) benchmark Kwon in their Table 3; without it
     the -0.0011*n term drives the estimator negative at TSPLIB-scale n.
+
+    Raises :class:`ValueError` when n exceeds the calibration range
+    (``KWON_CALIBRATION_N_MAX = 300``). The coefficient ``-0.0011 * n`` drives
+    the estimator negative past that size, so extrapolating is ill-defined.
+    Callers MUST gate on n before invoking this function and record a status
+    row rather than silently suppressing the failure.
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
     if n <= 1:
         return 0.0, 0.0
+    if n > KWON_CALIBRATION_N_MAX:
+        raise ValueError(
+            f"Kwon: n={n} > {KWON_CALIBRATION_N_MAX} (calibration range). "
+            f"Caller must gate on n and record status='kwon_out_of_calibration'."
+        )
     d = coords.shape[1]
 
     ranges = np.ptp(coords, axis=0).astype(float)
@@ -503,12 +491,9 @@ def estimate_tsp_kwon(nodes_coords):
 
     coords_n = (coords - coords.min(axis=0)) / diag
 
-    try:
-        if n > d + 1:
-            A = ConvexHull(coords_n).volume
-        else:
-            raise Exception("hull fail")
-    except Exception:
+    if n > d + 1:
+        A = ConvexHull(coords_n).volume
+    else:
         r_n = np.ptp(coords_n, axis=0).astype(float)
         r_n[r_n < 1e-9] = 1e-9
         A = float(np.prod(r_n))
@@ -539,12 +524,9 @@ def estimate_tsp_daganzo(nodes_coords, k=0.57):
         return 0.0, 0.0
     d = coords.shape[1]
 
-    try:
-        if n > d + 1:
-            A = ConvexHull(coords).volume
-        else:
-            raise Exception("hull fail")
-    except Exception:
+    if n > d + 1:
+        A = ConvexHull(coords).volume
+    else:
         ranges = np.ptp(coords, axis=0).astype(float)
         ranges[ranges < 1e-9] = 1e-9
         A = float(np.prod(ranges))
@@ -590,15 +572,16 @@ def _calculate_gart_features(coords):
     matrix because they require per-point nearest-neighbor lookups.
     """
     n = len(coords)
+    d = coords.shape[1] if coords.ndim == 2 else 2
     features = {'n': n}
-    try:
+    if n > d + 1:
         hull = ConvexHull(coords)
         features['convex_hull_area'] = hull.volume
         features['convex_hull_perimeter'] = hull.area
         features['hull_vertex_count'] = len(hull.vertices)
         features['hull_ratio'] = features['hull_vertex_count'] / n
-    except:
-        features.update({'convex_hull_area': 0, 'convex_hull_perimeter': 0, 'hull_vertex_count': 0, 'hull_ratio': 0})
+    else:
+        features.update({'convex_hull_area': 0.0, 'convex_hull_perimeter': 0.0, 'hull_vertex_count': 0, 'hull_ratio': 0.0})
 
     ranges = np.ptp(coords, axis=0).astype(float)
     features['bounding_box_area'] = np.prod(ranges)
@@ -610,15 +593,14 @@ def _calculate_gart_features(coords):
     features['one_nn_dist_mean'] = one_nn.mean()
     features['one_nn_dist_std'] = one_nn.std()
 
-    try:
+    if n >= 2 and d >= 2:
         pca = PCA(n_components=2).fit(coords)
         ev = pca.explained_variance_
         features['pca_eigenvalue_ratio'] = ev[0] / ev[1] if ev[1] > 1e-9 else 1.0
-    except:
+    else:
         features['pca_eigenvalue_ratio'] = 1.0
 
     # MST topology via Delaunay-sparse graph for 2D (O(n log n)); dense fallback.
-    d = coords.shape[1] if coords.ndim == 2 else 2
     mst = None
     if d == 2 and n >= 4:
         try:
@@ -667,11 +649,10 @@ def estimate_tsp_ml_alpha(nodes_coords, ml_model):
     features_dict, mst_length = _calculate_gart_features(coords)
     t_feat = time.perf_counter() - start_time
     if mst_length == 0: return 0.0, time.perf_counter() - start_time
-    
-    try: feature_cols = ml_model.feature_name_
-    except AttributeError: feature_cols = sorted(features_dict.keys()) 
+
     feature_df = pd.DataFrame([features_dict])
-    if hasattr(ml_model, "feature_name_"): feature_df = feature_df[ml_model.feature_name_]
+    if hasattr(ml_model, "feature_name_"):
+        feature_df = feature_df[ml_model.feature_name_]
 
     predicted_alpha = ml_model.predict(feature_df)[0]
     est = predicted_alpha * mst_length

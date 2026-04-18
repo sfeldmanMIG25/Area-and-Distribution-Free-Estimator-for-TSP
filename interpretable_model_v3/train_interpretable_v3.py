@@ -17,7 +17,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 # --- CONFIGURATION ---
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(ROOT_DIR, '..', 'tsp_features_v3.csv')
-LGBM_MODEL = "C:\\Area-and-Distribution-Free-Estimators-for-TSP\\lgbm_model_v3\\lgbm_alpha_model_v3.joblib"
+LGBM_MODEL = os.path.join(ROOT_DIR, '..', 'lgbm_model_v3', 'lgbm_alpha_model_v3.joblib')
 
 MODEL_DIR = os.path.join(ROOT_DIR, 'model_artifacts')
 ROUTER_FILE = os.path.join(MODEL_DIR, 'router.joblib')

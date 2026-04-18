@@ -44,49 +44,43 @@ def load_instance_data(instance_name):
     
     bin_path = os.path.join(INSTANCES_DIR, f"{base_name}.bin")
     json_path = os.path.join(INSTANCES_DIR, f"{base_name}.json")
-    
-    # Try Binary First — but validate header to avoid MemoryError on corrupt files
-    if os.path.exists(bin_path):
-        try:
-            file_size = os.path.getsize(bin_path)
-            with open(bin_path, 'rb') as f:
-                hdr = f.read(12)
-                if len(hdr) != 12:
-                    raise ValueError('short header')
-                n, d, grid_size = struct.unpack('III', hdr)
-                if not (3 <= n <= 100000 and 1 <= d <= 200):
-                    raise ValueError(f'bad n/d header: n={n}, d={d}')
-                dist_len_bytes = f.read(4)
-                if len(dist_len_bytes) != 4:
-                    raise ValueError('short dist_len')
-                dist_len = struct.unpack('I', dist_len_bytes)[0]
-                if dist_len > 1024:
-                    raise ValueError(f'bad dist_len: {dist_len}')
-                coord_bytes = n * d * 4
-                min_expected = 12 + 4 + dist_len + coord_bytes
-                if file_size < min_expected:
-                    raise ValueError(f'truncated: need {min_expected}, got {file_size}')
-                _ = f.read(dist_len)
-                coords_buffer = f.read(coord_bytes)
-                coords = np.frombuffer(coords_buffer, dtype=np.float32).reshape(n, d)
-            return {
-                'instance_name': base_name, 'n_customers': n,
-                'dimension': d, 'grid_size': grid_size, 'coordinates': coords
-            }
-        except (ValueError, struct.error, OSError):
-            # Corrupt binary — fall through to JSON fallback below (never silent)
-            pass
 
-    # Fallback to JSON
+    # Binary format (strict — any malformed file crashes the pipeline so the
+    # upstream bug is visible, per integrity-pipeline policy).
+    if os.path.exists(bin_path):
+        file_size = os.path.getsize(bin_path)
+        with open(bin_path, 'rb') as f:
+            hdr = f.read(12)
+            if len(hdr) != 12:
+                raise ValueError(f'{base_name}: short binary header')
+            n, d, grid_size = struct.unpack('III', hdr)
+            if not (3 <= n <= 100000 and 1 <= d <= 200):
+                raise ValueError(f'{base_name}: bad n/d header: n={n}, d={d}')
+            dist_len_bytes = f.read(4)
+            if len(dist_len_bytes) != 4:
+                raise ValueError(f'{base_name}: short dist_len')
+            dist_len = struct.unpack('I', dist_len_bytes)[0]
+            if dist_len > 1024:
+                raise ValueError(f'{base_name}: bad dist_len: {dist_len}')
+            coord_bytes = n * d * 4
+            min_expected = 12 + 4 + dist_len + coord_bytes
+            if file_size < min_expected:
+                raise ValueError(f'{base_name}: truncated binary: need {min_expected}, got {file_size}')
+            _ = f.read(dist_len)
+            coords_buffer = f.read(coord_bytes)
+            coords = np.frombuffer(coords_buffer, dtype=np.float32).reshape(n, d)
+        return {
+            'instance_name': base_name, 'n_customers': n,
+            'dimension': d, 'grid_size': grid_size, 'coordinates': coords,
+        }
+
+    # JSON format (strict — same policy).
     if os.path.exists(json_path):
-        try:
-            with open(json_path, 'r') as f:
-                data = json.load(f)
-            data['coordinates'] = np.array(data['coordinates'], dtype=np.float32)
-            data['instance_name'] = base_name
-            return data
-        except (json.JSONDecodeError, ValueError, KeyError, OSError):
-            return None
+        with open(json_path, 'r') as f:
+            data = json.load(f)
+        data['coordinates'] = np.array(data['coordinates'], dtype=np.float32)
+        data['instance_name'] = base_name
+        return data
 
     return None
 
@@ -271,22 +265,21 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     return features
 
 def process_file_worker(filename):
-    """Worker function for ProcessPoolExecutor. Never raises; bad files → None."""
+    """Worker function for ProcessPoolExecutor. Strict — any I/O or parse error
+    bubbles up and halts the pipeline so the upstream bug is visible (no
+    silent fallbacks)."""
     if not filename.endswith('.json'):
         return None
     base_name = filename[:-5]
     sol_path = os.path.join(SOLUTIONS_DIR, f"{base_name}.sol.json")
     if not os.path.exists(sol_path):
         return None
-    try:
-        inst = load_instance_data(filename)
-        if not inst:
-            return None
-        with open(sol_path, 'r') as f:
-            sol = json.load(f)
-        return compute_features_for_instance_v3(inst, sol)
-    except (json.JSONDecodeError, ValueError, KeyError, OSError, MemoryError):
+    inst = load_instance_data(filename)
+    if not inst:
         return None
+    with open(sol_path, 'r') as f:
+        sol = json.load(f)
+    return compute_features_for_instance_v3(inst, sol)
 
 def create_stratified_split(df):
     """

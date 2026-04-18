@@ -24,22 +24,12 @@ sys.path.append(str(SCRIPT_DIR / "nn_est_alpha_v3"))
 sys.path.append(str(SCRIPT_DIR / "interpretable_model_v3"))
 sys.path.append(str(SCRIPT_DIR / "gart_model"))
 
-# --- IMPORTS ---
-try:
-    from tsp_utils import parse_tsp_instance, parse_tsp_solution
-    import tsp_utils_2 as academic
-except ImportError:
-    print("WARNING: tsp_utils or tsp_utils_2 not found.")
-    pass
-
-# Import V3 Estimators
-try:
-    from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
-    from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
-    from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
-    from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
-except ImportError as e:
-    print(f"WARNING: Could not import V3 models: {e}")
+# --- IMPORTS (strict — missing modules halt the pipeline so the bug is visible) ---
+from tsp_utils import parse_tsp_instance, parse_tsp_solution
+import tsp_utils_2 as academic
+from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
+from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
+from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis"
@@ -67,35 +57,33 @@ class GART_Adapter:
 # 1. Base Data Generation
 # =============================================================================
 def extract_base_info(file_pair):
+    """Strict ground-truth extraction. Any I/O or parse error bubbles up."""
     inst_path, sol_path = file_pair
-    try:
-        inst_data = parse_tsp_instance(inst_path)
-        sol_data = parse_tsp_solution(sol_path)
-        
-        coords = inst_data.coordinates
-        mst_length, _ = academic.get_mst_length(coords)
-        mst_length_safe = mst_length if mst_length > 1e-9 else 1e-9
-        
-        opt_solver = sol_data.get('optimal_solver')
-        opt_time = 0.0
-        if opt_solver == 'concorde': 
-            opt_time = sol_data.get('concorde_time_s', 0.0)
-        elif opt_solver in ['lkh', 'lkh_only', 'lkh_only_timed']: 
-            opt_time = sol_data.get('lkh_time_s', 0.0)
-            
-        return {
-            "instance": inst_data.get('instance_name', inst_path.stem),
-            "file_path": str(inst_path),
-            "n_customers": inst_data['n_customers'],
-            "dimension": inst_data['dimension'],
-            "grid_size": inst_data.get('grid_size', 1000),
-            "true_cost": sol_data['optimal_cost'],
-            "mst_length": mst_length,
-            "true_alpha": sol_data['optimal_cost'] / mst_length_safe,
-            "optimal_solve_time_s": opt_time
-        }
-    except Exception as e:
-        return None
+    inst_data = parse_tsp_instance(inst_path)
+    sol_data = parse_tsp_solution(sol_path)
+
+    coords = inst_data.coordinates
+    mst_length, _ = academic.get_mst_length(coords)
+    mst_length_safe = mst_length if mst_length > 1e-9 else 1e-9
+
+    opt_solver = sol_data.get('optimal_solver')
+    opt_time = 0.0
+    if opt_solver == 'concorde':
+        opt_time = sol_data.get('concorde_time_s', 0.0)
+    elif opt_solver in ['lkh', 'lkh_only', 'lkh_only_timed']:
+        opt_time = sol_data.get('lkh_time_s', 0.0)
+
+    return {
+        "instance": inst_data.get('instance_name', inst_path.stem),
+        "file_path": str(inst_path),
+        "n_customers": inst_data['n_customers'],
+        "dimension": inst_data['dimension'],
+        "grid_size": inst_data.get('grid_size', 1000),
+        "true_cost": sol_data['optimal_cost'],
+        "mst_length": mst_length,
+        "true_alpha": sol_data['optimal_cost'] / mst_length_safe,
+        "optimal_solve_time_s": opt_time,
+    }
 
 def generate_base_dataframe(tasks):
     base_file = BENCHMARK_RESULTS_DIR / "base_ground_truth_2d.csv"
@@ -121,44 +109,43 @@ def generate_base_dataframe(tasks):
 # 2. Model Execution Logic
 # =============================================================================
 def worker_run_estimator(row_dict, model_name, estimator_obj):
+    """Strict worker. No exception handling — errors halt the pipeline so the
+    offending (instance, model) pair is visible and fixable."""
     inst_path = Path(row_dict['file_path'])
-    try:
-        inst_data = parse_tsp_instance(inst_path)
-    except:
-        return None
-        
+    inst_data = parse_tsp_instance(inst_path)
     coords = inst_data.coordinates
+    n = row_dict['n_customers']
     d = row_dict['dimension']
     grid_size = row_dict['grid_size']
-    
-    t_feat = 0.0
-    t_inf = 0.0
-    pred_cost = 0.0
-    
-    try:
-        if hasattr(estimator_obj, 'estimate'):
-            # V3 Models and GART
-            res = estimator_obj.estimate(coords, d, grid_size)
-            pred_cost = res['estimate']
-            t_feat = res.get('feature_time', 0.0)
-            t_inf = res.get('inference_time', 0.0)
-        else:
-            # Academic Estimators (passed as functions)
-            pred_cost, t_total = estimator_obj(coords)
-            t_feat = t_inf = t_total / 2  # Approximate split
-    except Exception as e:
-        print(f"Error in {model_name} for {inst_path.stem}: {e}")
-        return None
-        
+
+    status = 'ok'
+    pred_cost = float('nan')
+    t_feat = float('nan')
+    t_inf = float('nan')
+
+    # Kwon: only runs inside its calibration range. Out-of-range is a recorded
+    # status row (explicit, not a silent fallback).
+    if model_name == 'Kwon' and n > academic.KWON_CALIBRATION_N_MAX:
+        status = 'kwon_out_of_calibration'
+    elif hasattr(estimator_obj, 'estimate'):
+        res = estimator_obj.estimate(coords, d, grid_size)
+        pred_cost = res['estimate']
+        t_feat = res.get('feature_time', 0.0)
+        t_inf = res.get('inference_time', 0.0)
+    else:
+        pred_cost, t_total = estimator_obj(coords)
+        t_feat = t_inf = t_total / 2.0
+
     return {
         'model': model_name,
         'instance': row_dict['instance'],
         'pred_cost': pred_cost,
         'true_cost': row_dict['true_cost'],
-        'prediction_time_s': t_feat + t_inf,
+        'prediction_time_s': (t_feat + t_inf) if status == 'ok' else float('nan'),
         'feature_time_s': t_feat,
         'inference_time_s': t_inf,
-        'optimal_solve_time_s': row_dict['optimal_solve_time_s']
+        'optimal_solve_time_s': row_dict['optimal_solve_time_s'],
+        'status': status,
     }
 
 def process_model(model_name, factory, base_df):
