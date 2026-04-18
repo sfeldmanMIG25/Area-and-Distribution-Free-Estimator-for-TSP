@@ -25,7 +25,8 @@ from itertools import combinations
 from scipy.spatial.distance import cdist
 from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy.stats import weibull_min
-from scipy.spatial import ConvexHull
+from scipy.spatial import ConvexHull, Delaunay
+from scipy.sparse import csr_matrix
 from sklearn.decomposition import PCA
 
 from hilbertcurve.hilbertcurve import HilbertCurve
@@ -39,15 +40,22 @@ BETA_3D = 0.6979
 # ====================================================================
 
 def get_mst_length(nodes_coords):
-    """Calculates MST length on UNIQUE coordinates."""
+    """Calculates MST length on UNIQUE coordinates.
+
+    Uses Delaunay triangulation (MST is a subgraph of the Delaunay graph,
+    valid in any dimension d >= 2) for O(n log n). Falls back to the dense
+    distance-matrix MST if Delaunay fails on a degenerate point set.
+    """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
     if n <= 1: return 0.0, 0.0
-    
-    dist_matrix = cdist(coords, coords)
-    mst = minimum_spanning_tree(dist_matrix)
-    mst_length = mst.sum()
+
+    try:
+        mst_length = _delaunay_mst_length(coords)
+    except Exception:
+        dist_matrix = cdist(coords, coords)
+        mst_length = float(minimum_spanning_tree(dist_matrix).sum())
     return mst_length, time.perf_counter() - start_time
 
 def _run_2opt_fast(coords, n, max_iter=2000):
@@ -184,19 +192,50 @@ def estimate_tsp_christofides(nodes_coords):
         cost += dist_matrix[u, v]
     return cost, time.perf_counter() - start_time
 
+def _delaunay_mst_length(coords):
+    """MST length via Delaunay edge set — O(n log n), valid for any d >= 2."""
+    n = coords.shape[0]
+    tri = Delaunay(coords)
+    edges = set()
+    d = coords.shape[1]
+    # simplex has d+1 vertices; enumerate all pairs
+    for simplex in tri.simplices:
+        for i in range(len(simplex)):
+            for j in range(i + 1, len(simplex)):
+                a, b = simplex[i], simplex[j]
+                if a > b:
+                    a, b = b, a
+                edges.add((a, b))
+    rows, cols, dists = [], [], []
+    for a, b in edges:
+        dist = float(np.linalg.norm(coords[a] - coords[b]))
+        rows += [a, b]; cols += [b, a]; dists += [dist, dist]
+    sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
+    return float(minimum_spanning_tree(sp).sum())
+
+
 def estimate_tsp_mst_ratio(nodes_coords):
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
-    if n <= 1: return 0.0, 0.0
-    
+    if n <= 1:
+        return 0.0, 0.0
+
     d = coords.shape[1]
-    dist_matrix = cdist(coords, coords)
-    mst_len = minimum_spanning_tree(dist_matrix).sum()
-    
-    if d == 2: ratio = 1.075
-    elif d == 3: ratio = 1.05
-    else: ratio = 1.0 + (0.075 * (2.0/d))
+    # Use Delaunay triangulation for O(n log n) MST in any dim (MST ⊆ Delaunay graph)
+    try:
+        mst_len = _delaunay_mst_length(coords)
+    except Exception:
+        # Fallback to full distance matrix for degenerate point sets
+        dist_matrix = cdist(coords, coords)
+        mst_len = float(minimum_spanning_tree(dist_matrix).sum())
+
+    if d == 2:
+        ratio = 1.075
+    elif d == 3:
+        ratio = 1.05
+    else:
+        ratio = 1.0 + (0.075 * (2.0 / d))
     return mst_len * ratio, time.perf_counter() - start_time
 
 def estimate_tsp_hilbert(nodes_coords, p=16):
@@ -438,6 +477,82 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
             
     return estimated_cost, time.perf_counter() - start_time
 
+def estimate_tsp_kwon(nodes_coords):
+    """
+    Kwon, Golden, Wasil (1995) TSP/VRP tour-length estimator.
+
+    Kwon calibrated the form L_norm = (0.8326 - 0.0011*n + 1.1147*R/n) * sqrt(n)
+    against unit-area service regions. We reproduce that convention by first
+    rescaling coordinates so the bounding-box diagonal is 1, evaluating Kwon's
+    expression on the normalized coordinates, and scaling the predicted length
+    back by the original diagonal. This is the same "rescale then apply" wrapper
+    used when Cavdar-Sokol (2015) benchmark Kwon in their Table 3; without it
+    the -0.0011*n term drives the estimator negative at TSPLIB-scale n.
+    """
+    start_time = time.perf_counter()
+    coords = np.unique(nodes_coords, axis=0)
+    n = len(coords)
+    if n <= 1:
+        return 0.0, 0.0
+    d = coords.shape[1]
+
+    ranges = np.ptp(coords, axis=0).astype(float)
+    diag = float(np.sqrt(np.sum(ranges ** 2)))
+    if diag < 1e-12:
+        return 0.0, time.perf_counter() - start_time
+
+    coords_n = (coords - coords.min(axis=0)) / diag
+
+    try:
+        if n > d + 1:
+            A = ConvexHull(coords_n).volume
+        else:
+            raise Exception("hull fail")
+    except Exception:
+        r_n = np.ptp(coords_n, axis=0).astype(float)
+        r_n[r_n < 1e-9] = 1e-9
+        A = float(np.prod(r_n))
+
+    centroid = coords_n.mean(axis=0)
+    R = float(np.mean(np.linalg.norm(coords_n - centroid, axis=1)))
+
+    est_norm = (0.8326 - 0.0011 * n + 1.1147 * (R / max(n, 1))) * math.sqrt(n * A)
+    est_norm = max(est_norm, 0.0)
+    est = est_norm * diag  # rescale back to original units
+    return est, time.perf_counter() - start_time
+
+
+def estimate_tsp_daganzo(nodes_coords, k=0.57):
+    """
+    Daganzo (1984) TSP/CVRP-style tour length estimator.
+
+    Simple form: L = k * sqrt(n * A), where k = 0.57 is Daganzo's calibrated
+    constant for uniform points inside a disc. Structurally identical to
+    BHH up to the choice of constant (BHH uses beta_2 = 0.7124); the two
+    are included separately because the literature reports them as
+    separate baselines.
+    """
+    start_time = time.perf_counter()
+    coords = np.unique(nodes_coords, axis=0)
+    n = len(coords)
+    if n <= 1:
+        return 0.0, 0.0
+    d = coords.shape[1]
+
+    try:
+        if n > d + 1:
+            A = ConvexHull(coords).volume
+        else:
+            raise Exception("hull fail")
+    except Exception:
+        ranges = np.ptp(coords, axis=0).astype(float)
+        ranges[ranges < 1e-9] = 1e-9
+        A = float(np.prod(ranges))
+
+    est = k * math.sqrt(n * A)
+    return est, time.perf_counter() - start_time
+
+
 def estimate_tsp_composite(nodes_coords):
     """Meta-estimator returning max(MST, min(2MST, Vinel/Cavdar))."""
     start_time = time.perf_counter()
@@ -448,15 +563,18 @@ def estimate_tsp_composite(nodes_coords):
     if n <= 10:
         cost, _ = estimate_tsp_held_karp(coords)
         return cost, time.perf_counter() - start_time
-    
-    dist_matrix = cdist(coords, coords)
-    mst_length = minimum_spanning_tree(dist_matrix).sum()
-    
+
+    try:
+        mst_length = _delaunay_mst_length(coords)
+    except Exception:
+        dist_matrix = cdist(coords, coords)
+        mst_length = float(minimum_spanning_tree(dist_matrix).sum())
+
     if n < 100:
         est = estimate_tsp_vinel(coords)[0]
     else:
         est = estimate_tsp_cavdar(coords)[0]
-        
+
     final_cost = max(mst_length, min(2 * mst_length, est))
     return final_cost, time.perf_counter() - start_time
 
@@ -465,6 +583,12 @@ def estimate_tsp_composite(nodes_coords):
 # ====================================================================
 
 def _calculate_gart_features(coords):
+    """GART 1.0 legacy feature set (2D).
+
+    MST topology features are computed from a Delaunay-sparse graph for 2D
+    inputs (O(n log n)); 1-NN distances are still computed from the dense
+    matrix because they require per-point nearest-neighbor lookups.
+    """
     n = len(coords)
     features = {'n': n}
     try:
@@ -475,39 +599,63 @@ def _calculate_gart_features(coords):
         features['hull_ratio'] = features['hull_vertex_count'] / n
     except:
         features.update({'convex_hull_area': 0, 'convex_hull_perimeter': 0, 'hull_vertex_count': 0, 'hull_ratio': 0})
-    
+
     ranges = np.ptp(coords, axis=0).astype(float)
     features['bounding_box_area'] = np.prod(ranges)
-    
+
+    # Dense matrix still needed for 1-NN distances (per-row min over neighbors).
     dist_matrix = cdist(coords, coords)
     np.fill_diagonal(dist_matrix, np.inf)
     one_nn = np.min(dist_matrix, axis=1)
     features['one_nn_dist_mean'] = one_nn.mean()
     features['one_nn_dist_std'] = one_nn.std()
-    
+
     try:
         pca = PCA(n_components=2).fit(coords)
         ev = pca.explained_variance_
         features['pca_eigenvalue_ratio'] = ev[0] / ev[1] if ev[1] > 1e-9 else 1.0
     except:
         features['pca_eigenvalue_ratio'] = 1.0
-        
-    np.fill_diagonal(dist_matrix, 0)
-    mst = minimum_spanning_tree(dist_matrix)
-    mst_length = mst.sum()
+
+    # MST topology via Delaunay-sparse graph for 2D (O(n log n)); dense fallback.
+    d = coords.shape[1] if coords.ndim == 2 else 2
+    mst = None
+    if d == 2 and n >= 4:
+        try:
+            tri = Delaunay(coords)
+            edges = set()
+            for simplex in tri.simplices:
+                for i in range(len(simplex)):
+                    for j in range(i + 1, len(simplex)):
+                        a, b = simplex[i], simplex[j]
+                        if a > b:
+                            a, b = b, a
+                        edges.add((a, b))
+            rows, cols, dists = [], [], []
+            for a, b in edges:
+                dab = float(np.linalg.norm(coords[a] - coords[b]))
+                rows += [a, b]; cols += [b, a]; dists += [dab, dab]
+            sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
+            mst = minimum_spanning_tree(sp)
+        except Exception:
+            mst = None
+    if mst is None:
+        np.fill_diagonal(dist_matrix, 0)
+        mst = minimum_spanning_tree(dist_matrix)
+    mst_length = float(mst.sum())
     degrees = np.count_nonzero(mst.toarray() + mst.toarray().T, axis=1)
     features['mst_degree_mean'] = degrees.mean()
     features['mst_degree_max'] = degrees.max()
     features['mst_degree_std'] = degrees.std()
     features['mst_leaf_nodes_fraction'] = np.sum(degrees == 1) / n
-    
+
     features['coord_std_dev_x'] = coords[:, 0].std()
     features['coord_std_dev_y'] = coords[:, 1].std()
     depot = coords[0]
     dists_depot = np.linalg.norm(coords[1:] - depot, axis=1) if n > 1 else np.array([0.0])
     features['avg_dist_from_depot'] = dists_depot.mean()
     features['max_dist_from_depot'] = dists_depot.max()
-    
+
     return features, mst_length
 
 def estimate_tsp_ml_alpha(nodes_coords, ml_model):

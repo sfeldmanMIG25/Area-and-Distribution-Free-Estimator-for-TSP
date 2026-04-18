@@ -8,7 +8,9 @@ import numpy as np
 import pandas as pd
 import joblib
 from collections import deque
+from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
+from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
 from tqdm import tqdm
@@ -137,8 +139,30 @@ class TSP_V3_Neural_Estimator:
         feats['centroid_dist_mean'], feats['centroid_dist_std'], feats['centroid_dist_max'] = c_mn, c_st, c_mx
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
-        dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32); np.fill_diagonal(dist_mat, 0)
-        mst = minimum_spanning_tree(dist_mat); edges = mst.data; mst_len = np.sum(edges)
+        # MST — Delaunay-sparse for 2D (O(n log n)), dense fallback otherwise.
+        mst = None
+        if d == 2 and n >= 4:
+            try:
+                tri = Delaunay(coords)
+                pairs = set()
+                for simplex in tri.simplices:
+                    for i in range(len(simplex)):
+                        for j in range(i + 1, len(simplex)):
+                            a, b = simplex[i], simplex[j]
+                            if a > b: a, b = b, a
+                            pairs.add((a, b))
+                rows, cols, dists_ = [], [], []
+                for a, b in pairs:
+                    dab = float(np.linalg.norm(coords[a] - coords[b]))
+                    rows += [a, b]; cols += [b, a]; dists_ += [dab, dab]
+                sp = csr_matrix((dists_, (rows, cols)), shape=(n, n))
+                mst = minimum_spanning_tree(sp)
+            except Exception:
+                mst = None
+        if mst is None:
+            dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32); np.fill_diagonal(dist_mat, 0)
+            mst = minimum_spanning_tree(dist_mat)
+        edges = mst.data; mst_len = np.sum(edges)
         feats['mst_total_length'] = mst_len
         feats['mst_edge_mean'], feats['mst_edge_std'] = np.mean(edges), np.std(edges)
         feats['mst_edge_skew'], feats['mst_edge_kurtosis'] = stats.skew(edges), stats.kurtosis(edges)

@@ -12,7 +12,9 @@ import struct
 from collections import deque
 from tqdm import tqdm
 import pandas as pd
+from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
+from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
 from concurrent.futures import ProcessPoolExecutor
@@ -168,12 +170,32 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     features['centroid_dist_iqr'] = q75 - q25
 
     # === Group 3: Topological Structure ===
-    
-    dist_matrix = cdist(coords, coords, 'euclidean') + 1e-9
-    np.fill_diagonal(dist_matrix, 0)
-    
-    mst_csr = minimum_spanning_tree(dist_matrix)
-    mst_edges = mst_csr.data 
+    # MST via Delaunay-sparse graph for 2D (O(n log n)); dense fallback otherwise.
+    mst_csr = None
+    if d == 2 and n >= 4:
+        try:
+            tri = Delaunay(coords)
+            pairs = set()
+            for simplex in tri.simplices:
+                for i in range(len(simplex)):
+                    for j in range(i + 1, len(simplex)):
+                        a, b = simplex[i], simplex[j]
+                        if a > b: a, b = b, a
+                        pairs.add((a, b))
+            rows_d, cols_d, dists_d = [], [], []
+            for a, b in pairs:
+                dab = float(np.linalg.norm(coords[a] - coords[b]))
+                rows_d += [a, b]; cols_d += [b, a]; dists_d += [dab, dab]
+            sp = csr_matrix((dists_d, (rows_d, cols_d)), shape=(n, n))
+            mst_csr = minimum_spanning_tree(sp)
+        except Exception:
+            mst_csr = None
+    if mst_csr is None:
+        dist_matrix = cdist(coords, coords, 'euclidean') + 1e-9
+        np.fill_diagonal(dist_matrix, 0)
+        mst_csr = minimum_spanning_tree(dist_matrix)
+
+    mst_edges = mst_csr.data
     
     if len(mst_edges) == 0: 
         mst_edges = np.array([0.0])

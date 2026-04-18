@@ -310,27 +310,20 @@ def main():
     base_df = generate_base_dataframe(test_instances)
     
     schedule = [
-        # --- Classic Academic Estimators ---
-        #('Cavdar', lambda: academic.estimate_tsp_cavdar),
-        #('Vinel', lambda: academic.estimate_tsp_vinel),
-        #('Composite', lambda: academic.estimate_tsp_composite),
-        #('BHH', lambda: academic.estimate_tsp_bhh),
+        # --- Classic Academic Estimators (N-D-capable: convex-hull / MST-based) ---
+        ('Cavdar', lambda: academic.estimate_tsp_cavdar),
+        ('Vinel', lambda: academic.estimate_tsp_vinel),
+        ('Composite', lambda: academic.estimate_tsp_composite),
+        ('BHH', lambda: academic.estimate_tsp_bhh),
         ('MST_Ratio', lambda: academic.estimate_tsp_mst_ratio),
-        #('Chien', lambda: academic.estimate_tsp_chien),
-        # ('Christofides', lambda: academic.estimate_tsp_christofides),
+        ('Chien', lambda: academic.estimate_tsp_chien),
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
-        # --- Simulation / Sampling ---
-        # ('EVT', lambda: academic.estimate_tsp_evt),
-        # ('2Opt_Dist', lambda: academic.estimate_tsp_2opt_distribution),
-        # ('Basel', lambda: academic.estimate_tsp_basel_willemain)
+        # Kwon and Daganzo are 2D-planar only — excluded from N-D schedule.
         # --- Machine Learning Models ---
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
-        ('Neural_V3', lambda: TSP_V3_Neural_Estimator(str(SCRIPT_DIR / 'nn_est_alpha_v3'))),
+        # ('Neural_V3', ...): disabled — checkpoint file not available in this repo snapshot.
         ('Interp_V3', lambda: TSP_Interpretable_Estimator(str(SCRIPT_DIR / 'interpretable_model_v3'))),
-        
-        # --- GART (Legacy ML) ---
-        #('GART', lambda: GART_Adapter(str(SCRIPT_DIR / 'GART_1.0'))),
     ]
 
     for name, factory in schedule:
@@ -346,7 +339,7 @@ def main():
         calculate_metrics_and_print(final_df)
         generate_plots(final_df, RESULTS_DIR)
 
-    print("\n✅ ND Benchmark Complete.")
+    print("\n[OK] ND Benchmark Complete.")
 
 if __name__ == "__main__":
     main()

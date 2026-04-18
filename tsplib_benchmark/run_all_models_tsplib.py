@@ -279,21 +279,49 @@ def run_benchmark(max_n=None, workers=None):
         "Cavdar": academic.estimate_tsp_cavdar,
         "Chien": academic.estimate_tsp_chien,
         "Vinel": academic.estimate_tsp_vinel,
+        "Kwon": academic.estimate_tsp_kwon,
+        "Daganzo": academic.estimate_tsp_daganzo,
         "Composite": academic.estimate_tsp_composite,
         "MST_Ratio": academic.estimate_tsp_mst_ratio,
         "Hilbert": academic.estimate_tsp_hilbert,
     }
 
+    # Full model universe — used for never-silent status logging. Every
+    # (instance, model) pair must produce a row with a non-empty status.
+    ALL_MODELS = list(ml_models.keys()) + ["Fixed_Alpha"] + list(academic_estimators.keys())
+
+    def _status_row(name, n, ewt, model, status, mode=None, feat_dim=None):
+        """Emit a placeholder row for an instance-model pair we could not score.
+        Never-silent contract: if a pair is not in the output CSV with status='ok',
+        it must appear with a status explaining why."""
+        return {
+            "instance": name,
+            "n": n,
+            "edge_weight_type": ewt,
+            "model": model,
+            "pred_cost": np.nan,
+            "true_cost": np.nan,
+            "gap_pct": np.nan,
+            "abs_gap_pct": np.nan,
+            "total_time_s": np.nan,
+            "feature_time_s": np.nan,
+            "inference_time_s": np.nan,
+            "mst_length": np.nan,
+            "alpha": np.nan,
+            "concorde_time_s": np.nan,
+            "speedup_vs_concorde": np.nan,
+            "mode": mode,
+            "feature_dim": feat_dim,
+            "status": status,
+        }
+
     # --- Parse all instances ---
     print(f"\nParsing {len(tsp_files)} TSPLIB instances...")
+    results = []
     instances = []
     for path in tsp_files:
         name = path.stem
         true_cost = optima.get(name)
-        if true_cost is None:
-            continue
-
-        # Quick n check from header
         n_from_header = None
         try:
             with open(path, "r", encoding="utf-8", errors="ignore") as fh:
@@ -304,7 +332,15 @@ def run_benchmark(max_n=None, workers=None):
         except Exception:
             pass
 
+        if true_cost is None:
+            # Never-silent: emit status rows for every model we would have tried.
+            for m in ALL_MODELS:
+                results.append(_status_row(name, n_from_header or 0, None, m, "no_optimum"))
+            continue
+
         if max_n is not None and n_from_header is not None and n_from_header > max_n:
+            for m in ALL_MODELS:
+                results.append(_status_row(name, n_from_header, None, m, "max_n_cap"))
             continue
 
         instances.append((path, name, true_cost, n_from_header))
@@ -312,7 +348,6 @@ def run_benchmark(max_n=None, workers=None):
     print(f"  {len(instances)} instances to benchmark\n")
 
     # --- Process each instance ---
-    results = []
     for path, name, true_cost, n_hint in tqdm(instances, desc="Benchmarking"):
         # Parse
         try:
@@ -321,6 +356,8 @@ def run_benchmark(max_n=None, workers=None):
             t_parse = time.perf_counter() - t_parse0
         except Exception as exc:
             print(f"  SKIP {name}: parse error: {exc}")
+            for m in ALL_MODELS:
+                results.append(_status_row(name, n_hint or 0, None, m, f"parse_error:{type(exc).__name__}"))
             continue
 
         n = info["n"]
@@ -345,6 +382,8 @@ def run_benchmark(max_n=None, workers=None):
                 mds_dim = X.shape[1]
             except Exception as exc:
                 print(f"  SKIP {name}: MDS error: {exc}")
+                for m in ALL_MODELS:
+                    results.append(_status_row(name, n, ewt, m, f"mds_error:{type(exc).__name__}", mode="hybrid"))
                 continue
 
         # Compute MST length once for fixed-alpha baseline
@@ -355,7 +394,13 @@ def run_benchmark(max_n=None, workers=None):
         # 1. ML models (work on all instances via hybrid)
         for model_name, model_obj in ml_models.items():
             # GART 1.0 only works on 2D Euclidean; skip large instances (dense MST)
-            if model_name == "GART_1.0" and (not is_2d or n > 5000):
+            if model_name == "GART_1.0" and not is_2d:
+                results.append(_status_row(name, n, ewt, model_name, "gart1_only_2d",
+                                           mode="native" if is_native else "hybrid"))
+                continue
+            if model_name == "GART_1.0" and n > 5000:
+                results.append(_status_row(name, n, ewt, model_name, "gart1_n_gt_5000",
+                                           mode="native"))
                 continue
 
             try:
@@ -368,6 +413,8 @@ def run_benchmark(max_n=None, workers=None):
                 elif hasattr(model_obj, "features_required"):
                     res = _hybrid_estimate_generic(model_obj, D_orig, mds_coords, mds_dim)
                 else:
+                    results.append(_status_row(name, n, ewt, model_name, "no_hybrid_path",
+                                               mode="hybrid"))
                     continue
                 total_time = time.perf_counter() - t0
 
@@ -397,9 +444,13 @@ def run_benchmark(max_n=None, workers=None):
                     "speedup_vs_concorde": speedup,
                     "mode": "native" if is_native else "hybrid",
                     "feature_dim": mds_dim if not is_native else (coords_2d.shape[1] if coords_2d is not None else 2),
+                    "status": "ok",
                 })
             except Exception as exc:
                 print(f"  {model_name} FAILED on {name}: {exc}")
+                results.append(_status_row(name, n, ewt, model_name, f"exception:{type(exc).__name__}",
+                                           mode="native" if is_native else "hybrid",
+                                           feat_dim=mds_dim if not is_native else (coords_2d.shape[1] if coords_2d is not None else 2)))
 
         # 2. Fixed-alpha baseline (uses MST from any previous model)
         if mst_length is not None:
@@ -423,41 +474,56 @@ def run_benchmark(max_n=None, workers=None):
                 "speedup_vs_concorde": None,
                 "mode": "native" if is_native else "hybrid",
                 "feature_dim": mds_dim if not is_native else (coords_2d.shape[1] if coords_2d is not None else 2),
+                "status": "ok",
             })
+        else:
+            results.append(_status_row(name, n, ewt, "Fixed_Alpha", "no_mst_length",
+                                       mode="native" if is_native else "hybrid"))
 
-        # 3. Academic estimators (2D Euclidean only, skip for n>5000 to avoid O(n^2) blowup)
-        if is_2d and coords_2d is not None and n <= 5000:
-            for est_name, est_func in academic_estimators.items():
-                try:
-                    t0 = time.perf_counter()
-                    pred, est_time = est_func(coords_2d)
-                    total_time = time.perf_counter() - t0
+        # 3. Academic estimators (2D Euclidean only, skip for n>5000 to avoid O(n^2) blowup).
+        # Never-silent: when an academic baseline cannot run, still emit a status row.
+        for est_name, est_func in academic_estimators.items():
+            if not (is_2d and coords_2d is not None):
+                results.append(_status_row(name, n, ewt, est_name, "academic_non_2d",
+                                           mode="hybrid"))
+                continue
+            if n > 5000:
+                results.append(_status_row(name, n, ewt, est_name, "academic_n_gt_5000",
+                                           mode="native", feat_dim=2))
+                continue
+            try:
+                t0 = time.perf_counter()
+                pred, est_time = est_func(coords_2d)
+                total_time = time.perf_counter() - t0
 
-                    gap = (pred - true_cost) / true_cost * 100.0
-                    concorde_t = concorde_times.get(name, None)
-                    speedup = concorde_t / total_time if concorde_t else None
+                gap = (pred - true_cost) / true_cost * 100.0
+                concorde_t = concorde_times.get(name, None)
+                speedup = concorde_t / total_time if concorde_t else None
 
-                    results.append({
-                        "instance": name,
-                        "n": n,
-                        "edge_weight_type": ewt,
-                        "model": est_name,
-                        "pred_cost": pred,
-                        "true_cost": true_cost,
-                        "gap_pct": gap,
-                        "abs_gap_pct": abs(gap),
-                        "total_time_s": total_time,
-                        "feature_time_s": est_time,
-                        "inference_time_s": 0.0,
-                        "mst_length": mst_length,
-                        "alpha": None,
-                        "concorde_time_s": concorde_t,
-                        "speedup_vs_concorde": speedup,
-                        "mode": "native",
-                        "feature_dim": 2,  # academic estimators are 2D native only
-                    })
-                except Exception as exc:
-                    print(f"  {est_name} FAILED on {name}: {exc}")
+                results.append({
+                    "instance": name,
+                    "n": n,
+                    "edge_weight_type": ewt,
+                    "model": est_name,
+                    "pred_cost": pred,
+                    "true_cost": true_cost,
+                    "gap_pct": gap,
+                    "abs_gap_pct": abs(gap),
+                    "total_time_s": total_time,
+                    "feature_time_s": est_time,
+                    "inference_time_s": 0.0,
+                    "mst_length": mst_length,
+                    "alpha": None,
+                    "concorde_time_s": concorde_t,
+                    "speedup_vs_concorde": speedup,
+                    "mode": "native",
+                    "feature_dim": 2,
+                    "status": "ok",
+                })
+            except Exception as exc:
+                print(f"  {est_name} FAILED on {name}: {exc}")
+                results.append(_status_row(name, n, ewt, est_name, f"exception:{type(exc).__name__}",
+                                           mode="native", feat_dim=2))
 
     # --- Save results (fixed filename, overwrites previous run) ---
     out_path = RESULTS_DIR / "all_models_tsplib.csv"
@@ -470,16 +536,24 @@ def run_benchmark(max_n=None, workers=None):
     print("ALL-MODELS TSPLIB BENCHMARK SUMMARY")
     print("=" * 70)
 
-    # Exclude brg180 from summary
+    # Exclude brg180 (triangle-inequality violator) from summary
     df_clean = df[df.instance != "brg180"]
 
-    for model in df_clean["model"].unique():
-        sub = df_clean[df_clean["model"] == model]
-        mape = sub["abs_gap_pct"].mean()
-        median = sub["abs_gap_pct"].median()
-        count = len(sub)
-        avg_time = sub["total_time_s"].mean() * 1000  # ms
-        print(f"  {model:15s}  n={count:3d}  MAPE={mape:6.2f}%  median={median:5.2f}%  avg_time={avg_time:8.1f}ms")
+    # Per-status tally for visibility (never-silent principle)
+    print("\nStatus breakdown across all (instance, model) pairs:")
+    for st, cnt in df_clean["status"].value_counts().items():
+        print(f"  {st:30s} {cnt}")
+    print()
+
+    for model in sorted(df_clean["model"].unique()):
+        sub_all = df_clean[df_clean["model"] == model]
+        sub_ok  = sub_all[sub_all["status"] == "ok"]
+        mape    = sub_ok["abs_gap_pct"].mean() if len(sub_ok) else float("nan")
+        median  = sub_ok["abs_gap_pct"].median() if len(sub_ok) else float("nan")
+        count_ok = len(sub_ok)
+        count_all = len(sub_all)
+        avg_time = sub_ok["total_time_s"].mean() * 1000 if len(sub_ok) else float("nan")
+        print(f"  {model:15s}  ok={count_ok:3d}/{count_all:3d}  MAPE={mape:6.2f}%  median={median:5.2f}%  avg_time={avg_time:8.1f}ms")
 
     print("=" * 70)
     return out_path

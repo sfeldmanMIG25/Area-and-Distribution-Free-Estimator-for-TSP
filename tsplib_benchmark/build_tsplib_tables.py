@@ -1,8 +1,8 @@
 """
-Emit the TSPLIB LaTeX tables the paper \\input's, matching the paper's
-multirow + resizebox aesthetic but with SDPE as the primary column,
-bootstrap CI, and numbers pulled from the merged canonical + supplemental
-benchmark CSVs.
+Verification helper: merges canonical + supplemental TSPLIB CSVs, then prints
+per-bucket SDPE [95% CI], MAPE, Median, R^2, r_alpha, Time(ms), N, and mean
+Concorde wall time (ms). Diff these values against Area_Free_Main.tex
+Table \\ref{tab:tsplib_by_size}. No .tex file is written.
 """
 import os
 import numpy as np
@@ -11,8 +11,6 @@ from sklearn.metrics import r2_score
 
 ROOT    = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RESULTS = os.path.join(ROOT, 'tsplib_benchmark', 'results')
-GEN_DIR = os.path.join(ROOT, 'paper_reference', 'gen')
-os.makedirs(GEN_DIR, exist_ok=True)
 
 CANONICAL  = os.path.join(RESULTS, 'all_models_tsplib.csv')
 SUPPLEMENT = os.path.join(RESULTS, 'all_models_tsplib_supplemental.csv')
@@ -174,22 +172,52 @@ def build_by_model_table(df, out_path):
         f_.write('\n'.join(L) + '\n')
 
 
+def _fmt_ms(x):
+    if x is None or (isinstance(x, float) and np.isnan(x)):
+        return '---'
+    if x < 10:    return f'{x:.2f}'
+    if x < 1000:  return f'{x:.1f}'
+    return f'{int(round(x)):,}'
+
+
 def main():
     can = pd.read_csv(CANONICAL)
     sup = pd.read_csv(SUPPLEMENT)
     merged = pd.concat([can, sup], ignore_index=True).drop_duplicates(subset=['instance', 'model'], keep='first')
     merged.to_csv(MERGED, index=False)
 
+    # Never-silent contract: rows with a 'status' column that is not 'ok'
+    # are placeholders for skipped/failed runs; drop them before aggregating.
+    if 'status' in merged.columns:
+        before = len(merged)
+        merged = merged[merged['status'].isna() | (merged['status'] == 'ok')]
+        print(f"Status-filtered: kept {len(merged)}/{before} rows (non-ok rows are audit placeholders)")
+
     euc2d = merged[merged['edge_weight_type'] == 'EUC_2D'].copy()
-    print(f"Merged rows: {len(merged)} | EUC_2D rows: {len(euc2d)} | instances: {euc2d['instance'].nunique()}")
+    print(f"Merged rows: {len(merged)} | EUC_2D rows: {len(euc2d)} | instances: {euc2d['instance'].nunique()}\n")
 
-    build_by_size_table(euc2d, os.path.join(GEN_DIR, 'tsplib_by_size.tex'))
-    build_by_model_table(euc2d, os.path.join(GEN_DIR, 'tsplib_by_model.tex'))
-    print(f"Wrote {GEN_DIR}/tsplib_by_size.tex and tsplib_by_model.tex")
-
-    g = agg(euc2d[euc2d['model'] == 'LGBM_V3'], 'LGBM_V3')
-    print(f"GART 2.0 EUC_2D: SDPE={g['SDPE']:.2f} [{g['SDPE_LO']:.2f},{g['SDPE_HI']:.2f}] | "
-          f"MAPE={g['MAPE']:.2f} | MED={g['MEDIAN']:.2f} | R2={g['R2']:.3f} | r_a={g['R_ALPHA']:.3f} | N={g['N']}")
+    BUCKETS = [
+        ('[51,150]',    51,    150),
+        ('[151,400]',   151,   400),
+        ('[401,1500]',  401,   1500),
+        ('n>1500',      1501,  10**9),
+        ('TOTAL',       51,    10**9),
+    ]
+    for (lbl, lo_n, hi_n) in BUCKETS:
+        bucket = euc2d[(euc2d['n'] >= lo_n) & (euc2d['n'] <= hi_n)]
+        print(f"--- bucket {lbl} (N instances={bucket['instance'].nunique()}) ---")
+        for m in HEADLINE_MODELS:
+            r = agg(bucket[bucket['model'] == m], m)
+            if r is None:
+                continue
+            r_alpha_s = f"{r['R_ALPHA']:.3f}" if (r['R_ALPHA'] is not None and not np.isnan(r['R_ALPHA'])) else '---'
+            print(f"  {MODEL_LABEL[m]:<10s} SDPE={r['SDPE']:6.2f} [{r['SDPE_LO']:5.2f},{r['SDPE_HI']:5.2f}] "
+                  f" MAPE={r['MAPE']:6.2f}  MED={r['MEDIAN']:6.2f}  "
+                  f"R2={r['R2']:.3f}  r_a={r_alpha_s}  t={_fmt_ms(r['TIME'])} ms  N={r['N']}")
+        ct = bucket[bucket['model'] == 'LGBM_V3']['concorde_time_s'].dropna()
+        t_ms = ct.mean() * 1000 if len(ct) > 0 else np.nan
+        print(f"  Optimal solver mean Concorde wall time : {_fmt_ms(t_ms)} ms\n")
+    print("Diff these values against Area_Free_Main.tex Table \\ref{tab:tsplib_by_size}.")
 
 
 if __name__ == '__main__':

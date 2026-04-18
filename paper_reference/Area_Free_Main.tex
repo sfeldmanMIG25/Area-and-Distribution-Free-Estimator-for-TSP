@@ -285,14 +285,14 @@ The final category contains features designed to detect higher-order structuresâ
 
 To train a general model, we constructed a synthetic dataset with topological diversity across four distribution classes: Uniform, Normal (Gaussian), Clustered ($k$-means centers), and Correlated (autoregressive across dimensions). For each instance, dimensions are independently assigned a distribution class, producing anisotropic configurations where the topology varies by axis. This ``mix-and-match'' strategy avoids bias toward any single geometric type. Random seeds are derived from distribution signatures to ensure distinct realizations across instances.
 
-The training dataset comprises 51,818 instances with node counts $n \in [20, 1000]$ and dimensions $d \in \{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\}$ (17 dimension values), split into training (37,283), validation (9,286), and test (5,249) partitions. Solved instances exist for $d$ up to 100 (see Appendix~\ref{app:training}); extrapolation beyond the training range ($d = 100$) is evaluated in Section~\ref{subsec:results_nd}.
+The full feature corpus comprises $90{,}418$ solved instances with node counts $n \in [5, 1000]$ and dimensions $d \in \{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\}$ (17 training-visible dimension values), plus a held-out extrapolation bucket at $d = 100$. Instances are partitioned 70/20/10 into training ($59{,}247$), validation ($16{,}714$), and test ($14{,}457$) via a stratified split on $(d, n, \text{grid size})$; all $d = 100$ instances are locked into the test partition so the model never sees that dimension during training or validation. Generator details and the stratification rule are documented in Appendix~\ref{app:training}; extrapolation to $d = 100$ is evaluated in Section~\ref{subsec:results_nd}.
 
 For each instance, the best-known tour cost was computed by running both Concorde \citep{concorde2006} and LKH-3 \citep{helsgaun2017}, retaining the shorter result as ground truth. Concorde provides provably optimal solutions for instances within its computational budget; LKH-3 is a state-of-the-art heuristic that empirically matches or approaches the optimum. For all training instances ($n \le 1000$), Concorde confirmed optimality within its computational budget; LKH-3 matched or improved all Concorde solutions. Coordinate scaling was applied to preserve floating-point precision in the integer-valued TSPLIB format required by these solvers.
 
 \subsection{Implementation}
 The GART 2.0 pipeline is implemented in Python using SciPy \citep{scipy2020} for Delaunay triangulation \citep{delaunay1934} and MST construction (via \texttt{scipy.sparse.csgraph.minimum\_spanning\_tree}), Numba \citep{numba2015} for JIT-compiled centroid distance computation, and scikit-learn \citep{sklearn2011} for classical MDS embedding of non-Euclidean distance matrices. For instances without Euclidean coordinates (e.g., TSPLIB GEO and EXPLICIT types), MDS projects the distance matrix into 2D coordinates for geometric feature extraction while MST features are computed from the original distances; details are given in Appendix~\ref{app:mds} and evaluated in Section~\ref{sec:application}. The LightGBM model \citep{ke2017lightgbm} is trained and served via the Python API. All benchmarks were run on a single machine (AMD Ryzen 9 5900X, 64\,GB RAM, Windows 11) with no GPU. Concorde version 03.12.19 and LKH-3 version 3.0.7 were used for ground-truth computation.
 
-\section{Estimation Model Development and Complexity Analysis}
+\section{Estimation Model Development}
 \label{sec:model}
 
 The relationship between topological features and the scaling factor $\alpha$ is non-smooth: sharp regime transitions occur, for example, when a point cloud transitions from a single cluster to multiple separated groups. This motivates a model architecture capable of capturing discontinuous, high-order feature interactions. GART 2.0 is implemented using the LightGBM gradient-boosting framework \citep{ke2017lightgbm}. For the task of scalar regression on tabular topological features, Gradient Boosted Decision Trees (GBDTs) offer superior sample efficiency and faster inference compared to deep learning alternatives.
@@ -337,6 +337,8 @@ max tree depth           & $29$ \\
 \end{tabular}
 \end{table}
 
+\paragraph{Complexity.} The trained model performs $K = 4{,}431$ tree traversals at inference, with an average root-to-leaf depth of $\bar{D} \approx 16.3$ (empirical maximum $29$). Since LightGBM grows leaf-wise, depth is not $\lceil \log_2 L \rceil$; the per-prediction cost is $K \cdot \bar{D} \approx 7.2 \times 10^{4}$ comparisons, independent of $n$. Feature extraction is dominated by the MST: $O(n^2 \cdot d)$ in general (dense distance matrix), reduced to $O(n \log n)$ in 2D by constructing the MST on a Delaunay-sparse edge set \citep{delaunay1934}, since the Euclidean MST is a subgraph of the Delaunay triangulation. Sorting the $n-1$ MST edges for quantile features adds $O(n \log n)$, and the remaining topological statistics (degrees, diameter via two BFS passes, leaf counts) are $O(n)$. The total asymptotic complexity is therefore $O(n^2 \cdot d)$ in general, and $O(n \log n)$ for 2D inputs. For comparison, Christofides' $\frac{3}{2}$-approximation requires a Minimum Weight Perfect Matching on the odd-degree MST vertices, with exact algorithms in $O(n^3)$ \citep{cook1999}; approximate MWPM variants reduce this but sacrifice the 1.5 guarantee \citep{duan2014, drake2003}, and Christofides returns a worst-case upper bound rather than a point estimate.
+
 \subsection{Feature importance and design validation}\label{subsec:shap}
 
 To verify that the 29-feature set is doing real work---rather than carrying redundant descriptors---we compute SHAP values \citep{lundberg2017shap} on the held-out test split using the saved booster (see \texttt{shap\_analyzer\_v3.py}). Table~\ref{tab:shap_top} reports the top ten features by mean absolute SHAP contribution. Three observations motivate the final feature set:
@@ -371,18 +373,6 @@ Rank & Feature & Mean $|$SHAP$|$ & Share (\%) \\
 \end{tabular}
 \end{table}
 
-\subsection{Computational Complexity Analysis}
-
-A primary motivation for GART 2.0 is to provide high-quality estimates faster than constructive heuristics. To validate this, we analyze the worst-case time complexity of the GART 2.0 pipeline compared to the Christofides algorithm, which provides the tightest polynomial-time approximation guarantee ($\frac{3}{2} \cdot L^*_{\text{TSP}}$). The total runtime of GART 2.0 is the sum of the feature extraction time and the inference time.
-
-The computational pipeline begins with the construction of the MST. For a complete graph with $n$ vertices in $d$ dimensions, calculating the pairwise distance matrix requires $O(n^2 \cdot d)$ operations. Constructing the MST from the dense matrix takes $O(n^2)$ time. For 2D instances, we exploit the fact that the MST is a subgraph of the Delaunay triangulation \citep{delaunay1934}, which has $O(n)$ edges, reducing the MST construction to $O(n \log n)$. Extracting topological features (degrees, diameter, leaf counts) requires $O(n)$ time. Sorting the $n-1$ edges for quantile computation adds $O(n \log n)$. Therefore, feature extraction is dominated by the distance matrix: $O(n^2 \cdot d)$ in general, or $O(n \log n)$ for 2D.
-
-The inference complexity of the LightGBM model is determined by the total number of split comparisons across the ensemble. Our trained model has $K=4{,}431$ trees with a mean of $144.5$ leaves per tree (maximum $258$). LightGBM grows trees leaf-wise rather than level-wise \citep{ke2017lightgbm}, so depth is \emph{not} $\lceil \log_2 L \rceil$; the actual average root-to-leaf depth is $\bar{D} \approx 16.3$ with a worst-case depth of $29$ empirically. Inference therefore performs $K \cdot \bar{D} \approx 7.2 \times 10^{4}$ comparisons per prediction, independent of $n$. Including feature computation, the total asymptotic complexity of GART 2.0 is $O(n^2 \cdot d)$ in general and $O(n \log n)$ in 2D via the Delaunay-sparse MST construction described below.
-
-In contrast, the Christofides heuristic requires a Minimum Weight Perfect Matching (MWPM) on odd-degree MST vertices. Exact MWPM algorithms run in $O(n^3)$ time \citep{cook1999}. Approximate matching algorithms \citep{duan2014, drake2003} reduce this cost but sacrifice the 1.5-approximation guarantee, degrading the worst-case ratio to $1.5 + \epsilon$.
-
-As noted in Section~\ref{sec:theory}, Christofides provides a worst-case \textit{upper bound}, not an estimate. GART 2.0 provides a statistical \textit{point estimate} calibrated to minimize prediction error, aligning more closely with operational needs such as fleet sizing where the true cost is typically $1.08 \times L_{\text{MST}}$ \citep{percus1996}.
-
 \section{Benchmarking} \label{sec:evaluation}
 
 We evaluate GART 2.0 against established estimators on three benchmarks: a synthetic 2D dataset spanning five distribution classes, a multi-dimensional synthetic dataset covering $d \in \{2, \ldots, 100\}$ (with $d = 100$ reserved as an extrapolation bucket outside the training range), and the 78 EUC\_2D instances of TSPLIB95 \citep{reinelt1991tsplib}. The 2D suite mixes uniform and non-uniform generators: anisotropic clusters, geometric lattices, and near-linear manifolds. The near-linear generator was not part of the training distribution; we include it explicitly to probe how MST-based estimation handles geometries outside what the model was taught.
@@ -412,6 +402,20 @@ To handle anisotropic distributions, \citet{cavdar2015distribution} proposed a d
     \hat{L}_{\text{CS}} = \alpha_1 \sqrt{n \cdot \sigma'_x \sigma'_y} + \alpha_2 \sqrt{\frac{n \cdot A \cdot \sigma_x \sigma_y}{\bar{c}_x \bar{c}_y}}
 \end{equation}
 where $A$ is the area of the convex hull, $\sigma_k$ is the standard deviation of coordinates in dimension $k$, $\bar{c}_k$ is the mean absolute deviation from the centroid, and $\sigma'_k$ is the standard deviation of these absolute deviations. The regression coefficients are fitted by \citet{cavdar2015distribution} as $\alpha_1 = 2.791$ and $\alpha_2 = 0.2669$. Because the model was trained on axis-aligned rectangular graphs, applying it to arbitrarily oriented point sets requires a preprocessing step: coordinates are rotated to align with the minimum-area bounding rectangle \citep{freeman1975determining}, following the procedure described in Section~5 of \citet{cavdar2015distribution}. All dispersion statistics are then computed on the rotated coordinates.
+
+\subsubsection{Kwon--Golden--Wasil (1995) Estimator}
+\citet{kwon1995tsp} proposed a regression-based TSP estimator calibrated on depot-centric VRP instances. It is the only classical baseline in our comparison that is explicitly sensitive to both $n$ and a characteristic radius $R$ of the point set:
+\begin{equation}
+    \hat{L}_{\text{Kwon}} = \left(0.8326 - 0.0011\,n + 1.1147\,\frac{R}{n}\right)\sqrt{n\,A},
+\end{equation}
+where $A$ is the convex hull area and $R$ is the mean distance from each vertex to the centroid (a depot-free adaptation of Kwon's original depot-to-region distance, matching the specification used by \citet{cavdar2015distribution} when they benchmarked Kwon). Two properties of this form are worth noting. First, the linear $-0.0011\,n$ term was calibrated for VRP customer counts in the tens-to-hundreds range; extrapolated to $n$ in the thousands or tens of thousands it dominates the bracket and drives the prediction negative, which we clip to zero. Second, to apply the formula across TSPLIB's wide range of raw coordinate scales, we rescale coordinates so the bounding-box diagonal is $1$, evaluate Kwon in that normalized space, and multiply the result by the original diagonal; without this step the $R$ term becomes scale-dependent and unusable across TSPLIB. Both behaviours are visible directly in Table~\ref{tab:tsplib_by_size}: Kwon tracks the data well for $n \le 400$ and degenerates for $n \ge 1500$.
+
+\subsubsection{Daganzo (1984) Estimator}
+\citet{daganzo1984} derived a square-root TSP/CVRP approximation for uniformly distributed points:
+\begin{equation}
+    \hat{L}_{\text{Daganzo}} = 0.57\,\sqrt{n\,A}.
+\end{equation}
+Structurally this is BHH with a different constant: Daganzo calibrated his coefficient at $0.57$ for disc-shaped service regions, which is visibly looser than the BHH/uniform-square value $0.7124$ we use for the BHH baseline. We include both separately because the literature reports them as distinct benchmarks; Table~\ref{tab:tsplib_by_size} shows Daganzo is competitive with BHH at large $n$ (where both track the BHH asymptote) and weaker at small $n$ where the constant-$k$ assumption misses instance-specific structure.
 
 \subsubsection{Chien Estimator}
 \citet{chien1992operational} proposed a probabilistic estimator for logistics route planning that scales tour cost with the square root of the number of stops and the service area:
@@ -695,7 +699,7 @@ Table~\ref{tab:tsplib_by_size} reports per-bucket results across all 78 EUC\_2D 
 
 \begin{table}[!ht]
 \centering
-\caption{TSPLIB95 EUC\_2D benchmark by instance size (78 instances, four balanced buckets). SDPE is primary (first numeric column) and includes a 95\% bootstrap CI (1000 resamples, seed 42). GART 2.0 rows are bolded. \textit{Optimal solver} row shows mean \textsc{Concorde} wall time in milliseconds.}
+\caption{TSPLIB95 EUC\_2D benchmark by instance size (78 instances, four balanced buckets). SDPE is primary (first numeric column) and includes a 95\% bootstrap CI (1000 resamples, seed 42). GART 2.0 rows are bolded. Kwon (1995) is included for completeness; its calibration is known to break for $n$ well beyond typical VRP sizes --- its $n > 1500$ bucket returns a clipped estimator (all predictions clamped to $0$), reflected in $100\%$ error, which we report as-observed rather than hide. \textit{Optimal solver} row shows mean \textsc{Concorde} wall time in milliseconds.}
 \label{tab:tsplib_by_size}
 \resizebox{\textwidth}{!}{%
 \footnotesize
@@ -703,51 +707,62 @@ Table~\ref{tab:tsplib_by_size} reports per-bucket results across all 78 EUC\_2D 
 \toprule
 $n$ bucket & Model & SDPE (\%) [95\% CI] & MAPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) & $N$ \\
 \midrule
-\multirow{7}{*}{$[51,\,150]$}
-  & \textbf{GART 2.0} & \textbf{3.28} \scriptsize[2.03, 4.04]        & \textbf{2.83}  & 1.71  & 0.996 & 0.704 & 9.33  & 23 \\
-  & MST Ratio         & 4.05 \scriptsize[2.70, 4.84]                 & 6.93           & 6.12  & 0.978 & ---   & 0.93  & 23 \\
-  & Cavdar            & 14.37 \scriptsize[7.77, 19.01]               & 10.00          & 6.44  & 0.936 & ---   & 0.71  & 23 \\
-  & BHH               & 15.99 \scriptsize[7.69, 20.89]               & 16.09          & 13.59 & 0.958 & ---   & 0.73  & 23 \\
-  & Chien             & 14.58 \scriptsize[6.61, 18.92]               & 18.45          & 17.84 & 0.948 & ---   & 0.11  & 23 \\
-  & Hilbert           & 11.46 \scriptsize[8.20, 13.91]               & 39.91          & 38.92 & 0.758 & ---   & 0.72  & 23 \\
+\multirow{9}{*}{$[51,\,150]$}
+  & \textbf{GART 2.0} & \textbf{3.28} \scriptsize[2.03, 4.04]  & \textbf{2.83}  & 1.71  & 0.996  & 0.704 & 9.33  & 23 \\
+  & MST Ratio         & 4.05 \scriptsize[2.70, 4.84]           & 6.93           & 6.12  & 0.978  & ---   & 0.93  & 23 \\
+  & Cavdar            & 14.37 \scriptsize[7.77, 19.01]         & 10.00          & 6.44  & 0.936  & ---   & 0.71  & 23 \\
+  & BHH               & 15.99 \scriptsize[7.69, 20.89]         & 16.09          & 13.59 & 0.958  & ---   & 0.73  & 23 \\
+  & Chien             & 14.58 \scriptsize[6.61, 18.92]         & 18.45          & 17.84 & 0.948  & ---   & 0.11  & 23 \\
+  & Hilbert           & 11.46 \scriptsize[8.20, 13.91]         & 39.91          & 38.92 & 0.758  & ---   & 0.72  & 23 \\
+  & Kwon              & 14.27 \scriptsize[6.21, 18.53]         & 14.83          & 14.01 & 0.965  & ---   & 0.63  & 23 \\
+  & Daganzo           & 12.80 \scriptsize[6.16, 16.72]         & 27.94          & 29.61 & 0.894  & ---   & 0.51  & 23 \\
   & \textit{Optimal solver} & --- & --- & --- & --- & --- & 854 & --- \\
 \midrule
-\multirow{7}{*}{$[151,\,400]$}
-  & \textbf{GART 2.0} & \textbf{3.23} \scriptsize[2.00, 4.11]        & \textbf{2.89}  & 2.50  & 0.997 & 0.841 & 18.4  & 16 \\
-  & MST Ratio         & 5.25 \scriptsize[2.45, 7.17]                 & 5.94           & 4.93  & 0.986 & ---   & 4.45  & 16 \\
-  & Cavdar            & 26.84 \scriptsize[10.56, 34.22]              & 19.60          & 11.29 & 0.577 & ---   & 0.66  & 16 \\
-  & BHH               & 23.29 \scriptsize[11.57, 29.59]              & 16.06          & 6.53  & 0.793 & ---   & 0.87  & 16 \\
-  & Chien             & 25.90 \scriptsize[13.29, 31.96]              & 21.22          & 16.22 & 0.860 & ---   & 0.14  & 16 \\
-  & Hilbert           & 7.27 \scriptsize[3.45, 10.25]                & 44.39          & 42.42 & 0.596 & ---   & 1.61  & 16 \\
+\multirow{9}{*}{$[151,\,400]$}
+  & \textbf{GART 2.0} & \textbf{3.23} \scriptsize[2.00, 4.11]  & \textbf{2.89}  & 2.50  & 0.997  & 0.841 & 18.4  & 16 \\
+  & MST Ratio         & 5.25 \scriptsize[2.45, 7.17]           & 5.94           & 4.93  & 0.986  & ---   & 4.45  & 16 \\
+  & Cavdar            & 26.84 \scriptsize[10.56, 34.22]        & 19.60          & 11.29 & 0.577  & ---   & 0.66  & 16 \\
+  & BHH               & 23.29 \scriptsize[11.57, 29.59]        & 16.06          & 6.53  & 0.793  & ---   & 0.87  & 16 \\
+  & Chien             & 25.90 \scriptsize[13.29, 31.96]        & 21.22          & 16.22 & 0.860  & ---   & 0.14  & 16 \\
+  & Hilbert           & 7.27 \scriptsize[3.45, 10.25]          & 44.39          & 42.42 & 0.596  & ---   & 1.61  & 16 \\
+  & Kwon              & 23.30 \scriptsize[14.58, 28.50]        & 24.84          & 27.84 & 0.879  & ---   & 0.68  & 16 \\
+  & Daganzo           & 18.63 \scriptsize[9.26, 23.67]         & 21.33          & 23.29 & 0.908  & ---   & 0.55  & 16 \\
   & \textit{Optimal solver} & --- & --- & --- & --- & --- & 15{,}525 & --- \\
 \midrule
-\multirow{7}{*}{$[401,\,1500]$}
-  & \textbf{GART 2.0} & \textbf{3.92} \scriptsize[2.55, 4.84]        & \textbf{3.60}  & 2.25  & 0.999 & 0.666 & 34.5  & 20 \\
-  & MST Ratio         & 3.51 \scriptsize[2.58, 4.14]                 & 4.85           & 5.65  & 0.993 & ---   & 101.7 & 20 \\
-  & Cavdar            & 36.92 \scriptsize[19.56, 45.96]              & 28.84          & 14.19 & 0.825 & ---   & 1.11  & 20 \\
-  & BHH               & 49.16 \scriptsize[20.33, 64.83]              & 34.04          & 14.70 & 0.831 & ---   & 1.57  & 20 \\
-  & Chien             & 44.38 \scriptsize[20.70, 57.82]              & 30.75          & 18.33 & 0.943 & ---   & 0.43  & 20 \\
-  & Hilbert           & 10.81 \scriptsize[7.24, 13.35]               & 48.57          & 46.95 & 0.278 & ---   & 5.99  & 20 \\
-  & \textit{Optimal solver} & --- & --- & --- & --- & --- & 4{,}541{,}959 & --- \\
+\multirow{9}{*}{$[401,\,1500]$}
+  & \textbf{GART 2.0} & \textbf{3.92} \scriptsize[2.55, 4.84]  & \textbf{3.60}  & 2.25  & 0.999  & 0.666 & 34.5  & 20 \\
+  & MST Ratio         & 3.51 \scriptsize[2.58, 4.14]           & 4.85           & 5.65  & 0.993  & ---   & 101.7 & 20 \\
+  & Cavdar            & 36.92 \scriptsize[19.56, 45.96]        & 28.84          & 14.19 & 0.825  & ---   & 1.11  & 20 \\
+  & BHH               & 49.16 \scriptsize[20.33, 64.83]        & 34.04          & 14.70 & 0.831  & ---   & 1.57  & 20 \\
+  & Chien             & 44.38 \scriptsize[20.70, 57.82]        & 30.75          & 18.33 & 0.943  & ---   & 0.43  & 20 \\
+  & Hilbert           & 10.81 \scriptsize[7.24, 13.35]         & 48.57          & 46.95 & 0.278  & ---   & 5.99  & 20 \\
+  & Kwon              & 28.77 \scriptsize[14.15, 39.39]        & 81.60          & 100.00 & $-1.03$ & --- & 0.87  & 20 \\
+  & Daganzo           & 39.34 \scriptsize[16.26, 51.87]        & 27.65          & 20.11 & 0.955  & ---   & 0.72  & 20 \\
+  & \textit{Optimal solver} & --- & --- & --- & --- & --- & $> 1$~h (not measured) & --- \\
 \midrule
-\multirow{7}{*}{$n > 1500$}
-  & \textbf{GART 2.0} & \textbf{3.28} \scriptsize[2.05, 3.96]        & \textbf{4.47}  & 3.50  & 1.000 & 0.486 & 87.5  & 19 \\
-  & MST Ratio         & 3.52 \scriptsize[2.29, 4.40]                 & 2.93           & 2.21  & 0.998 & ---   & 539.9 & 19 \\
-  & Cavdar            & 53.76 \scriptsize[15.47, 78.40]              & 35.25          & 18.58 & 0.821 & ---   & 2.64  & 19 \\
-  & BHH               & 50.47 \scriptsize[15.98, 74.50]              & 34.45          & 25.11 & 0.872 & ---   & 2.82  & 19 \\
-  & Chien             & 44.16 \scriptsize[15.34, 65.12]              & 26.16          & 13.70 & 0.930 & ---   & 1.80  & 19 \\
-  & Hilbert           & 14.47 \scriptsize[9.42, 19.08]               & 48.76          & 49.11 & 0.597 & ---   & 36.0  & 19 \\
-  & \textit{Optimal solver} & --- & --- & --- & --- & --- & 1{,}341{,}641{,}880 & --- \\
+\multirow{9}{*}{$n > 1500$}
+  & \textbf{GART 2.0} & \textbf{3.28} \scriptsize[2.05, 3.96]  & \textbf{4.47}  & 3.50  & 1.000  & 0.486 & 87.5  & 19 \\
+  & MST Ratio         & 3.52 \scriptsize[2.29, 4.40]           & 2.93           & 2.21  & 0.998  & ---   & 539.9 & 19 \\
+  & Cavdar            & 53.76 \scriptsize[15.47, 78.40]        & 35.25          & 18.58 & 0.821  & ---   & 2.64  & 19 \\
+  & BHH               & 50.47 \scriptsize[15.98, 74.50]        & 34.45          & 25.11 & 0.872  & ---   & 2.82  & 19 \\
+  & Chien             & 44.16 \scriptsize[15.34, 65.12]        & 26.16          & 13.70 & 0.930  & ---   & 1.80  & 19 \\
+  & Hilbert           & 14.47 \scriptsize[9.42, 19.08]         & 48.76          & 49.11 & 0.597  & ---   & 36.0  & 19 \\
+  & Kwon$^{\dagger}$  & 0.00 \scriptsize[0.00, 0.00]           & 100.00         & 100.00 & $-0.10$ & --- & 2.60  & 19 \\
+  & Daganzo           & 40.38 \scriptsize[12.95, 59.20]        & 23.48          & 11.64 & 0.994  & ---   & 2.25  & 19 \\
+  & \textit{Optimal solver} & --- & --- & --- & --- & --- & $> 1$~h (not measured) & --- \\
 \midrule
-\multirow{7}{*}{\textbf{Total}}
-  & \textbf{GART 2.0} & \textbf{3.52} \scriptsize[2.95, 4.04]        & \textbf{3.44}  & 2.37  & 1.000 & 0.727 & 36.7  & 78 \\
-  & MST Ratio         & 4.54 \scriptsize[3.54, 5.36]                 & 5.22           & 4.96  & 0.998 & ---   & 158.8 & 78 \\
-  & Cavdar            & 36.30 \scriptsize[22.72, 48.46]              & 22.95          & 11.44 & 0.832 & ---   & 1.28  & 78 \\
-  & BHH               & 40.75 \scriptsize[25.39, 53.04]              & 25.16          & 13.41 & 0.880 & ---   & 1.48  & 78 \\
-  & Chien             & 35.83 \scriptsize[23.46, 46.44]              & 24.05          & 16.84 & 0.934 & ---   & 0.61  & 78 \\
-  & Hilbert           & 11.84 \scriptsize[9.83, 13.62]               & 45.20          & 44.60 & 0.623 & ---   & 10.9  & 78 \\
-  & \textit{Optimal solver} & --- & --- & --- & --- & --- & 591{,}595{,}588 & --- \\
+\multirow{9}{*}{\textbf{Total}}
+  & \textbf{GART 2.0} & \textbf{3.52} \scriptsize[2.95, 4.04]  & \textbf{3.44}  & 2.37  & 1.000  & 0.727 & 36.7  & 78 \\
+  & MST Ratio         & 4.54 \scriptsize[3.54, 5.36]           & 5.22           & 4.96  & 0.998  & ---   & 158.8 & 78 \\
+  & Cavdar            & 36.30 \scriptsize[22.72, 48.46]        & 22.95          & 11.44 & 0.832  & ---   & 1.28  & 78 \\
+  & BHH               & 40.75 \scriptsize[25.39, 53.04]        & 25.16          & 13.41 & 0.880  & ---   & 1.48  & 78 \\
+  & Chien             & 35.83 \scriptsize[23.46, 46.44]        & 24.05          & 16.84 & 0.934  & ---   & 0.61  & 78 \\
+  & Hilbert           & 11.84 \scriptsize[9.83, 13.62]         & 45.20          & 44.60 & 0.623  & ---   & 10.9  & 78 \\
+  & Kwon$^{\dagger}$  & 44.87 \scriptsize[40.73, 47.93]        & 54.75          & 32.51 & $-0.03$ & --- & 1.18  & 78 \\
+  & Daganzo           & 32.60 \scriptsize[21.00, 42.89]        & 25.42          & 23.68 & 0.994  & ---   & 0.99  & 78 \\
+  & \textit{Optimal solver} & --- & --- & --- & --- & --- & $> 1$~h (not measured) & --- \\
 \bottomrule
+\multicolumn{9}{l}{\scriptsize $^{\dagger}$ Kwon (1995) was calibrated for VRP customer counts $\approx 50$--$300$; its linear $-0.0011n$ term drives the estimate negative at large $n$, clipped to $0$.} \\
 \end{tabular}%
 }
 \end{table}
@@ -780,7 +795,7 @@ TSPLIB95 contains 32 metric instances that are not native EUC\_2D: 4 CEIL\_2D (E
 
 \subsection{MDS preprocessing}
 
-Classical multidimensional scaling \citep{torgerson1952mds,borg2005mds} embeds an $n \times n$ distance matrix $D$ into $k$-dimensional Euclidean coordinates. Let $J = I - \tfrac{1}{n}\mathbf{1}\mathbf{1}^\top$ be the centering matrix and $D^{(2)}$ the elementwise-squared distance matrix. The doubly-centered inner-product matrix is $B = -\tfrac{1}{2} J D^{(2)} J$; its eigendecomposition $B = V \Lambda V^\top$ yields the embedding $X = V_k \Lambda_k^{1/2}$ on the top $k$ positive eigenvalues \citep{cox2000mds}. We pick the smallest $k$ retaining $\ge 99.9\%$ of the eigenvalue variance, capped at $k = 100$. MST features are computed from the \emph{original} distance matrix (preserving metric accuracy), while geometric features use the embedded coordinates. The selected $k$ is passed to the model as the dimension feature. Appendix~\ref{app:mds} gives the derivation.
+For each non-Euclidean TSPLIB instance we obtain a Euclidean coordinate representation by applying classical multidimensional scaling \citep{torgerson1952mds,borg2005mds,cox2000mds} to the distance matrix $D$, retaining the smallest number of dimensions $k$ that preserves $\ge 99.9\%$ of the eigenvalue variance (capped at $k = 100$). Geometric features are computed on the MDS embedding while MST features are computed from the \emph{original} $D$ so no metric information is lost, and the selected $k$ is passed to the model as the \texttt{dimension} feature. Full derivation and the per-instance $k$ distribution are given in Appendix~\ref{app:mds}.
 
 \subsection{Results on non-Euclidean TSPLIB95}
 
@@ -806,15 +821,6 @@ EXPLICIT-metric & 16 & 5.94 & 5.85 & 5.19 & 0.838 & 12.3 & 37 [8,100] \\
 \end{table}
 
 GART 2.0 generalizes across all four distance types with 4--7\% MAPE. GEO instances achieve the lowest error (4.44\%) because great-circle distances admit a low-stress Euclidean embedding at typical geographic scales. EXPLICIT-metric instances reach 5.94\% because their matrices may mildly violate the triangle inequality, inflating MDS stress. CEIL\_2D runtime is inflated by two of its four instances exceeding $n = 10{,}000$, which dominates the 581~ms mean.
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.75\textwidth]{tsplib_extrapolation.png}
-\caption{GART 2.0: predicted vs.\ true $\alpha = L_{\text{TSP}} / L_{\text{MST}}$ on all 110 TSPLIB95 instances, colored by distance type. Combined data from the 78 EUC\_2D instances of Section~\ref{subsec:results_tsplib} and the 32 non-Euclidean instances of Table~\ref{tab:tsplib_nonEuc}.}
-\label{fig:tsplib_scatter}
-\end{figure}
-
-Figure~\ref{fig:tsplib_scatter} combines all 110 TSPLIB95 metric instances on a single predicted-versus-true $\alpha$ plot. Predictions cluster along the diagonal across every distance type, showing that the MST-to-TSP ratio is learnable even when coordinates are derived rather than native. A pattern worth noting: the non-Euclidean subsets (GEO, EXPLICIT-metric) produce wider true-$\alpha$ spreads than EUC\_2D, so there is more signal for the model to track --- GART's $r_\alpha$ reaches 0.97 on GEO and 0.84 on EXPLICIT-metric. On EUC\_2D, most real-world instances converge to $\alpha \in [1.07, 1.15]$; that narrow band makes the ranking harder because a small absolute prediction error spans a larger fraction of the true-$\alpha$ range. Instances with higher true-$\alpha$ variation are therefore where MST-based features have the most headroom, and where the next generation of features should focus.
 
 \section{Conclusion}\label{sec:conclusion}
 
@@ -859,9 +865,9 @@ The training dataset was constructed by generating synthetic TSP instances acros
     \item \textbf{Correlated}: Autoregressive structure across dimensions: $x_{d+1} = \rho \cdot x_d + \epsilon$, producing axis-aligned anisotropy.
 \end{itemize}
 
-Each instance's dimensions are independently assigned a distribution class, producing anisotropic configurations where topology varies by axis. Node counts span $n \in [20, 1{,}000]$ with dimensions $d \in \{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\}$ (17 dimension values). Ground-truth solutions were computed by running both Concorde and LKH-3, retaining the shorter result. Solved instances exist for $d$ up to 100 (85{,}229 total across 18 dimension values); the $d = 100$ instances are reserved as the extrapolation bucket in the ND benchmark (Section~\ref{subsec:results_nd}).
+Each instance's dimensions are independently assigned a distribution class, producing anisotropic configurations where topology varies by axis. Node counts span $n \in [5, 1{,}000]$ with training-visible dimensions $d \in \{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\}$ (17 dimension values), plus a held-out extrapolation bucket at $d = 100$ ($4{,}574$ instances, all placed in the test split). Ground-truth solutions were computed by running both Concorde and LKH-3, retaining the shorter result.
 
-The 51,818 instances are partitioned into training (72\%), validation (18\%), and test (10\%) splits using stratified sampling by dimension and size bracket.
+The $90{,}418$ solved instances are partitioned into training ($59{,}247$, $65.5\%$), validation ($16{,}714$, $18.5\%$), and test ($14{,}457$, $16.0\%$) using a stratified sample on $(d, n, \text{grid size})$. The stratification rule ranks instances within each stratum by a seeded uniform and assigns the first $10\%$ to test, the next $20\%$ to validation, and the remainder to training; $d = 100$ instances bypass this rule and are locked to the test partition (see \texttt{feature\_creator\_v3.create\_stratified\_split}).
 
 \section{MDS Embedding for Non-Euclidean Instances} \label{app:mds}
 

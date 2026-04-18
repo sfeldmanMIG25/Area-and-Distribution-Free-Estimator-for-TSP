@@ -279,6 +279,8 @@ def main():
         ('Chien', lambda: academic.estimate_tsp_chien),
         #('Christofides', lambda: academic.estimate_tsp_christofides),
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
+        ('Kwon', lambda: academic.estimate_tsp_kwon),
+        ('Daganzo', lambda: academic.estimate_tsp_daganzo),
         
         # --- Simulation / Sampling ---
         # ('EVT', academic.estimate_tsp_evt),
@@ -288,7 +290,7 @@ def main():
         # --- Machine Learning Models ---
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
-        ('Neural_V3', lambda: TSP_V3_Neural_Estimator(str(SCRIPT_DIR / 'nn_est_alpha_v3'))),
+        # ('Neural_V3', ...): disabled — checkpoint file not available in this repo snapshot.
         ('Interp_V3', lambda: TSP_Interpretable_Estimator(str(SCRIPT_DIR / 'interpretable_model_v3'))),
         
         # --- GART (Legacy ML) ---
@@ -305,7 +307,7 @@ def main():
         final_df.to_csv(FINAL_RESULTS_FILE, index=False)
         calculate_metrics_and_print(final_df)
 
-    print("\n✅ Benchmark Complete.")
+    print("\n[OK] Benchmark Complete.")
 
 if __name__ == "__main__":
-    main()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    main()

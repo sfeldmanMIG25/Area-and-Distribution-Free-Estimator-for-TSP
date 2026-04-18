@@ -145,6 +145,30 @@ def run_missing(ground_truth: dict) -> pd.DataFrame:
         except Exception as exc:
             print(f"    Hilbert FAILED: {exc}")
 
+        # Vinel
+        try:
+            pred, tsec = academic.estimate_tsp_vinel(coords)
+            rows.append(make_row(name, n, "Vinel", pred, true_cost, tsec, mst_len))
+            print(f"    Vinel: pred={pred:.1f} in {tsec:.3f}s")
+        except Exception as exc:
+            print(f"    Vinel FAILED: {exc}")
+
+        # Kwon (1995)
+        try:
+            pred, tsec = academic.estimate_tsp_kwon(coords)
+            rows.append(make_row(name, n, "Kwon", pred, true_cost, tsec, mst_len))
+            print(f"    Kwon: pred={pred:.1f} in {tsec:.3f}s")
+        except Exception as exc:
+            print(f"    Kwon FAILED: {exc}")
+
+        # Daganzo (1984)
+        try:
+            pred, tsec = academic.estimate_tsp_daganzo(coords)
+            rows.append(make_row(name, n, "Daganzo", pred, true_cost, tsec, mst_len))
+            print(f"    Daganzo: pred={pred:.1f} in {tsec:.3f}s")
+        except Exception as exc:
+            print(f"    Daganzo FAILED: {exc}")
+
     df = pd.DataFrame(rows)
     print("\nSkipped:", skipped)
     return df
