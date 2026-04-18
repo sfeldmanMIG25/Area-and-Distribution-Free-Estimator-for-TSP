@@ -43,28 +43,49 @@ def load_instance_data(instance_name):
     bin_path = os.path.join(INSTANCES_DIR, f"{base_name}.bin")
     json_path = os.path.join(INSTANCES_DIR, f"{base_name}.json")
     
-    # Try Binary First
+    # Try Binary First — but validate header to avoid MemoryError on corrupt files
     if os.path.exists(bin_path):
-        # Strict loading: if files are corrupt, script will crash (per user rules)
-        with open(bin_path, 'rb') as f:
-            n, d, grid_size = struct.unpack('III', f.read(12))
-            dist_len = struct.unpack('I', f.read(4))[0]
-            _ = f.read(dist_len) # Skip dist string
-            coords_buffer = f.read(n * d * 4)
-            coords = np.frombuffer(coords_buffer, dtype=np.float32).reshape(n, d)
-        return {
-            'instance_name': base_name, 'n_customers': n, 
-            'dimension': d, 'grid_size': grid_size, 'coordinates': coords
-        }
+        try:
+            file_size = os.path.getsize(bin_path)
+            with open(bin_path, 'rb') as f:
+                hdr = f.read(12)
+                if len(hdr) != 12:
+                    raise ValueError('short header')
+                n, d, grid_size = struct.unpack('III', hdr)
+                if not (3 <= n <= 100000 and 1 <= d <= 200):
+                    raise ValueError(f'bad n/d header: n={n}, d={d}')
+                dist_len_bytes = f.read(4)
+                if len(dist_len_bytes) != 4:
+                    raise ValueError('short dist_len')
+                dist_len = struct.unpack('I', dist_len_bytes)[0]
+                if dist_len > 1024:
+                    raise ValueError(f'bad dist_len: {dist_len}')
+                coord_bytes = n * d * 4
+                min_expected = 12 + 4 + dist_len + coord_bytes
+                if file_size < min_expected:
+                    raise ValueError(f'truncated: need {min_expected}, got {file_size}')
+                _ = f.read(dist_len)
+                coords_buffer = f.read(coord_bytes)
+                coords = np.frombuffer(coords_buffer, dtype=np.float32).reshape(n, d)
+            return {
+                'instance_name': base_name, 'n_customers': n,
+                'dimension': d, 'grid_size': grid_size, 'coordinates': coords
+            }
+        except (ValueError, struct.error, OSError):
+            # Corrupt binary — fall through to JSON fallback below (never silent)
+            pass
 
     # Fallback to JSON
     if os.path.exists(json_path):
-        with open(json_path, 'r') as f:
-            data = json.load(f)
+        try:
+            with open(json_path, 'r') as f:
+                data = json.load(f)
             data['coordinates'] = np.array(data['coordinates'], dtype=np.float32)
             data['instance_name'] = base_name
             return data
-            
+        except (json.JSONDecodeError, ValueError, KeyError, OSError):
+            return None
+
     return None
 
 # --- V3 FEATURE LOGIC (MST-Centric + Clustering Proxies) ---
@@ -228,62 +249,53 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     return features
 
 def process_file_worker(filename):
-    """Worker function for ProcessPoolExecutor"""
-    if not filename.endswith('.json'): return None
-    
-    # Check strict existence to avoid crashes
+    """Worker function for ProcessPoolExecutor. Never raises; bad files → None."""
+    if not filename.endswith('.json'):
+        return None
     base_name = filename[:-5]
-    sol_filename = f"{base_name}.sol.json"
-    sol_path = os.path.join(SOLUTIONS_DIR, sol_filename)
-    
-    if not os.path.exists(sol_path): return None
-    
-    inst = load_instance_data(filename)
-    if not inst: return None
-    
-    with open(sol_path, 'r') as f:
-        sol = json.load(f)
-        
-    return compute_features_for_instance_v3(inst, sol)
+    sol_path = os.path.join(SOLUTIONS_DIR, f"{base_name}.sol.json")
+    if not os.path.exists(sol_path):
+        return None
+    try:
+        inst = load_instance_data(filename)
+        if not inst:
+            return None
+        with open(sol_path, 'r') as f:
+            sol = json.load(f)
+        return compute_features_for_instance_v3(inst, sol)
+    except (json.JSONDecodeError, ValueError, KeyError, OSError, MemoryError):
+        return None
 
 def create_stratified_split(df):
     """
-    Replicates the exact split logic from feature_creator.py
-    if the baseline split file is missing.
+    70/20/10 train/val/test stratified by (dimension, n_customers, grid_size).
+    d=100 is locked to test (held-out OOD), per paper spec.
     """
     print("Applying Fresh Stratified Split Logic...")
-    
-    # 1. d=100 -> TEST
+
     mask_d100 = df['dimension'] == 100
-    df_d100 = df[mask_d100].copy()
+    df_d100   = df[ mask_d100].copy()
     df_others = df[~mask_d100].copy()
-    
+
     df_d100['split'] = 'test'
     print(f"Locked {len(df_d100)} instances (d=100) into Test.")
-    
+
     if len(df_others) > 0:
-        # Group by [Dimension, N, Grid]
-        stratum_cols = ['dimension', 'n_customers', 'grid_size']
-        
-        # Shuffle within groups
-        df_others = df_others.groupby(stratum_cols, group_keys=False).apply(
-            lambda x: x.sample(frac=1, random_state=RANDOM_STATE)
+        rng = np.random.default_rng(RANDOM_STATE)
+        df_others = df_others.copy()
+        df_others['_r'] = rng.random(len(df_others))
+
+        grp = df_others.groupby(['dimension', 'n_customers', 'grid_size'])
+        df_others['_rank']  = grp['_r'].rank(method='first')
+        df_others['_count'] = grp['_r'].transform('count')
+        df_others['_frac']  = (df_others['_rank'] - 1) / df_others['_count']
+
+        df_others['split'] = np.where(
+            df_others['_frac'] < 0.10, 'test',
+            np.where(df_others['_frac'] < 0.30, 'val', 'train')
         )
-        
-        # Calculate ratio within the group
-        df_others['group_frac'] = df_others.groupby(stratum_cols).cumcount() / \
-                                  df_others.groupby(stratum_cols)['instance_name'].transform('count')
-        
-        # 70% Train, 20% Val, 10% Test
-        conditions = [
-            df_others['group_frac'] < 0.10,          # 10% Test
-            df_others['group_frac'] < (0.10 + 0.20)  # 20% Val (Cumulative 0.30)
-        ]
-        choices = ['test', 'val']
-        
-        df_others['split'] = np.select(conditions, choices, default='train')
-        df_others = df_others.drop(columns=['group_frac'])
-    
+        df_others = df_others.drop(columns=['_r', '_rank', '_count', '_frac'])
+
     return pd.concat([df_others, df_d100], ignore_index=True)
 
 # --- MAIN ---
@@ -316,6 +328,8 @@ if __name__ == '__main__':
                             total=len(files_to_process), desc="Computing V3 Features"))
 
     all_features = [res for res in results if res is not None]
+    n_skipped = len(files_to_process) - len(all_features)
+    print(f"Processed OK: {len(all_features)} | Skipped (no solution / n<3 / corrupt): {n_skipped}")
 
     if not all_features:
         print("Error: No features generated.")

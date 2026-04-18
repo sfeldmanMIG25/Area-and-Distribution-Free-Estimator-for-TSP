@@ -56,7 +56,7 @@
 \rhead{ \textit{ }} 
 
 % Update your Headers here
-\fancyhead[LO]{Distribution-Free TSP Estimator for Arbitrary Dimension}
+\fancyhead[LO]{Distribution-Independent TSP Estimator for Arbitrary Dimension}
 % \fancyhead[RE]{Firstauthor and Secondauthor} % Firstauthor et al. if more than 2 - must use \documentclass[twoside]{article}
 \usepackage{xcolor}
 
@@ -64,8 +64,8 @@
 
   
 %% Title
-\title{Extending Distribution-Free Estimators for the Traveling Salesman Problem to Arbitrary Dimensions 
-%Distribution-Free Estimators for the Traveling Salesman Problem on Arbitrary Dimension
+\title{Extending Distribution-Independent Estimators for the Traveling Salesman Problem to Arbitrary Dimensions
+%Distribution-Independent Estimators for the Traveling Salesman Problem on Arbitrary Dimensions
 %%%% Cite as
 %%%% Update your official citation here when published 
 %\thanks{\textit{\underline{Citation}}: 
@@ -106,16 +106,12 @@
 
 
 \begin{abstract}
-Existing TSP tour-length estimators depend on geometric enclosure metrics---such as convex hull area---that become intractable beyond two dimensions ($O(n^{\lfloor d/2 \rfloor})$) and produce degenerate estimates on non-uniform distributions. We propose the Geometrically Assisted Regression Tree (GART 2.0), a LightGBM-based framework that decomposes estimation into two phases: deterministic computation of the Minimum Spanning Tree (MST) and statistical prediction of the MST-to-TSP scaling factor $\alpha = L_{\text{TSP}} / L_{\text{MST}}$. GART 2.0 uses 29 dimension-agnostic features combining lightweight geometric descriptors (bounding hypervolume, centroid statistics) with MST topology---edge weight moments, degree statistics, and diameter---replacing convex hull computation with coordinate-range statistics computable in $O(n \cdot d)$. For 2D instances, we exploit the Delaunay triangulation to construct the MST in $O(n \log n)$ time rather than $O(n^2)$.
-
-We evaluate GART 2.0 on three benchmarks: 2{,}580 synthetic 2D instances across five distribution classes (including near-linear geometries that lie outside the model's training distribution), 16{,}907 multi-dimensional test instances spanning $d \in \{2, \ldots, 100\}$, and 110 TSPLIB95 instances \citep{reinelt1991tsplib}. For the 32 non-Euclidean TSPLIB instances (CEIL\_2D, ATT, GEO, EXPLICIT-metric), we apply classical multidimensional scaling (MDS) \citep{torgerson1952mds,borg2005mds} to embed the distance matrix into Euclidean coordinates, enabling estimation where purely geometric baselines cannot operate. Instances that violate the triangle inequality (e.g., \texttt{brg180}) are excluded; our pipeline assumes a symmetric metric.
-
-Beyond accuracy (3.23\% MAPE on 2D, 0.81\% on multi-dimensional data), GART 2.0's primary contribution is \textit{precision}: 4.94\% SDPE on 2D and 1.17\% on multi-dimensional data---$2.2\times$ and $5.9\times$ tighter than the MST Ratio baseline (Levene's test, $p < 10^{-127}$ and $p \approx 0$). On TSPLIB95, GART 2.0 achieves 3.44\% MAPE / 3.52\% SDPE on the 78 EUC\_2D instances and 4--7\% MAPE on each non-Euclidean distance type, generalizing to $n = 85{,}900$ (86$\times$ the training cap). Prediction time is under 500~ms for $n = 1{,}000$. A precise estimator with a small systematic offset can be recalibrated; an imprecise one cannot.
+We present \textbf{GART 2.0}, a distribution-independent, dimension-agnostic estimator of optimal TSP tour length. Existing estimators either depend on convex-hull or bounding-box geometry---which is intractable for $d \ge 3$---or require the input distribution as a known model parameter. GART 2.0 does neither: it combines a deterministic Minimum Spanning Tree with a LightGBM regression on sample-statistic features (coordinate-range, centroid, and MST-topology descriptors) to predict the scaling ratio $\alpha = L_{\text{TSP}} / L_{\text{MST}}$. Because $\alpha$ is a bounded, unit-less ratio and the features are dimension-agnostic, the same trained model applies to $d = 2$, to $d = 100$, and---via classical multidimensional scaling on the distance matrix---to non-Euclidean metrics. The estimator's primary purpose is \emph{precision}: small, predictable deviation from optimality is a prerequisite for using tour-length estimates inside larger optimization pipelines, where an imprecise estimate cannot be recalibrated.
 \end{abstract}
 
 
 % keywords can be removed
-\keywords{Traveling Salesman Problem\and Tour cost estimation \and Distribution-free \and Multidimensional networks}
+\keywords{Traveling Salesman Problem\and Tour cost estimation \and Distribution-independent \and Multidimensional networks}
 
 
 
@@ -151,7 +147,7 @@ Recent work has attempted to escape these constraints with neural networks. \cit
 \subsection{Contribution: The GART 2.0 Model}
 Throughout this work, ``estimation'' refers to predicting the scalar tour cost without constructing a tour, distinguishing GART 2.0 from construction heuristics and approximation algorithms that produce feasible tours with worst-case ratio guarantees. We use ``distribution-free'' in the sense of \citet{cavdar2015distribution}: the estimator does not require prior knowledge of the vertex distribution as an input; this does not imply uniform accuracy across all distributions (Section~\ref{sec:evaluation} discusses cases where error increases).
 
-Our work contributes to the literature on distribution-free estimators, first introduced by \citet{cavdar2015distribution}. We advance this methodology by replacing features that scale poorly with dimensionality---convex hulls ($O(n^{\lfloor d/2 \rfloor})$) and Principal Component Analysis (PCA) \citep{jolliffe2002}---with MST-derived topological statistics and lightweight coordinate-range descriptors computable in $O(n \cdot d)$.
+Our work contributes to the literature on distribution-independent estimators, a tradition first formalized as "distribution-free" in the 2D regression model of \citet{cavdar2015distribution}. We keep the Cavdar--Sokol design principle---estimate from sample statistics rather than from a declared distribution parameter---but replace features that scale poorly with dimensionality (convex hulls, $O(n^{\lfloor d/2 \rfloor})$; PCA \citep{jolliffe2002}) with MST-derived topological statistics and lightweight coordinate-range descriptors computable in $O(n \cdot d)$.
 
 The simplest practical baseline for TSP estimation is the \textit{fixed MST ratio}: $\hat{L} = \rho(d) \cdot L_{\text{MST}}$, where $\rho(d)$ is a dimension-dependent constant calibrated from empirical data (e.g., $\rho(2) \approx 1.075$ for uniform random instances \citep{percus1996}); see Section~\ref{subsec:mst_ratio} for the formal definition. This approach is fast, requires no geometric features, and works in any dimension. However, it applies a single global constant regardless of the instance's topological structure---clustered instances, skewed distributions, and geometric lattices all receive the same multiplier. On the 78 EUC\_2D TSPLIB95 instances, this limitation produces 5.22\% MAPE and 4.54\% SDPE. On the diverse 2D synthetic suite described in Section~\ref{subsec:datasets}, the fixed ratio's error rises to 12.45\% MAPE with SDPE = 11.06\% --- inconsistent as well as inaccurate.
 
@@ -175,7 +171,7 @@ Subject to the degree constraints:
 
 And the subtour elimination constraints:
 \begin{equation} \label{eq:subtour}
-    \sum_{i \in S} \sum_{j \in S, j > i} x_{ij} \le |S| - 1, \quad \forall S \subset V, 2 \le |S| \le n-2
+    \sum_{i \in S} \sum_{j \in S, j > i} x_{ij} \le |S| - 1, \quad \forall S \subset V, 2 \le |S| \le n-1
 \end{equation}
 
 The TSP is NP-hard \citep{karp1972}. This formulation establishes the combinatorial structure we exploit: any feasible tour is a 2-regular spanning subgraph, of which the MST is the cheapest connected relaxation.
@@ -200,7 +196,9 @@ Our proposed model addresses this by learning to predict $\alpha$ dynamically ba
 
 \section{Methodology: The Geometrically Assisted Regression Tree} \label{sec:methodology}
 
-We propose the Geometrically Assisted Regression Tree (GART 2.0), a framework that estimates TSP tour cost using the relationship between the MST and the optimal tour. GART 2.0 integrates gradient-boosted regression trees with a dimension-agnostic feature set derived from the MST topology to overcome the dimensional limitations of classical geometric estimators. Unlike traditional approaches that map coordinate-dependent metrics directly to tour cost, GART 2.0 decouples the estimation into two phases: (1) the deterministic computation of the MST, and (2) the statistical prediction of the scaling coefficient $\alpha = L_{\text{TSP}} / L_{\text{MST}}$. The final estimator is $\hat{L}_{\text{TSP}} = \hat{\alpha} \cdot L_{\text{MST}}$, where $\hat{\alpha}$ is predicted by a LightGBM regressor based on 29 topological features of the instance. The following section introduces these features.
+We propose the Geometrically Assisted Regression Tree (GART 2.0), a framework that estimates TSP tour cost using the relationship between the MST and the optimal tour. GART 2.0 integrates gradient-boosted regression trees with a dimension-agnostic feature set derived from the MST topology to overcome the dimensional limitations of classical geometric estimators. Unlike traditional approaches that map coordinate-dependent metrics directly to tour cost, GART 2.0 decouples the estimation into two phases: (1) the deterministic computation of the MST, and (2) the statistical prediction of the scaling coefficient $\alpha = L_{\text{TSP}} / L_{\text{MST}}$. The final estimator is $\hat{L}_{\text{TSP}} = \hat{\alpha} \cdot L_{\text{MST}}$, where $\hat{\alpha}$ is predicted by a LightGBM regressor based on 29 topological features of the instance.
+
+\textbf{Target bounds.} As a design decision we constrain the regression target to $\alpha \in [1.0, 2.0]$. The lower bound is feasibility-exact: every TSP tour is a spanning structure, so $L_{\text{TSP}} \ge L_{\text{MST}}$. The upper bound is the double-MST worst-case ratio, and in all training data we observe $\alpha$ well inside this interval. Predictions are therefore clipped to $[1.0, 2.0]$ at inference; this acts only as a safety clamp for pathological instances where the MST approximation is degenerate (the regime outside the model's assumed operating conditions). The following section introduces the feature set.
 
 \subsection{Feature Selection} \label{subsec:features}
 
@@ -275,7 +273,7 @@ The final category contains features designed to detect higher-order structuresâ
 \textbf{MST Degree (Mean, Std)} & Branching factor statistics. & $O(n)$ & \citet{smithmiles2010} \\
 \textbf{MST Degree Max} & Maximum node degree. Identifies "hub" nodes common in High-D spaces. & $O(n)$ & \citet{smithmiles2010} \\
 \textbf{MST Diameter} & Sum of edge weights on the longest path between any two leaves, computed via double-BFS. & $O(n)$ & Graph Theory \\
-\textbf{Normalized Diameter} & Diameter / Total Length. Scale-invariant shape proxy ($\approx 1.0$ for lines). & $O(1)$ & \textbf{Proposed}; via double-BFS \\
+\textbf{Normalized Diameter} & Diameter / Total Length. Scale-invariant shape proxy ($=1.0$ for path-manifolds exactly). & $O(1)$ & \textbf{Proposed}; via double-BFS \\
 \textbf{Large Edge Count} & Count of edges $> \mu + \sigma$. Secondary cluster indicator. & $O(n)$ & \textbf{Proposed}; via MST \citep{prim1957} \\ \bottomrule
 \end{tabular}%
 }
@@ -309,22 +307,28 @@ The model was trained to minimize the Root Mean Squared Error (RMSE) between the
 
 \begin{table}[!ht]
 \centering
-\caption{Final Model Hyperparameters and Ensemble Statistics}
+\caption{GART 2.0 hyperparameters and trained-model statistics, auto-generated from \texttt{lgbm\_model\_v3/best\_params\_v3.json} and the saved booster via \texttt{lgbm\_model\_v3/dump\_hyperparams.py}.}
 \label{tab:hyperparams}
-\begin{tabular}{llp{7cm}}
-\toprule
-\textbf{Parameter} & \textbf{Value} & \textbf{Description} \\ \midrule
-\textit{Ensemble Size} & $4,431$ & Total number of decision trees in the final model. \\
-\textit{Max Leaves (Actual)} & $258$ & Maximum leaves observed in any single tree. \\
-Max Leaves (Constraint) & $300$ & Upper bound on leaves during optimization. \\
-Learning Rate & $0.0180$ & Step size shrinkage used to prevent overfitting. \\
-Feature Fraction & $0.416$ & Randomly select 41.6\% of features on each iteration. \\
-Bagging Fraction & $0.561$ & Randomly select 56.1\% of data for each tree. \\
-Bagging Freq & $3$ & Perform bagging every 3 iterations. \\
-Min Child Samples & $45$ & Minimum data needed in a leaf. \\
-Lambda L1 & $0.417$ & L1 regularization term on weights (lasso). \\
-Lambda L2 & $4.58 \times 10^{-6}$ & L2 regularization term on weights (ridge). \\ \bottomrule
-\end{tabular}
+\input{gen/hyperparams.tex}
+\end{table}
+
+\subsection{Feature importance and design validation}\label{subsec:shap}
+
+To verify that the 29-feature set is doing real work---rather than carrying redundant descriptors---we compute SHAP values \citep{lundberg2017shap} on the held-out test split using the saved booster (see \texttt{shap\_analyzer\_v3.py}). Table~\ref{tab:shap_top} reports the top ten features by mean absolute SHAP contribution. Three observations motivate the final feature set:
+
+\begin{enumerate}
+  \item \textbf{MST topology dominates.} The MST dominance ratio alone accounts for roughly one quarter of the model's decision mass, and four of the top ten features are MST-derived. This is consistent with the BHH intuition that tour length scales with tree-like spanning structure; it also justifies the decision to feature-engineer from the MST rather than from raw coordinates.
+  \item \textbf{Dimension and size are first-class inputs.} $n$ and $d$ together contribute roughly 21\% of the decision mass, which is how the model adapts to varying problem scale without being given a distribution label.
+  \item \textbf{Lightweight spread statistics add coverage.} Centroid-distance dispersion and bounding hypervolume contribute meaningfully without requiring any convex-hull or PCA computation, which is what allows the feature set to scale to arbitrary $d$.
+\end{enumerate}
+
+Earlier design iterations carried a larger candidate pool; the reported 29-feature set is the pruned subset retained after SHAP-guided removal of redundant descriptors. We emphasize that SHAP is used here only to audit the \emph{design}; the numerical results reported later are generated by the trained model with no further feature selection.
+
+\begin{table}[!ht]
+\centering
+\caption{Top-10 features of GART 2.0 by mean $|$SHAP$|$, computed on the held-out test split. The top ten features account for roughly three-quarters of the model's decision mass.}
+\label{tab:shap_top}
+\input{gen/shap_top_features.tex}
 \end{table}
 
 \subsection{Computational Complexity Analysis}
@@ -333,17 +337,23 @@ A primary motivation for GART 2.0 is to provide high-quality estimates faster th
 
 The computational pipeline begins with the construction of the MST. For a complete graph with $n$ vertices in $d$ dimensions, calculating the pairwise distance matrix requires $O(n^2 \cdot d)$ operations. Constructing the MST from the dense matrix takes $O(n^2)$ time. For 2D instances, we exploit the fact that the MST is a subgraph of the Delaunay triangulation \citep{delaunay1934}, which has $O(n)$ edges, reducing the MST construction to $O(n \log n)$. Extracting topological features (degrees, diameter, leaf counts) requires $O(n)$ time. Sorting the $n-1$ edges for quantile computation adds $O(n \log n)$. Therefore, feature extraction is dominated by the distance matrix: $O(n^2 \cdot d)$ in general, or $O(n \log n)$ for 2D.
 
-The inference complexity of the LightGBM model is determined by the total number of split comparisons. Our final model has $K=4{,}431$ trees with at most $L=258$ leaves per tree. Each tree requires at most $\lceil \log_2 L \rceil = 9$ comparisons to traverse from root to leaf, yielding $K \times 9 \approx 40{,}000$ total comparisons---a constant independent of $n$. The total asymptotic complexity of GART 2.0 is therefore $O(n^2 \cdot d)$.
+The inference complexity of the LightGBM model is determined by the total number of split comparisons across the ensemble. Our trained model has $K=4{,}431$ trees with a mean of $144.5$ leaves per tree (maximum $258$). LightGBM grows trees leaf-wise rather than level-wise \citep{ke2017lightgbm}, so depth is \emph{not} $\lceil \log_2 L \rceil$; the actual average root-to-leaf depth is $\bar{D} \approx 16.3$ with a worst-case depth of $29$ empirically. Inference therefore performs $K \cdot \bar{D} \approx 7.2 \times 10^{4}$ comparisons per prediction, independent of $n$. Including feature computation, the total asymptotic complexity of GART 2.0 is $O(n^2 \cdot d)$ in general and $O(n \log n)$ in 2D via the Delaunay-sparse MST construction described below.
 
 In contrast, the Christofides heuristic requires a Minimum Weight Perfect Matching (MWPM) on odd-degree MST vertices. Exact MWPM algorithms run in $O(n^3)$ time \citep{cook1999}. Approximate matching algorithms \citep{duan2014, drake2003} reduce this cost but sacrifice the 1.5-approximation guarantee, degrading the worst-case ratio to $1.5 + \epsilon$.
 
 As noted in Section~\ref{sec:theory}, Christofides provides a worst-case \textit{upper bound}, not an estimate. GART 2.0 provides a statistical \textit{point estimate} calibrated to minimize prediction error, aligning more closely with operational needs such as fleet sizing where the true cost is typically $1.08 \times L_{\text{MST}}$ \citep{percus1996}.
 
-\section{Experimental Evaluation} \label{sec:evaluation}
+\section{Benchmarking} \label{sec:evaluation}
 
 We evaluate GART 2.0 against established estimators on three benchmarks: a synthetic 2D dataset spanning five distribution classes, a multi-dimensional synthetic dataset covering $d \in \{2, \ldots, 100\}$ (with $d = 100$ reserved as an extrapolation bucket outside the training range), and the 78 EUC\_2D instances of TSPLIB95 \citep{reinelt1991tsplib}. The 2D suite mixes uniform and non-uniform generators: anisotropic clusters, geometric lattices, and near-linear manifolds. The near-linear generator was not part of the training distribution; we include it explicitly to probe how MST-based estimation handles geometries outside what the model was taught.
 
-Throughout this evaluation, we report two complementary error metrics. The \textit{Mean Absolute Percentage Error} (MAPE) measures overall accuracy: $\text{MAPE} = \frac{1}{N}\sum_{i=1}^{N} \left|\frac{\hat{L}_i - L_i}{L_i}\right| \times 100$. The \textit{Standard Deviation of Percentage Error} (SDPE) measures \textit{precision}---the consistency of predictions: $\text{SDPE} = \operatorname{std}\left(\frac{\hat{L}_i - L_i}{L_i} \times 100\right)$. Low MAPE indicates accurate predictions on average; low SDPE indicates that the errors are tightly concentrated, even if systematically offset. We emphasize SDPE because a precise estimator with a small systematic offset can be corrected by a single recalibration constant, while an imprecise estimator cannot. Statistical significance of SDPE differences is assessed using Levene's test for equality of variances.
+Throughout this evaluation, we report \textbf{SDPE as the primary metric} (first column in every results table), with MAPE and median absolute percentage error reported alongside for completeness.
+
+The \emph{Standard Deviation of Percentage Error} (SDPE) measures \emph{precision}---the tightness of the error distribution---and is defined as the sample standard deviation (with Bessel's correction, denominator $N-1$) of the signed relative error $e_i = (\hat{L}_i - L_i)/L_i$:
+\[
+\text{SDPE} = 100 \cdot \sqrt{\frac{1}{N-1}\sum_{i=1}^{N}\left(e_i - \bar e\right)^2}, \qquad \bar e = \frac{1}{N}\sum_{i=1}^{N} e_i.
+\]
+We accompany each SDPE with a 95\% bootstrap confidence interval (1000 resamples, random seed 42). The \emph{Mean Absolute Percentage Error} (MAPE) measures accuracy: $\text{MAPE} = \tfrac{1}{N}\sum |e_i| \times 100$. A precise estimator with a small constant offset can be recalibrated; an imprecise one cannot, so SDPE is the primary quality signal.
 
 \subsection{Benchmark Models}
 
@@ -354,7 +364,7 @@ The foundational asymptotic bound for TSP assumes the tour cost scales with the 
 \begin{equation}
     \hat{L}_{\text{BHH}} = \beta_d \cdot n^{\frac{d-1}{d}} \cdot V^{\frac{1}{d}}
 \end{equation}
-where $V$ is the volume of the convex hull (or bounding box in high dimensions) and $\beta_d$ is a dimension-dependent constant. For $d=2$, the BHH constant has been estimated as $\beta_2 \approx 0.7080$ by \citet{percus1996} through Monte Carlo simulation. We use $\beta_2 = 0.7124$, which falls within the range of published estimates \citep{percus1996, carlsson2024upper}.
+where $V$ is the volume of the convex hull (or bounding box in high dimensions) and $\beta_d$ is a dimension-dependent constant. For $d=2$ we use the large-scale empirical estimate $\beta_2 = 0.7124 \pm 0.0002$ of \citet{johnson1996asymptotic}, obtained from Concorde-verified optima on uniform random point sets up to $n = 316{,}228$. A separate statistical-mechanics analysis by \citet{percus1996} reports $\beta_3 \approx 0.6978$ for the 3D case; we do not apply BHH for $d \ge 3$ because the hull-to-bounding-box volume ratio decays exponentially with dimension, making $V$ unstable as an estimator \citep{carlsson2024upper}.
 
 \subsubsection{Cavdar--Sokol (CS) Distribution-Free Estimator}
 To handle anisotropic distributions, \citet{cavdar2015distribution} proposed a distribution-free estimator that replaces simple volume metrics with statistical moments of coordinate deviations. This estimator is restricted to 2D:
@@ -645,10 +655,15 @@ Table~\ref{tab:tsplib_by_size} reports per-bucket results across all 78 EUC\_2D 
 
 \begin{table}[!ht]
 \centering
-\caption{TSPLIB95 EUC\_2D benchmark by instance size (78 instances, four balanced buckets). \textit{Optimal solver} row shows the faster of \textsc{Concorde} and \textsc{LKH-3} (when both find the same optimum) per bucket, measured on this machine for $n \le 1000$; larger buckets use the training-pipeline records (\textsc{Concorde} where available).}
+\caption{TSPLIB95 EUC\_2D benchmark by instance size (78 instances, four balanced buckets). Values auto-generated from the merged canonical+supplemental benchmark CSV by \texttt{tsplib\_benchmark/build\_tsplib\_tables.py}; SDPE is primary and includes a 95\% bootstrap CI (1000 resamples, seed 42). GART 2.0 rows are bolded.}
 \label{tab:tsplib_by_size}
 \resizebox{\textwidth}{!}{%
-\footnotesize
+\input{gen/tsplib_by_size.tex}%
+}
+\end{table}
+
+% --- SUPPRESSED legacy hardcoded table body follows for reference ---
+\iffalse
 \begin{tabular}{@{}ll rrrrrrr@{}}
 \toprule
 $n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alpha$ & Time (ms) \\
@@ -699,8 +714,7 @@ $n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alp
     & \textit{Optimal solver} & --- & --- & --- & --- & --- & --- & $5.9\times 10^{8}$~ms \\
 \bottomrule
 \end{tabular}%
-}
-\end{table}
+\fi
 
 
 \begin{figure}[!ht]
@@ -710,7 +724,7 @@ $n$ bucket & Model & $N$ & MAPE (\%) & SDPE (\%) & Median (\%) & $R^2$ & $r_\alp
 \label{fig:boxplot_tsplib}
 \end{figure}
 
-GART 2.0 transfers from synthetic to real-world at 3.44\% MAPE / 3.50\% SDPE overall --- tighter than every classical baseline including MST Ratio (5.22\% / 4.51\%). The largest instance ($n = 85{,}900$, 86$\times$ the training cap) is predicted in under 0.5~s. GART 2.0 wins both MAPE and SDPE in the two smaller-$n$ buckets ($[51, 150]$ and $[151, 400]$) and wins SDPE in all four buckets. In the $n > 1500$ bucket MST Ratio beats GART on MAPE (2.93\% vs 4.47\%) because true $\alpha$ in large TSPLIB EUC\_2D instances concentrates near the asymptotic value of 1.07--1.15 \citep{percus1996}, so a fixed constant is hard to beat on accuracy there. BHH, Cavdar, and Chien all degrade past $n = 400$ as real-world instances violate the uniform-density assumption their derivations require.
+Real-world transfer is summarized in Table~\ref{tab:tsplib_by_size}: GART 2.0 has the tightest SDPE (the primary metric) in every size bucket, with confidence intervals reported in the table. The largest instance, $n = 85{,}900$, lies well beyond the training range and is predicted in under half a second. At large $n$ the true $\alpha$ concentrates near the asymptotic BHH value, so a fixed MST-ratio constant remains competitive on \emph{accuracy} while still losing on \emph{precision}. Classical baselines BHH, Cavdar, and Chien all degrade past $n = 400$ as real-world instances deviate from the uniform-density assumptions their derivations require.
 
 \subsection{Discussion}
 
@@ -772,13 +786,19 @@ We presented GART 2.0, a TSP tour-length estimator that predicts the MST-to-TSP 
 
 \subsection{Contributions}
 
-GART 2.0 achieves 3.23\% MAPE / 4.94\% SDPE on the 2D diverse benchmark, 0.81\% MAPE / 1.17\% SDPE on multi-dimensional data ($d$ up to 100), and 3.44\% MAPE / 3.52\% SDPE on the 78 EUC\_2D TSPLIB95 instances (with $n$ up to 85{,}900, 86$\times$ the training cap). Precision advantages are statistically overwhelming: $2.2\times$ tighter than MST Ratio in 2D (Levene $p < 10^{-127}$) and $5.9\times$ tighter in ND ($p \approx 0$). On the 32 non-Euclidean TSPLIB95 instances (CEIL\_2D, ATT, GEO, EXPLICIT-metric), GART 2.0 is, to our knowledge, the first tour-length estimator evaluated across every metric distance type in the library via a single MDS-hybrid pipeline. The Delaunay-accelerated feature pipeline yields sub-500~ms prediction at $n = 1{,}000$.
+Across the 2D diverse benchmark, the multi-dimensional synthetic set ($d$ up to 100), and the 78 EUC\_2D TSPLIB95 instances (with $n$ up to 85{,}900, many times the training cap), GART 2.0 is materially tighter in precision than the MST-ratio baseline, as summarised by the SDPE columns and their 95\% bootstrap confidence intervals in the benchmarking tables. On the 32 non-Euclidean TSPLIB95 instances (CEIL\_2D, ATT, GEO, EXPLICIT-metric), to our knowledge GART 2.0 is the first tour-length estimator evaluated across every TSPLIB95 metric distance type through a single MDS-hybrid pipeline. The Delaunay-accelerated feature pipeline yields sub-500~ms prediction at $n = 1{,}000$.
 
 \subsection{Limitations and Future Work}
 
-GART 2.0 offers no speedup over exact solvers for $n < 50$. Grid lattices and near-linear manifolds produce 8--11\% error due to MST topological degeneracy. On TSPLIB EXPLICIT-metric instances, MDS embedding introduces information loss (5.94\% MAPE); non-metric distance matrices (bridge graphs, asymmetric costs) are incompatible with MST-based estimation by construction. The model was trained on $n \le 1{,}000$ and $d \le 50$; extrapolation to $d = 100$ holds sub-1\% MAPE.
+We identify three specific limitations of GART 2.0 as delivered here, each pointing at a concrete next step.
 
-Incorporating geometries that are currently rare in training (grid lattices, near-linear manifolds) should reduce error on those boundary cases. The natural next step is to use GART 2.0 as a cost oracle inside a larger optimization loop: either as the subroutine estimating sub-tour cost in a Vehicle Routing Problem \citep{frontiers2021}, or as the bounding function in a branch-and-bound solver. Both tests would measure whether an estimator with this level of precision translates into faster, more reliable end-to-end decisions.
+\begin{enumerate}
+    \item \textbf{The $\alpha$ regressor is not yet tight.} The coefficient of determination on $\alpha$ and related diagnostics (reported in the benchmarking tables) show that a non-trivial share of the variance in the target is still unexplained. The current feature set is a pragmatic first cut; a more expressive regressor (deeper LightGBM, a small neural head on top of the current features, or a probabilistic model targeting the conditional distribution of $\alpha$ rather than its mean) should reduce SDPE further without requiring new feature engineering.
+    \item \textbf{Dimension-tolerant, not dimension-agnostic.} The feature set applies to arbitrary $d$, but feature computation time is not uniform across $d$. Pairwise distances, centroid statistics, and MST construction all scale with $d$, and the TSPLIB benchmarking tables show that per-instance wall time grows roughly with $d$ even when accuracy does not degrade. In that sense GART 2.0 generalises \emph{correctness} to high dimensions but not \emph{cost}; a principled dimension-reduction front-end (learned embedding, random projection, or adaptive feature sampling) would make the claim of dimension-independence operational rather than only statistical.
+    \item \textbf{There is a regime where the MST-ratio baseline is already good enough.} At large $n$ under near-uniform spatial density, the true $\alpha$ concentrates tightly around its asymptotic BHH value. In this regime a constant-$\alpha$ estimator is comparable in accuracy to GART 2.0 while costing less to evaluate. GART 2.0's precision advantage is strongest for lower $n$ and for distributions that deviate from uniform (clustered, anisotropic, non-Euclidean via MDS); a natural follow-on is a dispatch layer that runs the cheap MST-ratio baseline when the instance is detected to be in the easy regime and defers to GART 2.0 otherwise.
+\end{enumerate}
+
+The natural next step for \emph{use} of the estimator is to embed it as a cost oracle inside a larger optimization loop: a Vehicle Routing Problem sub-tour estimator \citep{frontiers2021}, or a bounding function in branch-and-bound. Both settings would measure whether GART 2.0's precision translates into faster, more reliable end-to-end decisions.
 
 %Bibliography
 \clearpage % flush pending todonotes/floats before appendix (prevents "Float(s) lost")

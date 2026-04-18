@@ -59,10 +59,12 @@ def load_and_preprocess(data_path):
 
     y = df['alpha']
     
-    # Drop Metadata and Components of Target
+    # Drop metadata and the grid_size leak. mst_total_length is kept as a
+    # feature: the regression target is alpha = optimal_cost / mst_total_length
+    # (a ratio), so including mst_total_length does not leak the target and
+    # lets the model use absolute MST magnitude as a scale cue.
     features_to_drop = [
-        'instance_name', 'optimal_cost', 'alpha', 'split', 'grid_size'
-        'mst_total_length'
+        'instance_name', 'optimal_cost', 'alpha', 'split', 'grid_size',
     ]
     
     existing_cols_to_drop = [col for col in features_to_drop if col in df.columns]

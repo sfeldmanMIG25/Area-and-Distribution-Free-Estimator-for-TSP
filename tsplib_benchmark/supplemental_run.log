@@ -1,0 +1,46 @@
+  Running brd14051 (n=14051) ...
+    MST_Ratio: pred=461670.2 in 0.140s, mst=429460.6
+    BHH: pred=518339.6 in 0.005s
+    Cavdar: pred=532066.0 in 0.004s
+    Chien: pred=473701.3 in 0.003s
+    Hilbert: pred=652392.1 in 0.083s
+  Running d15112 (n=15112) ...
+    MST_Ratio: pred=1538288.7 in 0.139s, mst=1430966.2
+    BHH: pred=1636840.7 in 0.006s
+    Cavdar: pred=1668404.4 in 0.006s
+    Chien: pred=1464793.1 in 0.005s
+    Hilbert: pred=2135973.5 in 0.099s
+  Running d18512 (n=18512) ...
+    MST_Ratio: pred=638194.6 in 0.187s, mst=593669.4
+    BHH: pred=642185.3 in 0.006s
+    Cavdar: pred=647357.5 in 0.006s
+    Chien: pred=572315.1 in 0.005s
+    Hilbert: pred=877989.9 in 0.108s
+  Running rl11849 (n=11849) ...
+    MST_Ratio: pred=920493.6 in 0.119s, mst=856273.2
+    BHH: pred=1125650.3 in 0.005s
+    Cavdar: pred=1094838.6 in 0.005s
+    Chien: pred=913080.4 in 0.004s
+    Hilbert: pred=1414559.0 in 0.068s
+  Running rl5915 (n=5915) ...
+    MST_Ratio: pred=560979.9 in 0.054s, mst=521841.7
+    BHH: pred=779465.4 in 0.003s
+    Cavdar: pred=786810.5 in 0.003s
+    Chien: pred=654179.5 in 0.002s
+    Hilbert: pred=916036.4 in 0.034s
+  Running rl5934 (n=5934) ...
+    MST_Ratio: pred=552500.8 in 0.056s, mst=513954.2
+    BHH: pred=772464.1 in 0.003s
+    Cavdar: pred=789128.0 in 0.003s
+    Chien: pred=632217.2 in 0.002s
+    Hilbert: pred=908123.9 in 0.034s
+  Running usa13509 (n=13509) ...
+    MST_Ratio: pred=19184967.0 in 0.120s, mst=17846480.9
+    BHH: pred=26826891.4 in 0.004s
+    Cavdar: pred=28088231.2 in 0.004s
+    Chien: pred=25065130.0 in 0.002s
+    Hilbert: pred=32111988.0 in 0.076s
+
+Skipped: []
+
+Wrote 35 rows -> D:\Area-and-Distribution-Free-Estimator-for-TSP\tsplib_benchmark\results\all_models_tsplib_supplemental.csv
