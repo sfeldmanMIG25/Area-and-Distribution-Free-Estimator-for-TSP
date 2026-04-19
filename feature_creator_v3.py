@@ -1,10 +1,8 @@
 import os
 import sys
 
-# --- CRITICAL FIX FOR WINDOWS/JOBLIB ---
-# Prevent sklearn/joblib from spawning subprocesses inside workers.
+# Prevent sklearn/joblib from spawning subprocesses inside workers on Windows.
 os.environ["LOKY_MAX_CPU_COUNT"] = str(max(1, os.cpu_count()))
-# ---------------------------------------
 
 import numpy as np
 import json
@@ -12,33 +10,21 @@ import struct
 from collections import deque
 from tqdm import tqdm
 import pandas as pd
-from scipy.spatial.distance import cdist
 from scipy import stats
 
 from mst_utils import compute_mst
 from concurrent.futures import ThreadPoolExecutor
 import warnings
 
-# Suppress warnings
 warnings.filterwarnings("ignore")
 
-# --- CONFIGURATION ---
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-# SOURCE OF TRUTH FOR SPLITS (If available)
-BASELINE_DATA_FILE = os.path.join(ROOT_DIR, 'tsp_features.csv') 
 OUTPUT_FILE = os.path.join(ROOT_DIR, 'tsp_features_v3.csv')
-
 INSTANCES_DIR = os.path.join(ROOT_DIR, "instances")
 SOLUTIONS_DIR = os.path.join(ROOT_DIR, "solutions")
-
 RANDOM_STATE = 42
 
-# --- BINARY LOADER (OPTIMIZED) ---
 def load_instance_data(instance_name):
-    """
-    Loads instance data, prioritizing the fast binary format.
-    Falls back to JSON if binary is missing.
-    """
     base_name = instance_name[:-5] if instance_name.endswith('.json') else instance_name
     
     bin_path = os.path.join(INSTANCES_DIR, f"{base_name}.bin")
@@ -83,10 +69,8 @@ def load_instance_data(instance_name):
 
     return None
 
-# --- V3 FEATURE LOGIC (MST-Centric + Clustering Proxies) ---
 
 def _compute_tree_diameter(mst_adj, n):
-    """Compute the weighted diameter of the tree using two BFS runs."""
     def farthest(start_node):
         distances = np.full(n, -1.0)
         distances[start_node] = 0.0
@@ -113,10 +97,6 @@ def _compute_tree_diameter(mst_adj, n):
     return diameter
 
 def compute_features_for_instance_v3(inst_data, sol_data):
-    """
-    Compute the 25-feature, dimension-agnostic, MST-centric feature set.
-    Includes advanced clustering proxies (Dominance, Leaf Ratio, Gap Ratio).
-    """
     coords = inst_data['coordinates']
     coords = np.unique(coords, axis=0)
     
@@ -242,28 +222,31 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     return features
 
 def process_file_worker(filename):
-    """Worker function for ThreadPoolExecutor. Strict — any I/O or parse error
-    bubbles up and halts the pipeline so the upstream bug is visible (no
-    silent fallbacks)."""
-    if not filename.endswith('.json'):
-        return None
+    """Returns (features_dict, None) on success or (None, skip_reason) on skip."""
     base_name = filename[:-5]
     sol_path = os.path.join(SOLUTIONS_DIR, f"{base_name}.sol.json")
     if not os.path.exists(sol_path):
-        return None
-    inst = load_instance_data(filename)
+        return None, 'no_solution'
+    try:
+        inst = load_instance_data(filename)
+    except Exception:
+        return None, 'corrupt_instance'
     if not inst:
-        return None
-    with open(sol_path, 'r') as f:
-        sol = json.load(f)
-    return compute_features_for_instance_v3(inst, sol)
+        return None, 'corrupt_instance'
+    try:
+        with open(sol_path, 'r') as f:
+            sol = json.load(f)
+        features = compute_features_for_instance_v3(inst, sol)
+    except Exception:
+        return None, 'corrupt_instance'
+    if features is None:
+        return None, 'n_lt_3'
+    return features, None
 
 def create_stratified_split(df):
-    """
-    70/20/10 train/val/test stratified by (dimension, n_customers, grid_size).
-    d=100 is locked to test (held-out OOD), per paper spec.
-    """
-    print("Applying Fresh Stratified Split Logic...")
+    # 70/20/10 train/val/test stratified by (dimension, n_customers, grid_size).
+    # d=100 is locked to test (held-out OOD).
+    print("Applying stratified split...")
 
     mask_d100 = df['dimension'] == 100
     df_d100   = df[ mask_d100].copy()
@@ -290,59 +273,45 @@ def create_stratified_split(df):
 
     return pd.concat([df_others, df_d100], ignore_index=True)
 
-# --- MAIN ---
 if __name__ == '__main__':
-    print(f"--- Feature Generator V3 (Auto-Split + New Proxies) ---")
-    
-    split_map = None
-    files_to_process = []
-    
-    # 1. Check for Baseline Split (V1)
-    if os.path.exists(BASELINE_DATA_FILE):
-        print(f"Loading split map from: {BASELINE_DATA_FILE}")
-        base_df = pd.read_csv(BASELINE_DATA_FILE, usecols=['instance_name', 'split'])
-        split_map = dict(zip(base_df['instance_name'], base_df['split']))
-        target_instances = list(split_map.keys())
-        files_to_process = [f"{name}.json" for name in target_instances]
-    else:
-        print(f"Baseline file '{BASELINE_DATA_FILE}' not found.")
-        print("Scanning instance directory for all available files...")
-        files_to_process = [f for f in os.listdir(INSTANCES_DIR) if f.endswith('.json')]
-    
-    print(f"Targeting {len(files_to_process)} instances.")
+    print("--- Feature Generator V3 ---")
 
-    # 2. Compute Features in Parallel
+    files_to_process = sorted(f for f in os.listdir(INSTANCES_DIR) if f.endswith('.json'))
+    print(f"Found {len(files_to_process)} instance files in {INSTANCES_DIR}")
+
     num_workers = max(1, os.cpu_count())
     print(f"Starting computation with {num_workers} workers...")
-    
-    with ThreadPoolExecutor(max_workers=num_workers) as executor:
-        results = list(tqdm(executor.map(process_file_worker, files_to_process), 
-                            total=len(files_to_process), desc="Computing V3 Features"))
 
-    all_features = [res for res in results if res is not None]
-    n_skipped = len(files_to_process) - len(all_features)
-    print(f"Processed OK: {len(all_features)} | Skipped (no solution / n<3 / corrupt): {n_skipped}")
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        results = list(tqdm(
+            executor.map(process_file_worker, files_to_process),
+            total=len(files_to_process),
+            desc="Computing V3 Features",
+        ))
+
+    all_features = []
+    skip_counts = {'no_solution': 0, 'n_lt_3': 0, 'corrupt_instance': 0}
+    for features, reason in results:
+        if features is not None:
+            all_features.append(features)
+        else:
+            skip_counts[reason] = skip_counts.get(reason, 0) + 1
+
+    n_ok = len(all_features)
+    n_skipped = sum(skip_counts.values())
+    print(f"\nProcessed OK : {n_ok}")
+    print(f"Skipped total: {n_skipped}")
+    for reason, count in skip_counts.items():
+        if count:
+            print(f"  {reason}: {count}")
 
     if not all_features:
         print("Error: No features generated.")
         sys.exit(1)
 
-    # 3. Merge & Split
     df = pd.DataFrame(all_features)
-    
-    if split_map:
-        # Apply existing splits
-        df['split'] = df['instance_name'].map(split_map)
-        missing_mask = df['split'].isna()
-        if missing_mask.sum() > 0:
-            print(f"Warning: {missing_mask.sum()} instances missing from baseline split map. Dropping them.")
-            df = df.dropna(subset=['split'])
-    else:
-        # Generate fresh splits
-        df = create_stratified_split(df)
-
-    # 4. Save
+    df = create_stratified_split(df)
     df.to_csv(OUTPUT_FILE, index=False)
-    print(f"\n✅ V3 Features saved to {OUTPUT_FILE}")
-    print("Split Consistency Check:")
+    print(f"\nV3 Features saved to {OUTPUT_FILE}")
+    print("Split distribution:")
     print(df['split'].value_counts(normalize=True).map("{:.2%}".format))

@@ -272,13 +272,23 @@ def compute_mst(coords: np.ndarray, cache_path: Optional[str] = None) -> MSTResu
             empty.save(cache_path)
         return empty
 
-    if _dense_is_feasible(n):
+    # Dynamic n x d dispatch. Thresholds come from measured crossovers on this
+    # project (see mst_utils benchmarks): in d<=3 Delaunay dominates dense at
+    # all n; in d>=4 Qhull simplex count explodes so dense wins up to its
+    # memory limit; blocked-Prim is the universal O(n)-memory fallback.
+    result = None
+    if d <= 3 and n >= d + 2:
+        try:
+            result = _delaunay_mst(coords)
+        except Exception:
+            result = None
+    if result is None and _dense_is_feasible(n):
         try:
             result = _dense_mst(coords)
         except MemoryError:
-            result = _fallback_mst(coords, n, d)
-    else:
-        result = _fallback_mst(coords, n, d)
+            result = None
+    if result is None:
+        result = _blocked_prim_mst(coords)
 
     if cache_path is not None:
         try:

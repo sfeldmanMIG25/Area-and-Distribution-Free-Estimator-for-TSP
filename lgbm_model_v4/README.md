@@ -18,7 +18,7 @@ V4 fixes this by adding a small rotation-invariant spectral feature block on top
 of the V3 MST-topology set, and retunes hyperparameters with a precision-first
 objective.
 
-## The 41 candidate features
+## The 42 candidate features
 
 **V3 baseline (29)** — carried forward verbatim: `n_customers`, `dimension`,
 `grid_size`, `bounding_hypervolume`, `log_bounding_hypervolume`,
@@ -34,14 +34,40 @@ diameter, large-edge count).
 - `pca_e1_share = λ₁ / Σλᵢ`
 - `pca_effective_rank = (Σλᵢ)² / Σλᵢ²`
 
-**Tier 2 — local density via cKDTree (d ≤ 16) — 4 features**
-- `nn1_dist_mean`, `nn1_dist_cv = nn1_std/nn1_mean`
-- `nn2_dist_mean`, `nn_gap_ratio = nn2/nn1`
+**Tier 2 — MST-based local density (defined at any d) — 4 features**
+- `mst_nn1_mean` — mean over vertices of the minimum incident MST-edge weight.
+  By the MST cut property this equals the exact 1-NN distance at every vertex.
+- `mst_nn1_cv = mst_nn1_std / mst_nn1_mean`
+- `mst_nn2_proxy_mean` — mean of the second-smallest incident MST-edge weight
+  over vertices of MST-degree ≥ 2. Upper bound on the true 2-NN distance.
+- `mst_nn_gap_ratio = mst_nn2_proxy_mean / mst_nn1_mean`
 
-**Tier 3 — second-order / manifold — 3 features**
+These replace the earlier cKDTree-based 1-NN / 2-NN block, which was capped at
+d ≤ 16 and emitted NaN beyond that. The MST-based block is well-defined at
+every dimension, costs O(n) extra work over already-computed MST edges, and
+keeps the exact 1-NN component from the original formulation.
+
+**Tier 3 — second-order shape — 2 features**
 - `pca_log_det = Σ log λᵢ` (Mahalanobis-style log-volume)
 - `mst_edge_pca_e1_share` (edge-vector anisotropy)
-- `intrinsic_dim_2nn` (Facco 2017 two-nearest-neighbour ratio MLE)
+
+**Tier 4 — spatial point-pattern — 1 feature**
+- `ripley_L_dev = L(r) / r − 1` at `r = median 1-NN distance`, computed in
+  log-space so it is numerically stable at any dimension. Ripley's L is 0 for
+  a homogeneous Poisson point process (CSR), positive for clustered point
+  sets, and negative for regular / repulsive point sets (grids, lattices).
+  This captures a distinct shape axis from OBB / PCA / MST — the
+  clustering / regularity tendency of the point cloud itself — and separates
+  clustered (+5.5) from grid (−0.1) from uniform (~0) cleanly on smoke tests.
+
+**Tier 5 — tour-ordering upper bound — 1 feature**
+- `greedy_nn_over_mst = greedy_nn_tour_length / mst_total_length`. The greedy
+  nearest-neighbour tour from the centroid-nearest vertex (Rosenkrantz-Stearns-
+  Lewis 1977; within ½·(⌈log₂ n⌉+1)·OPT for metric TSP). Ratio form is
+  scale-free and non-redundant with `mst_total_length`. This is the only V4
+  feature that encodes *tour* (sequential) information — every other feature
+  is either a geometric summary or an MST-tree stat, so this axis is
+  orthogonal and strongly correlated with OPT/MST on non-uniform point sets.
 
 Full definitions and the rotation-invariance argument are in
 [`feature_engineering.py`](feature_engineering.py).
@@ -99,7 +125,7 @@ Assumes the prerequisite above is resolved. Run from the repo root with
 `PYTHONUTF8=1` set (Python 3.14 on Windows still defaults stdout to cp1252).
 
 ```bash
-# 1. Build the 41-feature CSV for all 90,395 instances (~6-10 min on 20 cores).
+# 1. Build the 42-feature CSV for all 90,395 instances (~6-10 min on 20 cores).
 PYTHONUTF8=1 python lgbm_model_v4/build_features_csv.py
 
 # 2. Generate the feature report and the auto-filtered selected_features.json
@@ -161,10 +187,31 @@ works unchanged.
   Delaunay 1.8 s vs dense 0.2 s). Propagated to every estimator and to
   `tsp_utils_2.py`. See the comment on `DELAUNAY_DIM_CAP` in
   `feature_engineering.py`.
-- **cKDTree dim cap:** 16 (beyond this, concentration-of-measure collapses
-  k-NN gap; features emit NaN and LightGBM handles it via sentinel splits).
+- **Local-density via MST, not cKDTree:** the Tier-2 block is derived from
+  MST incident edges so every feature is defined at every dimension — no
+  NaN-branch dead weight for high-d rows. The exact 1-NN component is
+  preserved via the MST cut property.
 - **Inference shape-compat:** V4 estimator is drop-in for V3 — same
   constructor signature and return dict.
+
+## Future improvements (GART 3.0 candidates)
+
+Deferred from V4 to keep the current iteration scoped; to be revisited once the
+V4 Pareto front is measured.
+
+- **Retarget the model on OPT / 1-tree instead of OPT / MST.** The Held-Karp
+  1-tree (MST on V \ {v₀} plus the two cheapest edges at v₀, maximised over a
+  sample of pivots v₀) is a strictly tighter lower bound than the MST and is
+  the basis of the tightest known LP relaxation (Held-Golden 1970). Changing
+  the target from α = OPT / mst_total_length to α = OPT / one_tree_bound would
+  concentrate the residual the booster has to learn and should reduce SDPE at
+  equal compute. This is a *fundamental* modeling change (affects training,
+  inference, and the paper's framing) — hence GART 3.0, not a V4 patch.
+  Implementation note: 1-tree is O(n log n) on top of the already-computed
+  MST, so the only real cost is redoing the full training run.
+- **Multi-start greedy-NN tour.** V4 uses the centroid-nearest start for
+  determinism. A max-over-k-starts variant would tighten the upper bound at
+  k× compute — worth measuring if training budget allows.
 
 ## Open questions for the next session
 

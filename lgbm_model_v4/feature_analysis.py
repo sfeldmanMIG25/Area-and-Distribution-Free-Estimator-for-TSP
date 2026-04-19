@@ -69,8 +69,10 @@ BASELINE_V3_FEATURES = [
 V4_CANDIDATES = [
     "obb_volume", "log_obb_volume", "obb_shrinkage",
     "pca_e1_share", "pca_effective_rank",
-    "nn1_dist_mean", "nn1_dist_cv", "nn2_dist_mean", "nn_gap_ratio",
-    "pca_log_det", "mst_edge_pca_e1_share", "intrinsic_dim_2nn",
+    "mst_nn1_mean", "mst_nn1_cv", "mst_nn2_proxy_mean", "mst_nn_gap_ratio",
+    "pca_log_det", "mst_edge_pca_e1_share",
+    "ripley_L_dev",
+    "greedy_nn_over_mst",
 ]
 
 DELTA_SDPE_THRESHOLD = 0.05      # percentage points
@@ -122,8 +124,9 @@ def _time_per_feature(sample_names: List[str]) -> Dict[str, tuple[float, float]]
     re-run each *feature-specific* helper in isolation on the same coords
     to get a per-feature breakdown."""
     from feature_engineering import (
-        _pca_eigenvalues, _obb_volume, _knn_features, _intrinsic_dim_2nn,
-        _mst_edge_pca_e1_share, _compute_mst,
+        _pca_eigenvalues, _obb_volume, _mst_local_density_stats,
+        _mst_edge_pca_e1_share, _ripley_L_deviation,
+        _greedy_nn_tour_length, _compute_mst,
     )
     timings: Dict[str, List[float]] = {f: [] for f in V4_CANDIDATES}
 
@@ -138,6 +141,7 @@ def _time_per_feature(sample_names: List[str]) -> Dict[str, tuple[float, float]]
 
         mst = _compute_mst(coords, d)
         rows, cols = mst.nonzero()
+        edges = mst.data.astype(np.float64)
 
         # PCA-based batch (Tier 1 + pca_log_det).
         t0 = time.perf_counter()
@@ -149,16 +153,20 @@ def _time_per_feature(sample_names: List[str]) -> Dict[str, tuple[float, float]]
         t_obb = time.perf_counter() - t0
 
         t0 = time.perf_counter()
-        _knn_features(coords, d)
-        t_knn = time.perf_counter() - t0
-
-        t0 = time.perf_counter()
-        _intrinsic_dim_2nn(coords, d)
-        t_idim = time.perf_counter() - t0
+        _mst_local_density_stats(rows, cols, edges, coords.shape[0])
+        t_mstnn = time.perf_counter() - t0
 
         t0 = time.perf_counter()
         _mst_edge_pca_e1_share(coords, rows, cols)
         t_edge_pca = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        _ripley_L_deviation(coords, d)
+        t_ripley = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        _greedy_nn_tour_length(coords)
+        t_greedy = time.perf_counter() - t0
 
         # Amortise PCA cost across the five features that use the eigvals.
         pca_share = t_pca / 5.0
@@ -169,13 +177,14 @@ def _time_per_feature(sample_names: List[str]) -> Dict[str, tuple[float, float]]
         timings["pca_effective_rank"].append(pca_share)
         timings["pca_log_det"].append(pca_share)
 
-        # Amortise kNN across its four features.
-        knn_share = t_knn / 4.0
-        for k in ["nn1_dist_mean", "nn1_dist_cv", "nn2_dist_mean", "nn_gap_ratio"]:
-            timings[k].append(knn_share)
+        # Amortise MST-local-density across its four features.
+        mstnn_share = t_mstnn / 4.0
+        for k in ["mst_nn1_mean", "mst_nn1_cv", "mst_nn2_proxy_mean", "mst_nn_gap_ratio"]:
+            timings[k].append(mstnn_share)
 
-        timings["intrinsic_dim_2nn"].append(t_idim)
         timings["mst_edge_pca_e1_share"].append(t_edge_pca)
+        timings["ripley_L_dev"].append(t_ripley)
+        timings["greedy_nn_over_mst"].append(t_greedy)
 
     out: Dict[str, tuple[float, float]] = {}
     for f, ts in timings.items():
@@ -294,12 +303,13 @@ def _write_report(stats, timings, fwd, keep_decisions) -> None:
     lines.append(
         "- All timings are on a stratified sample of 200 instances (10 per "
         "dimension class), including the amortised cost of shared primitives "
-        "(PCA eigendecomposition, cKDTree)."
+        "(PCA eigendecomposition, MST-incident-edge sort)."
     )
     lines.append(
-        "- Features above `KDTREE_DIM_CAP = 16` report NaN for k-NN and "
-        "intrinsic-dim metrics. The model sees NaN; LightGBM handles NaN via "
-        "built-in sentinel splits."
+        "- All 40 candidate features are defined at every dimension — the "
+        "Tier-2 local-density block is derived from MST incident edges, which "
+        "avoids the concentration-of-measure collapse that makes kd-tree k-NN "
+        "unreliable past d ~ 16."
     )
     lines.append("")
     lines.append(

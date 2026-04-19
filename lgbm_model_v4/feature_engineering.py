@@ -1,12 +1,17 @@
 """GART V4 feature engineering (single source of truth).
 
-Computes the full 41-candidate feature set for one TSP instance:
+Computes the full 42-candidate feature set for one TSP instance:
 
   * 29 inherited V3 features (geometric spread, centroid dispersion,
     MST topology)
   * Tier 1 (5): PCA-Oriented Bounding Box + spectral shape
-  * Tier 2 (4): local density via cKDTree (1-NN, 2-NN)
-  * Tier 3 (3): Mahalanobis log-volume, MST-edge PCA, 2-NN intrinsic dim
+  * Tier 2 (4): MST-based local density (exact 1-NN via MST cut property,
+    2nd-incident-edge proxy for 2-NN) — defined at any dimension
+  * Tier 3 (2): Mahalanobis log-volume, MST-edge PCA anisotropy
+  * Tier 4 (1): Ripley's L deviation at the median-NN scale (clustered vs.
+    regular vs. Poisson-random point pattern, computed in log-space)
+  * Tier 5 (1): Greedy nearest-neighbour tour length normalised by MST length
+    (Rosenkrantz-Stearns-Lewis 1977 tour-ordering upper bound)
 
 Design:
   * Public entry point :func:`compute_features(coords, dimension, grid_size)`.
@@ -30,6 +35,7 @@ from scipy import stats
 from scipy.sparse import csr_matrix
 from scipy.spatial import cKDTree
 from scipy.spatial.distance import cdist
+from scipy.special import gammaln
 
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 if _REPO_ROOT not in sys.path:
@@ -37,14 +43,10 @@ if _REPO_ROOT not in sys.path:
 
 from mst_utils import compute_mst
 
-# Dimension caps. QHull (Delaunay) blows up beyond ~10 dims; cKDTree still
-# works in high d but falls back to linear scan and its own BallTree is
-# preferable beyond d ~ 20 — we just cap cleanly instead.
 # Delaunay (QHull) crossover vs dense matrix: empirically dense is faster from
 # d >= 4 upwards (measured d=5, n=1000 -> Delaunay ~1.8s vs dense ~0.2s).
-# Keep Delaunay for d ∈ {2, 3} only.
+# Keep Delaunay for d ∈ {2, 3} only. Dispatch lives in ``mst_utils.compute_mst``.
 DELAUNAY_DIM_CAP = 3
-KDTREE_DIM_CAP = 16
 
 # Log/exp safety rails — keep features in float64 range without overflow.
 LOG_CAP = 690.0  # log(np.exp(690)) ~ 1e300, safely inside float64 max.
@@ -89,69 +91,134 @@ def _obb_volume(coords: np.ndarray) -> tuple[float, float]:
 
 
 # =============================================================================
-# K-NN helpers
+# MST-based local density
 # =============================================================================
-def _knn_features(coords: np.ndarray, d: int) -> Dict[str, float]:
-    """Local density stats via cKDTree. Caps at KDTREE_DIM_CAP dims — beyond
-    that, k-NN loses meaning because concentration-of-measure collapses the
-    nearest-neighbour gap."""
-    if d > KDTREE_DIM_CAP:
+def _mst_local_density_stats(
+    rows: np.ndarray, cols: np.ndarray, edges: np.ndarray, n: int
+) -> Dict[str, float]:
+    """Exact 1-NN distance and a 2-NN proxy derived from the MST.
+
+    By the MST cut property, the edge from any vertex v to its nearest
+    neighbour is always in the MST, so the minimum incident MST-edge weight
+    equals the exact 1-NN distance. For the second-nearest neighbour there is
+    no such guarantee, so we use the second-smallest incident MST-edge weight
+    as a proxy (it is an upper bound on the true 2-NN distance).
+
+    Works at any dimension — no concentration-of-measure cap needed.
+    """
+    if n < 3 or len(edges) == 0:
         return {
-            "nn1_dist_mean": float("nan"),
-            "nn1_dist_cv": float("nan"),
-            "nn2_dist_mean": float("nan"),
-            "nn_gap_ratio": float("nan"),
+            "mst_nn1_mean": 0.0,
+            "mst_nn1_cv": 0.0,
+            "mst_nn2_proxy_mean": 0.0,
+            "mst_nn_gap_ratio": 1.0,
         }
-    n = coords.shape[0]
-    if n < 3:
-        return {
-            "nn1_dist_mean": 0.0,
-            "nn1_dist_cv": 0.0,
-            "nn2_dist_mean": 0.0,
-            "nn_gap_ratio": 1.0,
-        }
-    tree = cKDTree(coords)
-    # query k=3: self (0), 1st NN, 2nd NN.
-    dd, _ = tree.query(coords, k=3)
-    nn1 = dd[:, 1]
-    nn2 = dd[:, 2]
+    incident: list[list[float]] = [[] for _ in range(n)]
+    for i in range(len(rows)):
+        w = float(edges[i])
+        incident[int(rows[i])].append(w)
+        incident[int(cols[i])].append(w)
+    nn1 = np.zeros(n, dtype=np.float64)
+    nn2_vals: list[float] = []
+    for v in range(n):
+        lst = incident[v]
+        if not lst:
+            continue
+        lst.sort()
+        nn1[v] = lst[0]
+        if len(lst) >= 2:
+            nn2_vals.append(lst[1])
     nn1_mean = float(np.mean(nn1))
     nn1_std = float(np.std(nn1))
-    nn2_mean = float(np.mean(nn2))
+    nn2_mean = float(np.mean(nn2_vals)) if nn2_vals else nn1_mean
     return {
-        "nn1_dist_mean": nn1_mean,
-        "nn1_dist_cv": (nn1_std / nn1_mean) if nn1_mean > 1e-12 else 0.0,
-        "nn2_dist_mean": nn2_mean,
-        "nn_gap_ratio": (nn2_mean / nn1_mean) if nn1_mean > 1e-12 else 1.0,
+        "mst_nn1_mean": nn1_mean,
+        "mst_nn1_cv": (nn1_std / nn1_mean) if nn1_mean > 1e-12 else 0.0,
+        "mst_nn2_proxy_mean": nn2_mean,
+        "mst_nn_gap_ratio": (nn2_mean / nn1_mean) if nn1_mean > 1e-12 else 1.0,
     }
 
 
-def _intrinsic_dim_2nn(coords: np.ndarray, d: int) -> float:
-    """Facco et al. 2017 two-nearest-neighbour intrinsic-dim estimator:
-    mu_i = r_2(i) / r_1(i) >= 1; P(mu > x) = x^{-d_intrinsic};
-    MLE: d_hat = N / sum(log mu_i).
+# =============================================================================
+# Greedy nearest-neighbour tour — Rosenkrantz-Stearns-Lewis (1977) upper bound
+# =============================================================================
+def _greedy_nn_tour_length(coords: np.ndarray) -> float:
+    """Closed greedy-NN tour length with a canonical start (centroid-nearest).
 
-    Returns NaN above KDTREE_DIM_CAP ambient dim (nearest-neighbour stats
-    become unreliable)."""
-    if d > KDTREE_DIM_CAP:
-        return float("nan")
+    Build a Hamiltonian tour by always moving to the nearest unvisited vertex
+    from the current one, closing with the return edge. This is a classical
+    TSP upper bound (RSL 1977: within ½·(⌈log₂ n⌉+1)·OPT for metric TSP).
+
+    Starting vertex is the point closest to the centroid so the result is
+    deterministic and invariant under point reordering. O(n²·d) in numpy.
+    """
+    n = coords.shape[0]
+    if n < 2:
+        return 0.0
+    centroid = coords.mean(axis=0)
+    start = int(np.argmin(np.sum((coords - centroid) ** 2, axis=1)))
+
+    visited = np.zeros(n, dtype=bool)
+    visited[start] = True
+    current = start
+    total = 0.0
+    for _ in range(n - 1):
+        diffs = coords - coords[current]
+        d2 = np.sum(diffs * diffs, axis=1)
+        d2[visited] = np.inf
+        nxt = int(np.argmin(d2))
+        total += float(np.sqrt(d2[nxt]))
+        visited[nxt] = True
+        current = nxt
+    total += float(np.linalg.norm(coords[current] - coords[start]))
+    return total
+
+
+# =============================================================================
+# Spatial point-pattern — Ripley's L deviation at the median NN scale
+# =============================================================================
+def _ripley_L_deviation(coords: np.ndarray, d: int) -> float:
+    """Ripley's L-function deviation at r = median nearest-neighbour distance.
+
+    For a homogeneous Poisson point process (CSR), L(r) = r exactly, so
+    L(r) / r − 1 is 0 for CSR, positive for clustered point sets, and negative
+    for regular / repulsive point sets (grids, quasi-crystal). The
+    characteristic scale (median NN distance) auto-normalises for n and extent.
+
+    Computed fully in log-space so it survives any ambient dimension.
+    """
     n = coords.shape[0]
     if n < 3:
-        return float(d)
+        return 0.0
+
+    ranges = np.ptp(coords, axis=0).astype(np.float64)
+    ranges = np.where(ranges < 1e-9, 1e-9, ranges)
+    log_V = float(np.sum(np.log(ranges)))  # log bounding hypervolume
     tree = cKDTree(coords)
-    dd, _ = tree.query(coords, k=3)
-    nn1 = dd[:, 1]
-    nn2 = dd[:, 2]
-    # Drop any coincident / near-coincident points to avoid log(1)=0 blow-ups.
-    mask = (nn1 > 1e-12) & (nn2 > nn1 * (1 + 1e-9))
-    if not mask.any():
-        return float(d)
-    mu = nn2[mask] / nn1[mask]
-    log_mu = np.log(mu)
-    total = float(np.sum(log_mu))
-    if total <= 1e-12:
-        return float(d)
-    return float(mask.sum() / total)
+
+    # Characteristic scale r = median 1-NN distance. query k=2 (self + 1-NN).
+    dd, _ = tree.query(coords, k=2)
+    r = float(np.median(dd[:, 1]))
+    if r <= 0.0:
+        return 0.0
+
+    # Number of *ordered* pairs within r; subtract the n self-pairs.
+    pairs = tree.count_neighbors(tree, r)
+    neighbour_pairs = pairs - n
+    if neighbour_pairs <= 0:
+        return -1.0
+
+    # K(r) = (neighbour_pairs / n) / lambda ; lambda = n / V
+    # log K = log(neighbour_pairs) - 2 log n + log V
+    log_K = np.log(neighbour_pairs) - 2.0 * np.log(n) + log_V
+
+    # Unit-ball volume c_d = pi^(d/2) / gamma(d/2 + 1); use lgamma in log-space.
+    log_c_d = (d / 2.0) * np.log(np.pi) - gammaln(d / 2.0 + 1.0)
+
+    # L(r) = (K(r) / c_d)^(1/d)
+    log_L = (log_K - log_c_d) / d
+    L = float(np.exp(log_L))
+    return L / r - 1.0
 
 
 # =============================================================================
@@ -308,16 +375,25 @@ def compute_features(
     # obb_shrinkage in [0, 1]: obb is always <= axis-aligned bounding box.
     out["obb_shrinkage"] = float(obb_vol / out["bounding_hypervolume"]) if out["bounding_hypervolume"] > 1e-12 else 0.0
 
-    # --- Group 5 (Tier 2): Local density via cKDTree --------------------------
-    out.update(_knn_features(coords, dimension))
+    # --- Group 5 (Tier 2): MST-based local density ---------------------------
+    out.update(_mst_local_density_stats(rows, cols, edges, n))
 
-    # --- Group 6 (Tier 3): Second-order + manifold ---------------------------
+    # --- Group 6 (Tier 3): Second-order shape ---------------------------------
     # log-determinant of coord covariance (Mahalanobis-style log-volume, safe
     # in any dimension). Zero eigenvalues are clipped with a floor.
     eig_floor = np.maximum(eigvals, 1e-12)
     out["pca_log_det"] = float(np.sum(np.log(eig_floor)))
     out["mst_edge_pca_e1_share"] = _mst_edge_pca_e1_share(coords, rows, cols)
-    out["intrinsic_dim_2nn"] = _intrinsic_dim_2nn(coords, dimension)
+
+    # --- Group 7 (Tier 4): Spatial point-pattern clustering ------------------
+    out["ripley_L_dev"] = _ripley_L_deviation(coords, dimension)
+
+    # --- Group 8 (Tier 5): Greedy-NN tour / MST ratio ------------------------
+    # Scale-free tour-ordering signal: Rosenkrantz-Stearns-Lewis upper bound
+    # normalised by the MST lower-bound proxy. Raw greedy length is omitted
+    # since it is near-redundant with mst_total_length.
+    greedy_len = _greedy_nn_tour_length(coords)
+    out["greedy_nn_over_mst"] = float(greedy_len / mst_len) if mst_len > 1e-9 else 1.0
 
     return out
 
@@ -353,8 +429,12 @@ def feature_columns_for_training() -> list[str]:
         # V4 Tier 1
         "obb_volume", "log_obb_volume", "obb_shrinkage",
         "pca_e1_share", "pca_effective_rank",
-        # V4 Tier 2
-        "nn1_dist_mean", "nn1_dist_cv", "nn2_dist_mean", "nn_gap_ratio",
+        # V4 Tier 2 (MST-based local density)
+        "mst_nn1_mean", "mst_nn1_cv", "mst_nn2_proxy_mean", "mst_nn_gap_ratio",
         # V4 Tier 3
-        "pca_log_det", "mst_edge_pca_e1_share", "intrinsic_dim_2nn",
+        "pca_log_det", "mst_edge_pca_e1_share",
+        # V4 Tier 4 (spatial point-pattern)
+        "ripley_L_dev",
+        # V4 Tier 5 (tour-ordering upper bound)
+        "greedy_nn_over_mst",
     ]
