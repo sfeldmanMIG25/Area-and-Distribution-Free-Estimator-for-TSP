@@ -42,6 +42,7 @@ sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v3"))
 sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v4"))
 sys.path.insert(0, str(REPO_ROOT / "linear_model_v3"))
 sys.path.insert(0, str(REPO_ROOT / "interpretable_model_v3"))
+sys.path.insert(0, str(REPO_ROOT / "nn_est_alpha_v3"))
 sys.path.insert(0, str(THIS_DIR))
 
 # Core imports
@@ -53,6 +54,7 @@ from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
 from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
+from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 
 # Academic estimator imports
@@ -279,6 +281,11 @@ def run_benchmark(max_n=None, workers=None):
         print("  Interp_V3: OK")
     except Exception as e:
         print(f"  Interp_V3: FAILED ({e})")
+    try:
+        ml_models["NN_V3"] = TSP_V3_Neural_Estimator(str(REPO_ROOT / "nn_est_alpha_v3"))
+        print("  NN_V3: OK")
+    except Exception as e:
+        print(f"  NN_V3: FAILED ({e})")
     try:
         ml_models["GART_1.0"] = GART_Adapter(str(REPO_ROOT / "GART_1.0"))
         print("  GART_1.0: OK")
