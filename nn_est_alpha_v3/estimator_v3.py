@@ -15,6 +15,7 @@ _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler, QuantileTransformer

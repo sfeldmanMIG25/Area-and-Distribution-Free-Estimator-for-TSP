@@ -699,35 +699,53 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
     else:
         coords = canonicalize_coords_pca(coords)
 
-    # A = axis-aligned bounding-rectangle area (2D paper definition) generalized
-    # to a bounding-box volume in ND.
+    # A = convex-hull area (2D) / volume (ND). Paper, Section 4: for tests on
+    # non-random graphs, "we used the area of the convex hull of the nodes as
+    # A". For the paper's random rectangular training graphs the hull area
+    # coincides with l_x * l_y by construction (they explicitly place a node
+    # at each corner), so the convex-hull form is faithful to both cases and
+    # strictly more accurate on real-world (non-corner-padded) instances.
+    # Rotation into the MABR frame above leaves ConvexHull.volume invariant,
+    # so the per-axis midpoint/stdev/cbar/cstdev statistics still come from
+    # the canonical frame while A stays rotation-free by construction.
     lo = coords.min(axis=0)
     hi = coords.max(axis=0)
     ranges = (hi - lo).astype(float)
     ranges[ranges < 1e-9] = 1e-9
-    vol = float(np.prod(ranges))
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
+        try:
+            vol = float(ConvexHull(coords).volume)
+        except Exception:
+            vol = float(np.prod(ranges))
+    else:
+        vol = float(np.prod(ranges))
+    if vol < 1e-12:
+        vol = float(np.prod(ranges))
 
     # Paper: "average distance of nodes to the central horizontal and vertical
     # axes (the horizontal and vertical midpoint lines of the space)".
     midpoint = 0.5 * (hi + lo)
 
-    stdev = coords.std(axis=0)
-    abs_dev = np.abs(coords - midpoint)
+    stdev = coords.std(axis=0).astype(np.float64)
+    stdev = np.where(stdev < 1e-12, 1e-12, stdev)
+    abs_dev = np.abs(coords - midpoint).astype(np.float64)
     c_bar = abs_dev.mean(axis=0)
-    c_bar[c_bar < 1e-9] = 1e-9
+    c_bar = np.where(c_bar < 1e-12, 1e-12, c_bar)
     cstdev = abs_dev.std(axis=0)
-
-    prod_stdev = float(np.prod(stdev))
-    prod_c_bar = float(np.prod(c_bar))
-    prod_cstdev = float(np.prod(cstdev))
+    cstdev = np.where(cstdev < 1e-12, 1e-12, cstdev)
 
     n_scale = math.pow(n, (d - 1) / d)
     inv_d = 1.0 / d
 
-    term1 = a0 * n_scale * math.pow(max(prod_cstdev, 1e-300), inv_d)
-    term2 = a1 * n_scale * math.pow(vol, inv_d) * math.pow(
-        max(prod_stdev, 1e-300) / prod_c_bar, inv_d
-    )
+    # Compute geometric-mean products in log space to stay finite in high d
+    # (prod_j cstdev_j overflows float64 by d ~ 30 for typical grid sizes).
+    log_geom_cstdev = float(np.sum(np.log(cstdev)) / d)
+    log_geom_stdev = float(np.sum(np.log(stdev)) / d)
+    log_geom_cbar = float(np.sum(np.log(c_bar)) / d)
+    log_vol = float(np.sum(np.log(ranges)))  # full log-volume (not geom mean)
+
+    term1 = a0 * n_scale * math.exp(log_geom_cstdev)
+    term2 = a1 * n_scale * math.exp(log_vol * inv_d) * math.exp(log_geom_stdev - log_geom_cbar)
 
     estimated_cost = term1 + term2
 

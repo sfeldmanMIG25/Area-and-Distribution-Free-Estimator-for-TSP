@@ -13,6 +13,7 @@ _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 if _REPO_ROOT not in _sys.path:
     _sys.path.insert(0, _REPO_ROOT)
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 import numba
@@ -41,15 +42,26 @@ class TSP_Interpretable_Estimator:
         self.router = joblib.load(os.path.join(artifacts_dir, 'router.joblib'))
         self.experts = joblib.load(os.path.join(artifacts_dir, 'experts.joblib'))
         
-        # Pre-fetch router features to ensure strict alignment during inference
-        if hasattr(self.router, 'feature_names_in_'):
-            self.router_features = self.router.feature_names_in_
-        else:
-            self.router_features = None
-        
         with open(os.path.join(artifacts_dir, 'model_metadata.json'), 'r') as f:
-            # Convert string keys back to int for leaf IDs
-            self.metadata = {int(k): v for k, v in json.load(f).items()}
+            raw_meta = json.load(f)
+
+        # Schema: {"router_features": [...], "leaves": {"<leaf_id>": {...}}}.
+        # Older artifacts stored a flat {leaf_id: info} dict; support both.
+        if isinstance(raw_meta, dict) and 'leaves' in raw_meta:
+            self.router_features = list(raw_meta.get('router_features') or [])
+            self.metadata = {int(k): v for k, v in raw_meta['leaves'].items()}
+        else:
+            self.metadata = {int(k): v for k, v in raw_meta.items()}
+            self.router_features = (
+                list(self.router.feature_names_in_)
+                if hasattr(self.router, 'feature_names_in_') else None
+            )
+
+        if not self.router_features:
+            self.router_features = (
+                list(self.router.feature_names_in_)
+                if hasattr(self.router, 'feature_names_in_') else None
+            )
             
     def _compute_base_features(self, coords, n, d, grid_size, precomputed_mst=None):
         """Computes V3 features with Log-Space stability."""

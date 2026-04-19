@@ -4,6 +4,15 @@ import sys
 # Prevent sklearn/joblib from spawning subprocesses inside workers on Windows.
 os.environ["LOKY_MAX_CPU_COUNT"] = str(max(1, os.cpu_count()))
 
+# Pin BLAS/LAPACK to single-thread BEFORE numpy is imported. The PCA
+# canonicalization step calls np.linalg.eigh inside each worker, and
+# multithreaded BLAS + Python ThreadPoolExecutor deadlocks on Windows
+# (LAPACK routines contend for the same thread pool). Each worker doing
+# its own eigendecomp serially is still plenty fast for d <= 100.
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+           "NUMEXPR_NUM_THREADS", "BLIS_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
 import numpy as np
 import json
 import struct

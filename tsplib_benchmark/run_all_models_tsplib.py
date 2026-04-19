@@ -405,14 +405,13 @@ def run_benchmark(max_n=None, workers=None):
 
         # 1. ML models (work on all instances via hybrid)
         for model_name, model_obj in ml_models.items():
-            # GART 1.0 only works on 2D Euclidean; skip large instances (dense MST)
+            # GART 1.0 only works on 2D Euclidean (its feature set assumes 2D);
+            # non-2D EWT is a correctness gate (different distance units), not
+            # a performance gate, so it stays. The n>5000 gate is lifted for
+            # consistency with the rest of the benchmark suite.
             if model_name == "GART_1.0" and not is_2d:
                 results.append(_status_row(name, n, ewt, model_name, "gart1_only_2d",
                                            mode="native" if is_native else "hybrid"))
-                continue
-            if model_name == "GART_1.0" and n > 5000:
-                results.append(_status_row(name, n, ewt, model_name, "gart1_n_gt_5000",
-                                           mode="native"))
                 continue
 
             try:
@@ -492,16 +491,18 @@ def run_benchmark(max_n=None, workers=None):
             results.append(_status_row(name, n, ewt, "Fixed_Alpha", "no_mst_length",
                                        mode="native" if is_native else "hybrid"))
 
-        # 3. Academic estimators (2D Euclidean only, skip for n>5000 to avoid O(n^2) blowup).
+        # 3. Academic estimators (2D Euclidean only: EUC_2D + CEIL_2D).
         # Never-silent: when an academic baseline cannot run, still emit a status row.
+        # Non-2D edge-weight types (ATT / GEO / EXPLICIT) are skipped because the
+        # true-cost optimum is computed with a non-Euclidean distance function,
+        # so a Euclidean Cavdar / BHH / Chien / etc. prediction lives in different
+        # units from the ground truth and the gap is meaningless. No n-gate: the
+        # academic estimators are O(n log n) at worst (convex hull + rotating
+        # calipers / MST), so the entire TSPLIB 2D set runs in seconds.
         for est_name, est_func in academic_estimators.items():
             if not (is_2d and coords_2d is not None):
                 results.append(_status_row(name, n, ewt, est_name, "academic_non_2d",
                                            mode="hybrid"))
-                continue
-            if n > 5000:
-                results.append(_status_row(name, n, ewt, est_name, "academic_n_gt_5000",
-                                           mode="native", feat_dim=2))
                 continue
             try:
                 t0 = time.perf_counter()

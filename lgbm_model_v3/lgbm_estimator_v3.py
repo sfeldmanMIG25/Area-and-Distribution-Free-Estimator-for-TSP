@@ -70,7 +70,7 @@ class TSP_V3_LGBM_Estimator:
         
         model_path = os.path.join(model_dir, 'lgbm_alpha_model_v3.joblib')
         if not os.path.exists(model_path):
-            sys.exit(f"CRITICAL ERROR: LGBM Model not found at {model_path}")
+            raise FileNotFoundError(f"LGBM Model not found at {model_path}")
             
         self.model = joblib.load(model_path)
         

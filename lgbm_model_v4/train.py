@@ -127,16 +127,22 @@ def _build_objective(X_tr, y_tr, X_vl, y_vl, mst_vl, true_vl):
             "verbosity": -1,
             "seed": RANDOM_STATE,
             "feature_pre_filter": False,
+            # Anti-overfit priors: previous V4 memorized ND with num_leaves=500+
+            # and min_child_samples=5. Bounds below constrain capacity and force
+            # meaningful regularization. Larger min_child_samples bites especially
+            # hard on the ND tail where each (d, n_customers) stratum has
+            # hundreds-to-thousands of rows — splits that rely on < 50 samples
+            # are almost certainly memorizing generator fingerprints.
             "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.1, log=True),
-            "num_leaves": trial.suggest_int("num_leaves", 31, 512),
-            "max_depth": trial.suggest_int("max_depth", -1, 32),
-            "min_child_samples": trial.suggest_int("min_child_samples", 5, 100),
-            "reg_alpha": trial.suggest_float("reg_alpha", 1e-9, 10.0, log=True),
-            "reg_lambda": trial.suggest_float("reg_lambda", 1e-9, 10.0, log=True),
-            "feature_fraction": trial.suggest_float("feature_fraction", 0.4, 1.0),
-            "bagging_fraction": trial.suggest_float("bagging_fraction", 0.4, 1.0),
-            "bagging_freq": trial.suggest_int("bagging_freq", 0, 10),
-            "min_split_gain": trial.suggest_float("min_split_gain", 1e-9, 1.0, log=True),
+            "num_leaves": trial.suggest_int("num_leaves", 31, 96),
+            "max_depth": trial.suggest_int("max_depth", 4, 10),
+            "min_child_samples": trial.suggest_int("min_child_samples", 50, 300),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-3, 10.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-3, 10.0, log=True),
+            "feature_fraction": trial.suggest_float("feature_fraction", 0.4, 0.8),
+            "bagging_fraction": trial.suggest_float("bagging_fraction", 0.5, 0.85),
+            "bagging_freq": trial.suggest_int("bagging_freq", 1, 8),
+            "min_split_gain": trial.suggest_float("min_split_gain", 1e-6, 1.0, log=True),
         }
         dtr = lgb.Dataset(X_tr, label=y_tr)
         dvl = lgb.Dataset(X_vl, label=y_vl, reference=dtr)

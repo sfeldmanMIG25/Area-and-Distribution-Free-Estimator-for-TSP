@@ -1,6 +1,16 @@
 import os
 import sys
 from pathlib import Path
+
+# Pin BLAS/LAPACK to single-thread BEFORE numpy is imported. Each estimator's
+# ``estimate()`` calls ``np.linalg.eigh`` (via canonicalize_coords_pca, plus
+# V4's PCA-OBB features) inside a ThreadPoolExecutor worker; multithreaded
+# BLAS contending with Python threads deadlocks on Windows. One serial LAPACK
+# call per worker is plenty fast for d <= 100.
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+           "NUMEXPR_NUM_THREADS", "BLIS_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
 import pandas as pd
 import numpy as np
 import time

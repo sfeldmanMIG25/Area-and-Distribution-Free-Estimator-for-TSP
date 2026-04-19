@@ -16,6 +16,7 @@ import numba
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 import warnings
 
 warnings.filterwarnings("ignore")

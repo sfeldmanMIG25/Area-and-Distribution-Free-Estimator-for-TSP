@@ -75,8 +75,10 @@ V4_CANDIDATES = [
     "greedy_nn_over_mst",
 ]
 
-DELTA_SDPE_THRESHOLD = 0.05      # percentage points
+DELTA_SDPE_THRESHOLD = 0.05      # full keep gate (pp SDPE improvement required)
+DELTA_SDPE_TIE_BREAK = 0.025     # half-gate; only opens when MI is also strong
 MI_THRESHOLD = 0.01
+MI_STRONG = 5 * MI_THRESHOLD     # tie-break admission bar
 P_VALUE_THRESHOLD = 0.01
 TIME_P95_CAP_MS = 10.0
 
@@ -258,21 +260,37 @@ def _forward_select(df: pd.DataFrame):
 # Report writer
 # =============================================================================
 def _decide(stats_row: dict, timing_row: tuple[float, float], fwd_row: dict) -> tuple[bool, str]:
+    """Admit a feature only if it actually improves SDPE.
+
+    Hard fail on any of: significance, runtime p95, or positive/trivial dSDPE.
+    MI is demoted from a standalone keep to a tie-breaker: it can rescue a
+    feature whose dSDPE is borderline (between the half- and full-gate) but
+    cannot rescue a feature that makes predictions worse.
+    """
     p = stats_row["p_value"]; mi = stats_row["mi"]
     t_p95 = timing_row[1]
     d_sdpe = fwd_row["d_sdpe_pp"]
-    reasons = []
-    if not (p < P_VALUE_THRESHOLD):
+    reasons: list[str] = []
+
+    passes_sig = p < P_VALUE_THRESHOLD
+    passes_time = t_p95 <= TIME_P95_CAP_MS
+    full_gate = d_sdpe <= -DELTA_SDPE_THRESHOLD
+    tie_break = (d_sdpe <= -DELTA_SDPE_TIE_BREAK) and (mi >= MI_STRONG)
+
+    if not passes_sig:
         reasons.append(f"p={p:.2e} >= {P_VALUE_THRESHOLD}")
-    if not (mi >= MI_THRESHOLD):
-        reasons.append(f"MI={mi:.4f} < {MI_THRESHOLD}")
-    if not (abs(d_sdpe) >= DELTA_SDPE_THRESHOLD):
-        reasons.append(f"|dSDPE|={abs(d_sdpe):.3f}pp < {DELTA_SDPE_THRESHOLD}")
-    if not (t_p95 <= TIME_P95_CAP_MS):
+    if not passes_time:
         reasons.append(f"p95={t_p95:.2f}ms > {TIME_P95_CAP_MS}")
-    # Bias: better to drop by cost than by dSDPE. We *keep* when |dSDPE|>=thresh OR when stat tests are strong.
-    keep = (abs(d_sdpe) >= DELTA_SDPE_THRESHOLD or mi >= 5 * MI_THRESHOLD) and (p < P_VALUE_THRESHOLD) and (t_p95 <= TIME_P95_CAP_MS)
-    return keep, ("auto-keep" if keep and not reasons else ("auto-keep (strong MI)" if keep else " | ".join(reasons)))
+    if not (full_gate or tie_break):
+        reasons.append(f"dSDPE={d_sdpe:+.3f}pp fails gate (need <=-{DELTA_SDPE_THRESHOLD} "
+                       f"or <=-{DELTA_SDPE_TIE_BREAK} with MI>={MI_STRONG:.3f}; MI={mi:.4f})")
+
+    keep = passes_sig and passes_time and (full_gate or tie_break)
+    if keep:
+        label = "keep (dSDPE gate)" if full_gate else "keep (dSDPE half-gate + strong MI tie-break)"
+    else:
+        label = " | ".join(reasons)
+    return keep, label
 
 
 def _write_report(stats, timings, fwd, keep_decisions) -> None:
@@ -280,8 +298,10 @@ def _write_report(stats, timings, fwd, keep_decisions) -> None:
     lines.append("# V4 feature-candidate report\n")
     lines.append(f"Baseline (V3 feature set): SDPE = **{fwd['baseline']['sdpe']:.3f}%**, MAPE = **{fwd['baseline']['mape']:.3f}%** on val split.\n")
     lines.append(
-        f"Filter rule: `p(F-reg) < {P_VALUE_THRESHOLD}`, `MI >= {MI_THRESHOLD}`, "
-        f"`|delta SDPE| >= {DELTA_SDPE_THRESHOLD}pp` (or strong MI), `p95 <= {TIME_P95_CAP_MS}ms`.\n"
+        f"Filter rule: `p(F-reg) < {P_VALUE_THRESHOLD}` AND `p95 <= {TIME_P95_CAP_MS}ms` "
+        f"AND (`dSDPE <= -{DELTA_SDPE_THRESHOLD}pp` OR "
+        f"[`dSDPE <= -{DELTA_SDPE_TIE_BREAK}pp` AND `MI >= {MI_STRONG:.3f}`]).\n"
+        f"(Sign-sensitive: features that *worsen* SDPE can no longer be auto-kept by MI alone.)\n"
     )
     lines.append("| Feature | p(F-reg) | MI | Spearman | p50 ms | p95 ms | delta SDPE pp | delta MAPE pp | Decision |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|---:|---|")
