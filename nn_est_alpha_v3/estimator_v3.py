@@ -123,7 +123,7 @@ class TSP_V3_Neural_Estimator:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
 
-    def _compute_v3_features(self, coords, n, d, grid_size):
+    def _compute_v3_features(self, coords, n, d, grid_size, precomputed_mst=None):
         """High-stability V3 feature set computation."""
         feats = {'n_customers': n, 'dimension': d}
         rngs = np.ptp(coords, axis=0).astype(float); rngs[rngs < 1e-9] = 1e-9
@@ -145,7 +145,9 @@ class TSP_V3_Neural_Estimator:
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
         # MST via the project-wide utility (dense primary, OOM fallback).
-        mst_result = compute_mst(coords)
+        # If a precomputed MST is supplied (e.g. from an external non-Euclidean
+        # distance matrix), use it instead of recomputing from coords.
+        mst_result = precomputed_mst if precomputed_mst is not None else compute_mst(coords)
         edges = mst_result.edges
         mst_len = float(np.sum(edges))
         feats['mst_total_length'] = mst_len
@@ -183,11 +185,12 @@ class TSP_V3_Neural_Estimator:
         feats['mst_diameter_normalized'] = diam / (mst_len + 1e-9)
         return feats, mst_len
 
-    def estimate(self, coordinates, dimension, grid_size):
+    def estimate(self, coordinates, dimension, grid_size, precomputed_mst=None):
         """Inference with strict input truncation."""
         coords = np.array(coordinates, dtype=np.float32)
+        coords = canonicalize_coords_pca(coords).astype(np.float32, copy=False)
         t0 = time.perf_counter()
-        f_dict, mst_len = self._compute_v3_features(coords, len(coords), dimension, grid_size)
+        f_dict, mst_len = self._compute_v3_features(coords, len(coords), dimension, grid_size, precomputed_mst=precomputed_mst)
         t_feat = time.perf_counter() - t0
         
         # Build vector and strictly cap to handle the '32 region' (float32 limit)

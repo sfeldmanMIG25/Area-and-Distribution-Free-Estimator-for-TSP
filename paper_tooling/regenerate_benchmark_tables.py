@@ -11,19 +11,20 @@ v3 changes (2026-04-17):
     - R^2_alpha is now computed *within each bucket* (not reused from the
       full dataset). A bucket with < 3 instances, or where true_alpha
       std < 1e-4, emits ``---``.
-    - TSPLIB aggregates exclude ``brg180`` entirely. That instance comes
-      from the bridge-graph family; its distance matrix violates the
-      triangle inequality and therefore breaks the symmetric-metric
-      assumption underlying the MST-based features that GART 2.0 uses.
+    - TSPLIB aggregates drop instances whose optimum exceeds the
+      double-tree bound (true_cost / MST > METRIC_RATIO_THRESHOLD = 2.5,
+      i.e. 25% above the metric ceiling of 2). This is a deterministic,
+      model-agnostic filter; brg180 is the only current TSPLIB instance
+      that trips it, but future additions are handled automatically.
     - TSPLIB by-size buckets replaced with finer splits:
       n<=50, [51,150], [151,500], [501,2000], [2001,10000], n>10000, ALL.
     - New non-Euclidean TSPLIB summary table ``table_tsplib_nonEuc.csv``
       with one row per non-Euclidean edge_weight_type (CEIL_2D, ATT,
-      GEO, EXPLICIT-metric; brg180 removed from EXPLICIT).
+      GEO, EXPLICIT-metric; non-metric outliers removed from EXPLICIT).
 
-Instances violating the triangle inequality (e.g. brg180 from the
-bridge-graph family) are excluded from all aggregates; GART 2.0 assumes a
-symmetric metric distance matrix.
+Instances that fail the double-tree bound (true_cost / MST >
+METRIC_RATIO_THRESHOLD) are dropped from every aggregate; GART 2.0
+assumes a symmetric metric distance matrix.
 """
 
 from __future__ import annotations
@@ -36,6 +37,9 @@ from typing import Iterable, List, Optional, Sequence
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tsplib_benchmark"))
+from exclusions import METRIC_RATIO_THRESHOLD, filter_metric_consistent  # noqa: E402
 import matplotlib
 
 matplotlib.use("Agg")
@@ -245,10 +249,9 @@ SIZE_BUCKETS_TSPLIB = [
     ("ALL",          lambda n: np.ones_like(n, dtype=bool)),
 ]
 
-# Instances violating the triangle inequality (e.g. brg180 from the
-# bridge-graph family) are excluded from all aggregates; GART 2.0 assumes a
-# symmetric metric distance matrix.
-TRIANGLE_INEQ_VIOLATORS = {"brg180"}
+# Non-metric instances (true_cost / MST > METRIC_RATIO_THRESHOLD) are
+# dropped from every aggregate via ``filter_metric_consistent``. The
+# threshold is imported from ``tsplib_benchmark/exclusions.py``.
 
 
 def build_table(
@@ -330,7 +333,7 @@ def load_tsplib_common() -> pd.DataFrame:
     large-instance baseline runs, then restricts to the EUC_2D common set
     covered by every model in ``MODELS_TSPLIB``.
 
-    Drops triangle-inequality violators (``TRIANGLE_INEQ_VIOLATORS``)
+    Drops non-metric instances (true_cost / MST > METRIC_RATIO_THRESHOLD)
     before any aggregation.
     """
     cols = [
@@ -346,10 +349,10 @@ def load_tsplib_common() -> pd.DataFrame:
         sup = pd.read_csv(PATH_TSPLIB_SUPPL, usecols=cols)
         df = pd.concat([df, sup], ignore_index=True)
 
-    # Drop triangle-inequality violators entirely (brg180 from the
-    # bridge-graph family). These violate the symmetric-metric assumption
-    # underlying the MST features that GART 2.0 uses.
-    df = df[~df["instance"].isin(TRIANGLE_INEQ_VIOLATORS)]
+    # Drop non-metric instances (true_cost / MST > METRIC_RATIO_THRESHOLD).
+    # GART 2.0 assumes symmetric metric distances; anything past the
+    # double-tree bound is outside the model's defined regime.
+    df = filter_metric_consistent(df)
 
     df = df[df["edge_weight_type"] == "EUC_2D"]
     df = df[df["model"].isin(raw_names)].copy()
@@ -378,7 +381,7 @@ def load_tsplib_nonEuc() -> pd.DataFrame:
         "feature_dim",
     ]
     df = pd.read_csv(PATH_TSPLIB, usecols=cols)
-    df = df[~df["instance"].isin(TRIANGLE_INEQ_VIOLATORS)]
+    df = filter_metric_consistent(df)
     df = df[df["edge_weight_type"].isin(["CEIL_2D", "ATT", "GEO", "EXPLICIT"])]
     df = df[df["model"] == "LGBM_V3"].copy()
     return df
@@ -651,7 +654,8 @@ def main():
     preview(tab_tl, f"table_tsplib_by_size.csv  ->  {p}")
 
     # ------------------- Table 5: TSPLIB non-Euclidean (§6) ------------ #
-    print("Building TSPLIB non-Euclidean summary (GART 2.0 only, brg180 excluded) ...")
+    print(f"Building TSPLIB non-Euclidean summary "
+          f"(GART 2.0 only, true_cost/MST > {METRIC_RATIO_THRESHOLD} dropped) ...")
     df_ne = load_tsplib_nonEuc()
     tab_ne = build_tsplib_nonEuc_table(df_ne)
     p = TAB_DIR / "table_tsplib_nonEuc.csv"

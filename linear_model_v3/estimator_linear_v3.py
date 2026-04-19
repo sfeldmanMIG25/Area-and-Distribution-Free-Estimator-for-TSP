@@ -45,7 +45,7 @@ class TSP_V3_Linear_Estimator:
         except AttributeError:
             self.feature_order = None
 
-    def _compute_features_raw(self, coords, n, d, grid_size):
+    def _compute_features_raw(self, coords, n, d, grid_size, precomputed_mst=None):
         """Computes features with explicit Log-Transform for stability."""
         feats = {'n_customers': n, 'dimension': d}
         
@@ -70,7 +70,9 @@ class TSP_V3_Linear_Estimator:
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
         # MST via the project-wide utility (dense primary, OOM fallback).
-        mst_result = compute_mst(coords)
+        # If a precomputed MST is supplied (e.g. from an external non-Euclidean
+        # distance matrix), use it instead of recomputing from coords.
+        mst_result = precomputed_mst if precomputed_mst is not None else compute_mst(coords)
         edges = mst_result.edges
         mst_len = float(np.sum(edges))
         
@@ -118,10 +120,11 @@ class TSP_V3_Linear_Estimator:
         
         return feats, mst_len
 
-    def estimate(self, coordinates, dimension, grid_size):
+    def estimate(self, coordinates, dimension, grid_size, precomputed_mst=None):
         coords = np.array(coordinates, dtype=np.float32)
+        coords = canonicalize_coords_pca(coords).astype(np.float32, copy=False)
         t0 = time.perf_counter()
-        f_dict, mst_len = self._compute_features_raw(coords, len(coords), dimension, grid_size)
+        f_dict, mst_len = self._compute_features_raw(coords, len(coords), dimension, grid_size, precomputed_mst=precomputed_mst)
         t_feat = time.perf_counter() - t0
         
         # DataFrame construction matches training pipeline expectation

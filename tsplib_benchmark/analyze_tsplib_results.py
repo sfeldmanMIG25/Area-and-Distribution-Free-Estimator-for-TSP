@@ -33,6 +33,9 @@ RESULTS_DIR = THIS_DIR / "results"
 FIGURES_DIR = THIS_DIR / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
+sys.path.insert(0, str(THIS_DIR))
+from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD  # noqa: E402
+
 # Matplotlib style for publication
 plt.rcParams.update({
     "font.family": "serif",
@@ -141,13 +144,18 @@ def fig_accuracy_by_type(df):
     ax.set_title("GART 3.0 Accuracy by TSPLIB Edge-Weight Type")
     for i, (v, c) in enumerate(zip(mape, counts)):
         ax.text(i, v + 0.3, f"n={c}", ha="center", fontsize=7)
-    # Exclude brg180 outlier annotation
-    brg = df[df["instance"] == "brg180"]
-    if not brg.empty:
-        ax.annotate(f"brg180 excluded\n(non-metric, {brg.abs_gap_pct.values[0]:.0f}%)",
-                    xy=(type_names.index("EXPLICIT"), mape[type_names.index("EXPLICIT")]),
-                    xytext=(type_names.index("EXPLICIT") + 0.5, max(mape) * 0.8),
-                    fontsize=7, arrowprops=dict(arrowstyle="->", lw=0.5))
+    # Annotate any non-metric outlier that slipped through (true_cost/MST > threshold).
+    if {"true_cost", "mst_length"}.issubset(df.columns):
+        ratio = df["true_cost"] / df["mst_length"]
+        outliers = df[ratio > METRIC_RATIO_THRESHOLD]
+        if not outliers.empty and "EXPLICIT" in type_names:
+            names_str = ", ".join(outliers["instance"].tolist())
+            ax.annotate(
+                f"{names_str} excluded\n(true_cost/MST > {METRIC_RATIO_THRESHOLD})",
+                xy=(type_names.index("EXPLICIT"), mape[type_names.index("EXPLICIT")]),
+                xytext=(type_names.index("EXPLICIT") + 0.5, max(mape) * 0.8),
+                fontsize=7, arrowprops=dict(arrowstyle="->", lw=0.5),
+            )
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "tsplib_accuracy_by_type.png")
     plt.close()
@@ -298,8 +306,8 @@ def fig_mds_dimension_analysis(df):
     ax.set_title("Accuracy vs Embedding Dimension (Non-Euclidean Instances)")
     ax.legend(framealpha=0.8)
 
-    # Exclude brg180 from y-axis scale
-    non_outlier = hybrid[hybrid["instance"] != "brg180"]
+    # Exclude non-metric outliers from y-axis scale
+    non_outlier = filter_metric_consistent(hybrid)
     if not non_outlier.empty:
         ax.set_ylim(0, non_outlier["abs_gap_pct"].max() * 1.2)
 
@@ -315,7 +323,7 @@ def fig_mds_dimension_analysis(df):
 def fig_gap_vs_n(df):
     fig, ax = plt.subplots(figsize=(5.5, 3.2))
     native = df[df["mode"] == "native"]
-    hybrid = df[(df["mode"] == "hybrid") & (df["instance"] != "brg180")]
+    hybrid = filter_metric_consistent(df[df["mode"] == "hybrid"])
 
     ax.scatter(native["n"], native["gap_pct"], s=12, alpha=0.5,
                color="#4c72b0", label="Native Euclidean", edgecolors="none")
@@ -395,12 +403,16 @@ def main():
     print(f"Synthetic benchmark rows: {len(synth)}")
     print()
 
-    # Exclude brg180 from aggregate stats (non-metric, breaks MDS)
-    df_clean = df[df["instance"] != "brg180"].copy()
+    # Exclude non-metric outliers from aggregate stats (true_cost/MST > threshold).
+    df_clean = filter_metric_consistent(df)
+    dropped = sorted(set(df["instance"]) - set(df_clean["instance"]))
+    if dropped:
+        print(f"Aggregate filter dropped {len(dropped)} non-metric instance(s) "
+              f"(true_cost/MST > {METRIC_RATIO_THRESHOLD}): {', '.join(dropped)}")
 
     print("Generating figures...")
     fig_accuracy_by_size(df_clean)
-    fig_accuracy_by_type(df)  # Keep brg180 for annotation
+    fig_accuracy_by_type(df)  # Keep full set so the annotation can flag outliers
     fig_fixed_alpha_comparison(df_clean)
     fig_synthetic_model_comparison(synth)
     fig_mds_dimension_analysis(df)
@@ -419,7 +431,8 @@ def main():
     in_range = df_clean[df_clean["in_training_n_range"]]
     extrap = df_clean[~df_clean["in_training_n_range"]]
 
-    print(f"\n1. Overall MAPE (excl. brg180): {df_clean.abs_gap_pct.mean():.2f}%")
+    print(f"\n1. Overall MAPE (metric-consistent, true_cost/MST <= {METRIC_RATIO_THRESHOLD}): "
+          f"{df_clean.abs_gap_pct.mean():.2f}%")
     print(f"   Median: {df_clean.abs_gap_pct.median():.2f}%")
     print(f"   Bias: {df_clean.gap_pct.mean():+.2f}%")
 

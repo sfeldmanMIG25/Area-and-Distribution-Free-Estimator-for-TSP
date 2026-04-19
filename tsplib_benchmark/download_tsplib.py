@@ -20,17 +20,16 @@ import time
 import urllib.request
 from pathlib import Path
 
-from exclusions import TRIANGLE_INEQ_VIOLATORS
-
 # Mirror base URL. Each instance is stored as {INSTANCE}.tsp at this location.
 MIRROR_BASE = "https://raw.githubusercontent.com/mastqe/tsplib/master"
 
 # Destination directory (relative to this file).
 DEST = Path(__file__).resolve().parent / "instances"
 
-# Full list of symmetric TSP instances present in TSPLIB95. Triangle-inequality
-# violators (see ``exclusions.py``) are filtered out below before download.
-_ALL_INSTANCES = [
+# Full list of symmetric TSP instances present in TSPLIB95. Every instance
+# is downloaded; the metric-consistency filter in ``exclusions.py`` is
+# applied at analysis time, not here.
+INSTANCES = [
     "a280", "ali535", "att48", "att532", "bayg29", "bays29", "berlin52",
     "bier127", "brazil58", "brd14051", "brg180", "burma14", "ch130", "ch150",
     "d1291", "d15112", "d1655", "d18512", "d198", "d2103", "d493", "d657",
@@ -47,9 +46,6 @@ _ALL_INSTANCES = [
     "u1060", "u1432", "u159", "u1817", "u2152", "u2319", "u574", "u724",
     "ulysses16", "ulysses22", "usa13509", "vm1084", "vm1748",
 ]
-
-# Public list with triangle-inequality violators filtered out.
-INSTANCES = [n for n in _ALL_INSTANCES if n not in TRIANGLE_INEQ_VIOLATORS]
 
 
 def download_one(name: str, dest_dir: Path, retries: int = 3) -> bool:

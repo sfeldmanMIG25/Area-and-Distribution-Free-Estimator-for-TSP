@@ -34,6 +34,9 @@ from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 sys.path.append(str(SCRIPT_DIR / "lgbm_model_v4"))
 from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
+from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
+
+GART_FAMILY = {"Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis_ND"
@@ -277,6 +280,39 @@ def generate_plots(df, out_dir):
     plt.close()
 
 # =============================================================================
+# 3b. Verification
+# =============================================================================
+def verify_results(final_df, base_df, schedule):
+    """Post-hoc sanity checks. Coverage + GART-family gap <= 100%."""
+    print("\n--- Verifying benchmark results ---")
+    expected_instances = set(base_df['instance'].astype(str))
+    expected_models = {name for name, _ in schedule}
+
+    missing = []
+    for m in expected_models:
+        got = set(final_df[final_df['model'] == m]['instance'].astype(str))
+        gap = expected_instances - got
+        if gap:
+            missing.append((m, len(gap)))
+
+    if missing:
+        print("[WARN] Coverage gaps:")
+        for m, k in missing: print(f"    {m}: {k} instances missing")
+    else:
+        print(f"[OK] Coverage: all {len(expected_models)} models x {len(expected_instances)} instances.")
+
+    fam = final_df[final_df['model'].isin(GART_FAMILY)].copy()
+    if 'status' in fam.columns:
+        fam = fam[fam['status'] == 'ok']
+    fam = fam.dropna(subset=['abs_gap_pct'])
+    bad = fam[fam['abs_gap_pct'] > 100.0]
+    if len(bad):
+        print(f"[FAIL] {len(bad)} GART-family rows exceed 100% gap:")
+        print(bad[['model', 'instance', 'true_cost', 'pred_cost', 'abs_gap_pct']].head(20).to_string(index=False))
+    else:
+        print(f"[OK] GART-family sanity: all {len(fam)} rows within 100% gap.")
+
+# =============================================================================
 # 4. Main
 # =============================================================================
 def main():
@@ -296,7 +332,7 @@ def main():
     
     schedule = [
         # --- Classic Academic Estimators (N-D-capable: convex-hull / MST-based) ---
-        ('Cavdar', lambda: academic.estimate_tsp_cavdar),
+        # Cavdar: excluded — not N-dimension scalable.
         # ('Vinel', lambda: academic.estimate_tsp_vinel),          # DEPRECATED (see tsp_utils_2.py)
         # ('Composite', lambda: academic.estimate_tsp_composite),  # DEPRECATED (see tsp_utils_2.py)
         ('BHH', lambda: academic.estimate_tsp_bhh),
@@ -308,7 +344,7 @@ def main():
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
         ('LGBM_V4', lambda: TSP_V4_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v4'))),
-        # ('Neural_V3', ...): disabled — checkpoint file not available in this repo snapshot.
+        ('NN_V3', lambda: TSP_V3_Neural_Estimator(str(SCRIPT_DIR / 'nn_est_alpha_v3'))),
         ('Interp_V3', lambda: TSP_Interpretable_Estimator(str(SCRIPT_DIR / 'interpretable_model_v3'))),
     ]
 
@@ -321,7 +357,8 @@ def main():
         final_df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
         final_df.to_csv(FINAL_RESULTS_FILE, index=False)
         print(f"Saved combined results to {FINAL_RESULTS_FILE}")
-        
+
+        verify_results(final_df, base_df, schedule)
         calculate_metrics_and_print(final_df)
         generate_plots(final_df, RESULTS_DIR)
 

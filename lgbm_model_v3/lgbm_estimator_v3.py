@@ -22,6 +22,7 @@ _REPO_ROOT = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), _os.pard
 if _REPO_ROOT not in _sys.path:
     _sys.path.insert(0, _REPO_ROOT)
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 import numba
@@ -175,8 +176,13 @@ class TSP_V3_LGBM_Estimator:
     def estimate(self, coordinates, dimension, grid_size):
         """Main entry point. Returns predictions and silent timing metrics."""
         coords = np.array(coordinates, dtype=np.float32)
+        # Rotate into PCA principal-axis frame so axis-dependent features
+        # match the canonicalized training distribution. Rotation preserves
+        # point identity and all Euclidean distances, so any precomputed MST
+        # remains valid.
+        coords = canonicalize_coords_pca(coords).astype(np.float32, copy=False)
         n = len(coords)
-        
+
         # 1. Feature Generation
         t0 = time.perf_counter()
         f_dict, mst_len = self._compute_v3_features(coords, n, dimension, grid_size)

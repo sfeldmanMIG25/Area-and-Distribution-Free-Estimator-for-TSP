@@ -1,6 +1,7 @@
 """Regenerate all five LaTeX tables, replacing R^2_alpha with Pearson r_alpha (bounded [-1, 1]).
 Outputs full LaTeX blocks for each table, ready to splice. Also emits CSV with the new column.
 """
+import sys
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -8,6 +9,9 @@ from sklearn.metrics import r2_score
 
 REPO = Path(__file__).resolve().parent.parent
 TBL_OUT = REPO / "paper_reference/scripts/tables"
+
+sys.path.insert(0, str(REPO / "tsplib_benchmark"))
+from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD  # noqa: E402
 
 # -------- Solver-time lookups (precomputed per bucket from CSVs) --------
 # 2D: optimal_solve_time_s, per n-bucket, seconds. Source: benchmark_results_2D_v3.csv (deduped by instance).
@@ -442,7 +446,8 @@ try:
     dfne = pd.concat([dfne, sup], ignore_index=True)
 except FileNotFoundError:
     pass
-dfne = dfne[(dfne["model"] == "LGBM_V3") & (dfne["instance"] != "brg180") & (dfne["edge_weight_type"] != "EUC_2D")].copy()
+dfne = dfne[(dfne["model"] == "LGBM_V3") & (dfne["edge_weight_type"] != "EUC_2D")].copy()
+dfne = filter_metric_consistent(dfne)
 
 out = []
 out.append(r"\begin{table}[!ht]")
@@ -460,7 +465,7 @@ rows = []
 for dt in ["CEIL_2D", "ATT", "GEO", "EXPLICIT"]:
     sub = dfne[dfne["edge_weight_type"] == dt]
     if dt == "EXPLICIT":
-        # exclude brg180 (already excluded) — EXPLICIT-metric subset
+        # non-metric outliers are already dropped by filter_metric_consistent above
         pass
     if len(sub) == 0:
         continue
@@ -480,7 +485,7 @@ for dt in ["CEIL_2D", "ATT", "GEO", "EXPLICIT"]:
     rows.append((name, len(sub), mape, sdpe, med, r_alpha, t_ms, k_avg, k_min, k_max))
 
 # Also compute TOTAL
-total = dfne  # already only LGBM_V3, brg180 excluded
+total = dfne  # LGBM_V3, non-Euc, metric-consistent (true_cost/MST <= threshold)
 ape_t = (np.abs(total["pred_cost"] - total["true_cost"]) / total["true_cost"] * 100)
 pe_t = ((total["pred_cost"] - total["true_cost"]) / total["true_cost"] * 100)
 true_at = total["true_cost"] / total["mst_length"]

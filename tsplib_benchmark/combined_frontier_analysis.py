@@ -35,6 +35,9 @@ REPO_ROOT = THIS_DIR.parent
 FIGURES_DIR = THIS_DIR / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
+sys.path.insert(0, str(THIS_DIR))
+from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD  # noqa: E402
+
 # Style
 plt.rcParams.update({
     "font.size": 10,
@@ -97,7 +100,7 @@ def load_data():
 def fig_tsplib_all_models(tsplib):
     if tsplib.empty:
         return
-    df = tsplib[tsplib.instance != "brg180"].copy()
+    df = filter_metric_consistent(tsplib)
 
     model_stats = (
         df.groupby("model")
@@ -167,7 +170,7 @@ def fig_frontier(tsplib, synth_2d):
     if tsplib.empty:
         return
 
-    df = tsplib[tsplib.instance != "brg180"].copy()
+    df = filter_metric_consistent(tsplib)
 
     # Get LGBM and Fixed_Alpha per instance
     lgbm = df[df.model == "LGBM_V3"].set_index("instance")
@@ -304,7 +307,8 @@ def fig_concorde_speedup(tsplib):
     if tsplib.empty:
         return
 
-    df = tsplib[(tsplib.instance != "brg180") & tsplib.concorde_time_s.notna()].copy()
+    df = filter_metric_consistent(tsplib)
+    df = df[df.concorde_time_s.notna()].copy()
     if df.empty:
         print("  No instances with Concorde times for speedup chart")
         return
@@ -376,7 +380,7 @@ def fig_combined_accuracy_by_n(tsplib, synth_2d):
     # (a) TSPLIB - LGBM_V3 vs key baselines across n
     ax = axes[0]
     if not tsplib.empty:
-        df = tsplib[tsplib.instance != "brg180"].copy()
+        df = filter_metric_consistent(tsplib)
         for model, color, marker in [
             ("LGBM_V3", "#2196F3", "o"),
             ("Fixed_Alpha", "#FF9800", "X"),
@@ -507,7 +511,7 @@ def main():
 
     # === Frontier Definition ===
     if not data["tsplib"].empty:
-        tsplib = data["tsplib"][data["tsplib"].instance != "brg180"]
+        tsplib = filter_metric_consistent(data["tsplib"])
         lgbm = tsplib[tsplib.model == "LGBM_V3"]
         fixed = tsplib[tsplib.model == "Fixed_Alpha"]
 
@@ -520,7 +524,7 @@ def main():
             print("\n" + "=" * 70)
             print("FRONTIER DEFINITION: When LGBM_V3 > Fixed MST Ratio")
             print("=" * 70)
-            print(f"\nOverall TSPLIB95 (excl. brg180):")
+            print(f"\nOverall TSPLIB95 (metric-consistent, true_cost/MST <= {METRIC_RATIO_THRESHOLD}):")
             print(f"  LGBM_V3:      MAPE={lgbm_mape:.2f}%  avg_time={lgbm_time:.0f}ms")
             print(f"  Fixed Alpha:  MAPE={fixed_mape:.2f}%  avg_time=~0ms")
             print(f"  Improvement:  {fixed_mape - lgbm_mape:.2f}pp")

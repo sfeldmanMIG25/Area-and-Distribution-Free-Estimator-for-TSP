@@ -2,12 +2,16 @@
 Solver time = mean Concorde (or LKH-3, whichever was optimal in training) per bucket.
 TSPLIB non-Euc and some large EUC_2D instances have no solver time: shown as '---'.
 """
+import sys
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from sklearn.metrics import r2_score
 
 REPO = Path(__file__).resolve().parent.parent
+
+sys.path.insert(0, str(REPO / "tsplib_benchmark"))
+from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD  # noqa: E402
 
 
 def pearson_r(y_true, y_pred):
@@ -346,7 +350,8 @@ try:
     dfne = pd.concat([dfne, sup], ignore_index=True)
 except FileNotFoundError:
     pass
-dfne = dfne[(dfne["model"] == "LGBM_V3") & (dfne["instance"] != "brg180") & (dfne["edge_weight_type"] != "EUC_2D")].copy()
+dfne = dfne[(dfne["model"] == "LGBM_V3") & (dfne["edge_weight_type"] != "EUC_2D")].copy()
+dfne = filter_metric_consistent(dfne)
 
 out = [r"\begin{table}[!ht]",
        r"\centering",

@@ -173,30 +173,35 @@ def eval_sdpe_gpu(model, X_gpu, mst_np, cost_np, batch_size=8192):
 
 
 # --- Optuna objective: 50 epochs + Hyperband pruning --------------------------
-def objective(trial, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
+def objective(trial, X_tr_gpu, y_tr_gpu, X_vl_gpu, mst_vl, cost_vl):
     h_dim = trial.suggest_int("hidden_dim", 128, 512, step=64)
     n_blocks = trial.suggest_int("num_blocks", 4, 8)
     dropout = trial.suggest_float("dropout", 0.05, 0.2)
     lr = trial.suggest_float("lr", 1e-5, 2e-3, log=True)
 
-    model = TSP_Leap_Model(X_tr.shape[1], h_dim, n_blocks, dropout).to(DEVICE)
+    model = TSP_Leap_Model(X_tr_gpu.shape[1], h_dim, n_blocks, dropout).to(DEVICE)
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     criterion = nn.HuberLoss(delta=0.1)
+    amp_scaler = torch.cuda.amp.GradScaler(enabled=USE_AMP)
 
-    tr_loader = DataLoader(TSPDataset(X_tr, y_tr), batch_size=BATCH_SIZE, shuffle=True)
-    vl_loader = DataLoader(TSPDataset(X_vl, y_vl), batch_size=BATCH_SIZE * 2)
-
+    n = X_tr_gpu.size(0)
     best_v = float('inf')
     for epoch in range(OPTUNA_EPOCHS):
         model.train()
-        for xb, yb in tr_loader:
-            xb, yb = xb.to(DEVICE), yb.to(DEVICE)
-            optimizer.zero_grad()
-            criterion(model(xb), yb).backward()
+        perm = torch.randperm(n, device=DEVICE)
+        for i in range(0, n, BATCH_SIZE):
+            idx = perm[i:i+BATCH_SIZE]
+            xb, yb = X_tr_gpu[idx], y_tr_gpu[idx]
+            optimizer.zero_grad(set_to_none=True)
+            with torch.cuda.amp.autocast(enabled=USE_AMP):
+                loss = criterion(model(xb), yb)
+            amp_scaler.scale(loss).backward()
+            amp_scaler.unscale_(optimizer)
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
+            amp_scaler.step(optimizer)
+            amp_scaler.update()
 
-        v_sdpe = eval_val_sdpe(model, vl_loader, mst_vl, cost_vl)
+        v_sdpe = eval_sdpe_gpu(model, X_vl_gpu, mst_vl, cost_vl)
         trial.report(v_sdpe, epoch)
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
@@ -205,31 +210,37 @@ def objective(trial, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
 
 
 # --- Final fit: train only, keep best-val checkpoint --------------------------
-def final_fit(bp, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
-    model = TSP_Leap_Model(X_tr.shape[1], bp['hidden_dim'], bp['num_blocks'], bp['dropout']).to(DEVICE)
+def final_fit(bp, X_tr_gpu, y_tr_gpu, X_vl_gpu, mst_vl, cost_vl):
+    model = TSP_Leap_Model(X_tr_gpu.shape[1], bp['hidden_dim'], bp['num_blocks'], bp['dropout']).to(DEVICE)
     optimizer = optim.AdamW(model.parameters(), lr=bp['lr'], weight_decay=1e-3)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
     criterion = nn.HuberLoss(delta=0.1)
+    amp_scaler = torch.cuda.amp.GradScaler(enabled=USE_AMP)
 
-    ds_train = TSPDataset(X_tr, y_tr)
-    sampler = WeightedRandomSampler(ds_train.get_sampler_weights(), len(ds_train), replacement=True)
-    loader = DataLoader(ds_train, batch_size=BATCH_SIZE, sampler=sampler, pin_memory=True)
-    vl_loader = DataLoader(TSPDataset(X_vl, y_vl), batch_size=BATCH_SIZE * 2)
+    # Alpha-weighted sampling: p ~ 1 + 5 * y  (y = alpha - 1 in [0,1])
+    weights = (1.0 + 5.0 * y_tr_gpu.squeeze(-1)).clamp_min(1e-6)
+    n = X_tr_gpu.size(0)
 
     best_v = float('inf')
     best_state = None
     best_epoch = -1
     for epoch in tqdm(range(EPOCHS), desc="Final"):
         model.train()
-        for xb, yb in loader:
-            xb, yb = xb.to(DEVICE, non_blocking=True), yb.to(DEVICE, non_blocking=True)
-            optimizer.zero_grad()
-            criterion(model(xb), yb).backward()
+        idx_all = torch.multinomial(weights, n, replacement=True)
+        for i in range(0, n, BATCH_SIZE):
+            idx = idx_all[i:i+BATCH_SIZE]
+            xb, yb = X_tr_gpu[idx], y_tr_gpu[idx]
+            optimizer.zero_grad(set_to_none=True)
+            with torch.cuda.amp.autocast(enabled=USE_AMP):
+                loss = criterion(model(xb), yb)
+            amp_scaler.scale(loss).backward()
+            amp_scaler.unscale_(optimizer)
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
+            amp_scaler.step(optimizer)
+            amp_scaler.update()
         scheduler.step()
 
-        v_sdpe = eval_val_sdpe(model, vl_loader, mst_vl, cost_vl)
+        v_sdpe = eval_sdpe_gpu(model, X_vl_gpu, mst_vl, cost_vl)
         if v_sdpe < best_v:
             best_v = v_sdpe
             best_state = copy.deepcopy(model.state_dict())
@@ -242,14 +253,13 @@ def final_fit(bp, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
 
 
 # --- Test metrics (cost-space MAPE + SDPE) ------------------------------------
-def eval_test(model, X_te, y_te, mst_te, cost_te):
+def eval_test(model, X_te_gpu, mst_te, cost_te):
     model.eval()
-    loader = DataLoader(TSPDataset(X_te, y_te), batch_size=BATCH_SIZE * 2)
-    preds = []
+    outs = []
     with torch.no_grad():
-        for xb, _ in loader:
-            preds.append(model(xb.to(DEVICE)).cpu().numpy().ravel())
-    preds = np.concatenate(preds)
+        for i in range(0, X_te_gpu.size(0), BATCH_SIZE * 2):
+            outs.append(model(X_te_gpu[i:i+BATCH_SIZE*2]).squeeze(-1))
+    preds = torch.cat(outs).cpu().numpy()
     pred_alpha = np.clip(preds + 1.0, 1.0, 2.0)
     pred_cost = pred_alpha * mst_te
     err = (pred_cost - cost_te) / cost_te
@@ -261,7 +271,15 @@ def eval_test(model, X_te, y_te, mst_te, cost_te):
 
 if __name__ == "__main__":
     X_tr, y_tr, X_vl, y_vl, X_te, y_te, mst_vl, cost_vl, mst_te, cost_te, feats = load_v3_clean()
-    print(f"Device: {DEVICE}  features: {len(feats)}  train: {len(y_tr)}")
+    print(f"Device: {DEVICE}  features: {len(feats)}  train: {len(y_tr)}  AMP: {USE_AMP}")
+
+    # Preload to GPU once — eliminates per-batch host->device transfer.
+    X_tr_gpu = to_gpu_tensor(X_tr)
+    y_tr_gpu = to_gpu_tensor(y_tr).view(-1, 1)
+    X_vl_gpu = to_gpu_tensor(X_vl)
+    X_te_gpu = to_gpu_tensor(X_te)
+    mst_vl = np.asarray(mst_vl); cost_vl = np.asarray(cost_vl)
+    mst_te = np.asarray(mst_te); cost_te = np.asarray(cost_te)
 
     sampler = TPESampler(multivariate=True, group=True, seed=RANDOM_STATE)
     pruner = HyperbandPruner(min_resource=OPTUNA_MIN_EPOCHS, max_resource=OPTUNA_EPOCHS)
@@ -269,14 +287,14 @@ if __name__ == "__main__":
         direction="minimize", sampler=sampler, pruner=pruner,
         study_name='nn_v3', storage=f'sqlite:///{OPTUNA_DB}', load_if_exists=True,
     )
-    study.optimize(lambda t: objective(t, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl), n_trials=OPTUNA_TRIALS)
+    study.optimize(lambda t: objective(t, X_tr_gpu, y_tr_gpu, X_vl_gpu, mst_vl, cost_vl), n_trials=OPTUNA_TRIALS)
     bp = study.best_params
     print(f"Best trial val loss = {study.best_value:.6f}")
     print(f"Best params: {bp}")
 
-    model = final_fit(bp, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl)
+    model = final_fit(bp, X_tr_gpu, y_tr_gpu, X_vl_gpu, mst_vl, cost_vl)
 
-    metrics = eval_test(model, X_te, y_te, mst_te, cost_te)
+    metrics = eval_test(model, X_te_gpu, mst_te, cost_te)
     print("\n--- Test metrics ---")
     print(f"  cost MAPE: {metrics['cost_mape_pct']:.3f}%")
     print(f"  cost SDPE: {metrics['cost_sdpe_pct']:.3f}%")

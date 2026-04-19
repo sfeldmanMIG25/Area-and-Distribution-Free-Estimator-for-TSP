@@ -1,0 +1,92 @@
+[plan] instances: 212,544 files, 13077.2 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\instances
+  hashing 212,544 source files...
+    hashed 10,000/212,544
+    hashed 20,000/212,544
+    hashed 30,000/212,544
+    hashed 40,000/212,544
+    hashed 50,000/212,544
+    hashed 60,000/212,544
+    hashed 70,000/212,544
+    hashed 80,000/212,544
+    hashed 90,000/212,544
+    hashed 100,000/212,544
+    hashed 110,000/212,544
+    hashed 120,000/212,544
+    hashed 130,000/212,544
+    hashed 140,000/212,544
+    hashed 150,000/212,544
+    hashed 160,000/212,544
+    hashed 170,000/212,544
+    hashed 180,000/212,544
+    hashed 190,000/212,544
+    hashed 200,000/212,544
+    hashed 210,000/212,544
+  writing chunks (<= 45 MiB each)...
+    packed 10,000/212,544
+    packed 20,000/212,544
+    packed 30,000/212,544
+    packed 40,000/212,544
+    packed 50,000/212,544
+    packed 60,000/212,544
+    packed 70,000/212,544
+    packed 80,000/212,544
+    packed 90,000/212,544
+    packed 100,000/212,544
+    packed 110,000/212,544
+    packed 120,000/212,544
+    packed 130,000/212,544
+    packed 140,000/212,544
+    packed 150,000/212,544
+    packed 160,000/212,544
+    packed 170,000/212,544
+    packed 180,000/212,544
+    packed 190,000/212,544
+    packed 200,000/212,544
+    packed 210,000/212,544
+  verifying 293 chunk(s)...
+[ok]   instances -> 293 chunk(s), 6049.8 MiB on disk (src 13077.2 MiB, ratio 2.16x)
+[plan] solutions: 106,272 files, 776.4 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\solutions
+  hashing 106,272 source files...
+    hashed 10,000/106,272
+    hashed 20,000/106,272
+    hashed 30,000/106,272
+    hashed 40,000/106,272
+    hashed 50,000/106,272
+    hashed 60,000/106,272
+    hashed 70,000/106,272
+    hashed 80,000/106,272
+    hashed 90,000/106,272
+    hashed 100,000/106,272
+  writing chunks (<= 45 MiB each)...
+    packed 10,000/106,272
+    packed 20,000/106,272
+    packed 30,000/106,272
+    packed 40,000/106,272
+    packed 50,000/106,272
+    packed 60,000/106,272
+    packed 70,000/106,272
+    packed 80,000/106,272
+    packed 90,000/106,272
+    packed 100,000/106,272
+  verifying 18 chunk(s)...
+[ok]   solutions -> 18 chunk(s), 126.0 MiB on disk (src 776.4 MiB, ratio 6.16x)
+[plan] Generalized_TSP_Analysis/instances: 2,580 files, 42.0 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\Generalized_TSP_Analysis__instances
+  hashing 2,580 source files...
+  writing chunks (<= 45 MiB each)...
+  verifying 1 chunk(s)...
+[ok]   Generalized_TSP_Analysis/instances -> 1 chunk(s), 4.9 MiB on disk (src 42.0 MiB, ratio 8.62x)
+[plan] Generalized_TSP_Analysis/solutions: 2,580 files, 30.5 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\Generalized_TSP_Analysis__solutions
+  hashing 2,580 source files...
+  writing chunks (<= 45 MiB each)...
+  verifying 1 chunk(s)...
+[ok]   Generalized_TSP_Analysis/solutions -> 1 chunk(s), 3.8 MiB on disk (src 30.5 MiB, ratio 8.07x)
+[plan] tsplib_benchmark/instances: 111 files, 9.1 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\tsplib_benchmark__instances
+  hashing 111 source files...
+  writing chunks (<= 45 MiB each)...
+  verifying 1 chunk(s)...
+[ok]   tsplib_benchmark/instances -> 1 chunk(s), 2.1 MiB on disk (src 9.1 MiB, ratio 4.29x)
+[plan] tsplib_benchmark/ground_truth: 1 files, 0.0 MiB -> D:\Area-and-Distribution-Free-Estimator-for-TSP\data_archives\tsplib_benchmark__ground_truth
+  hashing 1 source files...
+  writing chunks (<= 45 MiB each)...
+  verifying 1 chunk(s)...
+[ok]   tsplib_benchmark/ground_truth -> 1 chunk(s), 0.0 MiB on disk (src 0.0 MiB, ratio 1.64x)

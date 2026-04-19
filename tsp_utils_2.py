@@ -483,7 +483,18 @@ def estimate_tsp_bhh(nodes_coords):
         analysis for the Held-Karp traveling salesman bound."
         https://doi.org/10.1007/3-540-61310-2_18
     Constants source: Johnson et al. (1996) Section 3.2, beta_2 =
-    0.7124 +/- 0.0002; beta_3 ~ 0.6979 (Percus-Martin 1996).
+    0.7124 +/- 0.0002; beta_3 ~ 0.6979 (Percus-Martin 1996,
+    Phys. Rev. Lett. 76:1188,
+    https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.76.1188);
+    for d >= 4 we use the Rhee-Steele asymptotic
+    beta_d ~ sqrt(d / (2 pi e)) as no tighter point estimate exists
+    in the literature.
+
+    Implementation note: at high d the bounding-box volume
+    prod(ranges) overflows float64 (e.g. 10000**100 = 1e400).
+    We therefore compute vol**(1/d) directly as the geometric
+    mean exp(mean(log(ranges))), which is numerically stable
+    at any d.
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
@@ -493,17 +504,20 @@ def estimate_tsp_bhh(nodes_coords):
 
     if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         vol = ConvexHull(coords).volume
+        vol_root = vol ** (1.0 / d) if vol > 0 else 0.0
     else:
         ranges = np.ptp(coords, axis=0).astype(float)
         ranges[ranges < 1e-9] = 1e-9
-        vol = float(np.prod(ranges))
+        # Geometric mean in log-space: equivalent to (prod ranges)**(1/d),
+        # but stable at any d (no overflow from prod).
+        vol_root = float(np.exp(np.mean(np.log(ranges))))
 
     if d == 2: beta = BETA_2D
     elif d == 3: beta = BETA_3D
     else: beta = math.sqrt(d / (2 * math.pi * math.e))
-    
+
     exponent = (d - 1) / d
-    est = beta * (n ** exponent) * (vol ** (1/d))
+    est = beta * (n ** exponent) * vol_root
     return est, time.perf_counter() - start_time
 
 def estimate_tsp_vinel(nodes_coords, b=0.768):
@@ -530,67 +544,193 @@ def estimate_tsp_vinel(nodes_coords, b=0.768):
     estimated_cost = b * n_scale * geom_len_scale
     return estimated_cost, time.perf_counter() - start_time
 
-def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
-    """Cavdar & Sokol (2015) distribution-free TSP length estimator.
+def mabr_rotate_2d(coords):
+    """True 2D minimum-area bounding rectangle via rotating calipers.
 
-    Formula (paper Eq. 402, 2D):
-        L = 2.791 * sqrt(n * sigma'_x * sigma'_y)
-          + 0.2669 * sqrt(n * A * sigma_x * sigma_y / (cbar_x * cbar_y))
-    where sigma_x, sigma_y are coordinate stdevs; cbar_x, cbar_y are
-    mean absolute deviations; sigma'_x, sigma'_y are stdevs of those
-    absolute deviations; A is the convex-hull area.
+    Uses the standard result that the MABR of a planar point set is aligned
+    with one edge of its convex hull. Enumerates hull edges, rotates the hull
+    so the edge is axis-aligned, measures the bounding-box area, and keeps
+    the minimum. Returns the input coordinates expressed in that rotated
+    frame (origin translated to the MABR corner, axes aligned with MABR).
+
+    This is the orientation Cavdar & Sokol (2015) implicitly assume when they
+    write "the length and width of a rectangular graph" — applying the paper's
+    formula in any other frame distorts the per-axis dispersion statistics.
+
+    Degenerate input (n < 3 or colinear hull) falls back to a centered copy
+    of the input.
+    """
+    coords = np.ascontiguousarray(coords, dtype=np.float64)
+    n = len(coords)
+    if n < 3:
+        return coords - coords.mean(axis=0)
+    try:
+        hull = ConvexHull(coords)
+    except Exception:
+        return coords - coords.mean(axis=0)
+    hpts = coords[hull.vertices]
+    m = len(hpts)
+    if m < 2:
+        return coords - coords.mean(axis=0)
+
+    best_area = np.inf
+    best_R = np.eye(2)
+    best_origin = np.zeros(2)
+    for i in range(m):
+        p0 = hpts[i]
+        p1 = hpts[(i + 1) % m]
+        edge = p1 - p0
+        L = float(np.linalg.norm(edge))
+        if L < 1e-12:
+            continue
+        u = edge / L
+        v = np.array([-u[1], u[0]])
+        R = np.column_stack([u, v])  # rotate edge-frame <- world-frame via (X - p0) @ R
+        proj = (hpts - p0) @ R
+        dx = float(proj[:, 0].max() - proj[:, 0].min())
+        dy = float(proj[:, 1].max() - proj[:, 1].min())
+        area = dx * dy
+        if area < best_area:
+            best_area = area
+            best_R = R
+            best_origin = p0
+
+    rotated = (coords - best_origin) @ best_R
+    # deterministic sign: flip each axis so the extreme-magnitude point is positive
+    for j in range(2):
+        idx = int(np.argmax(np.abs(rotated[:, j])))
+        if rotated[idx, j] < 0.0:
+            rotated[:, j] = -rotated[:, j]
+    return rotated
+
+
+def canonicalize_coords_pca(coords):
+    """Rotate a point cloud to its PCA principal-axis frame.
+
+    ND-native generalization of the 2D minimum-area bounding rectangle (MABR):
+    diagonalizes the sample covariance so axes align with the directions of
+    greatest variance. For a uniform sample on an axis-aligned rectangle this
+    recovers the original orientation; for an arbitrarily rotated cloud it
+    removes the orientation-of-the-input noise that pollutes axis-dependent
+    features (coordinate stdevs, midpoint distances, bounding-box ranges).
+
+    The sign of each principal axis is fixed by making the coordinate with
+    the largest absolute magnitude positive, so reflections of the input
+    map to the same canonical frame.
+
+    Complexity: O(n*d^2 + d^3); ND-safe, unlike true rotating-calipers MABR
+    which is 2D-only.
+    """
+    arr = np.ascontiguousarray(coords, dtype=np.float64)
+    n, d = arr.shape
+    if n < 2 or d < 1:
+        return arr.astype(np.asarray(coords).dtype, copy=True)
+    centered = arr - arr.mean(axis=0)
+    if d == 1:
+        return centered.astype(np.asarray(coords).dtype, copy=False)
+    cov = np.cov(centered, rowvar=False)
+    cov = np.atleast_2d(cov)
+    eigvals, eigvecs = np.linalg.eigh(cov)
+    order = np.argsort(eigvals)[::-1]
+    R = eigvecs[:, order]
+    rotated = centered @ R
+    for j in range(d):
+        idx = int(np.argmax(np.abs(rotated[:, j])))
+        if rotated[idx, j] < 0.0:
+            rotated[:, j] = -rotated[:, j]
+    return rotated.astype(np.asarray(coords).dtype, copy=False)
+
+
+def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
+    """Cavdar & Sokol (2015) distribution-free TSP tour-length estimator.
+
+    Faithful implementation of Eq. (3) from Cavdar & Sokol (2015):
+
+        T = 2.791 * sqrt(n * cstdev_x * cstdev_y)
+          + 0.2669 * sqrt(n * stdev_x * stdev_y * A / (cbar_x * cbar_y))
+
+    using the paper's exact definitions:
+        stdev_{x,y}   : std of coordinates along each axis.
+        cbar_{x,y}    : mean absolute distance from each node to the
+                        *central midpoint axis* of the bounding rectangle
+                        (i.e. to (min+max)/2, NOT to the mean).
+        cstdev_{x,y}  : std of those absolute distances from the midpoint.
+        A             : area of the (rectangular) graph = product of the
+                        axis-aligned ranges (l_x * l_y in 2D).
+
+    The paper assumes an axis-aligned rectangular graph. To apply the model
+    to arbitrarily oriented point clouds without distorting its axis-dependent
+    statistics, we first rotate the coordinates into the PCA principal-axis
+    frame (ND-native analogue of the 2D minimum-area bounding rectangle). This
+    makes the bounding-rectangle area and per-axis dispersions rotation-
+    invariant without altering the paper's formula.
+
+    ND extension: the 2D form is lifted using the standard geometric-mean
+    convention
+        term1 = a0 * n^((d-1)/d) * (prod_j cstdev_j)^(1/d)
+        term2 = a1 * n^((d-1)/d) * A^(1/d) * (prod_j stdev_j / prod_j cbar_j)^(1/d)
+    which reduces exactly to Eq. (3) for d = 2.
+
+    Small-n correction (Cavdar & Sokol 2015 Eq. 4):
+        E/T = 0.9325 * exp(0.00005298 * n) - 0.2972 * exp(-0.01452 * n)
+    Divide raw estimate by this ratio for n < 1000 (paper's calibration range
+    100 <= n <= 975).
 
     Reference:
-      Cavdar, B., Sokol, J. (2015). "A distribution-free TSP tour
-        length estimation model for random graphs." EJOR 243(2):
-        588-598. https://doi.org/10.1016/j.ejor.2014.12.020
-    Constants source: Cavdar & Sokol (2015) Table 2, a0 = 2.791,
-    a1 = 0.2669 (fitted over uniform / clustered 2D instances).
-
-    Small-n correction (Cavdar & Sokol 2015 Eq. 4, page 7):
-        E/T = 0.9325 * exp(0.00005298 * n) - 0.2972 * exp(-0.01452 * n)
-    where E is the raw estimate and T the true tour length. The
-    raw estimate systematically underestimates for n < 1000; we
-    divide by E/T to invert the bias. Calibration range: n in
-    {100, 125, ..., 975}; we apply it for all n < 1000.
+      Cavdar, B., Sokol, J. (2015). "A distribution-free TSP tour length
+      estimation model for random graphs." European Journal of Operational
+      Research 243(2): 588-598. doi:10.1016/j.ejor.2014.12.020
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
-    if n <= 1: return 0.0, 0.0
+    if n <= 1:
+        return 0.0, 0.0
     d = coords.shape[1]
 
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        vol = ConvexHull(coords).volume
+    # Rotate into the frame the paper implicitly assumes (axis-aligned
+    # rectangular graph). In 2D this is the true minimum-area bounding
+    # rectangle via rotating calipers on the convex hull, exactly as Cavdar &
+    # Sokol (2015) define "the rectangular graph". For d > 2 the paper offers
+    # no definition (it is a 2D model); we fall back to PCA as a principled
+    # ND extension, but the 2D branch is an exact match to the paper.
+    if d == 2:
+        coords = mabr_rotate_2d(coords)
     else:
-        ranges = np.ptp(coords, axis=0).astype(float)
-        ranges[ranges < 1e-9] = 1e-9
-        vol = float(np.prod(ranges))
+        coords = canonicalize_coords_pca(coords)
 
-    mu = coords.mean(axis=0)
+    # A = axis-aligned bounding-rectangle area (2D paper definition) generalized
+    # to a bounding-box volume in ND.
+    lo = coords.min(axis=0)
+    hi = coords.max(axis=0)
+    ranges = (hi - lo).astype(float)
+    ranges[ranges < 1e-9] = 1e-9
+    vol = float(np.prod(ranges))
+
+    # Paper: "average distance of nodes to the central horizontal and vertical
+    # axes (the horizontal and vertical midpoint lines of the space)".
+    midpoint = 0.5 * (hi + lo)
+
     stdev = coords.std(axis=0)
-    abs_dev = np.abs(coords - mu)
+    abs_dev = np.abs(coords - midpoint)
     c_bar = abs_dev.mean(axis=0)
     c_bar[c_bar < 1e-9] = 1e-9
-    cstdev = np.sqrt(np.mean((abs_dev - c_bar)**2, axis=0))
-    
-    prod_stdev = np.prod(stdev)
-    prod_c_bar = np.prod(c_bar)
-    prod_cstdev = np.prod(cstdev)
-    
+    cstdev = abs_dev.std(axis=0)
+
+    prod_stdev = float(np.prod(stdev))
+    prod_c_bar = float(np.prod(c_bar))
+    prod_cstdev = float(np.prod(cstdev))
+
     n_scale = math.pow(n, (d - 1) / d)
     inv_d = 1.0 / d
-    
-    term1_geom = math.pow(prod_cstdev, inv_d)
-    term1 = a0 * n_scale * term1_geom
-    
-    vol_scale = math.pow(vol, inv_d)
-    dev_ratio = prod_stdev / prod_c_bar
-    term2_geom = math.pow(dev_ratio, inv_d)
-    term2 = a1 * n_scale * vol_scale * term2_geom
-    
+
+    term1 = a0 * n_scale * math.pow(max(prod_cstdev, 1e-300), inv_d)
+    term2 = a1 * n_scale * math.pow(vol, inv_d) * math.pow(
+        max(prod_stdev, 1e-300) / prod_c_bar, inv_d
+    )
+
     estimated_cost = term1 + term2
-    
+
     if n < 1000:
         corr = 0.9325 * math.exp(0.00005298 * n) - 0.2972 * math.exp(-0.01452 * n)
         estimated_cost = estimated_cost / corr
@@ -717,7 +857,7 @@ def estimate_tsp_composite(nodes_coords):
 # MACHINE LEARNING (GART 1.0)
 # ====================================================================
 
-def _calculate_gart_features(coords):
+def _calculate_gart_features(coords, precomputed_mst=None):
     """GART 1.0 legacy feature set (2D).
 
     MST topology features are computed from a Delaunay-sparse graph for 2D
@@ -754,7 +894,9 @@ def _calculate_gart_features(coords):
         features['pca_eigenvalue_ratio'] = 1.0
 
     # MST via the project-wide utility (dense primary, OOM fallback).
-    mst_result = compute_mst(coords)
+    # If a precomputed MST is supplied (e.g. from an external non-Euclidean
+    # distance matrix), use it instead of recomputing from coords.
+    mst_result = precomputed_mst if precomputed_mst is not None else compute_mst(coords)
     mst_length = float(mst_result.total_length)
     degrees = mst_result.degrees
     features['mst_degree_mean'] = degrees.mean()
@@ -771,13 +913,13 @@ def _calculate_gart_features(coords):
 
     return features, mst_length
 
-def estimate_tsp_ml_alpha(nodes_coords, ml_model):
+def estimate_tsp_ml_alpha(nodes_coords, ml_model, precomputed_mst=None):
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
     if n <= 1: return 0.0, 0.0
-    
-    features_dict, mst_length = _calculate_gart_features(coords)
+
+    features_dict, mst_length = _calculate_gart_features(coords, precomputed_mst=precomputed_mst)
     t_feat = time.perf_counter() - start_time
     if mst_length == 0: return 0.0, time.perf_counter() - start_time
 

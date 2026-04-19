@@ -47,7 +47,7 @@ sys.path.insert(0, str(THIS_DIR))
 # Core imports
 from tsplib_parser import parse_tsplib_file
 from classical_mds import classical_mds
-from exclusions import TRIANGLE_INEQ_VIOLATORS
+from exclusions import filter_metric_consistent, METRIC_RATIO_THRESHOLD
 
 # ML model imports
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
@@ -252,13 +252,9 @@ def run_benchmark(max_n=None, workers=None):
     if not tsp_files:
         raise SystemExit(f"No .tsp files in {INSTANCES_DIR}. Run download_tsplib.py first.")
 
-    # Filter triangle-inequality violators upstream (single source of truth in
-    # exclusions.py). GART 2.0 and MDS assume symmetric metric distances.
-    excluded = [p for p in tsp_files if p.stem in TRIANGLE_INEQ_VIOLATORS]
-    if excluded:
-        print(f"Excluding {len(excluded)} triangle-inequality violator(s): "
-              f"{', '.join(p.stem for p in excluded)}")
-        tsp_files = [p for p in tsp_files if p.stem not in TRIANGLE_INEQ_VIOLATORS]
+    # Every instance is run end-to-end. Non-metric outliers are dropped at
+    # aggregate-metric time via filter_metric_consistent (true_cost/MST ratio
+    # threshold = METRIC_RATIO_THRESHOLD); see exclusions.py for rationale.
 
     # --- Load ML models ---
     print("Loading ML models...")
@@ -552,10 +548,15 @@ def run_benchmark(max_n=None, workers=None):
     print("ALL-MODELS TSPLIB BENCHMARK SUMMARY")
     print("=" * 70)
 
-    # Triangle-inequality violators are already filtered upstream
-    # (see exclusions.TRIANGLE_INEQ_VIOLATORS); this is a belt-and-suspenders
-    # guard in case stale results are merged in from an earlier run.
-    df_clean = df[~df["instance"].isin(TRIANGLE_INEQ_VIOLATORS)]
+    # Drop instances whose optimum exceeds METRIC_RATIO_THRESHOLD * MST, i.e.
+    # instances mathematically incompatible with metric TSP (e.g. brg180).
+    # Per-instance rows are still in ``df`` on disk; only aggregates below
+    # use df_clean.
+    df_clean = filter_metric_consistent(df)
+    dropped = set(df["instance"].unique()) - set(df_clean["instance"].unique())
+    if dropped:
+        print(f"\nAggregate-metric filter dropped {len(dropped)} non-metric instance(s) "
+              f"(true_cost/MST > {METRIC_RATIO_THRESHOLD}): {', '.join(sorted(dropped))}")
 
     # Per-status tally for visibility (never-silent principle)
     print("\nStatus breakdown across all (instance, model) pairs:")

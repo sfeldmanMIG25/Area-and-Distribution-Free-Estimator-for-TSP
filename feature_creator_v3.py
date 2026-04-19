@@ -13,6 +13,7 @@ import pandas as pd
 from scipy import stats
 
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 from concurrent.futures import ThreadPoolExecutor
 import warnings
 
@@ -99,7 +100,13 @@ def _compute_tree_diameter(mst_adj, n):
 def compute_features_for_instance_v3(inst_data, sol_data):
     coords = inst_data['coordinates']
     coords = np.unique(coords, axis=0)
-    
+
+    # Rotate into the PCA principal-axis frame so axis-dependent features
+    # (bounding hypervolume, node density, aspect ratio, centroid dispersion)
+    # are invariant to the arbitrary orientation of the generator. ND-native
+    # analogue of the minimum-area bounding rectangle.
+    coords = canonicalize_coords_pca(coords)
+
     n = len(coords)
     d = inst_data['dimension']
     grid_size = inst_data.get('grid_size', 0)

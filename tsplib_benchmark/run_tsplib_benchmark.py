@@ -1,38 +1,44 @@
 """
-TSPLIB95 benchmark runner for the GART 3.0 (LGBM V3) estimator.
+TSPLIB95 benchmark runner — multi-model edition.
 
 Pipeline
 --------
 For each TSPLIB instance in ``instances/``:
 
 1. Parse the .tsp file (tsplib_parser.parse_tsplib_file).
-2. If the instance is natively Euclidean (EUC_2D / CEIL_2D / ATT), feed the raw
-   2D coordinates to the estimator directly. ATT is pseudo-Euclidean but is
-   close enough to 2D Euclidean for the feature set; we use its native 2D
+2. If the instance is natively Euclidean (EUC_2D / CEIL_2D / ATT), use raw
    coordinates.
-3. Otherwise (GEO, EXPLICIT) run classical MDS on the TSPLIB distance matrix,
-   auto-select a dimensionality (cap = ``MAX_MDS_DIM``), and pass the embedded
-   coordinates to the estimator.
-4. Compare the predicted tour length to the published optimum in
-   ``ground_truth/optima.csv``.
+3. Otherwise (GEO, EXPLICIT) run classical MDS on the TSPLIB distance matrix
+   once per instance (cap = ``MAX_MDS_DIM``), cache the embedded coordinates,
+   and feed them to each estimator. For LGBM-kind estimators we use a hybrid
+   path that computes MST features from the *original* distance matrix to
+   avoid MDS-induced distance inflation. Generic estimators (NN, Linear,
+   Interp) fall back to .estimate() on MDS coords (mode="mds_only").
+4. Compare each estimator's prediction to the published optimum.
 
-The script never overwrites existing results: each run is written to a new
-timestamped CSV under ``results/`` and a summary printed to stdout. Old result
-files are left untouched.
+Output layout
+-------------
+    results/
+      checkpoints/
+        results_<model>.csv        # per-model checkpoint (enables partial regen)
+      tsplib_results.csv           # canonical aggregated CSV with `model` column
+      tsplib_skipped.csv           # canonical skip log
+
+The canonical CSVs overwrite on every run. Older timestamped CSVs from earlier
+runs are deleted once the new canonical files are written.
 
 CLI
 ---
-    python tsplib_benchmark/run_tsplib_benchmark.py [--max-n N] [--include-over-cap]
+    python tsplib_benchmark/run_tsplib_benchmark.py [flags]
 
 Options:
-    --max-n N           Skip instances with more than N nodes. Default: no cap.
-    --include-over-cap  Include instances whose node count exceeds the model's
-                        training range (n > 1000). Default: included; use
-                        ``--exclude-over-cap`` to run only in-range instances.
-    --exclude-over-cap  Skip instances with n > 1000.
-    --tag LABEL         Suffix appended to the output filename.
+    --max-n N           Skip instances with more than N nodes.
+    --include-over-cap  Include n > 1000 (default).
+    --exclude-over-cap  Skip n > 1000.
     --max-mds-dim K     Hard cap on MDS dimensionality (default 100).
-    --workers N         Number of parallel worker processes (default: cpu_count - 1).
+    --workers N         Parallel workers (default: cpu_count).
+    --only M1,M2,...    Run only a subset of models (regen helper).
+    --fresh             Delete per-model checkpoints before running.
 """
 
 from __future__ import annotations
@@ -44,9 +50,9 @@ import os
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -55,75 +61,130 @@ THIS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = THIS_DIR.parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v3"))
+sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v4"))
+sys.path.insert(0, str(REPO_ROOT / "linear_model_v3"))
+sys.path.insert(0, str(REPO_ROOT / "nn_est_alpha_v3"))
+sys.path.insert(0, str(REPO_ROOT / "interpretable_model_v3"))
 sys.path.insert(0, str(THIS_DIR))
 
 from tsplib_parser import parse_tsplib_file  # noqa: E402
 from classical_mds import classical_mds      # noqa: E402
-from exclusions import TRIANGLE_INEQ_VIOLATORS  # noqa: E402
+import tsp_utils_2 as academic               # noqa: E402
 from lgbm_estimator_v3 import (              # noqa: E402
     TSP_V3_LGBM_Estimator,
     _fast_centroid_stats,
     compute_mst_degrees,
 )
+from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator  # noqa: E402
+from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator  # noqa: E402
+from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator  # noqa: E402
+from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator  # noqa: E402
 
 from collections import deque              # noqa: E402
 from scipy.sparse.csgraph import minimum_spanning_tree  # noqa: E402
 from scipy import stats                    # noqa: E402
+from mst_utils import MSTResult            # noqa: E402
 
 
 INSTANCES_DIR = THIS_DIR / "instances"
 GROUND_TRUTH_FILE = THIS_DIR / "ground_truth" / "optima.csv"
 RESULTS_DIR = THIS_DIR / "results"
-TRAINING_MAX_N = 1000     # Upper bound of n during training.
-TRAINING_MAX_DIM = 50     # Upper bound of feature dimensionality during training.
+CHECKPOINT_DIR = RESULTS_DIR / "checkpoints"
+FINAL_RESULTS_FILE = RESULTS_DIR / "tsplib_results.csv"
+FINAL_SKIPPED_FILE = RESULTS_DIR / "tsplib_skipped.csv"
+TRAINING_MAX_N = 1000
+TRAINING_MAX_DIM = 50
 DEFAULT_MAX_MDS_DIM = 100
 
+GART_FAMILY = {"Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
+EUC2D_TYPES = {"EUC_2D"}  # Scope gate for classical baselines.
+
 
 # ---------------------------------------------------------------------------
-# Shared estimator for ThreadPoolExecutor
+# GART 1.0 legacy adapter (same class used by run_benchmark_2D_all.py)
 # ---------------------------------------------------------------------------
-_worker_estimator = None
+class GART_Adapter:
+    def __init__(self, model_dir):
+        p = Path(model_dir) / "alpha_predictor_model.joblib"
+        self.model = joblib.load(p)
+
+    def estimate(self, coordinates, dimension, grid_size, precomputed_mst=None):
+        cost, t_feat, t_inf = academic.estimate_tsp_ml_alpha(
+            coordinates, self.model, precomputed_mst=precomputed_mst
+        )
+        return {"estimate": cost, "feature_time": t_feat, "inference_time": t_inf}
 
 
-def _worker_init():
-    """Lazily initialize the shared LightGBM estimator. Idempotent — safe to
-    call from every thread; only the first call actually loads the model."""
-    global _worker_estimator
-    if _worker_estimator is None:
-        _worker_estimator = TSP_V3_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v3"))
+# ---------------------------------------------------------------------------
+# Build an MSTResult from a precomputed distance matrix. compute_mst only
+# accepts coordinates (it computes Euclidean distances internally), so for the
+# hybrid path on non-native TSPLIB instances we wrap scipy's
+# minimum_spanning_tree output into an MSTResult compatible with the
+# estimator feature functions.
+# ---------------------------------------------------------------------------
+def _mst_from_distance_matrix(D):
+    n = D.shape[0]
+    D64 = D.astype(np.float64, copy=True)
+    np.fill_diagonal(D64, 0.0)
+    mst_csr = minimum_spanning_tree(D64)
+    coo = mst_csr.tocoo()
+    endpoints = np.stack([coo.row, coo.col], axis=1).astype(np.int32)
+    edges = coo.data.astype(np.float32)
+    degrees = np.zeros(n, dtype=np.int32)
+    np.add.at(degrees, endpoints[:, 0], 1)
+    np.add.at(degrees, endpoints[:, 1], 1)
+    return MSTResult(n=n, edges=edges, endpoints=endpoints,
+                     degrees=degrees, method="precomputed_dm")
 
 
-def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
-    """Hybrid feature computation for non-Euclidean instances.
-
-    Computes MST features (20 features) from the *original* TSPLIB distance
-    matrix so the MST scale is correct. Computes geometric/centroid features
-    (7 features) from the MDS-embedded coordinates so the model gets
-    approximate spatial structure. Metadata features (n, d) are set from the
-    MDS embedding.
-
-    This avoids the distance-inflation problem where classical MDS on a
-    non-Euclidean matrix produces embeddings with inflated pairwise distances,
-    causing the estimator's internally-computed Euclidean MST to be 2-4x too
-    long.
-
-    Returns the same dict schema as TSP_V3_LGBM_Estimator.estimate().
+# ---------------------------------------------------------------------------
+# Model registry
+# ---------------------------------------------------------------------------
+def build_model_registry():
+    """(name, factory, kind, scope).
+      kind  : 'lgbm' (hybrid path) | 'generic' (.estimate on MDS) | 'classical' (coords->(pred,t))
+      scope : 'all' (every instance) | 'euc2d' (EUC_2D only)
     """
-    n = original_dist_matrix.shape[0]
-    coords = mds_coords.astype(np.float32)
+    return [
+        # --- Machine Learning Models (run on every instance) ---
+        ("LGBM_V3",   lambda: TSP_V3_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v3")),   "lgbm",    "all"),
+        ("LGBM_V4",   lambda: TSP_V4_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v4")),   "lgbm",    "all"),
+        ("Linear_V3", lambda: TSP_V3_Linear_Estimator(str(REPO_ROOT / "linear_model_v3")), "generic", "all"),
+        ("NN_V3",     lambda: TSP_V3_Neural_Estimator(str(REPO_ROOT / "nn_est_alpha_v3")), "generic", "all"),
+        ("Interp_V3", lambda: TSP_Interpretable_Estimator(str(REPO_ROOT / "interpretable_model_v3")), "generic", "all"),
+        ("GART",      lambda: GART_Adapter(str(REPO_ROOT / "GART_1.0")),                 "generic", "euc2d"),
+        # --- Classical Academic Baselines (EUC_2D only) ---
+        ("Cavdar",    lambda: academic.estimate_tsp_cavdar,    "classical", "euc2d"),
+        ("BHH",       lambda: academic.estimate_tsp_bhh,       "classical", "euc2d"),
+        ("MST_Ratio", lambda: academic.estimate_tsp_mst_ratio, "classical", "euc2d"),
+        ("Chien",     lambda: academic.estimate_tsp_chien,     "classical", "euc2d"),
+        ("Hilbert",   lambda: academic.estimate_tsp_hilbert,   "classical", "euc2d"),
+        ("Kwon",      lambda: academic.estimate_tsp_kwon,      "classical", "euc2d"),
+        ("Daganzo",   lambda: academic.estimate_tsp_daganzo,   "classical", "euc2d"),
+    ]
 
+
+# ---------------------------------------------------------------------------
+# Hybrid feature computation (LGBM-kind on non-native instances)
+# ---------------------------------------------------------------------------
+def _hybrid_feature_vec(D_orig, mds_coords, d_feat):
+    """Compute the 27-feature hybrid dict: MST from ORIGINAL distances,
+    geometry from MDS embedding. Returns (feats, mst_len, feat_time_s)."""
+    n = D_orig.shape[0]
+    coords = mds_coords.astype(np.float32)
     t0 = time.perf_counter()
 
     feats = {"n_customers": n, "dimension": d_feat}
 
-    # --- Geometric features from MDS embedding (7 features) ---
     rngs = np.ptp(coords, axis=0).astype(float)
     rngs[rngs < 1e-9] = 1e-9
-    log_hv = np.sum(np.log(rngs))
+    log_hv = float(np.sum(np.log(rngs)))
     hypervolume = np.exp(min(log_hv, 690.0))
     feats["bounding_hypervolume"] = hypervolume
     feats["node_density"] = n / hypervolume if hypervolume > 1e-15 else 0.0
-    feats["aspect_ratio"] = np.max(rngs) / np.min(rngs)
+    feats["aspect_ratio"] = float(np.max(rngs) / np.min(rngs))
+    feats["log_bounding_hypervolume"] = log_hv
+    feats["log_node_density"] = float(np.log(n) - log_hv)
 
     cent = np.mean(coords, axis=0, dtype=np.float32)
     c_mn, c_st, c_mx, c_raw = _fast_centroid_stats(coords, cent)
@@ -132,8 +193,7 @@ def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
     feats["centroid_dist_max"] = c_mx
     feats["centroid_dist_iqr"] = float(np.subtract(*np.percentile(c_raw, [75, 25])))
 
-    # --- MST features from ORIGINAL distance matrix (20 features) ---
-    D = original_dist_matrix.astype(np.float64)
+    D = D_orig.astype(np.float64)
     np.fill_diagonal(D, 0)
     mst_csr = minimum_spanning_tree(D)
     edges = mst_csr.data
@@ -150,11 +210,8 @@ def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
     for i, p in enumerate([10, 25, 50, 75, 90]):
         feats[f"mst_edge_q{p}"] = float(percs[i])
 
-    # Clustering proxies
     k_dom = max(1, int(np.sqrt(n)))
-    feats["mst_dominance_ratio"] = float(
-        np.sum(np.partition(edges, -k_dom)[-k_dom:]) / (mst_len + 1e-9)
-    )
+    feats["mst_dominance_ratio"] = float(np.sum(np.partition(edges, -k_dom)[-k_dom:]) / (mst_len + 1e-9))
     feats["mst_gap_ratio"] = float(feats["mst_edge_max"] / (percs[2] + 1e-9))
 
     rows, cols = mst_csr.nonzero()
@@ -167,11 +224,8 @@ def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
     feats["mst_degree_mean"] = float(np.mean(degrees))
     feats["mst_degree_std"] = float(np.std(degrees))
     feats["mst_degree_max"] = int(np.max(degrees))
-    feats["large_edge_count"] = int(
-        np.sum(edges > feats["mst_edge_mean"] + feats["mst_edge_std"])
-    )
+    feats["large_edge_count"] = int(np.sum(edges > feats["mst_edge_mean"] + feats["mst_edge_std"]))
 
-    # Diameter via two BFS passes on the MST
     adj = [[] for _ in range(n)]
     for i in range(len(rows)):
         adj[rows[i]].append((cols[i], edges[i]))
@@ -198,166 +252,167 @@ def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
     feats["mst_diameter_normalized"] = float(diam / (mst_len + 1e-9))
 
     t_feat = time.perf_counter() - t0
+    return feats, mst_len, t_feat
 
-    # --- Inference ---
+
+def _lgbm_hybrid_predict(estimator, feats, mst_len):
+    """Predict using an LGBM-style estimator from a precomputed feature dict."""
     t1 = time.perf_counter()
-    df_input = pd.DataFrame(
-        [{k: feats.get(k, 0.0) for k in estimator.features_required}]
-    )
+    df_input = pd.DataFrame([{k: feats.get(k, 0.0) for k in estimator.features_required}])
     alpha = float(estimator.model.predict(df_input)[0])
-    alpha = np.clip(alpha, 1.0, 2.0)
+    alpha = float(np.clip(alpha, 1.0, 2.0))
     t_inf = time.perf_counter() - t1
-
-    return {
-        "estimate": float(alpha * mst_len),
-        "alpha": float(alpha),
-        "mst_length": mst_len,
-        "feature_time": t_feat,
-        "inference_time": t_inf,
-    }
+    return {"estimate": float(alpha * mst_len), "alpha": alpha,
+            "mst_length": mst_len, "inference_time": t_inf}
 
 
-def _process_one_instance(args):
-    """Worker function: parse, prep, and estimate a single TSPLIB instance.
-
-    For native Euclidean instances, calls the standard estimator. For
-    non-Euclidean instances (ATT, GEO, EXPLICIT), uses the hybrid path:
-    MST features from the original distance matrix, geometric features from
-    the MDS embedding.
-
-    Returns either a result dict or a (name, skip_reason) tuple.
-    """
-    path, true_cost, max_mds_dim = args
-    name = Path(path).stem
-    global _worker_estimator
-
-    try:
-        t_parse0 = time.perf_counter()
-        info = parse_tsplib_file(path)
-        t_parse = time.perf_counter() - t_parse0
-    except Exception as exc:
-        return ("skip", name, f"parse error: {exc}")
+# ---------------------------------------------------------------------------
+# Instance preparation (parse + optional MDS — once per instance)
+# ---------------------------------------------------------------------------
+def prepare_instance(path, max_mds_dim):
+    t0 = time.perf_counter()
+    info = parse_tsplib_file(path)
+    t_parse = time.perf_counter() - t0
 
     n = info["n"]
     is_native = info["is_native_euclidean"] and info["raw_coords"] is not None
 
-    if is_native:
-        # --- Standard path: estimator handles everything ---
-        coords = info["raw_coords"].astype(np.float32)
-        d_feat = coords.shape[1]
-        mds_info = {
-            "mode": "native",
-            "chosen_dim": d_feat,
-            "natural_dim": d_feat,
-            "variance_retained": 1.0,
-            "negative_eigvalue_mass": 0.0,
-            "strain": 0.0,
-        }
-        try:
-            t_est0 = time.perf_counter()
-            res = _worker_estimator.estimate(coords, d_feat, grid_size=0)
-            t_est = time.perf_counter() - t_est0
-        except Exception as exc:
-            return ("skip", name, f"estimate error: {exc}")
-
-    else:
-        # --- Hybrid path: MST from original matrix, geometry from MDS ---
-        D_orig = info["distance_matrix"]
-        try:
-            t_prep0 = time.perf_counter()
-            X, _eigs, mds_raw = classical_mds(
-                D_orig, max_dim=max_mds_dim, variance_threshold=0.999
-            )
-            t_prep = time.perf_counter() - t_prep0
-        except Exception as exc:
-            return ("skip", name, f"mds error: {exc}")
-
-        d_feat = X.shape[1]
-        mds_info = dict(mds_raw)
-        mds_info["mode"] = "hybrid"
-
-        try:
-            t_est0 = time.perf_counter()
-            res = _hybrid_estimate(_worker_estimator, D_orig, X, d_feat)
-            t_est = time.perf_counter() - t_est0
-        except Exception as exc:
-            return ("skip", name, f"hybrid estimate error: {exc}")
-
-    pred = res["estimate"]
-    gap = (pred - true_cost) / true_cost * 100.0
-    over_dim = d_feat > TRAINING_MAX_DIM
-
-    return ("ok", {
-        "instance": name,
+    prep = {
+        "name": Path(path).stem,
         "n": n,
+        "is_native": is_native,
         "edge_weight_type": info["edge_weight_type"],
-        "mode": mds_info["mode"],
-        "feature_dim": d_feat,
-        "mds_natural_dim": mds_info["natural_dim"],
-        "mds_variance_retained": mds_info["variance_retained"],
-        "mds_negative_mass": mds_info["negative_eigvalue_mass"],
-        "mds_strain": mds_info["strain"],
-        "in_training_n_range": n <= TRAINING_MAX_N,
-        "in_training_dim_range": d_feat <= TRAINING_MAX_DIM,
-        "extrapolated": (n > TRAINING_MAX_N) or over_dim,
+        "parse_time": t_parse,
+    }
+
+    if is_native:
+        raw = info["raw_coords"].astype(np.float32)
+        prep["coords"] = raw
+        prep["d_feat"] = raw.shape[1]
+        prep["D_orig"] = None
+        prep["mds_info"] = {"mode": "native", "chosen_dim": raw.shape[1],
+                            "natural_dim": raw.shape[1], "variance_retained": 1.0,
+                            "negative_eigvalue_mass": 0.0, "strain": 0.0}
+        prep["prep_time"] = 0.0
+    else:
+        D = info["distance_matrix"]
+        tp = time.perf_counter()
+        X, _eigs, mds_raw = classical_mds(D, max_dim=max_mds_dim, variance_threshold=0.999)
+        prep["prep_time"] = time.perf_counter() - tp
+        prep["coords"] = X
+        prep["d_feat"] = X.shape[1]
+        prep["D_orig"] = D
+        prep["mds_info"] = dict(mds_raw)
+        prep["mds_info"]["mode"] = "hybrid"
+
+    return prep
+
+
+# ---------------------------------------------------------------------------
+# Per-(instance, model) scoring
+# ---------------------------------------------------------------------------
+def _score_one(prep, estimator, model_name, kind, true_cost):
+    t0 = time.perf_counter()
+    status = "ok"
+    alpha = float('nan')
+    mst_len = float('nan')
+
+    if kind == "classical":
+        # Classical baselines: estimator is a bare callable coords -> (pred, time).
+        # Kwon has a calibration range — record out-of-range as explicit status.
+        if model_name == "Kwon" and prep["n"] > getattr(academic, "KWON_CALIBRATION_N_MAX", 300):
+            status = "kwon_out_of_calibration"
+            pred = float('nan')
+            t_feat = t_inf = float('nan')
+        else:
+            pred_raw, t_total_cls = estimator(prep["coords"])
+            pred = float(pred_raw)
+            t_feat = t_inf = t_total_cls / 2.0
+        res = {"estimate": pred, "feature_time": t_feat, "inference_time": t_inf}
+        mode = "native"
+    elif prep["is_native"]:
+        res = estimator.estimate(prep["coords"], prep["d_feat"], grid_size=0)
+        alpha = float(res.get("alpha", float('nan')))
+        mst_len = float(res.get("mst_length", float('nan')))
+        mode = "native"
+    else:
+        if kind == "lgbm":
+            feats, mst_len, t_feat_hybrid = _hybrid_feature_vec(
+                prep["D_orig"], prep["coords"], prep["d_feat"]
+            )
+            r = _lgbm_hybrid_predict(estimator, feats, mst_len)
+            res = {"estimate": r["estimate"],
+                   "feature_time": t_feat_hybrid,
+                   "inference_time": r["inference_time"]}
+            alpha = r["alpha"]
+            mode = "hybrid"
+        else:
+            # Hybrid path for generic estimators (Linear_V3, NN_V3, Interp_V3,
+            # GART) on non-native instances: compute MST from the ORIGINAL
+            # distance matrix (once) and feed it via precomputed_mst so
+            # coordinate-based features still use MDS coords but MST-derived
+            # features reflect the true metric.
+            mst_from_orig = _mst_from_distance_matrix(prep["D_orig"])
+            res = estimator.estimate(prep["coords"], prep["d_feat"], grid_size=0,
+                                     precomputed_mst=mst_from_orig)
+            alpha = float(res.get("alpha", float('nan')))
+            mst_len = float(res.get("mst_length", float(mst_from_orig.total_length)))
+            mode = "hybrid"
+
+    pred = float(res["estimate"]) if np.isfinite(res.get("estimate", float('nan'))) else float('nan')
+    t_total = time.perf_counter() - t0
+    gap = (pred - true_cost) / true_cost * 100.0 if (true_cost > 0 and np.isfinite(pred)) else float('nan')
+
+    return {
+        "model": model_name,
+        "instance": prep["name"],
+        "n": prep["n"],
+        "edge_weight_type": prep["edge_weight_type"],
+        "mode": mode,
+        "status": status,
+        "feature_dim": prep["d_feat"],
+        "mds_natural_dim": prep["mds_info"].get("natural_dim"),
+        "mds_variance_retained": prep["mds_info"].get("variance_retained"),
+        "mds_negative_mass": prep["mds_info"].get("negative_eigvalue_mass"),
+        "mds_strain": prep["mds_info"].get("strain"),
+        "in_training_n_range": prep["n"] <= TRAINING_MAX_N,
+        "in_training_dim_range": prep["d_feat"] <= TRAINING_MAX_DIM,
+        "extrapolated": (prep["n"] > TRAINING_MAX_N) or (prep["d_feat"] > TRAINING_MAX_DIM),
         "true_cost": true_cost,
         "pred_cost": pred,
-        "alpha": res["alpha"],
-        "mst_length": res["mst_length"],
+        "alpha": alpha,
+        "mst_length": mst_len,
+        "tsp_mst_ratio": (true_cost / mst_len) if (np.isfinite(mst_len) and mst_len > 0) else float('nan'),
+        "parse_time_s": prep["parse_time"],
+        "prep_time_s": prep["prep_time"],
+        "feature_time_s": float(res.get("feature_time", 0.0)),
+        "inference_time_s": float(res.get("inference_time", 0.0)),
+        "total_est_time_s": t_total,
         "gap_pct": gap,
-        "abs_gap_pct": abs(gap),
-        "parse_time_s": t_parse,
-        "prep_time_s": 0.0 if is_native else t_prep,
-        "feature_time_s": res["feature_time"],
-        "inference_time_s": res["inference_time"],
-        "total_est_time_s": t_est,
-    })
+        "abs_gap_pct": abs(gap) if np.isfinite(gap) else float('nan'),
+    }
 
 
-def load_optima() -> dict:
+# ---------------------------------------------------------------------------
+# Work collection
+# ---------------------------------------------------------------------------
+def load_optima():
     df = pd.read_csv(GROUND_TRUTH_FILE)
     return dict(zip(df["instance"].astype(str), df["optimum"].astype(float)))
 
 
-
-def run_benchmark(
-    exclude_over_cap: bool = False,
-    max_n: int | None = None,
-    tag: str = "",
-    max_mds_dim: int = DEFAULT_MAX_MDS_DIM,
-    workers: int | None = None,
-) -> Path:
-    """Run GART 3.0 on every TSPLIB .tsp file under ``instances/``.
-
-    Uses ProcessPoolExecutor to parallelize across CPU cores. Each worker
-    loads its own copy of the LightGBM model via the initializer, so the
-    model object is never serialized across the process boundary.
-
-    Returns the path to the newly-written results CSV.
-    """
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    optima = load_optima()
-
+def collect_work(exclude_over_cap, max_n):
     tsp_files = sorted(INSTANCES_DIR.glob("*.tsp"))
     if not tsp_files:
-        raise SystemExit(
-            f"No .tsp files in {INSTANCES_DIR}. Run download_tsplib.py first."
-        )
-
-    # --- Build work list (filter before dispatching to workers) ---
-    work = []
-    skipped = []
+        raise SystemExit(f"No .tsp files in {INSTANCES_DIR}. Run download_tsplib.py first.")
+    optima = load_optima()
+    work, skipped = [], []
     for path in tsp_files:
         name = path.stem
-        if name in TRIANGLE_INEQ_VIOLATORS:
-            skipped.append((name, "triangle-inequality violator"))
-            continue
         true_cost = optima.get(name)
         if true_cost is None:
             skipped.append((name, "no ground-truth optimum"))
             continue
-        # Peek at file header for DIMENSION to apply n-filters cheaply
-        # without full parse. Read first 20 lines.
         n_from_header = None
         try:
             with open(path, "r", encoding="utf-8", errors="ignore") as fh:
@@ -367,7 +422,6 @@ def run_benchmark(
                         break
         except Exception:
             pass
-
         if n_from_header is not None:
             if max_n is not None and n_from_header > max_n:
                 skipped.append((name, f"n={n_from_header} exceeds --max-n={max_n}"))
@@ -375,118 +429,172 @@ def run_benchmark(
             if exclude_over_cap and n_from_header > TRAINING_MAX_N:
                 skipped.append((name, f"n={n_from_header} > training cap {TRAINING_MAX_N}"))
                 continue
+        work.append((str(path), true_cost))
+    return work, skipped
 
-        work.append((str(path), true_cost, max_mds_dim))
 
-    n_workers = workers if workers else max(1, os.cpu_count() - 1)
-    print(f"Dispatching {len(work)} instances across {n_workers} workers...")
+# ---------------------------------------------------------------------------
+# Main orchestration
+# ---------------------------------------------------------------------------
+def run_benchmark(exclude_over_cap=False, max_n=None, max_mds_dim=DEFAULT_MAX_MDS_DIM,
+                  workers=None, only=None, fresh=False):
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 
-    rows = []
-    _worker_init()
-    with ThreadPoolExecutor(max_workers=n_workers) as pool:
-        futures = {pool.submit(_process_one_instance, w): w for w in work}
-        for future in tqdm(
-            as_completed(futures), total=len(futures), desc="TSPLIB benchmark"
-        ):
-            result = future.result()
-            if result[0] == "skip":
-                skipped.append((result[1], result[2]))
-            else:
-                rows.append(result[1])
+    if fresh:
+        for p in CHECKPOINT_DIR.glob("results_*.csv"):
+            p.unlink()
+            print(f"[fresh] removed {p.name}")
 
-    # --- Persist results ---
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    suffix = f"_{tag}" if tag else ""
-    out_file = RESULTS_DIR / f"tsplib_results_{ts}{suffix}.csv"
-    df = pd.DataFrame(rows)
-    df.to_csv(out_file, index=False)
+    work, skipped = collect_work(exclude_over_cap, max_n)
+    print(f"--- TSPLIB: {len(work)} instances queued, {len(skipped)} pre-skipped ---")
 
-    skip_file = RESULTS_DIR / f"tsplib_skipped_{ts}{suffix}.csv"
-    with open(skip_file, "w", newline="", encoding="utf-8") as fh:
+    n_workers = workers if workers else max(1, os.cpu_count() or 2)
+
+    # --- Prepare (parse + MDS) serially. Concurrent numpy.linalg.eigh on
+    # large TSPLIB distance matrices is memory-heavy and unstable under
+    # Python 3.14 + LAPACK; run one-at-a-time to avoid crashes. Model
+    # scoring below still uses the full worker pool.
+    prepared = []
+    prep_skips = []
+    for p, tc in tqdm(work, desc="prepare"):
+        try:
+            prep = prepare_instance(p, max_mds_dim)
+            prepared.append((prep, tc))
+        except Exception as exc:
+            prep_skips.append((Path(p).stem, f"prepare error: {exc}"))
+    skipped.extend(prep_skips)
+
+    registry = build_model_registry()
+    if only:
+        wanted = {m.strip() for m in only.split(",")}
+        registry = [(n, f, k, s) for n, f, k, s in registry if n in wanted]
+        print(f"--- Running subset: {[n for n, _, _, _ in registry]} ---")
+
+    # --- Per-model loop with checkpoint-and-skip ---
+    for model_name, factory, kind, scope in registry:
+        ckpt = CHECKPOINT_DIR / f"results_{model_name.lower()}.csv"
+        if ckpt.exists() and not fresh:
+            print(f"[SKIPPED] {model_name}: checkpoint exists at {ckpt.name}")
+            continue
+
+        # Apply scope gate — classical baselines restricted to EUC_2D only.
+        if scope == "euc2d":
+            scoped = [(p, tc) for p, tc in prepared if p["edge_weight_type"] in EUC2D_TYPES]
+        else:
+            scoped = prepared
+        if not scoped:
+            print(f"[SKIPPED] {model_name}: no instances match scope '{scope}'")
+            continue
+
+        print(f"[RUN] {model_name} ({kind}, scope={scope}, n={len(scoped)})")
+        try:
+            estimator = factory()
+        except Exception as exc:
+            print(f"    [ERROR] failed to load {model_name}: {exc}")
+            continue
+
+        rows = []
+        with ThreadPoolExecutor(max_workers=n_workers) as pool:
+            futs = [pool.submit(_score_one, prep, estimator, model_name, kind, tc)
+                    for prep, tc in scoped]
+            for fut in tqdm(as_completed(futs), total=len(futs), desc=model_name):
+                try:
+                    rows.append(fut.result())
+                except Exception as exc:
+                    rows.append({"model": model_name, "instance": "<error>",
+                                 "error": str(exc), "abs_gap_pct": float('nan')})
+
+        pd.DataFrame(rows).to_csv(ckpt, index=False)
+        ok = [r for r in rows if np.isfinite(r.get("abs_gap_pct", float('nan')))]
+        if ok:
+            mape = float(np.mean([r["abs_gap_pct"] for r in ok]))
+            print(f"    [SAVED] {model_name} | MAPE={mape:.3f}% | n_ok={len(ok)}/{len(rows)}")
+        del estimator
+        gc.collect()
+
+    # --- Aggregate into canonical CSV + clean up legacy timestamped files ---
+    csv_files = sorted(CHECKPOINT_DIR.glob("results_*.csv"))
+    if not csv_files:
+        print("[WARN] No per-model checkpoints to aggregate.")
+        return None
+    final_df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
+    final_df.to_csv(FINAL_RESULTS_FILE, index=False)
+
+    with open(FINAL_SKIPPED_FILE, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["instance", "reason"])
         for name, reason in skipped:
             w.writerow([name, reason])
 
-    print_summary(df, skipped, out_file)
-    return out_file
+    removed = 0
+    for p in RESULTS_DIR.glob("tsplib_results_*.csv"):
+        p.unlink(); removed += 1
+    for p in RESULTS_DIR.glob("tsplib_skipped_*.csv"):
+        p.unlink(); removed += 1
+    if removed:
+        print(f"[cleanup] removed {removed} legacy timestamped CSVs")
+
+    print_summary(final_df, skipped, FINAL_RESULTS_FILE)
+    return FINAL_RESULTS_FILE
 
 
-def print_summary(df: pd.DataFrame, skipped, out_file: Path):
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
+def print_summary(df, skipped, out_file):
     print()
     print("=" * 80)
-    print(f" TSPLIB95 benchmark -- GART 3.0 (LGBM V3)")
+    print(" TSPLIB95 benchmark -- multi-model")
     print("=" * 80)
     print(f"Result file    : {out_file}")
-    print(f"Total runs     : {len(df)}")
+    print(f"Total rows     : {len(df)}")
     print(f"Skipped        : {len(skipped)}")
     if df.empty:
         return
 
-    def _block(label: str, subset: pd.DataFrame):
+    def _block(label, subset):
         if subset.empty:
-            print(f"{label:30s}: (no instances)")
+            print(f"{label:34s}: (empty)")
             return
         mape = subset["abs_gap_pct"].mean()
-        med  = subset["abs_gap_pct"].median()
-        p90  = subset["abs_gap_pct"].quantile(0.90)
-        mx   = subset["abs_gap_pct"].max()
+        med = subset["abs_gap_pct"].median()
+        p90 = subset["abs_gap_pct"].quantile(0.90)
+        mx = subset["abs_gap_pct"].max()
         bias = subset["gap_pct"].mean()
         t = (subset["feature_time_s"] + subset["inference_time_s"]).mean() * 1000
-        print(
-            f"{label:30s}: n={len(subset):3d}  "
-            f"MAPE={mape:6.3f}%  med={med:6.3f}%  p90={p90:6.3f}%  "
-            f"max={mx:6.2f}%  bias={bias:+.3f}%  lat={t:6.2f}ms"
-        )
+        print(f"{label:34s}: n={len(subset):4d}  MAPE={mape:6.3f}%  med={med:6.3f}%  "
+              f"p90={p90:6.3f}%  max={mx:6.2f}%  bias={bias:+.3f}%  lat={t:6.2f}ms")
 
-    print()
-    print("--- Overall ---")
-    _block("ALL", df)
-    _block("In training range (n<=1000)", df[df["in_training_n_range"]])
-    _block("Extrapolated (n>1000)", df[~df["in_training_n_range"]])
-
-    print()
-    print("--- By edge-weight type ---")
-    for ewt in sorted(df["edge_weight_type"].unique()):
-        _block(ewt, df[df["edge_weight_type"] == ewt])
-
-    print()
-    print("--- By mode (native vs hybrid-MDS) ---")
-    for mode in sorted(df["mode"].unique()):
-        _block(mode, df[df["mode"] == mode])
-
-    print()
-    print("Top 10 largest |gap|:")
-    top = df.nlargest(10, "abs_gap_pct")[
-        ["instance", "n", "edge_weight_type", "mode", "true_cost", "pred_cost", "gap_pct"]
-    ]
-    print(top.to_string(index=False))
-    print("=" * 80)
+    print("\n--- By model ---")
+    for m in sorted(df["model"].astype(str).unique()):
+        _block(m, df[df["model"] == m])
 
 
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--max-n", type=int, default=None,
-                    help="Hard ceiling on n; larger instances are skipped.")
-    group = ap.add_mutually_exclusive_group()
-    group.add_argument("--include-over-cap", action="store_true",
-                       help="Include instances with n > 1000 (default).")
-    group.add_argument("--exclude-over-cap", action="store_true",
-                       help="Exclude instances with n > 1000.")
-    ap.add_argument("--tag", type=str, default="",
-                    help="Optional label appended to result filenames.")
-    ap.add_argument("--max-mds-dim", type=int, default=DEFAULT_MAX_MDS_DIM,
-                    help=f"Hard cap on MDS dimensionality (default {DEFAULT_MAX_MDS_DIM}).")
-    ap.add_argument("--workers", type=int, default=None,
-                    help="Number of parallel worker processes (default: cpu_count - 1).")
+    ap.add_argument("--max-n", type=int, default=None)
+    g = ap.add_mutually_exclusive_group()
+    g.add_argument("--include-over-cap", action="store_true")
+    g.add_argument("--exclude-over-cap", action="store_true")
+    ap.add_argument("--max-mds-dim", type=int, default=DEFAULT_MAX_MDS_DIM)
+    ap.add_argument("--workers", type=int, default=None)
+    ap.add_argument("--only", type=str, default=None,
+                    help="Comma-separated model subset (regen helper).")
+    ap.add_argument("--fresh", action="store_true",
+                    help="Delete per-model checkpoints before running.")
     args = ap.parse_args()
 
     run_benchmark(
         exclude_over_cap=args.exclude_over_cap,
         max_n=args.max_n,
-        tag=args.tag,
         max_mds_dim=args.max_mds_dim,
         workers=args.workers,
+        only=args.only,
+        fresh=args.fresh,
     )
 
 

@@ -42,6 +42,7 @@ if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
 from mst_utils import compute_mst
+from tsp_utils_2 import canonicalize_coords_pca
 
 # Delaunay (QHull) crossover vs dense matrix: empirically dense is faster from
 # d >= 4 upwards (measured d=5, n=1000 -> Delaunay ~1.8s vs dense ~0.2s).
@@ -347,6 +348,13 @@ def compute_features(
         )
     if n < 3:
         raise ValueError(f"feature extraction requires n >= 3 (got n={n})")
+
+    # Rotate into PCA principal-axis frame so axis-dependent V3-inherited
+    # features (bounding hypervolume, node density, aspect ratio, centroid
+    # dispersion) are invariant to input orientation. V4's explicit PCA-OBB
+    # features are unaffected (rotation of an already-rotated frame is
+    # identity up to sign, which is canonicalized inside the helper).
+    coords = canonicalize_coords_pca(coords).astype(np.float32, copy=False)
 
     out: Dict[str, float] = {
         "n_customers": int(n),
