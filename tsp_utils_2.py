@@ -35,6 +35,18 @@ from hilbertcurve.hilbertcurve import HilbertCurve
 BETA_2D = 0.7124
 BETA_3D = 0.6979
 
+# Hard caps on geometric primitives that blow up in high dimensions.
+# QHull/Delaunay simplex count scales as n^floor(d/2); beyond d≈8 both
+# memory and wall-clock become impractical. The Euclidean MST is still
+# correct via a dense distance matrix, and volume is safely approximated
+# by the bounding-box product (what the original BHH/Vinel/Cavdar
+# implementations fell back to for n <= d+1).
+# Delaunay (QHull) vs dense cdist-MST crossover on n=1000: Delaunay is faster
+# for d in {2, 3}, slower for d >= 4 (measured: d=5 Delaunay 1.8s vs dense 0.2s,
+# d=6 Delaunay 13.5s vs dense 0.2s). Keep Delaunay capped at d=3.
+DELAUNAY_MAX_DIM = 3
+CONVEX_HULL_MAX_DIM = 8
+
 # ====================================================================
 # SHARED HELPERS
 # ====================================================================
@@ -43,19 +55,25 @@ def get_mst_length(nodes_coords):
     """Calculates MST length on UNIQUE coordinates.
 
     Uses Delaunay triangulation (MST is a subgraph of the Delaunay graph,
-    valid in any dimension d >= 2) for O(n log n). Falls back to the dense
-    distance-matrix MST if Delaunay fails on a degenerate point set.
+    valid in any dimension d) for O(n log n) — but only up to
+    :data:`DELAUNAY_MAX_DIM`, because QHull simplex count grows as
+    n^floor(d/2). Beyond the cap, falls through to the dense O(n^2 d) matrix
+    MST. Falls back to dense MST on Delaunay errors (degenerate points).
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
     if n <= 1: return 0.0, 0.0
 
-    try:
-        mst_length = _delaunay_mst_length(coords)
-    except Exception:
-        dist_matrix = cdist(coords, coords)
-        mst_length = float(minimum_spanning_tree(dist_matrix).sum())
+    d = coords.shape[1]
+    if d <= DELAUNAY_MAX_DIM:
+        try:
+            mst_length = _delaunay_mst_length(coords)
+            return mst_length, time.perf_counter() - start_time
+        except Exception:
+            pass
+    dist_matrix = cdist(coords, coords)
+    mst_length = float(minimum_spanning_tree(dist_matrix).sum())
     return mst_length, time.perf_counter() - start_time
 
 def _run_2opt_fast(coords, n, max_iter=2000):
@@ -219,11 +237,13 @@ def estimate_tsp_mst_ratio(nodes_coords):
         return 0.0, 0.0
 
     d = coords.shape[1]
-    # Use Delaunay triangulation for O(n log n) MST in any dim (MST ⊆ Delaunay graph)
-    try:
-        mst_len = _delaunay_mst_length(coords)
-    except Exception:
-        # Fallback to full distance matrix for degenerate point sets
+    mst_len = None
+    if d <= DELAUNAY_MAX_DIM:
+        try:
+            mst_len = _delaunay_mst_length(coords)
+        except Exception:
+            mst_len = None
+    if mst_len is None:
         dist_matrix = cdist(coords, coords)
         mst_len = float(minimum_spanning_tree(dist_matrix).sum())
 
@@ -373,7 +393,7 @@ def estimate_tsp_bhh(nodes_coords):
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
 
-    if n > d + 1:
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         vol = ConvexHull(coords).volume
     else:
         ranges = np.ptp(coords, axis=0).astype(float)
@@ -395,7 +415,7 @@ def estimate_tsp_vinel(nodes_coords, b=0.768):
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
 
-    if n > d + 1:
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         vol = ConvexHull(coords).volume
     else:
         ranges = np.ptp(coords, axis=0).astype(float)
@@ -414,7 +434,7 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
     if n <= 1: return 0.0, 0.0
     d = coords.shape[1]
 
-    if n > d + 1:
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         vol = ConvexHull(coords).volume
     else:
         ranges = np.ptp(coords, axis=0).astype(float)
@@ -491,7 +511,7 @@ def estimate_tsp_kwon(nodes_coords):
 
     coords_n = (coords - coords.min(axis=0)) / diag
 
-    if n > d + 1:
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         A = ConvexHull(coords_n).volume
     else:
         r_n = np.ptp(coords_n, axis=0).astype(float)
@@ -524,7 +544,7 @@ def estimate_tsp_daganzo(nodes_coords, k=0.57):
         return 0.0, 0.0
     d = coords.shape[1]
 
-    if n > d + 1:
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
         A = ConvexHull(coords).volume
     else:
         ranges = np.ptp(coords, axis=0).astype(float)
@@ -546,9 +566,14 @@ def estimate_tsp_composite(nodes_coords):
         cost, _ = estimate_tsp_held_karp(coords)
         return cost, time.perf_counter() - start_time
 
-    try:
-        mst_length = _delaunay_mst_length(coords)
-    except Exception:
+    d = coords.shape[1]
+    mst_length = None
+    if d <= DELAUNAY_MAX_DIM:
+        try:
+            mst_length = _delaunay_mst_length(coords)
+        except Exception:
+            mst_length = None
+    if mst_length is None:
         dist_matrix = cdist(coords, coords)
         mst_length = float(minimum_spanning_tree(dist_matrix).sum())
 

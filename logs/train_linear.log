@@ -1,9 +1,0 @@
---- Training Linear Regression Baseline (Full V3 Set) ---
-  Applied Log Transform: bounding_hypervolume -> log_bounding_hypervolume
-  Applied Log Transform: node_density -> log_node_density
-Training on 28 features with 75961 samples...
-
---- Validation Results ---
-  RMSE: 0.047268
-  R^2 : 0.415728
-✅ Model saved to D:\Area-and-Distribution-Free-Estimator-for-TSP\linear_model_v3\linear_alpha_model_v3.joblib
