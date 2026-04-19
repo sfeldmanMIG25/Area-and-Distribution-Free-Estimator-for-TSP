@@ -13,11 +13,15 @@ import numpy as np
 import pandas as pd
 import lightgbm as lgb
 from collections import deque
-from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
+
+import os as _os
+import sys as _sys
+_REPO_ROOT = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), _os.pardir))
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
+from mst_utils import compute_mst
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 import numba
@@ -98,12 +102,16 @@ class TSP_V3_LGBM_Estimator:
         rngs[rngs < 1e-9] = 1e-9
         
         # Stable Log-Space product
-        log_hv = np.sum(np.log(rngs))
+        log_hv = float(np.sum(np.log(rngs)))
         # Cap at float64 ceiling (~1e300) to prevent INF errors in LGBM input
-        hypervolume = np.exp(min(log_hv, 690.0)) 
-        
+        hypervolume = np.exp(min(log_hv, 690.0))
+        log_density = np.log(n) - log_hv
+        density = np.exp(max(min(log_density, 690.0), -690.0))
+
         feats['bounding_hypervolume'] = hypervolume
-        feats['node_density'] = n / hypervolume if hypervolume > 1e-15 else 0.0
+        feats['node_density'] = density
+        feats['log_bounding_hypervolume'] = log_hv
+        feats['log_node_density'] = log_density
         feats['aspect_ratio'] = np.max(rngs) / np.min(rngs)
         
         # Centroid Stats (Numba)
@@ -112,37 +120,9 @@ class TSP_V3_LGBM_Estimator:
         feats['centroid_dist_mean'], feats['centroid_dist_std'], feats['centroid_dist_max'] = c_mn, c_st, c_mx
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
-        # MST Block
-        # In 2D, the MST is a subgraph of the Delaunay triangulation (O(n)
-        # edges), so we build a sparse graph from Delaunay edges instead of
-        # the full O(n^2) distance matrix. This reduces memory from O(n^2) to
-        # O(n) and is critical for large instances (n > 10000).
-        # For d >= 3 we fall back to the dense distance matrix since Delaunay
-        # in high dimensions can produce O(n^ceil(d/2)) simplices.
-        if d == 2 and n >= 4:
-            tri = Delaunay(coords)
-            edges_set = set()
-            for simplex in tri.simplices:
-                for i in range(3):
-                    for j in range(i + 1, 3):
-                        a, b = simplex[i], simplex[j]
-                        if a > b:
-                            a, b = b, a
-                        edges_set.add((a, b))
-            rows_d, cols_d, dists_d = [], [], []
-            for a, b in edges_set:
-                dist_ab = float(np.sqrt(np.sum((coords[a] - coords[b]) ** 2)))
-                rows_d.append(a); cols_d.append(b); dists_d.append(dist_ab)
-                rows_d.append(b); cols_d.append(a); dists_d.append(dist_ab)
-            sparse_graph = csr_matrix(
-                (dists_d, (rows_d, cols_d)), shape=(n, n)
-            )
-            mst_csr = minimum_spanning_tree(sparse_graph)
-        else:
-            dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32)
-            np.fill_diagonal(dist_mat, 0)
-            mst_csr = minimum_spanning_tree(dist_mat)
-        edges = mst_csr.data
+        # MST via the project-wide utility (dense primary, OOM fallback).
+        mst_result = compute_mst(coords)
+        edges = mst_result.edges
         mst_len = np.sum(edges)
         
         feats['mst_total_length'] = mst_len
@@ -159,8 +139,9 @@ class TSP_V3_LGBM_Estimator:
         feats['mst_dominance_ratio'] = np.sum(np.partition(edges, -k_dom)[-k_dom:]) / (mst_len + 1e-9)
         feats['mst_gap_ratio'] = feats['mst_edge_max'] / (percs[2] + 1e-9)
         
-        rows, cols = mst_csr.nonzero()
-        degrees = compute_mst_degrees(rows, cols, n)
+        rows = mst_result.endpoints[:, 0]
+        cols = mst_result.endpoints[:, 1]
+        degrees = mst_result.degrees
         feats['mst_leaf_ratio'] = np.sum(degrees == 1) / n
         feats['mst_degree_mean'], feats['mst_degree_std'] = np.mean(degrees), np.std(degrees)
         feats['mst_degree_max'] = np.max(degrees)

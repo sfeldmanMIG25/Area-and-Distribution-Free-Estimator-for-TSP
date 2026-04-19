@@ -26,9 +26,12 @@ sys.path.insert(0, str(THIS_DIR))
 
 from tsplib_parser import parse_tsplib_file
 import tsp_utils_2 as academic
-from scipy.sparse.csgraph import minimum_spanning_tree
-from scipy.sparse import csr_matrix
-from scipy.spatial import Delaunay
+
+import sys as _sys
+_REPO_ROOT = str(ROOT)
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
+from mst_utils import mst_length as _mst_length
 
 MISSING = [
     "brd14051", "d15112", "d18512",
@@ -37,25 +40,9 @@ MISSING = [
 
 
 def delaunay_mst_length(coords: np.ndarray) -> float:
-    """Compute MST length using Delaunay edge set — O(n) edges in 2D."""
-    n = coords.shape[0]
-    tri = Delaunay(coords)
-    edges = set()
-    for simplex in tri.simplices:
-        for i in range(3):
-            for j in range(i + 1, 3):
-                a, b = simplex[i], simplex[j]
-                if a > b:
-                    a, b = b, a
-                edges.add((a, b))
-    rows, cols, dists = [], [], []
-    for a, b in edges:
-        d = float(np.linalg.norm(coords[a] - coords[b]))
-        rows.append(a); cols.append(b); dists.append(d)
-        rows.append(b); cols.append(a); dists.append(d)
-    sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
-    mst = minimum_spanning_tree(sp)
-    return float(mst.sum())
+    """Backwards-compatible shim. The underlying computation now routes through
+    ``mst_utils.compute_mst`` (dense primary, dimension-aware OOM fallback)."""
+    return _mst_length(coords)
 
 
 def mst_ratio_delaunay(coords: np.ndarray):

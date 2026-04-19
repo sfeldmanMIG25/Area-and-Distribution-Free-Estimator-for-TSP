@@ -8,7 +8,7 @@ import re
 import sys
 import warnings
 from collections import Counter
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import List, Tuple
 
@@ -312,7 +312,7 @@ def main_optimized():
             print(f"\n2. Generating {len(needed_params)} new instances...")
             num_workers = max(1, os.cpu_count() - 2)
             batch_size = min(100, len(needed_params) // num_workers + 1)
-            with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            with ThreadPoolExecutor(max_workers=num_workers) as executor:
                 batches = [needed_params[i:i + batch_size] for i in range(0, len(needed_params), batch_size)]
                 futures = [executor.submit(generate_batch_wrapper, b) for b in batches]
                 for f in tqdm(as_completed(futures), total=len(futures), desc="Generating"):
@@ -327,7 +327,7 @@ def main_optimized():
             instances_to_solve.sort(key=lambda x: int(x.split("_")[0][1:]))
             num_workers = max(1, min(6, os.cpu_count()))
             solve_batch_size = min(10, len(instances_to_solve) // num_workers + 1)
-            with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            with ThreadPoolExecutor(max_workers=num_workers) as executor:
                 batches = [instances_to_solve[i:i + solve_batch_size] for i in range(0, len(instances_to_solve), solve_batch_size)]
                 futures = [executor.submit(solve_instance_batch, b) for b in batches]
                 for f in tqdm(as_completed(futures), total=len(futures), desc="Solving"):

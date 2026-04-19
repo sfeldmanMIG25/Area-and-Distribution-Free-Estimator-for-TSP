@@ -8,11 +8,13 @@ import numpy as np
 import pandas as pd
 import joblib
 from collections import deque
-from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
+
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+from mst_utils import compute_mst
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler, QuantileTransformer
@@ -127,11 +129,14 @@ class TSP_V3_Neural_Estimator:
         rngs = np.ptp(coords, axis=0).astype(float); rngs[rngs < 1e-9] = 1e-9
         
         # --- STABLE HYPERVOLUME INTAKE ---
-        log_hv = np.sum(np.log(rngs))
-        hypervolume = np.exp(min(log_hv, 690.0)) 
-        
+        log_hv = float(np.sum(np.log(rngs)))
+        hypervolume = np.exp(min(log_hv, 690.0))
+        log_density = np.log(n) - log_hv
+        density = np.exp(max(min(log_density, 690.0), -690.0))
         feats['bounding_hypervolume'] = hypervolume
-        feats['node_density'] = n / hypervolume if hypervolume > 1e-15 else 0.0
+        feats['node_density'] = density
+        feats['log_bounding_hypervolume'] = log_hv
+        feats['log_node_density'] = log_density
         feats['aspect_ratio'] = np.max(rngs) / np.min(rngs)
         
         cent = np.mean(coords, axis=0, dtype=np.float32)
@@ -139,30 +144,10 @@ class TSP_V3_Neural_Estimator:
         feats['centroid_dist_mean'], feats['centroid_dist_std'], feats['centroid_dist_max'] = c_mn, c_st, c_mx
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
-        # MST — Delaunay-sparse for 2D (O(n log n)), dense fallback otherwise.
-        mst = None
-        if d == 2 and n >= 4:
-            try:
-                tri = Delaunay(coords)
-                pairs = set()
-                for simplex in tri.simplices:
-                    for i in range(len(simplex)):
-                        for j in range(i + 1, len(simplex)):
-                            a, b = simplex[i], simplex[j]
-                            if a > b: a, b = b, a
-                            pairs.add((a, b))
-                rows, cols, dists_ = [], [], []
-                for a, b in pairs:
-                    dab = float(np.linalg.norm(coords[a] - coords[b]))
-                    rows += [a, b]; cols += [b, a]; dists_ += [dab, dab]
-                sp = csr_matrix((dists_, (rows, cols)), shape=(n, n))
-                mst = minimum_spanning_tree(sp)
-            except Exception:
-                mst = None
-        if mst is None:
-            dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32); np.fill_diagonal(dist_mat, 0)
-            mst = minimum_spanning_tree(dist_mat)
-        edges = mst.data; mst_len = np.sum(edges)
+        # MST via the project-wide utility (dense primary, OOM fallback).
+        mst_result = compute_mst(coords)
+        edges = mst_result.edges
+        mst_len = float(np.sum(edges))
         feats['mst_total_length'] = mst_len
         feats['mst_edge_mean'], feats['mst_edge_std'] = np.mean(edges), np.std(edges)
         feats['mst_edge_skew'], feats['mst_edge_kurtosis'] = stats.skew(edges), stats.kurtosis(edges)
@@ -174,8 +159,9 @@ class TSP_V3_Neural_Estimator:
         feats['mst_dominance_ratio'] = np.sum(np.partition(edges, -k_dom)[-k_dom:]) / (mst_len + 1e-9)
         feats['mst_gap_ratio'] = feats['mst_edge_max'] / (percs[2] + 1e-9)
         
-        degs = np.zeros(n); r, c = mst.nonzero()
-        for i in range(len(r)): degs[r[i]]+=1; degs[c[i]]+=1
+        r = mst_result.endpoints[:, 0]
+        c = mst_result.endpoints[:, 1]
+        degs = mst_result.degrees.astype(float)
         feats['mst_leaf_ratio'] = np.sum(degs == 1) / n
         feats['mst_degree_mean'], feats['mst_degree_std'], feats['mst_degree_max'] = np.mean(degs), np.std(degs), np.max(degs)
         feats['large_edge_count'] = np.sum(edges > feats['mst_edge_mean'] + feats['mst_edge_std'])

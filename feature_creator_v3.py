@@ -12,12 +12,11 @@ import struct
 from collections import deque
 from tqdm import tqdm
 import pandas as pd
-from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
-from concurrent.futures import ProcessPoolExecutor
+
+from mst_utils import compute_mst
+from concurrent.futures import ThreadPoolExecutor
 import warnings
 
 # Suppress warnings
@@ -139,14 +138,19 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     # === Group 2: Geometric Spread ===
     
     dim_ranges = np.ptp(coords, axis=0).astype(float)
-    dim_ranges[dim_ranges < 1e-9] = 1e-9 
-    
-    features['bounding_hypervolume'] = np.prod(dim_ranges)
-    
-    if features['bounding_hypervolume'] > 1e-12:
-        features['node_density'] = n / features['bounding_hypervolume']
-    else:
-        features['node_density'] = 0.0
+    dim_ranges[dim_ranges < 1e-9] = 1e-9
+
+    # Hypervolume in high d overflows float64 (e.g. 10000**100 == 10**400).
+    # Compute the log-sum and clip before exponentiating so downstream
+    # consumers always see a finite value. 690 is just below log(float64_max).
+    log_hv = float(np.sum(np.log(dim_ranges)))
+    features['log_bounding_hypervolume'] = log_hv
+    features['bounding_hypervolume'] = float(np.exp(min(log_hv, 690.0)))
+
+    # Density likewise in log-space, then exponentiated with clipping.
+    log_density = np.log(n) - log_hv
+    features['log_node_density'] = log_density
+    features['node_density'] = float(np.exp(max(min(log_density, 690.0), -690.0)))
         
     min_range = np.min(dim_ranges)
     if min_range > 1e-12:
@@ -164,32 +168,8 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     features['centroid_dist_iqr'] = q75 - q25
 
     # === Group 3: Topological Structure ===
-    # MST via Delaunay-sparse graph for 2D (O(n log n)); dense fallback otherwise.
-    mst_csr = None
-    if d == 2 and n >= 4:
-        try:
-            tri = Delaunay(coords)
-            pairs = set()
-            for simplex in tri.simplices:
-                for i in range(len(simplex)):
-                    for j in range(i + 1, len(simplex)):
-                        a, b = simplex[i], simplex[j]
-                        if a > b: a, b = b, a
-                        pairs.add((a, b))
-            rows_d, cols_d, dists_d = [], [], []
-            for a, b in pairs:
-                dab = float(np.linalg.norm(coords[a] - coords[b]))
-                rows_d += [a, b]; cols_d += [b, a]; dists_d += [dab, dab]
-            sp = csr_matrix((dists_d, (rows_d, cols_d)), shape=(n, n))
-            mst_csr = minimum_spanning_tree(sp)
-        except Exception:
-            mst_csr = None
-    if mst_csr is None:
-        dist_matrix = cdist(coords, coords, 'euclidean') + 1e-9
-        np.fill_diagonal(dist_matrix, 0)
-        mst_csr = minimum_spanning_tree(dist_matrix)
-
-    mst_edges = mst_csr.data
+    mst_result = compute_mst(coords)
+    mst_edges = mst_result.edges
     
     if len(mst_edges) == 0: 
         mst_edges = np.array([0.0])
@@ -237,15 +217,12 @@ def compute_features_for_instance_v3(inst_data, sol_data):
 
     # Topology stats (Degree & Diameter)
     mst_adj = [[] for _ in range(n)]
-    degrees = np.zeros(n, dtype=int)
-    rows, cols = mst_csr.nonzero()
-    
-    for i in range(len(rows)):
-        u, v, dist = rows[i], cols[i], mst_edges[i]
+    degrees = mst_result.degrees.astype(int)
+    endpoints = mst_result.endpoints
+    for i in range(endpoints.shape[0]):
+        u, v, dist = int(endpoints[i, 0]), int(endpoints[i, 1]), mst_edges[i]
         mst_adj[u].append((v, dist))
         mst_adj[v].append((u, dist))
-        degrees[u] += 1
-        degrees[v] += 1
     
     # 2. Leaf Ratio (Count of Degree=1 / N)
     features['mst_leaf_ratio'] = np.sum(degrees == 1) / n
@@ -265,7 +242,7 @@ def compute_features_for_instance_v3(inst_data, sol_data):
     return features
 
 def process_file_worker(filename):
-    """Worker function for ProcessPoolExecutor. Strict — any I/O or parse error
+    """Worker function for ThreadPoolExecutor. Strict — any I/O or parse error
     bubbles up and halts the pipeline so the upstream bug is visible (no
     silent fallbacks)."""
     if not filename.endswith('.json'):
@@ -338,7 +315,7 @@ if __name__ == '__main__':
     num_workers = max(1, os.cpu_count())
     print(f"Starting computation with {num_workers} workers...")
     
-    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
         results = list(tqdm(executor.map(process_file_worker, files_to_process), 
                             total=len(files_to_process), desc="Computing V3 Features"))
 

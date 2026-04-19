@@ -3,6 +3,8 @@
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
+      "log_node_density",
       "aspect_ratio",
       "centroid_dist_mean",
       "centroid_dist_max",
@@ -25,18 +27,16 @@
       "mst_degree_max",
       "mst_diameter",
       "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume",
-      "log_node_density"
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -44,11 +44,35 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
       ],
       [
         "dimension",
-        "large_edge_count"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
       ],
       [
         "centroid_dist_std",
@@ -59,72 +83,38 @@
         "mst_diameter"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_diameter"
+        "n_customers",
+        "dimension"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
+        "mst_diameter_normalized"
       ],
       [
         "n_customers",
-        "centroid_dist_std"
+        "mst_dominance_ratio"
       ],
       [
-        "mst_diameter",
-        "mst_diameter_normalized"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
         "mst_gap_ratio"
       ],
       [
-        "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
-        "mst_diameter_normalized"
-      ],
-      [
-        "n_customers",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
-      ],
-      [
-        "n_customers",
-        "mst_degree_max"
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.89, N=23219"
+    "description": "R2=0.89, N=22123"
   },
   "4": {
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
+      "log_node_density",
       "aspect_ratio",
       "centroid_dist_mean",
       "centroid_dist_max",
@@ -142,22 +132,21 @@
       "mst_dominance_ratio",
       "mst_gap_ratio",
       "mst_leaf_ratio",
+      "mst_degree_mean",
       "mst_degree_std",
       "mst_degree_max",
       "mst_diameter",
       "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume",
-      "log_node_density"
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -165,11 +154,35 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
       ],
       [
         "dimension",
-        "large_edge_count"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
       ],
       [
         "centroid_dist_std",
@@ -180,72 +193,37 @@
         "mst_diameter"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_diameter"
+        "n_customers",
+        "dimension"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
+        "mst_diameter_normalized"
       ],
       [
         "n_customers",
-        "centroid_dist_std"
+        "mst_dominance_ratio"
       ],
       [
-        "mst_diameter",
-        "mst_diameter_normalized"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
         "mst_gap_ratio"
       ],
       [
-        "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
-        "mst_diameter_normalized"
-      ],
-      [
-        "n_customers",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
-      ],
-      [
-        "n_customers",
-        "mst_degree_max"
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.71, N=10555"
+    "description": "R2=0.69, N=8875"
   },
   "6": {
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
       "aspect_ratio",
       "centroid_dist_mean",
       "centroid_dist_max",
@@ -265,17 +243,16 @@
       "mst_degree_max",
       "mst_diameter",
       "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume"
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -283,11 +260,35 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
       ],
       [
         "dimension",
-        "large_edge_count"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
       ],
       [
         "centroid_dist_std",
@@ -298,43 +299,11 @@
         "mst_diameter"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
         "n_customers",
-        "centroid_dist_std"
-      ],
-      [
-        "n_customers",
-        "mst_gap_ratio"
-      ],
-      [
-        "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
-        "mst_dominance_ratio"
+        "dimension"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
         "mst_diameter_normalized"
       ],
       [
@@ -342,28 +311,28 @@
         "mst_dominance_ratio"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
-        "mst_degree_max"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.91, N=23474"
+    "description": "R2=0.90, N=22686"
   },
   "7": {
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
       "centroid_dist_mean",
       "centroid_dist_max",
       "mst_edge_mean",
-      "mst_edge_std",
       "mst_edge_skew",
       "mst_edge_kurtosis",
       "mst_edge_max",
@@ -376,21 +345,19 @@
       "mst_gap_ratio",
       "mst_leaf_ratio",
       "mst_degree_mean",
-      "mst_degree_std",
       "mst_degree_max",
       "mst_diameter",
       "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume"
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -398,11 +365,35 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
       ],
       [
         "dimension",
-        "large_edge_count"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
       ],
       [
         "centroid_dist_std",
@@ -413,43 +404,11 @@
         "mst_diameter"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
         "n_customers",
-        "centroid_dist_std"
-      ],
-      [
-        "mst_diameter",
-        "mst_diameter_normalized"
-      ],
-      [
-        "n_customers",
-        "mst_gap_ratio"
-      ],
-      [
-        "dimension",
-        "aspect_ratio"
+        "dimension"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
         "mst_diameter_normalized"
       ],
       [
@@ -457,138 +416,120 @@
         "mst_dominance_ratio"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
-        "mst_degree_max"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.86, N=8062"
+    "description": "R2=0.83, N=7772"
   },
   "10": {
     "base_features": [
       "n_customers",
       "dimension",
-      "centroid_dist_mean",
+      "log_bounding_hypervolume",
+      "aspect_ratio",
       "centroid_dist_std",
-      "centroid_dist_max",
       "centroid_dist_iqr",
-      "mst_edge_mean",
+      "mst_edge_std",
       "mst_edge_skew",
-      "mst_edge_max",
+      "mst_edge_kurtosis",
       "mst_edge_q10",
       "mst_edge_q25",
-      "mst_edge_q50",
-      "mst_edge_q75",
-      "mst_edge_q90",
       "mst_dominance_ratio",
+      "mst_gap_ratio",
       "mst_leaf_ratio",
       "mst_degree_mean",
+      "mst_degree_std",
       "mst_degree_max",
       "mst_diameter",
-      "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume",
-      "log_node_density"
+      "mst_diameter_normalized"
     ],
     "interactions": [
+      [
+        "n_customers",
+        "mst_diameter_normalized"
+      ],
+      [
+        "dimension",
+        "mst_dominance_ratio"
+      ],
+      [
+        "centroid_dist_std",
+        "mst_dominance_ratio"
+      ],
+      [
+        "dimension",
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
+      ],
+      [
+        "dimension",
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
+      ],
       [
         "n_customers",
         "dimension"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
-      ],
-      [
-        "centroid_dist_std",
-        "mst_dominance_ratio"
-      ],
-      [
-        "dimension",
-        "mst_dominance_ratio"
-      ],
-      [
-        "dimension",
-        "large_edge_count"
-      ],
-      [
-        "centroid_dist_std",
-        "mst_diameter"
-      ],
-      [
-        "mst_dominance_ratio",
-        "mst_diameter"
-      ],
-      [
         "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
-        "n_customers",
-        "centroid_dist_std"
-      ],
-      [
-        "mst_diameter",
         "mst_diameter_normalized"
+      ],
+      [
+        "n_customers",
+        "mst_dominance_ratio"
+      ],
+      [
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
         "mst_gap_ratio"
       ],
       [
-        "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
-        "mst_diameter_normalized"
-      ],
-      [
-        "n_customers",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "n_customers",
-        "mst_degree_max"
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.62, N=7493"
+    "description": "R2=0.66, N=3588"
   },
   "11": {
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
+      "log_node_density",
       "aspect_ratio",
       "centroid_dist_mean",
       "centroid_dist_std",
@@ -608,20 +549,19 @@
       "mst_gap_ratio",
       "mst_leaf_ratio",
       "mst_degree_mean",
+      "mst_degree_std",
       "mst_degree_max",
       "mst_diameter",
-      "mst_diameter_normalized",
-      "large_edge_count",
-      "log_bounding_hypervolume"
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -629,11 +569,35 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
+        "mst_diameter_normalized"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_gap_ratio"
+      ],
+      [
+        "n_customers",
+        "mst_degree_max"
       ],
       [
         "dimension",
-        "large_edge_count"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "dimension",
+        "mst_edge_skew"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
       ],
       [
         "centroid_dist_std",
@@ -644,43 +608,11 @@
         "mst_diameter"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
         "n_customers",
-        "centroid_dist_std"
-      ],
-      [
-        "mst_diameter",
-        "mst_diameter_normalized"
-      ],
-      [
-        "n_customers",
-        "mst_gap_ratio"
-      ],
-      [
-        "dimension",
-        "aspect_ratio"
+        "dimension"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
         "mst_diameter_normalized"
       ],
       [
@@ -688,49 +620,48 @@
         "mst_dominance_ratio"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
-        "mst_degree_max"
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.85, N=8599"
+    "description": "R2=0.63, N=7823"
   },
   "13": {
     "base_features": [
       "n_customers",
       "dimension",
+      "log_bounding_hypervolume",
+      "log_node_density",
       "aspect_ratio",
-      "centroid_dist_mean",
       "centroid_dist_std",
-      "centroid_dist_max",
       "centroid_dist_iqr",
-      "mst_edge_mean",
-      "mst_edge_std",
       "mst_edge_skew",
       "mst_edge_kurtosis",
-      "mst_edge_max",
       "mst_edge_q10",
       "mst_edge_q25",
-      "mst_edge_q50",
-      "mst_edge_q75",
-      "mst_edge_q90",
       "mst_dominance_ratio",
-      "mst_gap_ratio",
-      "mst_diameter",
-      "log_bounding_hypervolume",
-      "log_node_density"
+      "mst_leaf_ratio",
+      "mst_degree_mean",
+      "mst_degree_std",
+      "mst_diameter_normalized",
+      "large_edge_count"
     ],
     "interactions": [
       [
         "n_customers",
-        "dimension"
+        "mst_diameter_normalized"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
+        "dimension",
+        "mst_dominance_ratio"
       ],
       [
         "centroid_dist_std",
@@ -738,164 +669,89 @@
       ],
       [
         "dimension",
-        "mst_dominance_ratio"
-      ],
-      [
-        "dimension",
-        "large_edge_count"
-      ],
-      [
-        "centroid_dist_std",
-        "mst_diameter"
-      ],
-      [
-        "mst_dominance_ratio",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
-        "n_customers",
-        "centroid_dist_std"
-      ],
-      [
-        "mst_diameter",
-        "mst_diameter_normalized"
-      ],
-      [
-        "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
-        "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
-      ],
-      [
-        "dimension",
         "mst_diameter_normalized"
       ],
       [
         "log_bounding_hypervolume",
-        "mst_edge_q90"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
+        "mst_gap_ratio"
       ],
       [
         "n_customers",
         "mst_degree_max"
-      ]
-    ],
-    "description": "R2=0.58, N=5973"
-  },
-  "14": {
-    "base_features": [
-      "dimension",
-      "centroid_dist_mean",
-      "centroid_dist_max",
-      "mst_edge_mean",
-      "mst_edge_std",
-      "mst_edge_skew",
-      "mst_edge_kurtosis",
-      "mst_edge_max",
-      "mst_edge_q10",
-      "mst_edge_q25",
-      "mst_edge_q50",
-      "mst_edge_q75",
-      "mst_edge_q90",
-      "mst_dominance_ratio",
-      "mst_gap_ratio",
-      "mst_leaf_ratio",
-      "mst_degree_std",
-      "mst_degree_max",
-      "mst_diameter",
-      "mst_diameter_normalized",
-      "log_bounding_hypervolume",
-      "log_node_density"
-    ],
-    "interactions": [
+      ],
+      [
+        "dimension",
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "dimension",
+        "mst_leaf_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
+      ],
       [
         "n_customers",
         "dimension"
       ],
       [
-        "n_customers",
-        "log_bounding_hypervolume"
-      ],
-      [
-        "centroid_dist_std",
-        "mst_dominance_ratio"
-      ],
-      [
-        "dimension",
-        "mst_dominance_ratio"
-      ],
-      [
-        "dimension",
-        "large_edge_count"
-      ],
-      [
-        "centroid_dist_std",
-        "mst_diameter"
-      ],
-      [
-        "mst_dominance_ratio",
-        "mst_diameter"
-      ],
-      [
         "log_bounding_hypervolume",
-        "mst_diameter"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_edge_q75"
-      ],
-      [
-        "dimension",
-        "mst_degree_mean"
-      ],
-      [
-        "mst_diameter",
         "mst_diameter_normalized"
+      ],
+      [
+        "n_customers",
+        "mst_dominance_ratio"
+      ],
+      [
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
         "n_customers",
         "mst_gap_ratio"
       ],
       [
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
+      ]
+    ],
+    "description": "R2=0.48, N=2443"
+  },
+  "14": {
+    "base_features": [
+      "n_customers",
+      "dimension",
+      "log_bounding_hypervolume",
+      "log_node_density",
+      "mst_edge_mean",
+      "mst_edge_skew",
+      "mst_edge_kurtosis",
+      "mst_edge_q10",
+      "mst_edge_q25",
+      "mst_edge_q50",
+      "mst_edge_q75",
+      "mst_dominance_ratio",
+      "mst_gap_ratio",
+      "mst_leaf_ratio",
+      "mst_degree_mean",
+      "mst_degree_std",
+      "mst_degree_max",
+      "mst_diameter",
+      "mst_diameter_normalized"
+    ],
+    "interactions": [
+      [
+        "n_customers",
+        "mst_diameter_normalized"
+      ],
+      [
         "dimension",
-        "aspect_ratio"
-      ],
-      [
-        "centroid_dist_mean",
         "mst_dominance_ratio"
-      ],
-      [
-        "log_bounding_hypervolume",
-        "mst_degree_mean"
-      ],
-      [
-        "centroid_dist_iqr",
-        "mst_diameter"
       ],
       [
         "dimension",
@@ -903,17 +759,45 @@
       ],
       [
         "n_customers",
+        "mst_degree_max"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_degree_std"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_diameter"
+      ],
+      [
+        "n_customers",
+        "dimension"
+      ],
+      [
+        "log_bounding_hypervolume",
+        "mst_diameter_normalized"
+      ],
+      [
+        "n_customers",
         "mst_dominance_ratio"
       ],
       [
-        "log_bounding_hypervolume",
-        "mst_edge_q90"
+        "mst_diameter_normalized",
+        "large_edge_count"
       ],
       [
-        "log_bounding_hypervolume",
-        "centroid_dist_std"
+        "n_customers",
+        "mst_gap_ratio"
+      ],
+      [
+        "mst_dominance_ratio",
+        "mst_leaf_ratio"
       ]
     ],
-    "description": "R2=0.60, N=1977"
+    "description": "R2=0.35, N=643"
   }
 }

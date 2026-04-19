@@ -23,11 +23,16 @@ import pandas as pd
 from math import inf
 from itertools import combinations
 from scipy.spatial.distance import cdist
-from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy.stats import weibull_min
 from scipy.spatial import ConvexHull, Delaunay
 from scipy.sparse import csr_matrix
 from sklearn.decomposition import PCA
+
+import os as _os, sys as _sys
+_REPO_ROOT = _os.path.abspath(_os.path.dirname(__file__))
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
+from mst_utils import compute_mst, mst_length as _mst_length
 
 from hilbertcurve.hilbertcurve import HilbertCurve
 
@@ -65,15 +70,7 @@ def get_mst_length(nodes_coords):
     n = len(coords)
     if n <= 1: return 0.0, 0.0
 
-    d = coords.shape[1]
-    if d <= DELAUNAY_MAX_DIM:
-        try:
-            mst_length = _delaunay_mst_length(coords)
-            return mst_length, time.perf_counter() - start_time
-        except Exception:
-            pass
-    dist_matrix = cdist(coords, coords)
-    mst_length = float(minimum_spanning_tree(dist_matrix).sum())
+    mst_length = _mst_length(coords)
     return mst_length, time.perf_counter() - start_time
 
 def _run_2opt_fast(coords, n, max_iter=2000):
@@ -162,7 +159,7 @@ def estimate_tsp_christofides(nodes_coords):
     if n <= 1: return 0.0, 0.0
     
     dist_matrix = cdist(unique_coords, unique_coords)
-    mst_csr = minimum_spanning_tree(dist_matrix)
+    mst_csr = compute_mst(unique_coords).to_csr()
     mst_edges = zip(*mst_csr.nonzero())
     
     T = nx.Graph()
@@ -208,7 +205,12 @@ def estimate_tsp_christofides(nodes_coords):
     return cost, time.perf_counter() - start_time
 
 def _delaunay_mst_length(coords):
-    """MST length via Delaunay edge set — O(n log n), valid for any d >= 2."""
+    """Thin shim kept for backwards compatibility — delegates to
+    ``mst_utils.compute_mst`` (dense primary, OOM-triggered fallbacks)."""
+    return _mst_length(coords)
+
+
+def _legacy_delaunay_mst_length_unused(coords):
     n = coords.shape[0]
     tri = Delaunay(coords)
     edges = set()
@@ -237,15 +239,7 @@ def estimate_tsp_mst_ratio(nodes_coords):
         return 0.0, 0.0
 
     d = coords.shape[1]
-    mst_len = None
-    if d <= DELAUNAY_MAX_DIM:
-        try:
-            mst_len = _delaunay_mst_length(coords)
-        except Exception:
-            mst_len = None
-    if mst_len is None:
-        dist_matrix = cdist(coords, coords)
-        mst_len = float(minimum_spanning_tree(dist_matrix).sum())
+    mst_len = _mst_length(coords)
 
     if d == 2:
         ratio = 1.075
@@ -567,15 +561,7 @@ def estimate_tsp_composite(nodes_coords):
         return cost, time.perf_counter() - start_time
 
     d = coords.shape[1]
-    mst_length = None
-    if d <= DELAUNAY_MAX_DIM:
-        try:
-            mst_length = _delaunay_mst_length(coords)
-        except Exception:
-            mst_length = None
-    if mst_length is None:
-        dist_matrix = cdist(coords, coords)
-        mst_length = float(minimum_spanning_tree(dist_matrix).sum())
+    mst_length = _mst_length(coords)
 
     if n < 100:
         est = estimate_tsp_vinel(coords)[0]
@@ -625,32 +611,10 @@ def _calculate_gart_features(coords):
     else:
         features['pca_eigenvalue_ratio'] = 1.0
 
-    # MST topology via Delaunay-sparse graph for 2D (O(n log n)); dense fallback.
-    mst = None
-    if d == 2 and n >= 4:
-        try:
-            tri = Delaunay(coords)
-            edges = set()
-            for simplex in tri.simplices:
-                for i in range(len(simplex)):
-                    for j in range(i + 1, len(simplex)):
-                        a, b = simplex[i], simplex[j]
-                        if a > b:
-                            a, b = b, a
-                        edges.add((a, b))
-            rows, cols, dists = [], [], []
-            for a, b in edges:
-                dab = float(np.linalg.norm(coords[a] - coords[b]))
-                rows += [a, b]; cols += [b, a]; dists += [dab, dab]
-            sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
-            mst = minimum_spanning_tree(sp)
-        except Exception:
-            mst = None
-    if mst is None:
-        np.fill_diagonal(dist_matrix, 0)
-        mst = minimum_spanning_tree(dist_matrix)
-    mst_length = float(mst.sum())
-    degrees = np.count_nonzero(mst.toarray() + mst.toarray().T, axis=1)
+    # MST via the project-wide utility (dense primary, OOM fallback).
+    mst_result = compute_mst(coords)
+    mst_length = float(mst_result.total_length)
+    degrees = mst_result.degrees
     features['mst_degree_mean'] = degrees.mean()
     features['mst_degree_max'] = degrees.max()
     features['mst_degree_std'] = degrees.std()

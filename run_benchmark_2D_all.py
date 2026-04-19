@@ -186,8 +186,10 @@ def process_model(model_name, factory, base_df):
             
     if results:
         pd.DataFrame(results).to_csv(output_csv, index=False)
-        avg_gap = np.mean([r['abs_gap_pct'] for r in results])
-        print(f"    [SAVED] {model_name} | MAPE: {avg_gap:.2f}%")
+        ok_gaps = [r['abs_gap_pct'] for r in results if r.get('status', 'ok') == 'ok' and np.isfinite(r['abs_gap_pct'])]
+        avg_gap = float(np.mean(ok_gaps)) if ok_gaps else float('nan')
+        n_ok = len(ok_gaps); n_total = len(results)
+        print(f"    [SAVED] {model_name} | MAPE: {avg_gap:.2f}% | ok={n_ok}/{n_total}")
         
     del estimator_instance
     gc.collect()
@@ -199,7 +201,15 @@ def calculate_metrics_and_print(df):
     print("\n" + "="*90)
     print("                      FINAL BENCHMARK SUMMARY (2D)                      ")
     print("="*90)
-    
+
+    # Status rows carrying NaN (e.g. Kwon out-of-calibration) are not scored.
+    # We preserve them in the CSV for auditing but exclude from metrics.
+    if 'status' in df.columns:
+        print("\nStatus breakdown:")
+        print(df.groupby(['model', 'status']).size().unstack(fill_value=0))
+        df = df[df['status'] == 'ok'].copy()
+    df = df.dropna(subset=['pred_cost', 'true_cost'])
+
     df['error'] = df['pred_cost'] - df['true_cost']
     df['sq_error'] = df['error'] ** 2
     

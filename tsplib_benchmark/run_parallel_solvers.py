@@ -20,7 +20,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -235,11 +235,11 @@ def main() -> None:
         env_cap = int(os.environ.get("TSP_MAX_WORKERS", "0") or 0)
         default_cap = min(8, max(1, (os.cpu_count() or 2) - 1))
         max_workers = env_cap if env_cap > 0 else default_cap
-        print(f"Launching ProcessPoolExecutor with {max_workers} workers.", flush=True)
+        print(f"Launching ThreadPoolExecutor with {max_workers} workers.", flush=True)
 
         t0 = time.perf_counter()
         results: list[dict] = []
-        with ProcessPoolExecutor(max_workers=max_workers) as ex:
+        with ThreadPoolExecutor(max_workers=max_workers) as ex:
             futures = {ex.submit(run_one, t): t for t in todo}
             N = len(futures)
             for i, fut in enumerate(as_completed(futures), 1):

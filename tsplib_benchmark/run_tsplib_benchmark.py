@@ -43,7 +43,7 @@ import gc
 import os
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -79,16 +79,17 @@ DEFAULT_MAX_MDS_DIM = 100
 
 
 # ---------------------------------------------------------------------------
-# Per-worker state for ProcessPoolExecutor
+# Shared estimator for ThreadPoolExecutor
 # ---------------------------------------------------------------------------
 _worker_estimator = None
 
 
 def _worker_init():
-    """Initialize a per-process estimator so the LightGBM model is loaded once
-    per worker rather than serialized across the process boundary."""
+    """Lazily initialize the shared LightGBM estimator. Idempotent — safe to
+    call from every thread; only the first call actually loads the model."""
     global _worker_estimator
-    _worker_estimator = TSP_V3_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v3"))
+    if _worker_estimator is None:
+        _worker_estimator = TSP_V3_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v3"))
 
 
 def _hybrid_estimate(estimator, original_dist_matrix, mds_coords, d_feat):
@@ -377,9 +378,8 @@ def run_benchmark(
     print(f"Dispatching {len(work)} instances across {n_workers} workers...")
 
     rows = []
-    with ProcessPoolExecutor(
-        max_workers=n_workers, initializer=_worker_init
-    ) as pool:
+    _worker_init()
+    with ThreadPoolExecutor(max_workers=n_workers) as pool:
         futures = {pool.submit(_process_one_instance, w): w for w in work}
         for future in tqdm(
             as_completed(futures), total=len(futures), desc="TSPLIB benchmark"

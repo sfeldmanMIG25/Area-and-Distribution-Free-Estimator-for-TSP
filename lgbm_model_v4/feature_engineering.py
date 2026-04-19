@@ -22,12 +22,20 @@ from __future__ import annotations
 from collections import deque
 from typing import Dict, Optional
 
+import os
+import sys
+
 import numpy as np
 from scipy import stats
 from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
-from scipy.spatial import Delaunay, cKDTree
+from scipy.spatial import cKDTree
 from scipy.spatial.distance import cdist
+
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+from mst_utils import compute_mst
 
 # Dimension caps. QHull (Delaunay) blows up beyond ~10 dims; cKDTree still
 # works in high d but falls back to linear scan and its own BallTree is
@@ -43,43 +51,13 @@ LOG_CAP = 690.0  # log(np.exp(690)) ~ 1e300, safely inside float64 max.
 
 
 # =============================================================================
-# MST
+# MST — delegates to the project-wide utility (dense primary, fallback on OOM)
 # =============================================================================
-def _delaunay_mst(coords: np.ndarray) -> csr_matrix:
-    tri = Delaunay(coords)
-    pairs = set()
-    for simplex in tri.simplices:
-        for i in range(len(simplex)):
-            for j in range(i + 1, len(simplex)):
-                a, b = simplex[i], simplex[j]
-                if a > b:
-                    a, b = b, a
-                pairs.add((a, b))
-    n = coords.shape[0]
-    rows, cols, dists = [], [], []
-    for a, b in pairs:
-        dab = float(np.linalg.norm(coords[a] - coords[b]))
-        rows += [a, b]; cols += [b, a]; dists += [dab, dab]
-    sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
-    return minimum_spanning_tree(sp)
-
-
-def _dense_mst(coords: np.ndarray) -> csr_matrix:
-    dm = cdist(coords, coords, "euclidean").astype(np.float32)
-    np.fill_diagonal(dm, 0)
-    return minimum_spanning_tree(dm)
-
-
 def _compute_mst(coords: np.ndarray, d: int) -> csr_matrix:
-    """Return MST as a scipy CSR matrix. Delaunay for d <= DELAUNAY_DIM_CAP
-    when the simplex count stays tractable, dense otherwise."""
-    n = coords.shape[0]
-    if d <= DELAUNAY_DIM_CAP and n >= d + 2:
-        try:
-            return _delaunay_mst(coords)
-        except Exception:
-            pass
-    return _dense_mst(coords)
+    """Return MST as a scipy CSR matrix. Preserved shim — the real computation
+    lives in ``mst_utils.compute_mst``. ``d`` is kept for call-site compatibility
+    but unused by the utility (dim is taken from ``coords.shape[1]``)."""
+    return compute_mst(coords).to_csr()
 
 
 # =============================================================================

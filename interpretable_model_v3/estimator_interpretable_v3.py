@@ -5,11 +5,14 @@ import joblib
 import numpy as np
 import pandas as pd
 from collections import deque
-from scipy.spatial import Delaunay
 from scipy.spatial.distance import cdist
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy import stats
+
+import sys as _sys
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
+from mst_utils import compute_mst
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 import numba
@@ -69,32 +72,10 @@ class TSP_Interpretable_Estimator:
         feats['centroid_dist_max'] = c_mx
         feats['centroid_dist_iqr'] = np.subtract(*np.percentile(c_raw, [75, 25]))
 
-        # MST Construction — Delaunay-sparse for 2D (O(n log n)), dense fallback.
-        mst = None
-        if d == 2 and n >= 4:
-            try:
-                tri = Delaunay(coords)
-                pairs = set()
-                for simplex in tri.simplices:
-                    for i in range(len(simplex)):
-                        for j in range(i + 1, len(simplex)):
-                            a, b = simplex[i], simplex[j]
-                            if a > b: a, b = b, a
-                            pairs.add((a, b))
-                rows, cols, dists = [], [], []
-                for a, b in pairs:
-                    dab = float(np.linalg.norm(coords[a] - coords[b]))
-                    rows += [a, b]; cols += [b, a]; dists += [dab, dab]
-                sp = csr_matrix((dists, (rows, cols)), shape=(n, n))
-                mst = minimum_spanning_tree(sp)
-            except Exception:
-                mst = None
-        if mst is None:
-            dist_mat = cdist(coords, coords, 'euclidean').astype(np.float32)
-            np.fill_diagonal(dist_mat, 0)
-            mst = minimum_spanning_tree(dist_mat)
-        edges = mst.data
-        mst_len = np.sum(edges)
+        # MST via the project-wide utility (dense primary, OOM fallback).
+        mst_result = compute_mst(coords)
+        edges = mst_result.edges
+        mst_len = float(np.sum(edges))
         
         feats['mst_total_length'] = mst_len
         feats['mst_edge_mean'], feats['mst_edge_std'] = np.mean(edges), np.std(edges)
@@ -110,11 +91,9 @@ class TSP_Interpretable_Estimator:
         feats['mst_dominance_ratio'] = np.sum(np.partition(edges, -k_dom)[-k_dom:]) / (mst_len + 1e-9)
         feats['mst_gap_ratio'] = feats['mst_edge_max'] / (percs[2] + 1e-9)
         
-        degs = np.zeros(n, dtype=int)
-        rows, cols = mst.nonzero()
-        for i in range(len(rows)): 
-            degs[rows[i]] += 1
-            degs[cols[i]] += 1
+        rows = mst_result.endpoints[:, 0]
+        cols = mst_result.endpoints[:, 1]
+        degs = mst_result.degrees.astype(int)
         
         feats['mst_leaf_ratio'] = np.sum(degs == 1) / n
         feats['mst_degree_mean'], feats['mst_degree_std'] = np.mean(degs), np.std(degs)

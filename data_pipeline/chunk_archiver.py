@@ -167,7 +167,7 @@ def main():
     if tasks:
         print(f"Starting execution on {len(tasks)} tasks. ..")
         
-        with concurrent.futures.ProcessPoolExecutor(max_workers=number_of_cores) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=number_of_cores) as executor:
             list(tqdm(
                 executor.map(worker_function, tasks), 
                 total=len(tasks), 
