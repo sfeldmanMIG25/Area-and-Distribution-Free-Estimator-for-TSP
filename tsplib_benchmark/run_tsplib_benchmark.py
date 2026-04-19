@@ -59,6 +59,7 @@ sys.path.insert(0, str(THIS_DIR))
 
 from tsplib_parser import parse_tsplib_file  # noqa: E402
 from classical_mds import classical_mds      # noqa: E402
+from exclusions import TRIANGLE_INEQ_VIOLATORS  # noqa: E402
 from lgbm_estimator_v3 import (              # noqa: E402
     TSP_V3_LGBM_Estimator,
     _fast_centroid_stats,
@@ -348,6 +349,9 @@ def run_benchmark(
     skipped = []
     for path in tsp_files:
         name = path.stem
+        if name in TRIANGLE_INEQ_VIOLATORS:
+            skipped.append((name, "triangle-inequality violator"))
+            continue
         true_cost = optima.get(name)
         if true_cost is None:
             skipped.append((name, "no ground-truth optimum"))

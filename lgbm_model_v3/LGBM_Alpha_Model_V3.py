@@ -42,10 +42,11 @@ def load_and_preprocess(data_path):
     df['alpha'] = (df['optimal_cost'] / mst_divisor).clip(1.0, 2.0)
     y = df['alpha']
 
-    # Drop identifiers and grid_size (leak). mst_total_length is kept: target
-    # is alpha = optimal_cost / mst_total_length, so MST magnitude is a scale
-    # cue, not a target leak.
-    drop_cols = ['instance_name', 'optimal_cost', 'alpha', 'split', 'grid_size']
+    # Drop identifiers, grid_size (leak), and mst_total_length: since
+    # alpha = optimal_cost / mst_total_length, feeding MST magnitude to the
+    # model lets it recover a component of the label.
+    drop_cols = ['instance_name', 'optimal_cost', 'alpha', 'split', 'grid_size',
+                 'mst_total_length']
     X = df.drop(columns=[c for c in drop_cols if c in df.columns])
 
     train_mask = df['split'] == 'train'
@@ -54,14 +55,16 @@ def load_and_preprocess(data_path):
     X_train, y_train = X[train_mask], y[train_mask]
     X_val, y_val = X[val_mask], y[val_mask]
     X_test, y_test = X[test_mask], y[test_mask]
+    mst_val = df.loc[val_mask, 'mst_total_length'].to_numpy()
+    cost_val = df.loc[val_mask, 'optimal_cost'].to_numpy()
     mst_test = df.loc[test_mask, 'mst_total_length'].to_numpy()
     cost_test = df.loc[test_mask, 'optimal_cost'].to_numpy()
 
     print(f"  train: {len(X_train)}  val: {len(X_val)}  test: {len(X_test)}")
-    return X_train, y_train, X_val, y_val, X_test, y_test, mst_test, cost_test
+    return X_train, y_train, X_val, y_val, X_test, y_test, mst_val, cost_val, mst_test, cost_test
 
 
-def optuna_objective(trial, X_train, y_train, X_val, y_val):
+def optuna_objective(trial, X_train, y_train, X_val, y_val, mst_val, cost_val):
     params = {
         'objective': 'regression_l2',
         'metric': 'rmse',
@@ -82,15 +85,17 @@ def optuna_objective(trial, X_train, y_train, X_val, y_val):
     dval = lgb.Dataset(X_val, label=y_val, reference=dtr)
     callbacks = [
         lgb.early_stopping(EARLY_STOPPING_ROUNDS, verbose=False),
-        LightGBMPruningCallback(trial, metric='rmse'),
+        LightGBMPruningCallback(trial, metric='rmse', valid_name='val'),
     ]
     booster = lgb.train(
         params, dtr, num_boost_round=MAX_BOOST_ROUND,
         valid_sets=[dval], valid_names=['val'],
         callbacks=callbacks,
     )
-    pred = np.clip(booster.predict(X_val, num_iteration=booster.best_iteration), 1.0, 2.0)
-    return float(np.sqrt(mean_squared_error(y_val, pred)))
+    pred_alpha = np.clip(booster.predict(X_val, num_iteration=booster.best_iteration), 1.0, 2.0)
+    pred_cost = pred_alpha * mst_val
+    err = (pred_cost - cost_val) / np.where(cost_val == 0, 1e-9, cost_val)
+    return float(np.std(err, ddof=1))
 
 
 def _test_metrics(model, X_test, y_test, mst_test, cost_test):
@@ -108,7 +113,7 @@ def _test_metrics(model, X_test, y_test, mst_test, cost_test):
 
 if __name__ == '__main__':
     os.makedirs(MODEL_DIR, exist_ok=True)
-    X_train, y_train, X_val, y_val, X_test, y_test, mst_test, cost_test = load_and_preprocess(DATA_FILE)
+    X_train, y_train, X_val, y_val, X_test, y_test, mst_val, cost_val, mst_test, cost_test = load_and_preprocess(DATA_FILE)
 
     print(f"\n--- Running Optuna ({OPTUNA_N_TRIALS} trials, TPE multivariate + Hyperband) ---")
     sampler = TPESampler(multivariate=True, group=True, seed=RANDOM_STATE)
@@ -119,7 +124,7 @@ if __name__ == '__main__':
         load_if_exists=True,
     )
     study.optimize(
-        lambda t: optuna_objective(t, X_train, y_train, X_val, y_val),
+        lambda t: optuna_objective(t, X_train, y_train, X_val, y_val, mst_val, cost_val),
         n_trials=OPTUNA_N_TRIALS, show_progress_bar=True,
     )
     best_params = study.best_params

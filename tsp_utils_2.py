@@ -2,21 +2,41 @@
 TSP Academic Estimators Library (tsp_utils_2.py)
 
 Contains a comprehensive set of TSP length estimators:
-1. Exact (Held-Karp)
+1. Exact DP (O(n^2 * 2^n)) -- misnamed historically as 'Held-Karp'; retained for
+   backward compatibility. Paper uses this only as ground truth for n<=10
+   verification, never as an estimator baseline.
 2. Constructive (Christofides, Hilbert N-D, MST-Ratio)
-3. Geometric/Asymptotic (BHH, Chien, Cavdar, Vinel)
+3. Geometric/Asymptotic (BHH, Chien, Cavdar, Vinel, Kwon, Daganzo)
 4. Simulation (2-Opt, EVT, Basel)
 5. Machine Learning (GART 1.0)
+
+Paper-active baselines (Area_Free_Main.tex):
+- 2D / TSPLIB common subset: GART 2.0, MST_Ratio, Cavdar, BHH, Chien, Hilbert.
+- ND: GART 2.0, MST_Ratio, Hilbert.
+- TSPLIB-by-size adds: Kwon, Daganzo.
+Functions marked DEPRECATED are retained for historical CSV
+reproducibility only and emit a DeprecationWarning on call. They were
+cut from the paper under the kill rule: an estimator whose wall time
+equals or exceeds the optimal solver wall time at the benchmarked n is
+not a valid baseline. The cut set:
+
+- estimate_tsp_held_karp  (ground-truth DP, never a baseline)
+- estimate_tsp_christofides
+- estimate_tsp_evt
+- estimate_tsp_2opt_distribution
+- estimate_tsp_basel_willemain
+- estimate_tsp_vinel       (redundant with BHH in 2D)
+- estimate_tsp_composite   (dominated by GART)
 
 Rules enforced:
 - All functions operate on UNIQUE coordinates.
 - All geometric functions use float casting to prevent integer overflow/zero-volume bugs.
-- Chien estimator corrected for N-dimensional scaling.
 - Hilbert estimator works in N-dimensions (requires 'hilbertcurve' pkg).
 """
 
 import time
 import math
+import warnings
 import numpy as np
 import networkx as nx
 import pandas as pd
@@ -114,7 +134,17 @@ def _get_random_tour_len(coords, n):
 # ====================================================================
 
 def estimate_tsp_held_karp(nodes_coords):
-    """Exact TSP solver (DP) for small N."""
+    """DEPRECATED, not used in paper as a baseline.
+
+    Exact DP (O(n^2 * 2^n)) -- misnamed historically as 'Held-Karp';
+    retained for backward compatibility. Paper uses this only as
+    ground truth for n <= 10 verification, never as an estimator
+    baseline.
+    """
+    warnings.warn(
+        "estimate_tsp_held_karp is deprecated; retained for n<=10 ground truth only.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     unique_coords = np.unique(nodes_coords, axis=0)
     n = len(unique_coords)
@@ -153,6 +183,11 @@ def estimate_tsp_held_karp(nodes_coords):
 # ====================================================================
 
 def estimate_tsp_christofides(nodes_coords):
+    """DEPRECATED, cut from paper (wall-time exceeds optimal solver). Christofides 1.5x heuristic tour."""
+    warnings.warn(
+        "estimate_tsp_christofides is deprecated; cut under the solver-time kill rule.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     unique_coords = np.unique(nodes_coords, axis=0)
     n = len(unique_coords)
@@ -232,6 +267,23 @@ def _legacy_delaunay_mst_length_unused(coords):
 
 
 def estimate_tsp_mst_ratio(nodes_coords):
+    """MST-Ratio estimator: L ~ rho(d) * L_MST.
+
+    Constants source: empirically calibrated near the Percus-Martin 1996
+    asymptote beta_TSP / beta_MST for d-dimensional uniform points.
+    For 2D uniform, Percus-Martin gives beta_TSP/beta_MST ~ 0.7124/0.6331
+    ~ 1.125; the values 1.075 (d=2), 1.05 (d=3), and the tail form
+    1 + 0.075*(2/d) (d>=4) are empirical near-asymptote constants used
+    consistently across our benchmark CSVs.
+
+    References:
+      Percus, A.G., Martin, O.C. (1996). "Finite size and dimensional
+        dependence in the Euclidean traveling salesman problem."
+        Phys. Rev. E 54(2):1884. https://doi.org/10.1103/PhysRevE.54.1884
+      Johnson, D.S., McGeoch, L.A., Rothberg, E.E. (1996). "Asymptotic
+        experimental analysis for the Held-Karp traveling salesman bound."
+        https://doi.org/10.1007/3-540-61310-2_18  (beta_2 = 0.7124).
+    """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -250,8 +302,19 @@ def estimate_tsp_mst_ratio(nodes_coords):
     return mst_len * ratio, time.perf_counter() - start_time
 
 def estimate_tsp_hilbert(nodes_coords, p=16):
-    """
-    Estimates TSP cost using an N-dimensional Hilbert Space Filling Curve.
+    """Bartholdi-Platzman (1982) space-filling-curve TSP heuristic.
+
+    Constructive tour: sort points by their 1-D Hilbert-curve index,
+    visit in order, close the loop. Paper uses this as a constructive
+    upper-bound baseline (N-dimensional via hilbertcurve package).
+
+    Reference:
+      Bartholdi, J.J., Platzman, L.K. (1982). "An O(N log N)
+        planar travelling salesman heuristic based on spacefilling
+        curves." Oper. Res. Lett. 1(4):121-125.
+        https://doi.org/10.1016/0167-6377(82)90012-8
+    No asymptotic constant to calibrate; tour length is computed
+    directly from the constructed ordering (p = 16-bit grid here).
     """
     start_time = time.perf_counter()
 
@@ -302,6 +365,11 @@ def estimate_tsp_hilbert(nodes_coords, p=16):
 # ====================================================================
 
 def estimate_tsp_evt(nodes_coords, samples=50):
+    """DEPRECATED, cut from paper (dominated + simulation cost). Extreme-value-theory 2-opt fit."""
+    warnings.warn(
+        "estimate_tsp_evt is deprecated; cut as dominated baseline.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -316,6 +384,11 @@ def estimate_tsp_evt(nodes_coords, samples=50):
     return estimated_min, time.perf_counter() - start_time
 
 def estimate_tsp_2opt_distribution(nodes_coords, samples=20):
+    """DEPRECATED, cut from paper (dominated + simulation cost). 2-opt sample-distribution tail estimate."""
+    warnings.warn(
+        "estimate_tsp_2opt_distribution is deprecated; cut as dominated baseline.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -329,6 +402,11 @@ def estimate_tsp_2opt_distribution(nodes_coords, samples=20):
     return estimated_opt, time.perf_counter() - start_time
 
 def estimate_tsp_basel_willemain(nodes_coords):
+    """DEPRECATED, cut from paper (wall-time ~= solver at n=100). Basel/Willemain random-tour sigma fit."""
+    warnings.warn(
+        "estimate_tsp_basel_willemain is deprecated; cut under the solver-time kill rule.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -347,39 +425,65 @@ def estimate_tsp_basel_willemain(nodes_coords):
 # ====================================================================
 
 def estimate_tsp_chien(nodes_coords):
-    """
-    Implements Chien's Estimator with corrected N-dimensional scaling.
-    Original (2D): L = 2D_avg + 0.57 * sqrt(n) * sqrt(A)
-    Generalized:   L = 2D_avg + 0.57 * n^((d-1)/d) * V^(1/d)
+    """Chien (1992) single-route TSP length estimator.
+
+    Formula (paper Eq. 423, 2D only):
+        L = k1 * sqrt(n * A) + k2 * n / p
+    with k1 = 0.98, k2 = 0, p = 1 (single-route, no depot term), so
+        L = 0.98 * sqrt(n * A)
+    where A is the convex-hull area of the points.
+
+    Gated to d == 2. For d != 2 the expression is ill-defined
+    (Chien's derivation is planar); we raise ValueError so callers
+    can record status rather than silently producing a bogus value.
+
+    Reference:
+      Chien, T.W. (1992). "Operational estimators for the vehicle
+        routing problem." Transportation Science 26(2):104-114.
+        https://doi.org/10.1287/trsc.26.2.104
+    Constants source: Chien (1992) Table 1 / Eq. (8), k1 = 0.98 for
+    uniform 2D point distributions.
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
-    if n <= 1: return 0.0, 0.0
+    if n <= 1:
+        return 0.0, 0.0
     d = coords.shape[1]
-    
-    # Float cast fix for hypervolume
-    ranges = np.ptp(coords, axis=0).astype(float)
-    ranges[ranges < 1e-9] = 1e-9 
-    V = np.prod(ranges)
-    
-    geom_length_scale = math.pow(V, 1.0 / d)
+    if d != 2:
+        raise ValueError(
+            f"Chien: d={d} not supported (2D-only estimator). "
+            f"Caller must gate on d and record status='chien_not_2d'."
+        )
 
-    centroid = np.mean(coords, axis=0)
-    dists = np.linalg.norm(coords - centroid, axis=1)
-    D_avg = np.mean(dists)
-    
-    # Corrected Node Scaling for d dimensions: n^((d-1)/d)
-    exponent = (d - 1) / d
-    n_scale = math.pow(n, exponent)
-    
-    est = 2 * D_avg + 0.57 * n_scale * geom_length_scale
+    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
+        A = float(ConvexHull(coords).volume)
+    else:
+        ranges = np.ptp(coords, axis=0).astype(float)
+        ranges[ranges < 1e-9] = 1e-9
+        A = float(np.prod(ranges))
+
+    est = 0.98 * math.sqrt(n * A)
     return est, time.perf_counter() - start_time
 
 def estimate_tsp_bhh(nodes_coords):
-    """
-    Beardwood-Halton-Hammersley Theorem.
-    L ~ beta * n^((d-1)/d) * V^(1/d)
+    """Beardwood-Halton-Hammersley (1959) asymptotic TSP length.
+
+    Formula (paper Eq. 395):
+        L ~ beta_d * n^((d-1)/d) * V^(1/d)
+    Paper restricts BHH to d == 2 (beta_d for d >= 3 is not
+    empirically pinned); this implementation falls back to the
+    Gaussian-limit approximation beta_d ~ sqrt(d / (2*pi*e)) for
+    d >= 4, retained only for completeness.
+
+    References:
+      Beardwood, Halton, Hammersley (1959). "The shortest path
+        through many points." Proc. Camb. Phil. Soc. 55:299-327.
+      Johnson, McGeoch, Rothberg (1996). "Asymptotic experimental
+        analysis for the Held-Karp traveling salesman bound."
+        https://doi.org/10.1007/3-540-61310-2_18
+    Constants source: Johnson et al. (1996) Section 3.2, beta_2 =
+    0.7124 +/- 0.0002; beta_3 ~ 0.6979 (Percus-Martin 1996).
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
@@ -403,6 +507,11 @@ def estimate_tsp_bhh(nodes_coords):
     return est, time.perf_counter() - start_time
 
 def estimate_tsp_vinel(nodes_coords, b=0.768):
+    """DEPRECATED, cut from paper (redundant with BHH in 2D). Vinel-style BHH-coefficient variant."""
+    warnings.warn(
+        "estimate_tsp_vinel is deprecated; redundant with BHH in 2D.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -422,6 +531,29 @@ def estimate_tsp_vinel(nodes_coords, b=0.768):
     return estimated_cost, time.perf_counter() - start_time
 
 def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
+    """Cavdar & Sokol (2015) distribution-free TSP length estimator.
+
+    Formula (paper Eq. 402, 2D):
+        L = 2.791 * sqrt(n * sigma'_x * sigma'_y)
+          + 0.2669 * sqrt(n * A * sigma_x * sigma_y / (cbar_x * cbar_y))
+    where sigma_x, sigma_y are coordinate stdevs; cbar_x, cbar_y are
+    mean absolute deviations; sigma'_x, sigma'_y are stdevs of those
+    absolute deviations; A is the convex-hull area.
+
+    Reference:
+      Cavdar, B., Sokol, J. (2015). "A distribution-free TSP tour
+        length estimation model for random graphs." EJOR 243(2):
+        588-598. https://doi.org/10.1016/j.ejor.2014.12.020
+    Constants source: Cavdar & Sokol (2015) Table 2, a0 = 2.791,
+    a1 = 0.2669 (fitted over uniform / clustered 2D instances).
+
+    Small-n correction (Cavdar & Sokol 2015 Eq. 4, page 7):
+        E/T = 0.9325 * exp(0.00005298 * n) - 0.2972 * exp(-0.01452 * n)
+    where E is the raw estimate and T the true tour length. The
+    raw estimate systematically underestimates for n < 1000; we
+    divide by E/T to invert the bias. Calibration range: n in
+    {100, 125, ..., 975}; we apply it for all n < 1000.
+    """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)
@@ -461,8 +593,8 @@ def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
     
     if n < 1000:
         corr = 0.9325 * math.exp(0.00005298 * n) - 0.2972 * math.exp(-0.01452 * n)
-        if corr > 0.1: estimated_cost = estimated_cost / corr
-            
+        estimated_cost = estimated_cost / corr
+
     return estimated_cost, time.perf_counter() - start_time
 
 KWON_CALIBRATION_N_MAX = 300  # Kwon, Golden, Wasil (1995) calibration range upper bound.
@@ -522,14 +654,20 @@ def estimate_tsp_kwon(nodes_coords):
 
 
 def estimate_tsp_daganzo(nodes_coords, k=0.57):
-    """
-    Daganzo (1984) TSP/CVRP-style tour length estimator.
+    """Daganzo (1984) TSP/CVRP-style tour length estimator.
 
-    Simple form: L = k * sqrt(n * A), where k = 0.57 is Daganzo's calibrated
-    constant for uniform points inside a disc. Structurally identical to
-    BHH up to the choice of constant (BHH uses beta_2 = 0.7124); the two
-    are included separately because the literature reports them as
-    separate baselines.
+    Formula (paper Eq. 416): L = 0.57 * sqrt(n * A).
+
+    Structurally identical to BHH up to the choice of constant
+    (BHH uses beta_2 = 0.7124); the two are included separately
+    because the literature reports them as separate baselines.
+
+    Reference:
+      Daganzo, C.F. (1984). "The length of tours in zones of
+        different shapes." Transportation Research B 18(2):135-145.
+        https://doi.org/10.1016/0191-2615(84)90027-4
+    Constants source: Daganzo (1984) Eq. (1), k = 0.57 for uniform
+    points inside a disc / near-circular service region.
     """
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
@@ -550,7 +688,11 @@ def estimate_tsp_daganzo(nodes_coords, k=0.57):
 
 
 def estimate_tsp_composite(nodes_coords):
-    """Meta-estimator returning max(MST, min(2MST, Vinel/Cavdar))."""
+    """DEPRECATED, cut from paper (dominated by GART). Meta-estimator: max(MST, min(2MST, Vinel/Cavdar))."""
+    warnings.warn(
+        "estimate_tsp_composite is deprecated; dominated by GART 2.0.",
+        DeprecationWarning, stacklevel=2,
+    )
     start_time = time.perf_counter()
     coords = np.unique(nodes_coords, axis=0)
     n = len(coords)

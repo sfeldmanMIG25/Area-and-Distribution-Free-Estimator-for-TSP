@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.metrics import r2_score
 
-REPO = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP")
+REPO = Path(__file__).resolve().parent.parent
 TBL_OUT = REPO / "paper_reference/scripts/tables"
 
 # -------- Solver-time lookups (precomputed per bucket from CSVs) --------

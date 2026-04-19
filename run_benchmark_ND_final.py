@@ -32,6 +32,8 @@ import tsp_utils_2 as academic
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
+sys.path.append(str(SCRIPT_DIR / "lgbm_model_v4"))
+from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis_ND"
@@ -295,16 +297,17 @@ def main():
     schedule = [
         # --- Classic Academic Estimators (N-D-capable: convex-hull / MST-based) ---
         ('Cavdar', lambda: academic.estimate_tsp_cavdar),
-        ('Vinel', lambda: academic.estimate_tsp_vinel),
-        ('Composite', lambda: academic.estimate_tsp_composite),
+        # ('Vinel', lambda: academic.estimate_tsp_vinel),          # DEPRECATED (see tsp_utils_2.py)
+        # ('Composite', lambda: academic.estimate_tsp_composite),  # DEPRECATED (see tsp_utils_2.py)
         ('BHH', lambda: academic.estimate_tsp_bhh),
         ('MST_Ratio', lambda: academic.estimate_tsp_mst_ratio),
-        ('Chien', lambda: academic.estimate_tsp_chien),
+        # ('Chien', lambda: academic.estimate_tsp_chien),          # 2D-only — raises for d!=2
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
         # Kwon and Daganzo are 2D-planar only — excluded from N-D schedule.
         # --- Machine Learning Models ---
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
+        ('LGBM_V4', lambda: TSP_V4_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v4'))),
         # ('Neural_V3', ...): disabled — checkpoint file not available in this repo snapshot.
         ('Interp_V3', lambda: TSP_Interpretable_Estimator(str(SCRIPT_DIR / 'interpretable_model_v3'))),
     ]

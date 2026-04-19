@@ -2,11 +2,12 @@
 from pathlib import Path
 import subprocess
 
-tex_path = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/Area_Free_Main.tex")
+REPO = Path(__file__).resolve().parent.parent
+tex_path = REPO / "paper_reference/Area_Free_Main.tex"
 
 # Generate the new table block
 result = subprocess.run(
-    ["python", r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/scripts/gen_tsplib_4bin.py"],
+    ["python", str(REPO / "paper_reference/scripts/gen_tsplib_4bin.py")],
     capture_output=True, text=True, check=True
 )
 new_block = result.stdout.rstrip() + "\n"

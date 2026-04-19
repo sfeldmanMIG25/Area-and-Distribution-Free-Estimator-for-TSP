@@ -1,0 +1,18 @@
+[I 2026-04-18 22:18:11,906] A new study created in RDB with name: nn_v3
+[I 2026-04-18 22:23:20,447] Trial 0 finished with value: 0.014561824879274333 and parameters: {'hidden_dim': 256, 'num_blocks': 8, 'dropout': 0.15979909127171077, 'lr': 0.00023852347578447072}. Best is trial 0 with value: 0.014561824879274333.
+[I 2026-04-18 22:25:36,103] Trial 1 finished with value: 0.015374673407811896 and parameters: {'hidden_dim': 192, 'num_blocks': 4, 'dropout': 0.05871254182522992, 'lr': 0.0009842315738502602}. Best is trial 0 with value: 0.014561824879274333.
+[I 2026-04-18 22:28:49,615] Trial 2 finished with value: 0.074073336822181 and parameters: {'hidden_dim': 384, 'num_blocks': 7, 'dropout': 0.05308767414437037, 'lr': 0.0017052641538983103}. Best is trial 0 with value: 0.014561824879274333.
+[I 2026-04-18 22:29:07,309] Trial 3 pruned. 
+[I 2026-04-18 22:31:51,068] Trial 4 finished with value: 0.01442793280365061 and parameters: {'hidden_dim': 256, 'num_blocks': 6, 'dropout': 0.11479175279631737, 'lr': 4.678719265016204e-05}. Best is trial 4 with value: 0.01442793280365061.
+[I 2026-04-18 22:34:02,806] Trial 5 finished with value: 0.014462959477856864 and parameters: {'hidden_dim': 384, 'num_blocks': 4, 'dropout': 0.09382169728028272, 'lr': 6.966418981413732e-05}. Best is trial 4 with value: 0.01442793280365061.
+[I 2026-04-18 22:35:05,496] Trial 6 pruned. 
+[I 2026-04-18 22:35:19,953] Trial 7 pruned. 
+[I 2026-04-18 22:36:26,266] Trial 8 pruned. 
+[I 2026-04-18 22:38:30,184] Trial 9 pruned. 
+[I 2026-04-18 22:39:24,048] Trial 10 pruned. 
+[I 2026-04-18 22:40:23,034] Trial 11 pruned. 
+[I 2026-04-18 22:41:34,376] Trial 12 pruned. 
+[I 2026-04-18 22:41:51,938] Trial 13 pruned. 
+[I 2026-04-18 22:42:11,655] Trial 14 pruned. 
+[I 2026-04-18 22:42:28,298] Trial 15 pruned. 
+[I 2026-04-18 22:44:38,200] Trial 16 pruned. 

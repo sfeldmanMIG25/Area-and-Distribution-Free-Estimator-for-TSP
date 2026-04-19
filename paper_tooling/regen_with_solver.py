@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.metrics import r2_score
 
-REPO = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP")
+REPO = Path(__file__).resolve().parent.parent
 
 
 def pearson_r(y_true, y_pred):

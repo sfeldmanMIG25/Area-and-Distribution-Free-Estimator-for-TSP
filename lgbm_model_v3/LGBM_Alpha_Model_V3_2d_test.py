@@ -19,9 +19,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['PYTHONWARNINGS'] = 'ignore'
 # --- CONFIGURATION ---
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(ROOT_DIR)
 
-INSTANCES_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\instances"
-SOLUTIONS_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\solutions"
+INSTANCES_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "instances")
+SOLUTIONS_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "solutions")
 
 # Model Path
 MODEL_FILE = os.path.join(ROOT_DIR, 'lgbm_alpha_model_v3.joblib')

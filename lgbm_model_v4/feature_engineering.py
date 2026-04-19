@@ -51,6 +51,20 @@ DELAUNAY_DIM_CAP = 3
 # Log/exp safety rails — keep features in float64 range without overflow.
 LOG_CAP = 690.0  # log(np.exp(690)) ~ 1e300, safely inside float64 max.
 
+# Dense-matrix reuse budget for greedy-NN tour construction. If an n*n float32
+# matrix fits this budget, we build it once and let greedy read rows of it
+# (O(n^2) memory access, fastest). Otherwise greedy falls back to a cKDTree
+# incremental-k path — O(n log n) time and O(n) memory, required for TSPLIB
+# scale (n up to ~85k). Override with env var ``GREEDY_DENSE_BUDGET_GB``.
+# Default 0.5 GB -> n_max ~ 11k; cdist peak during build is ~2x this.
+_GREEDY_DENSE_BUDGET_BYTES = int(
+    float(os.environ.get("GREEDY_DENSE_BUDGET_GB", "0.5")) * (1 << 30)
+)
+
+
+def _greedy_dense_feasible(n: int) -> bool:
+    return (n * n * 4) <= _GREEDY_DENSE_BUDGET_BYTES
+
 
 # =============================================================================
 # MST — delegates to the project-wide utility (dense primary, fallback on OOM)
@@ -142,19 +156,27 @@ def _mst_local_density_stats(
 # =============================================================================
 # Greedy nearest-neighbour tour — Rosenkrantz-Stearns-Lewis (1977) upper bound
 # =============================================================================
-def _greedy_nn_tour_length(coords: np.ndarray) -> float:
-    """Closed greedy-NN tour length with a canonical start (centroid-nearest).
+def _greedy_nn_tour_length(
+    coords: np.ndarray, D: Optional[np.ndarray] = None
+) -> float:
+    """Closed greedy-NN tour length with a canonical (centroid-nearest) start.
 
-    Build a Hamiltonian tour by always moving to the nearest unvisited vertex
-    from the current one, closing with the return edge. This is a classical
-    TSP upper bound (RSL 1977: within ½·(⌈log₂ n⌉+1)·OPT for metric TSP).
+    Two paths — selected by the caller based on memory budget:
+      * ``D`` is an (n, n) pairwise-distance matrix — each step is a masked
+        argmin over one row (O(n^2) memory access, ~free with a cached matrix).
+      * Otherwise, build a ``cKDTree`` once and do incremental-k nearest
+        queries, skipping visited vertices — O(n log n) at low d, O(n) memory.
+        This path is what lets TSPLIB instances at n ~ 85k run without a
+        29 GB distance matrix.
 
-    Starting vertex is the point closest to the centroid so the result is
-    deterministic and invariant under point reordering. O(n²·d) in numpy.
+    Output is identical to a brute-force greedy tour. Starting vertex is the
+    point closest to the centroid so the result is reordering-invariant.
+    RSL (1977) upper bound for metric TSP: within ½·(⌈log₂ n⌉+1)·OPT.
     """
     n = coords.shape[0]
     if n < 2:
         return 0.0
+
     centroid = coords.mean(axis=0)
     start = int(np.argmin(np.sum((coords - centroid) ** 2, axis=1)))
 
@@ -162,12 +184,48 @@ def _greedy_nn_tour_length(coords: np.ndarray) -> float:
     visited[start] = True
     current = start
     total = 0.0
+
+    # Self-dispatch: if caller didn't pass D, build one when it fits the
+    # budget. This keeps the fast path identical whether called from
+    # compute_features or from the feature-timing benchmark.
+    if D is None and _greedy_dense_feasible(n):
+        D = cdist(coords, coords).astype(np.float32, copy=False)
+
+    if D is not None:
+        # Fast path: masked-argmin on a cached distance matrix row per step.
+        for _ in range(n - 1):
+            row = D[current].copy()
+            row[visited] = np.inf
+            nxt = int(np.argmin(row))
+            total += float(row[nxt])
+            visited[nxt] = True
+            current = nxt
+        total += float(np.linalg.norm(coords[current] - coords[start]))
+        return total
+
+    # Fallback: kd-tree with growing k so we never allocate n^2.
+    tree = cKDTree(coords)
+    k = min(32, n)
     for _ in range(n - 1):
-        diffs = coords - coords[current]
-        d2 = np.sum(diffs * diffs, axis=1)
-        d2[visited] = np.inf
-        nxt = int(np.argmin(d2))
-        total += float(np.sqrt(d2[nxt]))
+        nxt = -1
+        d_nxt = 0.0
+        while True:
+            dists, idxs = tree.query(coords[current], k=k)
+            # k=1 returns scalars; normalize to arrays.
+            idxs = np.atleast_1d(idxs)
+            dists = np.atleast_1d(dists)
+            mask_unvis = ~visited[idxs]
+            if mask_unvis.any():
+                j = int(np.argmax(mask_unvis))  # first unvisited in sorted order
+                nxt = int(idxs[j])
+                d_nxt = float(dists[j])
+                break
+            if k >= n:
+                break
+            k = min(k * 2, n)
+        if nxt < 0:
+            break
+        total += d_nxt
         visited[nxt] = True
         current = nxt
     total += float(np.linalg.norm(coords[current] - coords[start]))
@@ -364,15 +422,21 @@ def compute_features(
     out["large_edge_count"] = int(np.sum(edges > e_mean + e_std))
 
     # --- Group 4 (Tier 1): Oriented Bounding Box + PCA spectral --------------
-    eigvals = _pca_eigenvalues(coords)
+    # One full SVD; Vt reused for OBB rotation, s for eigenvalues.
+    centred = coords.astype(np.float64) - coords.mean(axis=0, dtype=np.float64)
+    _, s_svd, Vt = np.linalg.svd(centred, full_matrices=False)
+    eigvals = np.sort(s_svd ** 2 / max(n - 1, 1))[::-1]
     lam_sum = float(np.sum(eigvals))
     lam_sq_sum = float(np.sum(eigvals ** 2))
     out["pca_e1_share"] = float(eigvals[0] / lam_sum) if lam_sum > 1e-12 else 1.0
     out["pca_effective_rank"] = float(lam_sum ** 2 / lam_sq_sum) if lam_sq_sum > 1e-12 else 1.0
-    obb_vol, log_obb_vol = _obb_volume(coords)
+    rotated = centred @ Vt.T
+    obb_ranges = np.ptp(rotated, axis=0)
+    obb_ranges = np.where(obb_ranges < 1e-9, 1e-9, obb_ranges)
+    log_obb_vol = float(np.sum(np.log(obb_ranges)))
+    obb_vol = float(np.exp(min(log_obb_vol, LOG_CAP)))
     out["obb_volume"] = obb_vol
     out["log_obb_volume"] = log_obb_vol
-    # obb_shrinkage in [0, 1]: obb is always <= axis-aligned bounding box.
     out["obb_shrinkage"] = float(obb_vol / out["bounding_hypervolume"]) if out["bounding_hypervolume"] > 1e-12 else 0.0
 
     # --- Group 5 (Tier 2): MST-based local density ---------------------------
@@ -392,7 +456,14 @@ def compute_features(
     # Scale-free tour-ordering signal: Rosenkrantz-Stearns-Lewis upper bound
     # normalised by the MST lower-bound proxy. Raw greedy length is omitted
     # since it is near-redundant with mst_total_length.
-    greedy_len = _greedy_nn_tour_length(coords)
+    # Dense fast path when the n*n float32 matrix fits the budget; kd-tree
+    # fallback otherwise so TSPLIB-scale instances (n ~ 85k) stay in memory.
+    if _greedy_dense_feasible(n):
+        D_greedy = cdist(coords, coords).astype(np.float32, copy=False)
+        greedy_len = _greedy_nn_tour_length(coords, D=D_greedy)
+        del D_greedy
+    else:
+        greedy_len = _greedy_nn_tour_length(coords)
     out["greedy_nn_over_mst"] = float(greedy_len / mst_len) if mst_len > 1e-9 else 1.0
 
     return out
@@ -409,8 +480,8 @@ def feature_columns_for_training() -> list[str]:
     """All candidate feature names in a deterministic order. Excludes the
     identifier / target columns."""
     return [
-        # V3 metadata / scale
-        "n_customers", "dimension", "grid_size",
+        # V3 metadata / scale  (grid_size kept in CSV but excluded from training — leakage)
+        "n_customers", "dimension",
         # V3 geometric spread
         "bounding_hypervolume", "log_bounding_hypervolume",
         "node_density", "log_node_density", "aspect_ratio",

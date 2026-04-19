@@ -140,10 +140,12 @@ def _build_objective(X_tr, y_tr, X_vl, y_vl, mst_vl, true_vl):
         }
         dtr = lgb.Dataset(X_tr, label=y_tr)
         dvl = lgb.Dataset(X_vl, label=y_vl, reference=dtr)
+        # LightGBMPruningCallback reads study.direction (singular) and fails
+        # on multi-objective studies; per-round pruning on a Pareto front is
+        # not well-defined anyway. Rely on per-trial early stopping instead.
         callbacks = [
             lgb.early_stopping(early_stopping_rounds, verbose=False),
             lgb.log_evaluation(0),
-            optuna.integration.LightGBMPruningCallback(trial, "rmse", valid_name="valid_1"),
         ]
         booster = lgb.train(
             params, dtr, num_boost_round=5000,

@@ -1,0 +1,51 @@
+--- Training Interpretable V3 Model ---
+Mining interactions from D:\Area-and-Distribution-Free-Estimator-for-TSP\interpretable_model_v3\..\lgbm_model_v3\lgbm_alpha_model_v3.joblib ...
+Top 3 interactions:
+  n_customers * mst_dominance_ratio (0.0021)
+  centroid_dist_std * mst_diameter (0.0018)
+  dimension * mst_dominance_ratio (0.0014)
+
+Training Regime Router (Depth 3) ...
+Router identified 8 regimes.
+
+  Leaf 3: 18116 samples
+    Selected 57 features (30 interactions) after BH@0.01.
+    Train R^2: 0.8873
+
+  Leaf 4: 8284 samples
+    Selected 56 features (30 interactions) after BH@0.01.
+    Train R^2: 0.7091
+
+  Leaf 6: 18326 samples
+    Selected 53 features (29 interactions) after BH@0.01.
+    Train R^2: 0.8991
+
+  Leaf 7: 6298 samples
+    Selected 52 features (28 interactions) after BH@0.01.
+    Train R^2: 0.8574
+
+  Leaf 10: 5825 samples
+    Selected 49 features (27 interactions) after BH@0.01.
+    Train R^2: 0.6324
+
+  Leaf 11: 6721 samples
+    Selected 53 features (26 interactions) after BH@0.01.
+    Train R^2: 0.8510
+
+  Leaf 13: 4892 samples
+    Selected 51 features (28 interactions) after BH@0.01.
+    Train R^2: 0.5356
+
+  Leaf 14: 1306 samples
+    Selected 48 features (26 interactions) after BH@0.01.
+    Train R^2: 0.6115
+
+Saving artifacts ...
+
+--- Evaluating on held-out test set ---
+  alpha RMSE: 0.029289
+  alpha R^2 : 0.920311
+  cost  MAPE: 1.256%
+  cost  SDPE: 2.230%
+  Routed   : 16920/16920 test rows
+Interpretable Model V3 saved to D:\Area-and-Distribution-Free-Estimator-for-TSP\interpretable_model_v3\model_artifacts

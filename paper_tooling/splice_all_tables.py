@@ -1,8 +1,9 @@
 """Replace all five table blocks in the tex file with the new-Pearson versions."""
 from pathlib import Path
 
-tex_path = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/Area_Free_Main.tex")
-new_tables = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/scripts/new_tables.tex").read_text(encoding="utf-8")
+REPO = Path(__file__).resolve().parent.parent
+tex_path = REPO / "paper_reference/Area_Free_Main.tex"
+new_tables = (REPO / "paper_reference/scripts/new_tables.tex").read_text(encoding="utf-8")
 
 # Parse new_tables into per-label blocks
 blocks = {}  # label -> full \begin{table}...\end{table}

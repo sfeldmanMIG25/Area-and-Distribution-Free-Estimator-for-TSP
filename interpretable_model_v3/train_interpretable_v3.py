@@ -74,7 +74,7 @@ def get_lgbm_interactions(X_sample, lgbm_path):
     X_aligned = X_aligned[required_feats]
 
     explainer = shap.TreeExplainer(booster)
-    shap_vals = explainer.shap_interaction_values(X_aligned.iloc[:1000])
+    shap_vals = explainer.shap_interaction_values(X_aligned.iloc[:200])
     mean_int = np.abs(shap_vals).mean(0)
     np.fill_diagonal(mean_int, 0)
 

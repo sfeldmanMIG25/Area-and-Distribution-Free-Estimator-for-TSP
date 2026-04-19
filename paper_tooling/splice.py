@@ -1,7 +1,8 @@
 from pathlib import Path
 
-tex_path = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/Area_Free_Main.tex")
-new_block_path = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/scripts/new_sections.tex")
+REPO = Path(__file__).resolve().parent.parent
+tex_path = REPO / "paper_reference/Area_Free_Main.tex"
+new_block_path = REPO / "paper_reference/scripts/new_sections.tex"
 
 lines = tex_path.read_text(encoding="utf-8").splitlines(keepends=True)
 

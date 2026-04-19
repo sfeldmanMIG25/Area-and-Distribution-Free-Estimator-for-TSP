@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 import sys
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -61,7 +61,7 @@ def main() -> None:
 
     num_workers = max(1, os.cpu_count() or 1)
     results: list[dict] = []
-    with ThreadPoolExecutor(max_workers=num_workers) as ex:
+    with ProcessPoolExecutor(max_workers=num_workers) as ex:
         for feat in tqdm(ex.map(_process_one, rows, chunksize=32), total=len(rows), desc="v4 features"):
             if feat is not None:
                 results.append(feat)

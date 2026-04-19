@@ -1,7 +1,8 @@
 from pathlib import Path
 import re
 
-p = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/scripts/new_tables.tex")
+REPO = Path(__file__).resolve().parent.parent
+p = REPO / "paper_reference/scripts/new_tables.tex"
 t = p.read_text(encoding="utf-8")
 
 minv, maxv = 999.0, -999.0

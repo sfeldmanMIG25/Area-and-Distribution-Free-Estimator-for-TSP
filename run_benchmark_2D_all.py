@@ -30,6 +30,8 @@ import tsp_utils_2 as academic
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
+sys.path.append(str(SCRIPT_DIR / "lgbm_model_v4"))
+from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis"
@@ -269,27 +271,28 @@ def main():
     schedule = [
         # --- Classic Academic Estimators ---
         ('Cavdar', lambda: academic.estimate_tsp_cavdar),
-        ('Vinel', lambda: academic.estimate_tsp_vinel),
-        ('Composite', lambda: academic.estimate_tsp_composite),
+        # ('Vinel', lambda: academic.estimate_tsp_vinel),          # DEPRECATED: redundant with BHH in 2D
+        # ('Composite', lambda: academic.estimate_tsp_composite),  # DEPRECATED: dominated by GART
         ('BHH', lambda: academic.estimate_tsp_bhh),
         ('MST_Ratio', lambda: academic.estimate_tsp_mst_ratio),
         ('Chien', lambda: academic.estimate_tsp_chien),
-        #('Christofides', lambda: academic.estimate_tsp_christofides),
+        # ('Christofides', lambda: academic.estimate_tsp_christofides),  # DEPRECATED: wall-time > solver
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
         ('Kwon', lambda: academic.estimate_tsp_kwon),
         ('Daganzo', lambda: academic.estimate_tsp_daganzo),
-        
-        # --- Simulation / Sampling ---
-        # ('EVT', academic.estimate_tsp_evt),
-        # ('2Opt_Dist', academic.estimate_tsp_2opt_distribution),
-        # ('Basel', academic.estimate_tsp_basel_willemain)
-        
+
+        # --- Simulation / Sampling (all DEPRECATED under the solver-time kill rule) ---
+        # ('EVT', lambda: academic.estimate_tsp_evt),
+        # ('2Opt_Dist', lambda: academic.estimate_tsp_2opt_distribution),
+        # ('Basel', lambda: academic.estimate_tsp_basel_willemain),
+
         # --- Machine Learning Models ---
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
+        ('LGBM_V4', lambda: TSP_V4_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v4'))),
         # ('Neural_V3', ...): disabled — checkpoint file not available in this repo snapshot.
         ('Interp_V3', lambda: TSP_Interpretable_Estimator(str(SCRIPT_DIR / 'interpretable_model_v3'))),
-        
+
         # --- GART (Legacy ML) ---
         ('GART', lambda: GART_Adapter(str(SCRIPT_DIR / 'GART_1.0'))),
     ]

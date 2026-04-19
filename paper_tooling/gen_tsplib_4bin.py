@@ -1,10 +1,12 @@
 """Emit new 4-bin TSPLIB by-size LaTeX table with all six models and per-bucket R^2_alpha."""
 import pandas as pd, numpy as np
+from pathlib import Path
 from sklearn.metrics import r2_score
 
-df = pd.read_csv(r'D:/Area-and-Distribution-Free-Estimator-for-TSP/tsplib_benchmark/results/all_models_tsplib.csv')
+REPO = Path(__file__).resolve().parent.parent
+df = pd.read_csv(REPO / 'tsplib_benchmark/results/all_models_tsplib.csv')
 try:
-    sup = pd.read_csv(r'D:/Area-and-Distribution-Free-Estimator-for-TSP/tsplib_benchmark/results/all_models_tsplib_supplemental.csv')
+    sup = pd.read_csv(REPO / 'tsplib_benchmark/results/all_models_tsplib_supplemental.csv')
     df = pd.concat([df, sup], ignore_index=True)
 except FileNotFoundError:
     pass

@@ -10,7 +10,7 @@ import numpy as np
 from sklearn.metrics import r2_score
 from pathlib import Path
 
-REPO = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP")
+REPO = Path(__file__).resolve().parent.parent
 TBL = REPO / "paper_reference/scripts/tables"
 
 def r2_manual(y_true, y_pred):

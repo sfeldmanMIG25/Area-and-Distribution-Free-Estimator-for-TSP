@@ -34,11 +34,11 @@ class StableV3Scaler:
 # Import the estimator class
 from estimator_v3 import TSP_V3_Neural_Estimator
 
-# --- CONFIGURATION (Strict Absolute Paths) ---
-INSTANCES_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\instances"
-SOLUTIONS_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\solutions"
-
+# --- CONFIGURATION ---
 MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(MODEL_DIR)
+INSTANCES_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "instances")
+SOLUTIONS_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "solutions")
 OUTPUT_CSV = os.path.join(MODEL_DIR, 'nn_benchmark_results_2d.csv')
 
 def run_nn_benchmark():

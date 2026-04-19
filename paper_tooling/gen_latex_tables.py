@@ -2,7 +2,8 @@
 import pandas as pd
 from pathlib import Path
 
-TBL = Path(r"D:/Area-and-Distribution-Free-Estimator-for-TSP/paper_reference/scripts/tables")
+REPO = Path(__file__).resolve().parent.parent
+TBL = REPO / "paper_reference/scripts/tables"
 
 def fmt_int(n):
     try:

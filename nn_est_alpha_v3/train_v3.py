@@ -32,8 +32,9 @@ OPTUNA_TRIALS = 100
 OPTUNA_EPOCHS = 50          # inner trial budget (up from 15)
 OPTUNA_MIN_EPOCHS = 5       # Hyperband min resource
 EPOCHS = 250
-BATCH_SIZE = 128
+BATCH_SIZE = 4096
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+USE_AMP = torch.cuda.is_available()
 
 
 # --- Data-stability pipe -----------------------------------------------------
@@ -144,27 +145,35 @@ def load_v3_clean():
     X_te = scaler.transform(X_raw[test_mask])
     joblib.dump(scaler, SCALER_PATH)
 
+    mst_val = df.loc[val_mask, 'mst_total_length'].to_numpy()
+    cost_val = df.loc[val_mask, 'optimal_cost'].to_numpy()
     mst_test = df.loc[test_mask, 'mst_total_length'].to_numpy()
     cost_test = df.loc[test_mask, 'optimal_cost'].to_numpy()
     return (X_tr, y[train_mask], X_vl, y[val_mask], X_te, y[test_mask],
-            mst_test, cost_test, X_raw.columns.tolist())
+            mst_val, cost_val, mst_test, cost_test, X_raw.columns.tolist())
 
 
-# --- Per-sample val loss (weighted mean across batches) -----------------------
-def eval_val_loss(model, loader, criterion):
+# --- GPU-resident helpers -----------------------------------------------------
+def to_gpu_tensor(arr, dtype=torch.float32):
+    a = arr.values if hasattr(arr, 'values') else arr
+    return torch.as_tensor(a, dtype=dtype, device=DEVICE)
+
+
+def eval_sdpe_gpu(model, X_gpu, mst_np, cost_np, batch_size=8192):
     model.eval()
-    total_loss, total_n = 0.0, 0
+    outs = []
     with torch.no_grad():
-        for xb, yb in loader:
-            xb, yb = xb.to(DEVICE), yb.to(DEVICE)
-            loss = criterion(model(xb), yb).item()
-            total_loss += loss * xb.size(0)
-            total_n += xb.size(0)
-    return total_loss / max(total_n, 1)
+        for i in range(0, X_gpu.size(0), batch_size):
+            outs.append(model(X_gpu[i:i+batch_size]).squeeze(-1))
+    preds = torch.cat(outs).cpu().numpy()
+    pred_alpha = np.clip(preds + 1.0, 1.0, 2.0)
+    pred_cost = pred_alpha * mst_np
+    err = (pred_cost - cost_np) / np.where(cost_np == 0, 1e-9, cost_np)
+    return float(np.std(err, ddof=1))
 
 
 # --- Optuna objective: 50 epochs + Hyperband pruning --------------------------
-def objective(trial, X_tr, y_tr, X_vl, y_vl):
+def objective(trial, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
     h_dim = trial.suggest_int("hidden_dim", 128, 512, step=64)
     n_blocks = trial.suggest_int("num_blocks", 4, 8)
     dropout = trial.suggest_float("dropout", 0.05, 0.2)
@@ -187,16 +196,16 @@ def objective(trial, X_tr, y_tr, X_vl, y_vl):
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
 
-        v_loss = eval_val_loss(model, vl_loader, criterion)
-        trial.report(v_loss, epoch)
+        v_sdpe = eval_val_sdpe(model, vl_loader, mst_vl, cost_vl)
+        trial.report(v_sdpe, epoch)
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
-        best_v = min(best_v, v_loss)
+        best_v = min(best_v, v_sdpe)
     return best_v
 
 
 # --- Final fit: train only, keep best-val checkpoint --------------------------
-def final_fit(bp, X_tr, y_tr, X_vl, y_vl):
+def final_fit(bp, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl):
     model = TSP_Leap_Model(X_tr.shape[1], bp['hidden_dim'], bp['num_blocks'], bp['dropout']).to(DEVICE)
     optimizer = optim.AdamW(model.parameters(), lr=bp['lr'], weight_decay=1e-3)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
@@ -220,15 +229,15 @@ def final_fit(bp, X_tr, y_tr, X_vl, y_vl):
             optimizer.step()
         scheduler.step()
 
-        v_loss = eval_val_loss(model, vl_loader, criterion)
-        if v_loss < best_v:
-            best_v = v_loss
+        v_sdpe = eval_val_sdpe(model, vl_loader, mst_vl, cost_vl)
+        if v_sdpe < best_v:
+            best_v = v_sdpe
             best_state = copy.deepcopy(model.state_dict())
             best_epoch = epoch
 
     if best_state is not None:
         model.load_state_dict(best_state)
-    print(f"Best val Huber loss = {best_v:.6f} @ epoch {best_epoch}")
+    print(f"Best val SDPE = {best_v:.6f} @ epoch {best_epoch}")
     return model
 
 
@@ -251,7 +260,7 @@ def eval_test(model, X_te, y_te, mst_te, cost_te):
 
 
 if __name__ == "__main__":
-    X_tr, y_tr, X_vl, y_vl, X_te, y_te, mst_te, cost_te, feats = load_v3_clean()
+    X_tr, y_tr, X_vl, y_vl, X_te, y_te, mst_vl, cost_vl, mst_te, cost_te, feats = load_v3_clean()
     print(f"Device: {DEVICE}  features: {len(feats)}  train: {len(y_tr)}")
 
     sampler = TPESampler(multivariate=True, group=True, seed=RANDOM_STATE)
@@ -260,12 +269,12 @@ if __name__ == "__main__":
         direction="minimize", sampler=sampler, pruner=pruner,
         study_name='nn_v3', storage=f'sqlite:///{OPTUNA_DB}', load_if_exists=True,
     )
-    study.optimize(lambda t: objective(t, X_tr, y_tr, X_vl, y_vl), n_trials=OPTUNA_TRIALS)
+    study.optimize(lambda t: objective(t, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl), n_trials=OPTUNA_TRIALS)
     bp = study.best_params
     print(f"Best trial val loss = {study.best_value:.6f}")
     print(f"Best params: {bp}")
 
-    model = final_fit(bp, X_tr, y_tr, X_vl, y_vl)
+    model = final_fit(bp, X_tr, y_tr, X_vl, y_vl, mst_vl, cost_vl)
 
     metrics = eval_test(model, X_te, y_te, mst_te, cost_te)
     print("\n--- Test metrics ---")

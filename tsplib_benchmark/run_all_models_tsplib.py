@@ -39,6 +39,7 @@ THIS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = THIS_DIR.parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v3"))
+sys.path.insert(0, str(REPO_ROOT / "lgbm_model_v4"))
 sys.path.insert(0, str(REPO_ROOT / "linear_model_v3"))
 sys.path.insert(0, str(REPO_ROOT / "interpretable_model_v3"))
 sys.path.insert(0, str(THIS_DIR))
@@ -46,9 +47,11 @@ sys.path.insert(0, str(THIS_DIR))
 # Core imports
 from tsplib_parser import parse_tsplib_file
 from classical_mds import classical_mds
+from exclusions import TRIANGLE_INEQ_VIOLATORS
 
 # ML model imports
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
+from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 
@@ -249,6 +252,14 @@ def run_benchmark(max_n=None, workers=None):
     if not tsp_files:
         raise SystemExit(f"No .tsp files in {INSTANCES_DIR}. Run download_tsplib.py first.")
 
+    # Filter triangle-inequality violators upstream (single source of truth in
+    # exclusions.py). GART 2.0 and MDS assume symmetric metric distances.
+    excluded = [p for p in tsp_files if p.stem in TRIANGLE_INEQ_VIOLATORS]
+    if excluded:
+        print(f"Excluding {len(excluded)} triangle-inequality violator(s): "
+              f"{', '.join(p.stem for p in excluded)}")
+        tsp_files = [p for p in tsp_files if p.stem not in TRIANGLE_INEQ_VIOLATORS]
+
     # --- Load ML models ---
     print("Loading ML models...")
     ml_models = {}
@@ -257,6 +268,11 @@ def run_benchmark(max_n=None, workers=None):
         print("  LGBM_V3: OK")
     except Exception as e:
         print(f"  LGBM_V3: FAILED ({e})")
+    try:
+        ml_models["LGBM_V4"] = TSP_V4_LGBM_Estimator(str(REPO_ROOT / "lgbm_model_v4"))
+        print("  LGBM_V4: OK")
+    except Exception as e:
+        print(f"  LGBM_V4: FAILED ({e})")
     try:
         ml_models["Linear_V3"] = TSP_V3_Linear_Estimator(str(REPO_ROOT / "linear_model_v3"))
         print("  Linear_V3: OK")
@@ -278,10 +294,10 @@ def run_benchmark(max_n=None, workers=None):
         "BHH": academic.estimate_tsp_bhh,
         "Cavdar": academic.estimate_tsp_cavdar,
         "Chien": academic.estimate_tsp_chien,
-        "Vinel": academic.estimate_tsp_vinel,
+        # "Vinel": academic.estimate_tsp_vinel,          # DEPRECATED (see tsp_utils_2.py)
         "Kwon": academic.estimate_tsp_kwon,
         "Daganzo": academic.estimate_tsp_daganzo,
-        "Composite": academic.estimate_tsp_composite,
+        # "Composite": academic.estimate_tsp_composite,  # DEPRECATED (see tsp_utils_2.py)
         "MST_Ratio": academic.estimate_tsp_mst_ratio,
         "Hilbert": academic.estimate_tsp_hilbert,
     }
@@ -536,8 +552,10 @@ def run_benchmark(max_n=None, workers=None):
     print("ALL-MODELS TSPLIB BENCHMARK SUMMARY")
     print("=" * 70)
 
-    # Exclude brg180 (triangle-inequality violator) from summary
-    df_clean = df[df.instance != "brg180"]
+    # Triangle-inequality violators are already filtered upstream
+    # (see exclusions.TRIANGLE_INEQ_VIOLATORS); this is a belt-and-suspenders
+    # guard in case stale results are merged in from an earlier run.
+    df_clean = df[~df["instance"].isin(TRIANGLE_INEQ_VIOLATORS)]
 
     # Per-status tally for visibility (never-silent principle)
     print("\nStatus breakdown across all (instance, model) pairs:")

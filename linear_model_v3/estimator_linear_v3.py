@@ -13,6 +13,9 @@ from scipy import stats
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error
 import numba
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from mst_utils import compute_mst
 import warnings
 
 warnings.filterwarnings("ignore")

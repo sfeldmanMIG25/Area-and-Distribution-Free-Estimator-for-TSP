@@ -11,10 +11,12 @@ from sklearn.metrics import mean_squared_error, r2_score
 warnings.filterwarnings("ignore")
 from estimator_linear_v3 import TSP_V3_Linear_Estimator
 
-# --- CONFIGURATION (Absolute Paths) ---
-INSTANCES_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\instances"
-SOLUTIONS_DIR = r"C:\Area-and-Distribution-Free-Estimators-for-TSP\Generalized_TSP_Analysis\solutions"
+# --- CONFIGURATION ---
 MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(MODEL_DIR)
+INSTANCES_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "instances")
+SOLUTIONS_DIR = os.path.join(REPO_ROOT, "Generalized_TSP_Analysis", "solutions")
+
 
 def run_benchmark():
     print("--- Running Linear Baseline V3 Benchmark ---")

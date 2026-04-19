@@ -436,7 +436,7 @@ The control baseline scales the weight of the Minimum Spanning Tree by a dimensi
 \begin{equation}
     \hat{L}_{\text{MST-Ratio}} = \rho(d) \cdot L_{\text{MST}}
 \end{equation}
-For 2D instances, we utilize $\rho(2) = 1.075$, calibrated on uniform random instances \citep{percus1996}. For higher dimensions, we use $\rho(3) = 1.05$ and $\rho(d) = 1.0 + 0.075 \cdot (2/d)$ for $d \ge 4$, reflecting the known convergence of the MST-to-TSP ratio as dimensionality increases \citep{percus1996}. These constants were calibrated for uniform distributions; the elevated SDPE observed for MST Ratio in Table~\ref{tab:nd_by_dim} reflects the inability of a fixed constant to adapt to the topological variation present in non-uniform test instances.
+For 2D instances, we utilize $\rho(2) = 1.075$, calibrated on uniform random instances \citep{percus1996,johnson1996asymptotic}. For higher dimensions, we use $\rho(3) = 1.05$ and $\rho(d) = 1.0 + 0.075 \cdot (2/d)$ for $d \ge 4$, reflecting the known convergence of the MST-to-TSP ratio as dimensionality increases \citep{percus1996}. These constants were calibrated for uniform distributions; the elevated SDPE observed for MST Ratio in Table~\ref{tab:nd_by_dim} reflects the inability of a fixed constant to adapt to the topological variation present in non-uniform test instances.
 
 \subsection{Datasets} \label{subsec:datasets}
 
