@@ -1,4 +1,4 @@
-"""Principled, deterministic exclusion rule for non-metric TSPLIB instances.
+"""Shared audited screen for metric-dependent TSPLIB aggregates.
 
 Motivation
 ----------
@@ -7,29 +7,30 @@ distances. For any metric TSP, the double-tree construction proves
 
     L_MST  <=  L_TSP  <=  2 * L_MST.
 
-An instance whose published optimum falls outside this band is
-mathematically incompatible with the metric assumption -- triangle
-inequality is violated somewhere in its distance matrix. We use both
-bounds (with a 25% slack above for integer-rounded EXPLICIT matrices)
-as a deterministic, model-agnostic filter: any instance with
+The paper's non-Euclidean experiment uses an exhaustive distance-matrix
+audit to distinguish structural from mild rounding-level triangle
+violations. ``STRUCTURAL_TRIANGLE_VIOLATORS`` is the shared list used by
+the paper tooling and aggregate helpers. Three disclosed mild violators
+remain in the exploratory screen.
+
+The tour/MST bounds below provide an additional model-agnostic guard: an
+instance with
 
     L_TSP / L_MST  <  METRIC_RATIO_LOWER
     L_TSP / L_MST  >  METRIC_RATIO_UPPER
 
-is dropped from aggregate metrics. The instance is still downloaded,
-benchmarked, and reported in per-instance output so that the non-metric
-behavior is auditable; only the headline averages exclude it.
+is also dropped from metric-dependent aggregates. The upper guard retains
+25% slack for integer-rounded EXPLICIT matrices. All instances remain in
+per-instance benchmark output so the screen is auditable.
 
 Design notes
 ------------
 * The filter is applied at analysis time, not at download or benchmark
   time. Every instance in TSPLIB95 is run end-to-end so the per-instance
   CSV contains full results for brg180 (or any future outlier).
-* The constant lives here so the paper can cite a single source of
-  truth. Do not hard-code the threshold in call sites; import it.
-* ``TRIANGLE_INEQ_VIOLATORS`` is retained (empty) for backwards
-  compatibility with scripts that import it; new code should use
-  ``filter_metric_consistent`` instead.
+* Names and ratio guards live here so analysis scripts use one protocol.
+* ``TRIANGLE_INEQ_VIOLATORS`` aliases the structural list for backwards
+  compatibility.
 """
 
 from __future__ import annotations
@@ -53,10 +54,26 @@ METRIC_RATIO_UPPER: float = 2.5
 # Retained for import backwards-compat; points at UPPER.
 METRIC_RATIO_THRESHOLD: float = METRIC_RATIO_UPPER
 
-# Retained for backwards compatibility. With the ratio filter in place
-# there is no static exclusion list; every instance runs and the
-# principled filter handles aggregates.
-TRIANGLE_INEQ_VIOLATORS: frozenset[str] = frozenset()
+# Exhaustive distance-matrix audit reported in the paper. These violations
+# are structural (worst direct-edge ratio at least 1.2), not small rounding
+# artifacts.
+STRUCTURAL_TRIANGLE_VIOLATORS: frozenset[str] = frozenset({
+    "bays29",
+    "brazil58",
+    "brg180",
+    "dantzig42",
+    "gr17",
+    "gr21",
+    "gr24",
+    "gr48",
+    "gr120",
+    "hk48",
+})
+
+# Retained in the exploratory 23-instance screen and disclosed explicitly.
+MILD_TRIANGLE_VIOLATORS: frozenset[str] = frozenset({"fri26", "pa561", "swiss42"})
+
+TRIANGLE_INEQ_VIOLATORS = STRUCTURAL_TRIANGLE_VIOLATORS
 
 
 # -- Public helpers --------------------------------------------------------
@@ -78,27 +95,36 @@ def filter_metric_consistent(
     df: "pd.DataFrame",
     true_col: str = "true_cost",
     mst_col: str = "mst_length",
+    instance_col: str = "instance",
 ) -> "pd.DataFrame":
-    """Return a copy of ``df`` with non-metric rows removed.
+    """Return a copy using the shared structural-name and ratio screen.
 
-    A row is kept iff its optimal-tour / MST ratio is <= the threshold
-    (or iff the required columns are missing, in which case the filter
-    is a no-op).
+    The structural list is applied whenever ``instance_col`` is present.
+    The tour/MST guard is additionally applied when both numeric columns
+    are present.
     """
+    keep = None
+    if instance_col in df.columns:
+        names = df[instance_col].astype(str).str.lower().str.replace(r"\.tsp$", "", regex=True)
+        keep = ~names.isin(STRUCTURAL_TRIANGLE_VIOLATORS)
     if true_col not in df.columns or mst_col not in df.columns:
-        return df.copy()
+        return df.loc[keep].copy() if keep is not None else df.copy()
     ratio = df[true_col] / df[mst_col]
-    mask = (
+    ratio_keep = (
         ratio.notna()
         & (df[mst_col] > 0)
         & (ratio >= METRIC_RATIO_LOWER)
         & (ratio <= METRIC_RATIO_UPPER)
     )
     # Rows where ratio cannot be computed are kept (filter is a no-op there).
-    mask = mask | df[mst_col].isna() | (df[mst_col] <= 0)
-    return df[mask].copy()
+    ratio_keep = ratio_keep | df[mst_col].isna() | (df[mst_col] <= 0)
+    keep = ratio_keep if keep is None else keep & ratio_keep
+    return df.loc[keep].copy()
 
 
 def is_excluded(instance_name: str) -> bool:
-    """Legacy name-based check. Always False now that filtering is ratio-based."""
-    return instance_name in TRIANGLE_INEQ_VIOLATORS
+    """Return whether ``instance_name`` is in the structural audit list."""
+    normalized = instance_name.lower()
+    if normalized.endswith(".tsp"):
+        normalized = normalized[:-4]
+    return normalized in STRUCTURAL_TRIANGLE_VIOLATORS

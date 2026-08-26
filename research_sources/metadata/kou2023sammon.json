@@ -1,0 +1,19 @@
+{
+  "key": "kou2023sammon",
+  "type": "article",
+  "title": "Optimal {TSP} tour length estimation using {S}ammon maps",
+  "author": "Kou, Shuhan and Golden, Bruce L. and Poikonen, Stefan",
+  "year": "2023",
+  "doi": "10.1007/s11590-022-01937-y",
+  "bib_url": "",
+  "candidate_url": "https://api.drum.lib.umd.edu/server/api/core/bitstreams/3aa339e3-5e9f-46e4-9890-3485a9ad6f4c/content",
+  "status": "downloaded_related",
+  "notes": "institutional repository dissertation; contains the Sammon-map estimator chapter",
+  "pdf_path": "research_sources\\pdf\\kou2023sammon.pdf",
+  "text_path": "research_sources\\text\\kou2023sammon.txt",
+  "markdown_path": "research_sources\\text\\kou2023sammon.md",
+  "sha256": "81196d8930d6dd8f4c098ed23feede4861b40de29c039c84cbb5796f08a6b3e5",
+  "bytes": "2493288",
+  "http_status": "200",
+  "final_url": "https://api.drum.lib.umd.edu/server/api/core/bitstreams/3aa339e3-5e9f-46e4-9890-3485a9ad6f4c/content"
+}

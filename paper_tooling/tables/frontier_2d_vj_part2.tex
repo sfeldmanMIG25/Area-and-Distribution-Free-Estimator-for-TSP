@@ -1,0 +1,26 @@
+\begin{table}[!htbp]
+\centering
+\caption{2D diverse benchmark cost/accuracy ladder, Volgenant--Jonker ascent (part 2 of 2: $n>100$, and the whole corpus).}
+\label{tab:frontier_2d_vj_b}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrrrrrrrrr@{}}
+\toprule
+ & \multicolumn{4}{c}{n in [101{,}500]{,} $N=500$} & \multicolumn{4}{c}{n in [501{,}1000]{,} $N=610$} & \multicolumn{4}{c}{Total (all 2D){,} $N=2{,}580$} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+Row & ms & $\times$ & Raw & Cal. & ms & $\times$ & Raw & Cal. & ms & $\times$ & Raw & Cal. \\
+\midrule
+GART 2.0 & 7.56 & 1.00 & \multicolumn{2}{c}{2.39} & 12.65 & 1.00 & \multicolumn{2}{c}{1.64} & 5.00 & 1.00 & \multicolumn{2}{c}{2.89} \\
+\midrule
+$k=0$ & 2.66 & 0.35 & 12.39 & 3.70 & 11.46 & 0.91 & 11.11 & 2.98 & 0.23 & 0.05 & 13.94 & 5.65 \\
+$k=10$ & 4.10 & 0.54 & 9.31 & 3.37 & 17.66 & 1.40 & 8.63 & 2.62 & 0.44 & 0.09 & 8.35 & 4.26 \\
+$k=25$ & 6.16 & 0.81 & 3.89 & \textbf{2.14} & 26.83 & 2.12 & 2.94 & 1.17 & 0.70 & 0.14 & 3.61 & \textbf{2.56} \\
+$k=50$ & 10.21 & 1.35 & 2.85 & 2.07 & 42.70 & 3.38 & 1.87 & 1.04 & 1.15 & 0.23 & \textbf{2.70} & \textbf{2.33} \\
+$k=100$ & 18.18 & 2.40 & 2.64 & 1.94 & 74.26 & 5.87 & 1.70 & 0.97 & 2.05 & 0.41 & \textbf{2.05} & \textbf{1.76} \\
+$k=200$ & 35.50 & 4.69 & 2.63 & 1.94 & 139.17 & 11.00 & 1.69 & 0.98 & 3.95 & 0.79 & \textbf{1.88} & \textbf{1.62} \\
+$k=500$ & 87.43 & 11.56 & 2.25 & 1.73 & 329.88 & 26.08 & 1.57 & 1.04 & 9.42 & 1.88 & 1.27 & 1.10 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

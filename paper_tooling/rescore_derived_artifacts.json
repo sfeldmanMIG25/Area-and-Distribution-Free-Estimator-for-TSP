@@ -1,0 +1,175 @@
+{
+  "dry_run": false,
+  "frames": [
+    {
+      "path": "paper_tooling/hk1tree_frontier_nd.csv",
+      "rows_before": 151614,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 189,
+      "rows_after": 151614
+    },
+    {
+      "path": "paper_tooling/hk1tree_frontier_2d.csv",
+      "rows_before": 23220,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 23220
+    },
+    {
+      "path": "paper_tooling/hk1tree_frontier_train.csv",
+      "rows_before": 17982,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 17982
+    },
+    {
+      "path": "paper_tooling/hk1tree_frontier_train_d2.csv",
+      "rows_before": 8091,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 8091
+    },
+    {
+      "path": "paper_tooling/hk1tree_frontier_tsplib.csv",
+      "rows_before": 702,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 702
+    },
+    {
+      "path": "paper_tooling/hk1tree_frontier_tsplib_int.csv",
+      "rows_before": 657,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 657
+    },
+    {
+      "path": "paper_tooling/hk1tree_ladder.csv",
+      "rows_before": 8988,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 18,
+      "rows_after": 8988
+    },
+    {
+      "path": "paper_tooling/hk1tree_invariant_k1000.csv",
+      "rows_before": 19426,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 21,
+      "rows_after": 19426
+    },
+    {
+      "path": "paper_tooling/hk1tree_trainval_k1000.csv",
+      "rows_before": 89242,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 10,
+      "rows_after": 89242
+    },
+    {
+      "path": "paper_tooling/hk1tree_delaunay_trap.csv",
+      "rows_before": 250,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 250
+    },
+    {
+      "path": "paper_tooling/polyak_nd_sweep.csv",
+      "rows_before": 151614,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 189,
+      "rows_after": 151614
+    },
+    {
+      "path": "paper_tooling/polyak_nd_probe.csv",
+      "rows_before": 4752,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 4752
+    },
+    {
+      "path": "paper_tooling/polyak_nd_ub_sensitivity.csv",
+      "rows_before": 5832,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 5832
+    },
+    {
+      "path": "paper_tooling/polyak_nd_convergence_audit.csv",
+      "rows_before": 144,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 0,
+      "rows_after": 144
+    },
+    {
+      "path": "paper_tooling/v4_study_allmodels_per_instance.csv",
+      "rows_before": 122400,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 5244,
+      "rows_label_changed": 126,
+      "rows_after": 122400
+    },
+    {
+      "path": "paper_tooling/armA_verify_per_instance.csv",
+      "rows_before": 61203,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 2625,
+      "rows_label_changed": 63,
+      "rows_after": 61203
+    },
+    {
+      "path": "paper_tooling/support_arms_per_instance.csv",
+      "rows_before": 81600,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 3496,
+      "rows_label_changed": 84,
+      "rows_after": 81600
+    },
+    {
+      "path": "paper_tooling/controls_31f/rows_2d.csv",
+      "rows_before": 23220,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 23220,
+      "rows_after": 23220
+    },
+    {
+      "path": "paper_tooling/controls_31f/rows_nd.csv",
+      "rows_before": 152280,
+      "rows_dropped_quarantined": 666,
+      "rows_unmatched": 0,
+      "rows_label_changed": 151614,
+      "rows_after": 151614
+    },
+    {
+      "path": "paper_tooling/controls_31f/rows_tsplib.csv",
+      "rows_before": 999,
+      "rows_dropped_quarantined": 0,
+      "rows_unmatched": 0,
+      "rows_label_changed": 9,
+      "rows_after": 999
+    }
+  ],
+  "rebuild_order": [
+    "paper_tooling/hk1tree_frontier_analyze.py",
+    "paper_tooling/hk1tree_solo_cost.py",
+    "paper_tooling/hk1tree_polyak_nd_analyze.py",
+    "paper_tooling/hk1tree_polyak_nd_frontier.py",
+    "paper_tooling/report_31f_controls.py",
+    "paper_tooling/frontier_manuscript_numbers.py",
+    "paper_tooling/build_paper_tables.py",
+    "paper_tooling/splice_tables.py"
+  ]
+}

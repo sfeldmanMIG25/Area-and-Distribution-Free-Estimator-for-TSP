@@ -11,9 +11,10 @@ Contains a comprehensive set of TSP length estimators:
 5. Machine Learning (GART 1.0)
 
 Paper-active baselines (Area_Free_Main.tex):
-- 2D / TSPLIB common subset: GART 2.0, MST_Ratio, Cavdar, BHH, Chien, Hilbert.
+- 2D / TSPLIB common subset: GART 2.0, GART 1.0, MST_Ratio, Hilbert.
 - ND: GART 2.0, MST_Ratio, Hilbert.
-- TSPLIB-by-size adds: Kwon, Daganzo.
+- BHH, Chien, Cavdar, Kwon, and Daganzo are retained only as source-audited
+  legacy adaptations; they are not paper-active numerical baselines.
 Functions marked DEPRECATED are retained for historical CSV
 reproducibility only and emit a DeprecationWarning on call. They were
 cut from the paper under the kill rule: an estimator whose wall time
@@ -58,6 +59,7 @@ from hilbertcurve.hilbertcurve import HilbertCurve
 
 # --- CONSTANTS ---
 BETA_2D = 0.7124
+BETA_MST_2D = 0.6331
 BETA_3D = 0.6979
 
 # Hard caps on geometric primitives that blow up in high dimensions.
@@ -271,10 +273,10 @@ def estimate_tsp_mst_ratio(nodes_coords):
 
     Constants source: empirically calibrated near the Percus-Martin 1996
     asymptote beta_TSP / beta_MST for d-dimensional uniform points.
-    For 2D uniform, Percus-Martin gives beta_TSP/beta_MST ~ 0.7124/0.6331
-    ~ 1.125; the values 1.075 (d=2), 1.05 (d=3), and the tail form
-    1 + 0.075*(2/d) (d>=4) are empirical near-asymptote constants used
-    consistently across our benchmark CSVs.
+    The 2D multiplier is the published asymptotic anchor
+    beta_TSP / beta_MST = 0.7124 / 0.6331. The d=3 multiplier (1.05) and
+    d>=4 schedule 1 + 0.075*(2/d) are author-defined benchmark choices;
+    they are not literature-derived constants.
 
     References:
       Percus, A.G., Martin, O.C. (1996). "Finite size and dimensional
@@ -294,7 +296,7 @@ def estimate_tsp_mst_ratio(nodes_coords):
     mst_len = _mst_length(coords)
 
     if d == 2:
-        ratio = 1.075
+        ratio = BETA_2D / BETA_MST_2D
     elif d == 3:
         ratio = 1.05
     else:
@@ -302,19 +304,21 @@ def estimate_tsp_mst_ratio(nodes_coords):
     return mst_len * ratio, time.perf_counter() - start_time
 
 def estimate_tsp_hilbert(nodes_coords, p=16):
-    """Bartholdi-Platzman (1982) space-filling-curve TSP heuristic.
+    """Custom N-D Hilbert-sort tour construction.
 
-    Constructive tour: sort points by their 1-D Hilbert-curve index,
-    visit in order, close the loop. Paper uses this as a constructive
-    upper-bound baseline (N-dimensional via hilbertcurve package).
+    This implementation independently rescales every coordinate axis to a
+    ``p``-bit integer grid (default ``p=16``), sorts points by the resulting
+    N-dimensional Hilbert index, and closes the ordered route. It is an
+    adaptation of the planar space-filling-curve idea, not a reproduction of a
+    published N-D heuristic, and carries none of the planar paper's
+    approximation guarantees.
 
     Reference:
       Bartholdi, J.J., Platzman, L.K. (1982). "An O(N log N)
         planar travelling salesman heuristic based on spacefilling
         curves." Oper. Res. Lett. 1(4):121-125.
         https://doi.org/10.1016/0167-6377(82)90012-8
-    No asymptotic constant to calibrate; tour length is computed
-    directly from the constructed ordering (p = 16-bit grid here).
+    The returned length is computed directly from this constructed order.
     """
     start_time = time.perf_counter()
 
@@ -424,101 +428,31 @@ def estimate_tsp_basel_willemain(nodes_coords):
 # GEOMETRIC & ASYMPTOTIC ESTIMATORS
 # ====================================================================
 
-def estimate_tsp_chien(nodes_coords):
-    """Chien (1992) single-route TSP length estimator.
+def estimate_tsp_chien(nodes_coords, *args, **kwargs):
+    """WITHDRAWN. Its coefficients were transcribed from a secondary source and Chien (1992) is paywalled with no obtainable open-access copy, so the paper scores no Chien row.
 
-    Formula (paper Eq. 423, 2D only):
-        L = k1 * sqrt(n * A) + k2 * n / p
-    with k1 = 0.98, k2 = 0, p = 1 (single-route, no depot term), so
-        L = 0.98 * sqrt(n * A)
-    where A is the convex-hull area of the points.
-
-    Gated to d == 2. For d != 2 the expression is ill-defined
-    (Chien's derivation is planar); we raise ValueError so callers
-    can record status rather than silently producing a bogus value.
-
-    Reference:
-      Chien, T.W. (1992). "Operational estimators for the vehicle
-        routing problem." Transportation Science 26(2):104-114.
-        https://doi.org/10.1287/trsc.26.2.104
-    Constants source: Chien (1992) Table 1 / Eq. (8), k1 = 0.98 for
-    uniform 2D point distributions.
+    Superseded by :mod:`classical_region_estimators`. This stub exists so that a
+    stale import fails at the call site with an explanation instead of silently
+    returning a number no published table stands behind.
     """
-    start_time = time.perf_counter()
-    coords = np.unique(nodes_coords, axis=0)
-    n = len(coords)
-    if n <= 1:
-        return 0.0, 0.0
-    d = coords.shape[1]
-    if d != 2:
-        raise ValueError(
-            f"Chien: d={d} not supported (2D-only estimator). "
-            f"Caller must gate on d and record status='chien_not_2d'."
-        )
+    raise NotImplementedError(
+        "estimate_tsp_chien is withdrawn. Its coefficients were transcribed from a secondary source and Chien (1992) is paywalled with no obtainable open-access copy, so the paper scores no Chien row. "
+        "Use classical_region_estimators.ESTIMATORS instead; it registers only "
+        "BHH, BHH_region, Cavdar and MST_Only."
+    )
 
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        A = float(ConvexHull(coords).volume)
-    else:
-        ranges = np.ptp(coords, axis=0).astype(float)
-        ranges[ranges < 1e-9] = 1e-9
-        A = float(np.prod(ranges))
+def estimate_tsp_bhh(nodes_coords, *args, **kwargs):
+    """WITHDRAWN. This coordinate-only adaptation substituted a realised-sample measure for the sampling region the theorem names.
 
-    est = 0.98 * math.sqrt(n * A)
-    return est, time.perf_counter() - start_time
-
-def estimate_tsp_bhh(nodes_coords):
-    """Beardwood-Halton-Hammersley (1959) asymptotic TSP length.
-
-    Formula (paper Eq. 395):
-        L ~ beta_d * n^((d-1)/d) * V^(1/d)
-    Paper restricts BHH to d == 2 (beta_d for d >= 3 is not
-    empirically pinned); this implementation falls back to the
-    Gaussian-limit approximation beta_d ~ sqrt(d / (2*pi*e)) for
-    d >= 4, retained only for completeness.
-
-    References:
-      Beardwood, Halton, Hammersley (1959). "The shortest path
-        through many points." Proc. Camb. Phil. Soc. 55:299-327.
-      Johnson, McGeoch, Rothberg (1996). "Asymptotic experimental
-        analysis for the Held-Karp traveling salesman bound."
-        https://doi.org/10.1007/3-540-61310-2_18
-    Constants source: Johnson et al. (1996) Section 3.2, beta_2 =
-    0.7124 +/- 0.0002; beta_3 ~ 0.6979 (Percus-Martin 1996,
-    Phys. Rev. Lett. 76:1188,
-    https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.76.1188);
-    for d >= 4 we use the Rhee-Steele asymptotic
-    beta_d ~ sqrt(d / (2 pi e)) as no tighter point estimate exists
-    in the literature.
-
-    Implementation note: at high d the bounding-box volume
-    prod(ranges) overflows float64 (e.g. 10000**100 = 1e400).
-    We therefore compute vol**(1/d) directly as the geometric
-    mean exp(mean(log(ranges))), which is numerically stable
-    at any d.
+    Superseded by :mod:`classical_region_estimators`. This stub exists so that a
+    stale import fails at the call site with an explanation instead of silently
+    returning a number no published table stands behind.
     """
-    start_time = time.perf_counter()
-    coords = np.unique(nodes_coords, axis=0)
-    n = len(coords)
-    if n <= 1: return 0.0, 0.0
-    d = coords.shape[1]
-
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        vol = ConvexHull(coords).volume
-        vol_root = vol ** (1.0 / d) if vol > 0 else 0.0
-    else:
-        ranges = np.ptp(coords, axis=0).astype(float)
-        ranges[ranges < 1e-9] = 1e-9
-        # Geometric mean in log-space: equivalent to (prod ranges)**(1/d),
-        # but stable at any d (no overflow from prod).
-        vol_root = float(np.exp(np.mean(np.log(ranges))))
-
-    if d == 2: beta = BETA_2D
-    elif d == 3: beta = BETA_3D
-    else: beta = math.sqrt(d / (2 * math.pi * math.e))
-
-    exponent = (d - 1) / d
-    est = beta * (n ** exponent) * vol_root
-    return est, time.perf_counter() - start_time
+    raise NotImplementedError(
+        "estimate_tsp_bhh is withdrawn. This coordinate-only adaptation substituted a realised-sample measure for the sampling region the theorem names. "
+        "Use classical_region_estimators.ESTIMATORS instead; it registers only "
+        "BHH, BHH_region, Cavdar and MST_Only."
+    )
 
 def estimate_tsp_vinel(nodes_coords, b=0.768):
     """DEPRECATED, cut from paper (redundant with BHH in 2D). Vinel-style BHH-coefficient variant."""
@@ -641,209 +575,44 @@ def canonicalize_coords_pca(coords):
     return rotated.astype(np.asarray(coords).dtype, copy=False)
 
 
-def estimate_tsp_cavdar(nodes_coords, a0=2.791, a1=0.2669):
-    """Cavdar & Sokol (2015) distribution-free TSP tour-length estimator.
+def estimate_tsp_cavdar(nodes_coords, *args, **kwargs):
+    """WITHDRAWN. This coordinate-only adaptation substituted the convex hull for the graph area and measured dispersion about the sample midrange, and it applied no finite-n correction.
 
-    Faithful implementation of Eq. (3) from Cavdar & Sokol (2015):
-
-        T = 2.791 * sqrt(n * cstdev_x * cstdev_y)
-          + 0.2669 * sqrt(n * stdev_x * stdev_y * A / (cbar_x * cbar_y))
-
-    using the paper's exact definitions:
-        stdev_{x,y}   : std of coordinates along each axis.
-        cbar_{x,y}    : mean absolute distance from each node to the
-                        *central midpoint axis* of the bounding rectangle
-                        (i.e. to (min+max)/2, NOT to the mean).
-        cstdev_{x,y}  : std of those absolute distances from the midpoint.
-        A             : area of the (rectangular) graph = product of the
-                        axis-aligned ranges (l_x * l_y in 2D).
-
-    The paper assumes an axis-aligned rectangular graph. To apply the model
-    to arbitrarily oriented point clouds without distorting its axis-dependent
-    statistics, we first rotate the coordinates into the PCA principal-axis
-    frame (ND-native analogue of the 2D minimum-area bounding rectangle). This
-    makes the bounding-rectangle area and per-axis dispersions rotation-
-    invariant without altering the paper's formula.
-
-    ND extension: the 2D form is lifted using the standard geometric-mean
-    convention
-        term1 = a0 * n^((d-1)/d) * (prod_j cstdev_j)^(1/d)
-        term2 = a1 * n^((d-1)/d) * A^(1/d) * (prod_j stdev_j / prod_j cbar_j)^(1/d)
-    which reduces exactly to Eq. (3) for d = 2.
-
-    Small-n correction (Cavdar & Sokol 2015 Eq. 4):
-        E/T = 0.9325 * exp(0.00005298 * n) - 0.2972 * exp(-0.01452 * n)
-    Divide raw estimate by this ratio for n < 1000 (paper's calibration range
-    100 <= n <= 975).
-
-    Reference:
-      Cavdar, B., Sokol, J. (2015). "A distribution-free TSP tour length
-      estimation model for random graphs." European Journal of Operational
-      Research 243(2): 588-598. doi:10.1016/j.ejor.2014.12.020
+    Superseded by :mod:`classical_region_estimators`. This stub exists so that a
+    stale import fails at the call site with an explanation instead of silently
+    returning a number no published table stands behind.
     """
-    start_time = time.perf_counter()
-    coords = np.unique(nodes_coords, axis=0)
-    n = len(coords)
-    if n <= 1:
-        return 0.0, 0.0
-    d = coords.shape[1]
+    raise NotImplementedError(
+        "estimate_tsp_cavdar is withdrawn. This coordinate-only adaptation substituted the convex hull for the graph area and measured dispersion about the sample midrange, and it applied no finite-n correction. "
+        "Use classical_region_estimators.ESTIMATORS instead; it registers only "
+        "BHH, BHH_region, Cavdar and MST_Only."
+    )
 
-    # Rotate into the frame the paper implicitly assumes (axis-aligned
-    # rectangular graph). In 2D this is the true minimum-area bounding
-    # rectangle via rotating calipers on the convex hull, exactly as Cavdar &
-    # Sokol (2015) define "the rectangular graph". For d > 2 the paper offers
-    # no definition (it is a 2D model); we fall back to PCA as a principled
-    # ND extension, but the 2D branch is an exact match to the paper.
-    if d == 2:
-        coords = mabr_rotate_2d(coords)
-    else:
-        coords = canonicalize_coords_pca(coords)
+def estimate_tsp_kwon(nodes_coords, *args, **kwargs):
+    """WITHDRAWN. Its coefficients were transcribed from a secondary source and Kwon-Golden-Wasil (1995) is paywalled with no obtainable open-access copy, so the paper scores no Kwon row.
 
-    # A = convex-hull area (2D) / volume (ND). Paper, Section 4: for tests on
-    # non-random graphs, "we used the area of the convex hull of the nodes as
-    # A". For the paper's random rectangular training graphs the hull area
-    # coincides with l_x * l_y by construction (they explicitly place a node
-    # at each corner), so the convex-hull form is faithful to both cases and
-    # strictly more accurate on real-world (non-corner-padded) instances.
-    # Rotation into the MABR frame above leaves ConvexHull.volume invariant,
-    # so the per-axis midpoint/stdev/cbar/cstdev statistics still come from
-    # the canonical frame while A stays rotation-free by construction.
-    lo = coords.min(axis=0)
-    hi = coords.max(axis=0)
-    ranges = (hi - lo).astype(float)
-    ranges[ranges < 1e-9] = 1e-9
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        try:
-            vol = float(ConvexHull(coords).volume)
-        except Exception:
-            vol = float(np.prod(ranges))
-    else:
-        vol = float(np.prod(ranges))
-    if vol < 1e-12:
-        vol = float(np.prod(ranges))
-
-    # Paper: "average distance of nodes to the central horizontal and vertical
-    # axes (the horizontal and vertical midpoint lines of the space)".
-    midpoint = 0.5 * (hi + lo)
-
-    stdev = coords.std(axis=0).astype(np.float64)
-    stdev = np.where(stdev < 1e-12, 1e-12, stdev)
-    abs_dev = np.abs(coords - midpoint).astype(np.float64)
-    c_bar = abs_dev.mean(axis=0)
-    c_bar = np.where(c_bar < 1e-12, 1e-12, c_bar)
-    cstdev = abs_dev.std(axis=0)
-    cstdev = np.where(cstdev < 1e-12, 1e-12, cstdev)
-
-    n_scale = math.pow(n, (d - 1) / d)
-    inv_d = 1.0 / d
-
-    # Compute geometric-mean products in log space to stay finite in high d
-    # (prod_j cstdev_j overflows float64 by d ~ 30 for typical grid sizes).
-    log_geom_cstdev = float(np.sum(np.log(cstdev)) / d)
-    log_geom_stdev = float(np.sum(np.log(stdev)) / d)
-    log_geom_cbar = float(np.sum(np.log(c_bar)) / d)
-    log_vol = float(np.sum(np.log(ranges)))  # full log-volume (not geom mean)
-
-    term1 = a0 * n_scale * math.exp(log_geom_cstdev)
-    term2 = a1 * n_scale * math.exp(log_vol * inv_d) * math.exp(log_geom_stdev - log_geom_cbar)
-
-    estimated_cost = term1 + term2
-
-    if n < 1000:
-        corr = 0.9325 * math.exp(0.00005298 * n) - 0.2972 * math.exp(-0.01452 * n)
-        estimated_cost = estimated_cost / corr
-
-    return estimated_cost, time.perf_counter() - start_time
-
-KWON_CALIBRATION_N_MAX = 300  # Kwon, Golden, Wasil (1995) calibration range upper bound.
-
-
-def estimate_tsp_kwon(nodes_coords):
+    Superseded by :mod:`classical_region_estimators`. This stub exists so that a
+    stale import fails at the call site with an explanation instead of silently
+    returning a number no published table stands behind.
     """
-    Kwon, Golden, Wasil (1995) TSP/VRP tour-length estimator.
+    raise NotImplementedError(
+        "estimate_tsp_kwon is withdrawn. Its coefficients were transcribed from a secondary source and Kwon-Golden-Wasil (1995) is paywalled with no obtainable open-access copy, so the paper scores no Kwon row. "
+        "Use classical_region_estimators.ESTIMATORS instead; it registers only "
+        "BHH, BHH_region, Cavdar and MST_Only."
+    )
 
-    Kwon calibrated the form L_norm = (0.8326 - 0.0011*n + 1.1147*R/n) * sqrt(n)
-    against unit-area service regions. We reproduce that convention by first
-    rescaling coordinates so the bounding-box diagonal is 1, evaluating Kwon's
-    expression on the normalized coordinates, and scaling the predicted length
-    back by the original diagonal. This is the same "rescale then apply" wrapper
-    used when Cavdar-Sokol (2015) benchmark Kwon in their Table 3; without it
-    the -0.0011*n term drives the estimator negative at TSPLIB-scale n.
+def estimate_tsp_daganzo(nodes_coords, *args, **kwargs):
+    """WITHDRAWN. Its coefficient was transcribed from a secondary source and Daganzo (1984a, 1984b) is paywalled with no obtainable open-access copy, so the paper scores no Daganzo row.
 
-    Raises :class:`ValueError` when n exceeds the calibration range
-    (``KWON_CALIBRATION_N_MAX = 300``). The coefficient ``-0.0011 * n`` drives
-    the estimator negative past that size, so extrapolating is ill-defined.
-    Callers MUST gate on n before invoking this function and record a status
-    row rather than silently suppressing the failure.
+    Superseded by :mod:`classical_region_estimators`. This stub exists so that a
+    stale import fails at the call site with an explanation instead of silently
+    returning a number no published table stands behind.
     """
-    start_time = time.perf_counter()
-    coords = np.unique(nodes_coords, axis=0)
-    n = len(coords)
-    if n <= 1:
-        return 0.0, 0.0
-    if n > KWON_CALIBRATION_N_MAX:
-        raise ValueError(
-            f"Kwon: n={n} > {KWON_CALIBRATION_N_MAX} (calibration range). "
-            f"Caller must gate on n and record status='kwon_out_of_calibration'."
-        )
-    d = coords.shape[1]
-
-    ranges = np.ptp(coords, axis=0).astype(float)
-    diag = float(np.sqrt(np.sum(ranges ** 2)))
-    if diag < 1e-12:
-        return 0.0, time.perf_counter() - start_time
-
-    coords_n = (coords - coords.min(axis=0)) / diag
-
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        A = ConvexHull(coords_n).volume
-    else:
-        r_n = np.ptp(coords_n, axis=0).astype(float)
-        r_n[r_n < 1e-9] = 1e-9
-        A = float(np.prod(r_n))
-
-    centroid = coords_n.mean(axis=0)
-    R = float(np.mean(np.linalg.norm(coords_n - centroid, axis=1)))
-
-    est_norm = (0.8326 - 0.0011 * n + 1.1147 * (R / max(n, 1))) * math.sqrt(n * A)
-    est_norm = max(est_norm, 0.0)
-    est = est_norm * diag  # rescale back to original units
-    return est, time.perf_counter() - start_time
-
-
-def estimate_tsp_daganzo(nodes_coords, k=0.57):
-    """Daganzo (1984) TSP/CVRP-style tour length estimator.
-
-    Formula (paper Eq. 416): L = 0.57 * sqrt(n * A).
-
-    Structurally identical to BHH up to the choice of constant
-    (BHH uses beta_2 = 0.7124); the two are included separately
-    because the literature reports them as separate baselines.
-
-    Reference:
-      Daganzo, C.F. (1984). "The length of tours in zones of
-        different shapes." Transportation Research B 18(2):135-145.
-        https://doi.org/10.1016/0191-2615(84)90027-4
-    Constants source: Daganzo (1984) Eq. (1), k = 0.57 for uniform
-    points inside a disc / near-circular service region.
-    """
-    start_time = time.perf_counter()
-    coords = np.unique(nodes_coords, axis=0)
-    n = len(coords)
-    if n <= 1:
-        return 0.0, 0.0
-    d = coords.shape[1]
-
-    if n > d + 1 and d <= CONVEX_HULL_MAX_DIM:
-        A = ConvexHull(coords).volume
-    else:
-        ranges = np.ptp(coords, axis=0).astype(float)
-        ranges[ranges < 1e-9] = 1e-9
-        A = float(np.prod(ranges))
-
-    est = k * math.sqrt(n * A)
-    return est, time.perf_counter() - start_time
-
+    raise NotImplementedError(
+        "estimate_tsp_daganzo is withdrawn. Its coefficient was transcribed from a secondary source and Daganzo (1984a, 1984b) is paywalled with no obtainable open-access copy, so the paper scores no Daganzo row. "
+        "Use classical_region_estimators.ESTIMATORS instead; it registers only "
+        "BHH, BHH_region, Cavdar and MST_Only."
+    )
 
 def estimate_tsp_composite(nodes_coords):
     """DEPRECATED, cut from paper (dominated by GART). Meta-estimator: max(MST, min(2MST, Vinel/Cavdar))."""
@@ -875,12 +644,42 @@ def estimate_tsp_composite(nodes_coords):
 # MACHINE LEARNING (GART 1.0)
 # ====================================================================
 
+# The 1-NN features need a per-point minimum over every other point. Holding
+# the whole n*n float64 matrix to get it costs 8*n^2 bytes -- 55 GiB on
+# pla85900 (n = 85,900), which pages the machine instead of raising
+# MemoryError. The rows are swept in blocks capped at this many bytes instead.
+# Override with ``GART1_ONE_NN_BLOCK_MB``, mirroring ``MST_DENSE_BUDGET_GB``.
+_ONE_NN_BLOCK_BYTES = int(
+    float(_os.environ.get("GART1_ONE_NN_BLOCK_MB", "64")) * (1 << 20)
+)
+
+
+def _one_nn_distances(coords):
+    """Distance from each point to its nearest other point.
+
+    Row-blocked equivalent of ``cdist`` + ``fill_diagonal(inf)`` + row-min.
+    cdist evaluates each pair independently, so blocking the rows changes no
+    arithmetic: the returned array is bit-identical to the dense version, and
+    GART 1.0 predictions are unchanged.
+    """
+    n = len(coords)
+    rows_per_block = max(1, _ONE_NN_BLOCK_BYTES // (n * 8))
+    one_nn = np.empty(n, dtype=np.float64)
+    for start in range(0, n, rows_per_block):
+        stop = min(start + rows_per_block, n)
+        block = cdist(coords[start:stop], coords)
+        # Mask each row's self-distance, as fill_diagonal did on the full matrix.
+        block[np.arange(stop - start), np.arange(start, stop)] = np.inf
+        one_nn[start:stop] = block.min(axis=1)
+    return one_nn
+
+
 def _calculate_gart_features(coords, precomputed_mst=None):
     """GART 1.0 legacy feature set (2D).
 
     MST topology features are computed from a Delaunay-sparse graph for 2D
-    inputs (O(n log n)); 1-NN distances are still computed from the dense
-    matrix because they require per-point nearest-neighbor lookups.
+    inputs (O(n log n)); 1-NN distances still cost O(n^2) time, but are swept
+    in row blocks so peak memory stays O(n) rather than O(n^2).
     """
     n = len(coords)
     d = coords.shape[1] if coords.ndim == 2 else 2
@@ -897,10 +696,8 @@ def _calculate_gart_features(coords, precomputed_mst=None):
     ranges = np.ptp(coords, axis=0).astype(float)
     features['bounding_box_area'] = np.prod(ranges)
 
-    # Dense matrix still needed for 1-NN distances (per-row min over neighbors).
-    dist_matrix = cdist(coords, coords)
-    np.fill_diagonal(dist_matrix, np.inf)
-    one_nn = np.min(dist_matrix, axis=1)
+    # 1-NN distances: row-blocked sweep, no dense n*n matrix (see above).
+    one_nn = _one_nn_distances(coords)
     features['one_nn_dist_mean'] = one_nn.mean()
     features['one_nn_dist_std'] = one_nn.std()
 

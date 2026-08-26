@@ -1,0 +1,187 @@
+{
+  "name": "Neural net (GART 2.0 features)",
+  "model_key": "NN_31F",
+  "artifact": "nn_31f_model.pt",
+  "scaler": "nn_31f_scaler.joblib",
+  "supersedes": "nn_alpha_v3_model.pt",
+  "role": "same-feature control -- isolates the model class against GART 2.0",
+  "n_features": 31,
+  "features_in_model_order": [
+    "n_customers",
+    "dimension",
+    "log_bounding_hypervolume",
+    "bounding_hypervolume",
+    "log_node_density",
+    "node_density",
+    "aspect_ratio",
+    "centroid_dist_mean",
+    "centroid_dist_std",
+    "centroid_dist_max",
+    "centroid_dist_iqr",
+    "mst_edge_mean",
+    "mst_edge_std",
+    "mst_edge_skew",
+    "mst_edge_kurtosis",
+    "mst_edge_max",
+    "mst_edge_q10",
+    "mst_edge_q25",
+    "mst_edge_q50",
+    "mst_edge_q75",
+    "mst_edge_q90",
+    "mst_dominance_ratio",
+    "mst_gap_ratio",
+    "mst_leaf_ratio",
+    "mst_degree_mean",
+    "mst_degree_std",
+    "mst_degree_max",
+    "mst_diameter",
+    "mst_diameter_normalized",
+    "large_edge_count",
+    "greedy_nn_over_mst"
+  ],
+  "feature_source": "lgbm_model_v3/gart2_final.joblib::feature_name()",
+  "training_table": "tsp_features_v4.csv",
+  "target": "y = alpha - 1 in [0, 1]; sigmoid head, so alpha = 1 + y is structurally bounded and the clip is a guard, not a correction",
+  "alpha_clip": [
+    1.0,
+    2.0
+  ],
+  "architecture": "TSP_Leap_Model, verbatim from nn_est_alpha_v3/train_v3.py",
+  "hyperparameters": {
+    "hidden_dim": 192,
+    "num_blocks": 4,
+    "dropout": 0.05871254182522992,
+    "lr": 0.0009842315738502602
+  },
+  "hyperparameter_provenance": "V3's Optuna winner on the 30-input problem, frozen. Deliberately not retuned: GART 2.0 likewise carries V3's frozen hyperparameters, so both arms of the comparison were tuned on the same 30-feature problem and only the model class differs. See nn_31f_tuned_params.json for the falsification arm.",
+  "training_protocol": "fit on split=='train' only; val used solely to pick the best-SDPE checkpoint and never trained on; no refit on train+val",
+  "epochs": 250,
+  "batch_size": 4096,
+  "shipped_seed": 2,
+  "seed_band": {
+    "42": {
+      "val": {
+        "sdpe": 1.162864087892882,
+        "mape": 0.7321368307485395,
+        "mspe": 1.434600562999985,
+        "bias": -0.2870831324715673
+      },
+      "test": {
+        "sdpe": 2.164496752334802,
+        "mape": 1.2246454431006548,
+        "mspe": 4.936969800342207,
+        "bias": 0.5021956824358558
+      },
+      "best_val_sdpe": 1.162864087892882,
+      "best_epoch": 139
+    },
+    "1": {
+      "val": {
+        "sdpe": 1.1674602331083619,
+        "mape": 0.6946087015141083,
+        "mspe": 1.418084431990785,
+        "bias": -0.23492686492393955
+      },
+      "test": {
+        "sdpe": 1.6390814719480513,
+        "mape": 0.9188837479391463,
+        "mspe": 2.7467176212126496,
+        "bias": 0.24553682275818828
+      },
+      "best_val_sdpe": 1.1674602331083619,
+      "best_epoch": 166
+    },
+    "2": {
+      "val": {
+        "sdpe": 1.150423699495471,
+        "mape": 0.6478144857740398,
+        "mspe": 1.324304089372222,
+        "bias": -0.029949630999650857
+      },
+      "test": {
+        "sdpe": 2.0154010056779046,
+        "mape": 1.0757667532511137,
+        "mspe": 4.412971730198891,
+        "bias": 0.5927651963879412
+      },
+      "best_val_sdpe": 1.150423699495471,
+      "best_epoch": 190
+    },
+    "3": {
+      "val": {
+        "sdpe": 1.1688706101060276,
+        "mape": 0.6814970611814762,
+        "mspe": 1.382599042239488,
+        "bias": -0.12810270522731826
+      },
+      "test": {
+        "sdpe": 2.298604584200016,
+        "mape": 1.2663800965814787,
+        "mspe": 5.825439645395951,
+        "bias": 0.7363211795076113
+      },
+      "best_val_sdpe": 1.1688706101060276,
+      "best_epoch": 158
+    },
+    "4": {
+      "val": {
+        "sdpe": 1.1616754592753211,
+        "mape": 0.6567416227964534,
+        "mspe": 1.351661502524744,
+        "bias": -0.047334317546336054
+      },
+      "test": {
+        "sdpe": 2.111653066432134,
+        "mape": 1.0873884721061933,
+        "mspe": 4.7480598987903475,
+        "bias": 0.5378148052506311
+      },
+      "best_val_sdpe": 1.1616754592753211,
+      "best_epoch": 197
+    },
+    "5": {
+      "val": {
+        "sdpe": 1.173303382141693,
+        "mape": 0.7057931371648988,
+        "mspe": 1.3946866019909538,
+        "bias": -0.13459594944005757
+      },
+      "test": {
+        "sdpe": 1.626447955940127,
+        "mape": 0.9566810736229163,
+        "mspe": 2.766595165105631,
+        "bias": 0.34845165414871754
+      },
+      "best_val_sdpe": 1.173303382141693,
+      "best_epoch": 161
+    },
+    "6": {
+      "val": {
+        "sdpe": 1.1582746197827474,
+        "mape": 0.681073612373573,
+        "mspe": 1.3599376244284676,
+        "bias": -0.13566884131001886
+      },
+      "test": {
+        "sdpe": 1.8915911135608472,
+        "mape": 1.016069160605349,
+        "mspe": 3.7612728649157288,
+        "bias": 0.42821419482053985
+      },
+      "best_val_sdpe": 1.1582746197827474,
+      "best_epoch": 154
+    }
+  },
+  "seed_band_note": "train_v3.py did not seed torch, so the 30-feature predecessor has no measured run-to-run spread. The band is reported because the claim this control informs turns on a margin smaller than it.",
+  "test_sdpe_median": 2.0154010056779046,
+  "test_sdpe_band": [
+    1.626447955940127,
+    2.298604584200016
+  ],
+  "test_mape_median": 1.0757667532511137,
+  "test_mape_band": [
+    0.9188837479391463,
+    1.2663800965814787
+  ],
+  "shipped_seed_rule": "best validation SDPE among the fitted seeds"
+}

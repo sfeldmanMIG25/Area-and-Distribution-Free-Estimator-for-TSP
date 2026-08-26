@@ -1,0 +1,62 @@
+{
+  "_state": "PRE-REPAIR AUDIT. These counts are the discovery record, measured against the labels as originally released. The labels have since been repaired (paper_tooling/repair_labels.py) and the post-repair acceptance test is paper_tooling/verify_repaired_labels.py, which passes with 0 violations. Re-running label_certificate.py against the repaired CSVs will NOT reproduce these counts, and is not meant to.",
+  "_superseded_by": "paper_tooling/verify_repaired_labels.json",
+  "test": "bound > label + n*q/2  (TSPLIB: bound > label, one metric, no slack)",
+  "rel_eps": 1e-06,
+  "by_split": {
+    "2D benchmark/benchmark_2d": {
+      "N": 2580,
+      "bound_above_label": 505,
+      "proven_wrong": 0,
+      "worst_excess_pct": 0.2172215344447934,
+      "q_unverified": 0
+    },
+    "ND/test": {
+      "N": 16920,
+      "bound_above_label": 3201,
+      "proven_wrong": 35,
+      "worst_excess_pct": 4.1299525329656515,
+      "q_unverified": 76
+    },
+    "ND/train": {
+      "N": 69768,
+      "bound_above_label": 10813,
+      "proven_wrong": 2,
+      "worst_excess_pct": 2.697769387232883,
+      "q_unverified": 24899
+    },
+    "ND/val": {
+      "N": 19584,
+      "bound_above_label": 2980,
+      "proven_wrong": 2,
+      "worst_excess_pct": 1.8978303695605223,
+      "q_unverified": 7099
+    },
+    "TSPLIB/tsplib": {
+      "N": 104,
+      "bound_above_label": 4,
+      "proven_wrong": 1,
+      "worst_excess_pct": 1.1047656778252253,
+      "q_unverified": 0
+    }
+  },
+  "total_evaluated": 108956,
+  "total_proven_wrong": 40,
+  "proven_wrong_in_a_scored_set": 36,
+  "proven_wrong_by_tour_audit_bucket": {
+    "corrupt": 39,
+    "not_in_audit": 1
+  },
+  "coverage_gaps": {
+    "tsplib_no_bound": [
+      "brd14051",
+      "d15112",
+      "d18512",
+      "pla33810",
+      "pla85900",
+      "rl11849",
+      "usa13509"
+    ],
+    "nd_trainval_covered": true
+  }
+}

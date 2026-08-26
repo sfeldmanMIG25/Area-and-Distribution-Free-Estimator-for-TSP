@@ -1,0 +1,1122 @@
+{
+  "protocol": {
+    "measured_utc_date": "2026-08-11",
+    "repeats_per_pair": 11,
+    "statistic": "median over repeats",
+    "process": "single process, no thread pool, OMP/MKL/OpenBLAS threads = 1",
+    "warm_up": "numba JIT and first LightGBM predict warmed before timing",
+    "machine_load_pct_at_start": 7.9,
+    "logical_cores": 20,
+    "timed_region": "wall clock around model.estimate() on the native path and around _hybrid_estimate_generic() on the hybrid path; TSPLIB parsing and classical MDS excluded, matching run_all_models_tsplib.py",
+    "caveat": "The 19 restored models carry single-draw serial timings from the pre-contention run; these GART 2.0 / LGBM_V4 values are medians of 11 draws taken 2026-08-11. The repeat count is NOT the source of the difference: GART 2.0 median-of-11 sits within 0.97-1.05x of its own first cold draw. The difference is between RUNS -- LGBM_V3 re-measured today on the same instances runs at a median 0.70x of its restored value (0.92x for n>10000, i.e. the gap closes as real work dominates fixed overhead). Consequence: absolute time cells in tab:tsplib_by_size are comparable within a model but carry a ~1.5x between-run offset when compared ACROSS the restored and re-measured models, most of it on small n. The GART 2.0 vs LGBM_V3 ratios in gart2_over_lgbmv3_serial_ratio are free of this offset because both were measured in the same process.",
+    "repeat_vs_cold_draw_check": "median-of-11 / first-cold-draw per bucket: 1.05, 1.05, 0.97, 0.99 -- repeats do not bias the published cell.",
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_decomposition_euc2d_78": {
+    "convention": "share of summed median time over the 78 EUC_2D instances",
+    "feature_pct": 92.88,
+    "inference_pct": 4.96,
+    "other_pct": 2.16,
+    "predecessor_lgbm_v3_restored": {
+      "feature_pct": 82.57,
+      "inference_pct": 16.28,
+      "other_pct": 1.15
+    },
+    "predecessor_lgbm_v3_same_protocol": {
+      "feature_pct": 80.8,
+      "inference_pct": 17.7,
+      "other_pct": 1.5
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_decomposition_all_109": {
+    "feature_pct": 94.56,
+    "inference_pct": 3.31,
+    "other_pct": 2.12,
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_bucket_median_ms": {
+    "n in [51,150]": {
+      "N": 23,
+      "median_ms": 3.9156
+    },
+    "n in [151,400]": {
+      "N": 16,
+      "median_ms": 5.1644
+    },
+    "n > 400": {
+      "N": 39,
+      "median_ms": 24.6186
+    },
+    "Total (all EUC_2D)": {
+      "N": 78,
+      "median_ms": 7.0049
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_largest_instances_ms": {
+    "pla85900": {
+      "n": 85900,
+      "total_ms": 1351.1211,
+      "feature_ms": 1320.2987,
+      "inference_ms": 1.4849,
+      "iqr_rel_pct": 4.056,
+      "min_ms": 1330.0853,
+      "max_ms": 1427.7415,
+      "lgbm_v3_total_ms": 884.6881,
+      "ratio_gart2_over_v3": 1.5272
+    },
+    "pla33810": {
+      "n": 33810,
+      "total_ms": 476.8638,
+      "feature_ms": 463.9981,
+      "inference_ms": 1.4619,
+      "iqr_rel_pct": 5.164,
+      "min_ms": 449.6563,
+      "max_ms": 516.4826,
+      "lgbm_v3_total_ms": 279.0218,
+      "ratio_gart2_over_v3": 1.7091
+    },
+    "d18512": {
+      "n": 18512,
+      "total_ms": 257.9672,
+      "feature_ms": 252.0406,
+      "inference_ms": 1.5072,
+      "iqr_rel_pct": 4.101,
+      "min_ms": 242.7603,
+      "max_ms": 299.2528,
+      "lgbm_v3_total_ms": 140.1567,
+      "ratio_gart2_over_v3": 1.8406
+    },
+    "d15112": {
+      "n": 15112,
+      "total_ms": 203.8674,
+      "feature_ms": 197.0682,
+      "inference_ms": 1.5556,
+      "iqr_rel_pct": 2.5,
+      "min_ms": 198.5418,
+      "max_ms": 207.508,
+      "lgbm_v3_total_ms": 109.7565,
+      "ratio_gart2_over_v3": 1.8575
+    },
+    "brd14051": {
+      "n": 14051,
+      "total_ms": 179.0306,
+      "feature_ms": 175.2754,
+      "inference_ms": 1.4286,
+      "iqr_rel_pct": 3.272,
+      "min_ms": 170.7158,
+      "max_ms": 213.5048,
+      "lgbm_v3_total_ms": 99.0603,
+      "ratio_gart2_over_v3": 1.8073
+    },
+    "usa13509": {
+      "n": 13509,
+      "total_ms": 196.0922,
+      "feature_ms": 192.0813,
+      "inference_ms": 1.5741,
+      "iqr_rel_pct": 4.209,
+      "min_ms": 189.258,
+      "max_ms": 232.3326,
+      "lgbm_v3_total_ms": 100.6229,
+      "ratio_gart2_over_v3": 1.9488
+    },
+    "rl11849": {
+      "n": 11849,
+      "total_ms": 160.5758,
+      "feature_ms": 154.2068,
+      "inference_ms": 1.5605,
+      "iqr_rel_pct": 3.144,
+      "min_ms": 156.4594,
+      "max_ms": 169.8285,
+      "lgbm_v3_total_ms": 92.7322,
+      "ratio_gart2_over_v3": 1.7316
+    },
+    "pla7397": {
+      "n": 7397,
+      "total_ms": 114.8232,
+      "feature_ms": 110.5403,
+      "inference_ms": 1.5485,
+      "iqr_rel_pct": 8.983,
+      "min_ms": 96.1875,
+      "max_ms": 155.4087,
+      "lgbm_v3_total_ms": 60.0834,
+      "ratio_gart2_over_v3": 1.9111
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_over_lgbmv3_serial_ratio": {
+    "all 109": {
+      "N": 109,
+      "median": 0.7874,
+      "p10": 0.621,
+      "p90": 1.8054,
+      "min": 0.565,
+      "max": 2.2113
+    },
+    "EUC_2D (78)": {
+      "N": 78,
+      "median": 0.8786,
+      "p10": 0.716,
+      "p90": 1.8366,
+      "min": 0.6846,
+      "max": 2.2113
+    },
+    "native 2D (82)": {
+      "N": 82,
+      "median": 0.9155,
+      "p10": 0.7164,
+      "p90": 1.84,
+      "min": 0.6846,
+      "max": 2.2113
+    },
+    "hybrid (27)": {
+      "N": 27,
+      "median": 0.6368,
+      "p10": 0.5861,
+      "p90": 1.037,
+      "min": 0.565,
+      "max": 1.0442
+    },
+    "n<=1000": {
+      "N": 77,
+      "median": 0.7345,
+      "p10": 0.6027,
+      "p90": 1.0301,
+      "min": 0.565,
+      "max": 1.219
+    },
+    "n>1000": {
+      "N": 32,
+      "median": 1.7341,
+      "p10": 1.3423,
+      "p90": 2.0245,
+      "min": 1.2667,
+      "max": 2.2113
+    },
+    "n>10000 (7)": {
+      "N": 7,
+      "median": 1.8073,
+      "p10": 1.6363,
+      "p90": 1.894,
+      "min": 1.5272,
+      "max": 1.9488
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "gart2_headline_ms": {
+    "all_109": {
+      "median": 5.602,
+      "mean": 40.005,
+      "max": 1351.121,
+      "max_instance": "pla85900"
+    },
+    "euc2d_78": {
+      "median": 7.005,
+      "mean": 27.292,
+      "max": 257.967,
+      "max_instance": "d18512"
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "d18512_correction": {
+    "manuscript_text": "on TSPLIB d18512 GART predicts in 127 ms",
+    "source_of_127ms": "LGBM_V3 restored serial total_time_s = 127.39 ms (predecessor)",
+    "gart2_measured_ms": 257.97,
+    "gart2_feature_ms": 252.04,
+    "gart2_inference_ms": 1.51,
+    "gart2_min_ms": 242.76,
+    "gart2_max_ms": 299.25,
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "repeat_spread_pct": {
+    "GART_2.0": {
+      "rel_iqr_median": 5.39,
+      "rel_iqr_p90": 11.1,
+      "rel_iqr_max": 18.96
+    },
+    "LGBM_V4": {
+      "rel_iqr_median": 7.58,
+      "rel_iqr_p90": 13.87,
+      "rel_iqr_max": 16.26
+    },
+    "LGBM_V3": {
+      "rel_iqr_median": 5.47,
+      "rel_iqr_p90": 8.98,
+      "rel_iqr_max": 15.55
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "protocol_offset_sensitivity_tsplib_by_size": {
+    "n in [51,150]": {
+      "N": 23,
+      "published_median_ms": 3.916,
+      "cold_first_draw_median_ms": 4.099,
+      "cold_over_published": 1.047,
+      "lgbm_v3_published_restored_ms": 10.4,
+      "lgbm_v3_same_protocol_ms": 5.382
+    },
+    "n in [151,400]": {
+      "N": 16,
+      "published_median_ms": 5.164,
+      "cold_first_draw_median_ms": 5.413,
+      "cold_over_published": 1.048,
+      "lgbm_v3_published_restored_ms": 11.321,
+      "lgbm_v3_same_protocol_ms": 6.893
+    },
+    "n > 400": {
+      "N": 39,
+      "published_median_ms": 24.619,
+      "cold_first_draw_median_ms": 23.932,
+      "cold_over_published": 0.972,
+      "lgbm_v3_published_restored_ms": 21.423,
+      "lgbm_v3_same_protocol_ms": 15.703
+    },
+    "Total (all EUC_2D)": {
+      "N": 78,
+      "published_median_ms": 7.005,
+      "cold_first_draw_median_ms": 6.956,
+      "cold_over_published": 0.993,
+      "lgbm_v3_published_restored_ms": 12.599,
+      "lgbm_v3_same_protocol_ms": 8.078
+    },
+    "_superseded": "SUPERSEDED by tsplib_by_size_time_one_protocol. Run-1 PAIRED protocol (GART 2.0 sharing the process with LGBM_V3); the published column is now solo. Kept for provenance only -- do not quote."
+  },
+  "_provenance": {
+    "source_rows": "tsplib_benchmark/results/all_models_tsplib.csv, timing_provenance == 'serial_median11_quiet_2026-08-11'",
+    "generated_by": "serial re-measurement of the 136 previously blank timing rows",
+    "guarded_columns_max_relative_change": 0.0,
+    "roster_retiming": {
+      "source_rows": "tsplib_benchmark/results/all_models_tsplib.csv, timing_provenance == 'serial_solo_median11_quiet_2026-08-11' (711 rows)",
+      "models": [
+        "GART_2.0",
+        "LGBM_V3",
+        "NN_V3",
+        "GART_1.0",
+        "Asymptotic_MST",
+        "Calibrated_MST_dn",
+        "MST_Only",
+        "Hilbert"
+      ],
+      "guarded_columns_max_relative_change": 0.0,
+      "guarded_columns": [
+        "pred_cost",
+        "true_cost",
+        "gap_pct",
+        "abs_gap_pct",
+        "mst_length",
+        "alpha",
+        "concorde_time_s",
+        "n",
+        "feature_dim",
+        "instance",
+        "edge_weight_type",
+        "model",
+        "mode",
+        "status"
+      ],
+      "not_retimed": "LGBM_V4 -- it appears in no manuscript table (zero occurrences of 'V4' in Area_Free_Main.tex, and it is in no TEX_MODELS roster), so its 27 run-1 paired rows and 82 restored rows were left alone."
+    },
+    "classical_region_retiming": {
+      "source_rows": "tsplib_benchmark/results/all_models_tsplib.csv, timing_provenance == 'serial_solo_median11_quiet_2026-08-11', 410 rows added by this pass (82 instances x 5 estimators)",
+      "models": [
+        "BHH",
+        "Cavdar",
+        "Chien_extrap",
+        "Daganzo",
+        "Kwon_extrap"
+      ],
+      "guarded_columns_max_relative_change": 0.0,
+      "guarded_columns": [
+        "instance",
+        "n",
+        "edge_weight_type",
+        "model",
+        "pred_cost",
+        "true_cost",
+        "gap_pct",
+        "abs_gap_pct",
+        "mst_length",
+        "alpha",
+        "concorde_time_s",
+        "mode",
+        "feature_dim",
+        "status"
+      ],
+      "verification": "field-level byte comparison against all_models_tsplib_pre_classical_timings.csv.bak: 0 of the 14 non-timing columns changed on any of the 2,331 rows; only total_time_s (410), feature_time_s (410), speedup_vs_concorde (135, recomputed from the new median where a Concorde time exists) and timing_provenance (410) moved.",
+      "not_retimed": "Chien, Kwon, BHH_region, Daganzo_region, Cavdar_region, Chien_region, Kwon_region, MST_Ratio, Calibrated_MST_d, Fixed_Alpha, Linear_V3, Interp_V3, LGBM_V4 -- none is in a TSPLIB timing comparison in the manuscript. They keep serial_lowcontention."
+    }
+  },
+  "tsplib_by_size_time_one_protocol": {
+    "convention": "median over instances of the per-instance median-of-11, EUC_2D only, matching tab:tsplib_by_size. ALL EIGHT roster models, GART 2.0 included, are measured under the single protocol below; there is no mixed-protocol cell left in the column.",
+    "protocol": {
+      "tag": "serial_solo_median11_quiet_2026-08-11",
+      "measured_utc_date": "2026-08-11",
+      "repeats_per_pair": 11,
+      "statistic": "median over repeats; relative IQR and full range retained",
+      "process": "one estimator per process, single thread of control, no thread pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB threads = 1",
+      "warm_up": "numba JIT and each model's first predict warmed before timing",
+      "timed_region": "identical to run_all_models_tsplib.py: model.estimate() on the native path, _hybrid_estimate_generic() on the hybrid path, est.estimate(coords,2,None) for the region estimators and est(coords) for Hilbert. Parsing and classical MDS excluded.",
+      "machine": {
+        "logical_cores": 20,
+        "free_physical_GB": 42.5,
+        "background_cpu_pct_mean_5s": "13-16 across the measurement window",
+        "control": "a session reproducing run 1's exact pairing (GART 2.0 with LGBM_V3) returned GART 2.0's run-1 bucket medians at 0.998x and 0.949x, so the elevated background load did not move the numbers"
+      },
+      "determinism": "every timed call reproduced the canonical pred_cost; maximum relative difference 5.4e-08 over 711 measured pairs, and exactly 0 for seven of the eight models"
+    },
+    "time_ms": {
+      "n in [51,150]": {
+        "GART_2.0": {
+          "time_ms": 3.644,
+          "N": 23
+        },
+        "LGBM_V3": {
+          "time_ms": 7.039,
+          "N": 23
+        },
+        "NN_V3": {
+          "time_ms": 9.021,
+          "N": 23
+        },
+        "GART_1.0": {
+          "time_ms": 4.049,
+          "N": 23
+        },
+        "Asymptotic_MST": {
+          "time_ms": 1.156,
+          "N": 23
+        },
+        "Calibrated_MST_dn": {
+          "time_ms": 1.14,
+          "N": 23
+        },
+        "MST_Only": {
+          "time_ms": 1.676,
+          "N": 23
+        },
+        "Hilbert": {
+          "time_ms": 0.656,
+          "N": 23
+        }
+      },
+      "n in [151,400]": {
+        "GART_2.0": {
+          "time_ms": 4.514,
+          "N": 16
+        },
+        "LGBM_V3": {
+          "time_ms": 7.709,
+          "N": 16
+        },
+        "NN_V3": {
+          "time_ms": 9.839,
+          "N": 16
+        },
+        "GART_1.0": {
+          "time_ms": 5.027,
+          "N": 16
+        },
+        "Asymptotic_MST": {
+          "time_ms": 1.84,
+          "N": 16
+        },
+        "Calibrated_MST_dn": {
+          "time_ms": 1.911,
+          "N": 16
+        },
+        "MST_Only": {
+          "time_ms": 2.332,
+          "N": 16
+        },
+        "Hilbert": {
+          "time_ms": 1.436,
+          "N": 16
+        }
+      },
+      "n > 400": {
+        "GART_2.0": {
+          "time_ms": 20.544,
+          "N": 39
+        },
+        "LGBM_V3": {
+          "time_ms": 16.475,
+          "N": 39
+        },
+        "NN_V3": {
+          "time_ms": 18.265,
+          "N": 39
+        },
+        "GART_1.0": {
+          "time_ms": 18.407,
+          "N": 39
+        },
+        "Asymptotic_MST": {
+          "time_ms": 9.273,
+          "N": 39
+        },
+        "Calibrated_MST_dn": {
+          "time_ms": 9.516,
+          "N": 39
+        },
+        "MST_Only": {
+          "time_ms": 9.545,
+          "N": 39
+        },
+        "Hilbert": {
+          "time_ms": 9.136,
+          "N": 39
+        }
+      },
+      "Total (all EUC_2D)": {
+        "GART_2.0": {
+          "time_ms": 6.122,
+          "N": 78
+        },
+        "LGBM_V3": {
+          "time_ms": 8.982,
+          "N": 78
+        },
+        "NN_V3": {
+          "time_ms": 11.238,
+          "N": 78
+        },
+        "GART_1.0": {
+          "time_ms": 6.119,
+          "N": 78
+        },
+        "Asymptotic_MST": {
+          "time_ms": 2.574,
+          "N": 78
+        },
+        "Calibrated_MST_dn": {
+          "time_ms": 2.621,
+          "N": 78
+        },
+        "MST_Only": {
+          "time_ms": 3.083,
+          "N": 78
+        },
+        "Hilbert": {
+          "time_ms": 2.642,
+          "N": 78
+        }
+      }
+    },
+    "superseded_restored_cold_draw_ms": {
+      "note": "what the same cells printed before this pass -- single cold draws from a pre-contention run, except GART 2.0 which carried run 1's paired median-of-11",
+      "values": {
+        "n in [51,150]": {
+          "GART_2.0": 3.916,
+          "LGBM_V3": 10.4,
+          "NN_V3": 7.369,
+          "GART_1.0": 4.587,
+          "Asymptotic_MST": 1.32,
+          "Calibrated_MST_dn": 1.272,
+          "MST_Only": 1.944,
+          "Hilbert": 0.875
+        },
+        "n in [151,400]": {
+          "GART_2.0": 5.164,
+          "LGBM_V3": 11.321,
+          "NN_V3": 8.03,
+          "GART_1.0": 5.715,
+          "Asymptotic_MST": 2.042,
+          "Calibrated_MST_dn": 2.063,
+          "MST_Only": 2.819,
+          "Hilbert": 1.838
+        },
+        "n > 400": {
+          "GART_2.0": 24.619,
+          "LGBM_V3": 21.423,
+          "NN_V3": 17.908,
+          "GART_1.0": 22.034,
+          "Asymptotic_MST": 9.172,
+          "Calibrated_MST_dn": 10.609,
+          "MST_Only": 10.503,
+          "Hilbert": 10.378
+        },
+        "Total (all EUC_2D)": {
+          "GART_2.0": 7.005,
+          "LGBM_V3": 12.599,
+          "NN_V3": 9.54,
+          "GART_1.0": 6.592,
+          "Asymptotic_MST": 2.782,
+          "Calibrated_MST_dn": 2.955,
+          "MST_Only": 3.979,
+          "Hilbert": 2.684
+        }
+      }
+    },
+    "gart2_over_model_ratio": {
+      "reading": ">1 means GART 2.0 is SLOWER than that model in that bucket",
+      "values": {
+        "n in [51,150]": {
+          "LGBM_V3": 0.518,
+          "NN_V3": 0.404,
+          "GART_1.0": 0.9,
+          "Asymptotic_MST": 3.152,
+          "Calibrated_MST_dn": 3.196,
+          "MST_Only": 2.175,
+          "Hilbert": 5.552
+        },
+        "n in [151,400]": {
+          "LGBM_V3": 0.586,
+          "NN_V3": 0.459,
+          "GART_1.0": 0.898,
+          "Asymptotic_MST": 2.453,
+          "Calibrated_MST_dn": 2.362,
+          "MST_Only": 1.935,
+          "Hilbert": 3.144
+        },
+        "n > 400": {
+          "LGBM_V3": 1.247,
+          "NN_V3": 1.125,
+          "GART_1.0": 1.116,
+          "Asymptotic_MST": 2.216,
+          "Calibrated_MST_dn": 2.159,
+          "MST_Only": 2.152,
+          "Hilbert": 2.249
+        },
+        "Total (all EUC_2D)": {
+          "LGBM_V3": 0.682,
+          "NN_V3": 0.545,
+          "GART_1.0": 1.0,
+          "Asymptotic_MST": 2.378,
+          "Calibrated_MST_dn": 2.336,
+          "MST_Only": 1.986,
+          "Hilbert": 2.318
+        }
+      }
+    },
+    "positioning_summary": {
+      "vs_learned_baselines_it_beats": {
+        "LGBM_V3_total": 0.682,
+        "LGBM_V3_n_gt_400": 1.247,
+        "NN_V3_total": 0.545,
+        "NN_V3_n_gt_400": 1.125,
+        "GART_1.0_total": 1.0,
+        "GART_1.0_n_gt_400": 1.116
+      },
+      "_correction_2026_08_11": "vs_classical_closed_forms and classical_range_total previously held Asymptotic_MST, Calibrated_MST_dn, MST_Only and Hilbert. Those are three constant multiples of L_MST and a space-filling-curve tour construction, not classical closed-form region estimators, and the range they gave (1.99-2.38x) is not the cost gap against the family the paper says it displaces. Both keys now hold the five estimators they name, measured under the same solo protocol; the four models they used to hold are under vs_mst_reference_ratios_and_sfc_construction and mst_reference_and_sfc_range_total, unchanged in value.",
+      "vs_classical_closed_forms": {
+        "members": [
+          "BHH",
+          "Cavdar",
+          "Chien_extrap",
+          "Daganzo",
+          "Kwon_extrap"
+        ],
+        "source": "classical_region_estimators_solo.gart2_over_model_ratio",
+        "BHH": {
+          "n in [51,150]": 6.967,
+          "n in [151,400]": 7.892,
+          "n > 400": 20.181,
+          "Total (all EUC_2D)": 9.491
+        },
+        "Cavdar": {
+          "n in [51,150]": 6.073,
+          "n in [151,400]": 6.839,
+          "n > 400": 17.958,
+          "Total (all EUC_2D)": 7.73
+        },
+        "Chien_extrap": {
+          "n in [51,150]": 6.566,
+          "n in [151,400]": 7.086,
+          "n > 400": 18.197,
+          "Total (all EUC_2D)": 8.386
+        },
+        "Daganzo": {
+          "n in [51,150]": 6.981,
+          "n in [151,400]": 8.09,
+          "n > 400": 20.963,
+          "Total (all EUC_2D)": 9.954
+        },
+        "Kwon_extrap": {
+          "n in [51,150]": 6.053,
+          "n in [151,400]": 7.009,
+          "n > 400": 16.881,
+          "Total (all EUC_2D)": 8.55
+        }
+      },
+      "vs_mst_reference_ratios_and_sfc_construction": {
+        "members": [
+          "Asymptotic_MST",
+          "Calibrated_MST_dn",
+          "MST_Only",
+          "Hilbert"
+        ],
+        "note": "Asymptotic_MST / Calibrated_MST_dn / MST_Only are constant multiples of L_MST; Hilbert is a space-filling-curve tour construction. Values unchanged; only the key name is corrected.",
+        "Asymptotic_MST": {
+          "n in [51,150]": 3.152,
+          "n in [151,400]": 2.453,
+          "n > 400": 2.215,
+          "Total (all EUC_2D)": 2.378
+        },
+        "Calibrated_MST_dn": {
+          "n in [51,150]": 3.196,
+          "n in [151,400]": 2.362,
+          "n > 400": 2.159,
+          "Total (all EUC_2D)": 2.336
+        },
+        "MST_Only": {
+          "n in [51,150]": 2.174,
+          "n in [151,400]": 1.936,
+          "n > 400": 2.152,
+          "Total (all EUC_2D)": 1.986
+        },
+        "Hilbert": {
+          "n in [51,150]": 5.555,
+          "n in [151,400]": 3.143,
+          "n > 400": 2.249,
+          "Total (all EUC_2D)": 2.317
+        }
+      },
+      "classical_range_total": {
+        "members": [
+          "BHH",
+          "Cavdar",
+          "Chien_extrap",
+          "Daganzo",
+          "Kwon_extrap"
+        ],
+        "time_ms_range": [
+          0.615,
+          0.792
+        ],
+        "gart2_multiple_range": [
+          7.73,
+          9.954
+        ],
+        "statement": "GART 2.0 at 6.122 ms costs 7.73x to 9.95x the five classical estimators over the 78 EUC_2D instances, and 16.88x to 20.96x above n=400."
+      },
+      "mst_reference_and_sfc_range_total": {
+        "members": [
+          "Asymptotic_MST",
+          "Calibrated_MST_dn",
+          "MST_Only",
+          "Hilbert"
+        ],
+        "time_ms_range": [
+          2.574,
+          3.083
+        ],
+        "gart2_multiple_range": [
+          1.986,
+          2.378
+        ],
+        "was": "classical_range_total, mislabelled"
+      }
+    }
+  },
+  "stale_prose_flagged_not_edited": {
+    "scope": "Area_Free_Main.tex line 430. Both errors predate this re-timing pass; prose was left untouched for the machine-verified pass that follows.",
+    "claim_1": {
+      "text": "GART 2.0 spends 82.6% of total time on feature extraction and MST construction and 16.3% on LightGBM inference; the residual 1.2%",
+      "problem": "those are LGBM_V3 restored shares, not GART 2.0",
+      "correct_gart2": {
+        "convention": "share of summed median time over the 78 EUC_2D instances",
+        "feature_pct": 92.88,
+        "inference_pct": 4.96,
+        "other_pct": 2.16,
+        "predecessor_lgbm_v3_restored": {
+          "feature_pct": 82.57,
+          "inference_pct": 16.28,
+          "other_pct": 1.15
+        },
+        "predecessor_lgbm_v3_same_protocol": {
+          "feature_pct": 80.8,
+          "inference_pct": 17.7,
+          "other_pct": 1.5
+        }
+      },
+      "lgbm_v3_restored": {
+        "feature_pct": 82.57,
+        "inference_pct": 16.28,
+        "other_pct": 1.15
+      }
+    },
+    "claim_2": {
+      "text": "on TSPLIB d18512 GART predicts in 127 ms",
+      "problem": "127 ms was LGBM_V3s restored cold draw, not GART 2.0",
+      "gart2_d18512_ms": 257.97,
+      "lgbm_v3_d18512_ms_solo": 155.79,
+      "lgbm_v3_d18512_ms_restored_superseded": 127.4
+    },
+    "claim_3": {
+      "scope": "Area_Free_Main.tex lines 90 (abstract), 123 (intro), 442 (body) and 498 (conclusion). Flagged, not edited: this pass measures, it does not rewrite prose.",
+      "text": "GART 2.0 needs 6.12 ms per TSPLIB EUC_2D instance against 2.57-3.08 ms for the closed-form baselines / runs 2.0 to 2.4 times slower than the closed-form estimators it is meant to displace",
+      "problem": "2.57-3.08 ms is Asymptotic_MST through MST_Only -- constant multiples of L_MST and a space-filling-curve construction. The five classical closed-form estimators run at 0.615-0.792 ms, so the ratio the sentences claim understates the true one by about a factor of four.",
+      "correct_five_classical_total_ms": {
+        "BHH": 0.645,
+        "Cavdar": 0.792,
+        "Chien_extrap": 0.73,
+        "Daganzo": 0.615,
+        "Kwon_extrap": 0.716
+      },
+      "correct_gart2_multiple_total": [
+        7.73,
+        9.954
+      ],
+      "correct_gart2_multiple_n_gt_400": [
+        16.881,
+        20.963
+      ],
+      "status": "CLOSED 2026-08-11 by the seven-finding re-audit pass.",
+      "resolution": "All four sites rewritten. Each now names both families and gives both costs: 0.615-0.792 ms for the five classical estimators (BHH, Cavdar-Sokol, Chien extrapolated, Daganzo, Kwon-Golden-Wasil extrapolated) and 2.57-3.08 ms for the three constant multiples of L_MST plus the space-filling-curve construction, which are the four non-learned rows of tab:tsplib_by_size. GART 2.0's multiple is 7.73-9.96 over the classical five (16.9-21.0 above n=400) and 2.0-2.4 over the four non-learned rows. Registered in prose_manifest.py as abstract.timing.{classical,mstref}_{lo,hi}, intro.timing.{ratio,mstref}_{lo,hi}, discussion.timing.classical_{n,lo,hi,ratio_lo,ratio_hi,ratio_gt400_lo,ratio_gt400_hi} and conclusion.timing.{classical,mstref}_{lo,hi}. The manifest reason texts for intro.timing.ratio_lo/hi, which described MST_Only and Asymptotic_MST as 'closed form', were rewritten in the same pass.",
+      "gart2_multiple_total_exact": {
+        "note": "6.1222 ms over the unrounded bank time_ms, not the 3dp values above.",
+        "Cavdar": 7.734,
+        "Daganzo": 9.9605
+      }
+    },
+    "_status": "All three closed as of 2026-08-11. claim_1: the manuscript now reads 92.90 / 5.03 / 2.08 percent, matching current_solo_derived_numbers.gart2_decomposition_euc2d_78, so it was fixed before this pass. claim_2: the manuscript now reads 239 ms for d18512, matching current_solo_derived_numbers.d18512_ms.GART_2.0 = 239.25, also fixed before this pass. claim_3 was closed by the seven-finding re-audit pass of 2026-08-11; see its own status and resolution fields. This block is kept as a record of what was wrong, not as an open backlog."
+  },
+  "current_solo_derived_numbers": {
+    "note": "Same solo protocol as the published time column. Quote these, not the superseded blocks.",
+    "gart2_decomposition_euc2d_78": {
+      "feature_pct": 92.9,
+      "inference_pct": 5.03,
+      "other_pct": 2.08
+    },
+    "gart2_decomposition_all_109": {
+      "feature_pct": 94.65,
+      "inference_pct": 3.19,
+      "other_pct": 2.15
+    },
+    "gart2_bucket_median_ms": {
+      "n in [51,150]": 3.644,
+      "n in [151,400]": 4.514,
+      "n > 400": 20.544,
+      "Total (all EUC_2D)": 6.122
+    },
+    "d18512_ms": {
+      "GART_2.0": 239.25,
+      "LGBM_V3": 155.79
+    },
+    "largest_euc2d_instance_ms": {
+      "d18512": {
+        "n": 18512,
+        "GART_2.0_ms": 239.25
+      },
+      "d15112": {
+        "n": 15112,
+        "GART_2.0_ms": 193.56
+      },
+      "brd14051": {
+        "n": 14051,
+        "GART_2.0_ms": 179.68
+      }
+    }
+  },
+  "classical_region_estimators_solo": {
+    "convention": "median over instances of the per-instance median-of-11, EUC_2D only, the same convention as tsplib_by_size_time_one_protocol. These are the five region-based classical estimators the paper positions GART 2.0 against: BHH, Cavdar-Sokol, Chien (extrapolated), Daganzo and Kwon-Golden-Wasil (extrapolated). They were NOT in tab:tsplib_by_size and until this pass they still carried the superseded serial_lowcontention protocol.",
+    "protocol": {
+      "tag": "serial_solo_median11_quiet_2026-08-11",
+      "measured_utc_date": "2026-08-11",
+      "repeats_per_pair": 11,
+      "statistic": "median over repeats; relative IQR and full range retained",
+      "process": "one estimator per process, single thread of control, no thread pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB threads = 1",
+      "warm_up": "numba JIT and each estimator's first call warmed before timing",
+      "timed_region": "identical to run_all_models_tsplib.py: est.estimate(coords, 2, None) on the float32 raw coordinates. Parsing excluded.",
+      "harness": "the same timer that produced gart2_timing_repeats_summary.csv, extended only by five entries in its REGION_ACADEMIC registry, bound to the same region_est.ESTIMATORS objects the runner binds.",
+      "machine": {
+        "logical_cores": 20,
+        "free_physical_GB": 42.0,
+        "background_cpu_pct_mean_5s": "17.5 before the runs, 18.7 after",
+        "note": "slightly above the 13-16% window of the roster pass; the drift control below bounds what that cost."
+      },
+      "determinism": "every timed call reproduced the canonical pred_cost exactly; maximum relative difference 0.0 over all 410 measured pairs, for all five estimators.",
+      "drift_control": {
+        "what": "Asymptotic_MST, already on this protocol, re-measured in the same session; ratio of today's bucket median to its published solo cell.",
+        "ratio_today_over_published": {
+          "n in [51,150]": 0.962,
+          "n in [151,400]": 0.981,
+          "n > 400": 0.996,
+          "Total (all EUC_2D)": 0.988
+        }
+      },
+      "cache_audit": {
+        "why": "TSP_V3_LGBM_Estimator memoises features on hash(coords.tobytes()), which collapses repeats into cache hits. Every estimator timed here was audited for the same pattern before its repeats were trusted.",
+        "static": "each of the five holds only 1-3 scalar attributes (region_mode, enforce_n_range, variant, enforce_domain); no dict, list or set on the object grows across calls, and no new attribute appears. classical_region_estimators.py contains no lru_cache, no memo dict and no tobytes key.",
+        "dynamic_uncleared_repeats": "5 back-to-back calls with NO cache clearing, ratios call_k/call_0: 0.91-1.25 on d18512 (n=18,512) and 0.60-1.19 on pr152 (n=152). A memoised estimator returns ratios near 0.01.",
+        "repeat_spread_pct": {
+          "BHH": {
+            "rel_iqr_median_pct": 10.66,
+            "rel_iqr_max_pct": 48.45,
+            "rel_range_median_pct": 43.0,
+            "rel_range_max_pct": 474.79
+          },
+          "Cavdar": {
+            "rel_iqr_median_pct": 15.73,
+            "rel_iqr_max_pct": 65.87,
+            "rel_range_median_pct": 52.65,
+            "rel_range_max_pct": 296.41
+          },
+          "Chien_extrap": {
+            "rel_iqr_median_pct": 16.14,
+            "rel_iqr_max_pct": 51.41,
+            "rel_range_median_pct": 51.09,
+            "rel_range_max_pct": 122.06
+          },
+          "Daganzo": {
+            "rel_iqr_median_pct": 11.87,
+            "rel_iqr_max_pct": 61.1,
+            "rel_range_median_pct": 51.11,
+            "rel_range_max_pct": 498.2
+          },
+          "Kwon_extrap": {
+            "rel_iqr_median_pct": 9.72,
+            "rel_iqr_max_pct": 24.2,
+            "rel_range_median_pct": 36.27,
+            "rel_range_max_pct": 252.72
+          }
+        },
+        "verdict": "no result caching in any of the five; the 11 repeats measure 11 full computations."
+      }
+    },
+    "time_ms": {
+      "n in [51,150]": {
+        "BHH": {
+          "time_ms": 0.523,
+          "N": 23
+        },
+        "Cavdar": {
+          "time_ms": 0.6,
+          "N": 23
+        },
+        "Chien_extrap": {
+          "time_ms": 0.555,
+          "N": 23
+        },
+        "Daganzo": {
+          "time_ms": 0.522,
+          "N": 23
+        },
+        "Kwon_extrap": {
+          "time_ms": 0.602,
+          "N": 23
+        }
+      },
+      "n in [151,400]": {
+        "BHH": {
+          "time_ms": 0.572,
+          "N": 16
+        },
+        "Cavdar": {
+          "time_ms": 0.66,
+          "N": 16
+        },
+        "Chien_extrap": {
+          "time_ms": 0.637,
+          "N": 16
+        },
+        "Daganzo": {
+          "time_ms": 0.558,
+          "N": 16
+        },
+        "Kwon_extrap": {
+          "time_ms": 0.644,
+          "N": 16
+        }
+      },
+      "n > 400": {
+        "BHH": {
+          "time_ms": 1.018,
+          "N": 39
+        },
+        "Cavdar": {
+          "time_ms": 1.144,
+          "N": 39
+        },
+        "Chien_extrap": {
+          "time_ms": 1.129,
+          "N": 39
+        },
+        "Daganzo": {
+          "time_ms": 0.98,
+          "N": 39
+        },
+        "Kwon_extrap": {
+          "time_ms": 1.217,
+          "N": 39
+        }
+      },
+      "Total (all EUC_2D)": {
+        "BHH": {
+          "time_ms": 0.645,
+          "N": 78
+        },
+        "Cavdar": {
+          "time_ms": 0.792,
+          "N": 78
+        },
+        "Chien_extrap": {
+          "time_ms": 0.73,
+          "N": 78
+        },
+        "Daganzo": {
+          "time_ms": 0.615,
+          "N": 78
+        },
+        "Kwon_extrap": {
+          "time_ms": 0.716,
+          "N": 78
+        }
+      }
+    },
+    "superseded_serial_lowcontention_ms": {
+      "note": "what these cells held before this pass: single draws from the pre-contention run, the protocol the roster pass already retired. It runs HIGH, as it did for LGBM_V3.",
+      "values": {
+        "n in [51,150]": {
+          "BHH": 0.777,
+          "Cavdar": 0.65,
+          "Chien_extrap": 0.75,
+          "Daganzo": 0.6,
+          "Kwon_extrap": 0.546
+        },
+        "n in [151,400]": {
+          "BHH": 0.986,
+          "Cavdar": 0.9,
+          "Chien_extrap": 0.75,
+          "Daganzo": 0.574,
+          "Kwon_extrap": 0.639
+        },
+        "n > 400": {
+          "BHH": 1.575,
+          "Cavdar": 1.651,
+          "Chien_extrap": 1.331,
+          "Daganzo": 1.184,
+          "Kwon_extrap": 1.214
+        },
+        "Total (all EUC_2D)": {
+          "BHH": 1.132,
+          "Cavdar": 1.077,
+          "Chien_extrap": 0.916,
+          "Daganzo": 0.808,
+          "Kwon_extrap": 0.799
+        }
+      },
+      "new_over_old_total": {
+        "BHH": 0.57,
+        "Cavdar": 0.735,
+        "Chien_extrap": 0.797,
+        "Daganzo": 0.761,
+        "Kwon_extrap": 0.896
+      }
+    },
+    "gart2_over_model_ratio": {
+      "reading": ">1 means GART 2.0 is SLOWER than that estimator in that bucket",
+      "values": {
+        "n in [51,150]": {
+          "BHH": 6.967,
+          "Cavdar": 6.073,
+          "Chien_extrap": 6.566,
+          "Daganzo": 6.981,
+          "Kwon_extrap": 6.053
+        },
+        "n in [151,400]": {
+          "BHH": 7.892,
+          "Cavdar": 6.839,
+          "Chien_extrap": 7.086,
+          "Daganzo": 8.09,
+          "Kwon_extrap": 7.009
+        },
+        "n > 400": {
+          "BHH": 20.181,
+          "Cavdar": 17.958,
+          "Chien_extrap": 18.197,
+          "Daganzo": 20.963,
+          "Kwon_extrap": 16.881
+        },
+        "Total (all EUC_2D)": {
+          "BHH": 9.491,
+          "Cavdar": 7.73,
+          "Chien_extrap": 8.386,
+          "Daganzo": 9.954,
+          "Kwon_extrap": 8.55
+        }
+      }
+    }
+  },
+  "lgbm_v4_solo": {
+    "convention": "median over instances of the per-instance median-of-11, EUC_2D only, the same convention as tsplib_by_size_time_one_protocol. LGBM_V4 is not a printed row of tab:tsplib_by_size, but Section 4.6 prints its cost against GART 2.0's, and until this pass that ratio crossed a protocol boundary: V4's 82 native cells were serial_lowcontention and its 27 hybrid cells serial_median11_quiet, while GART 2.0 was solo. Both are now solo.",
+    "protocol": {
+      "tag": "serial_solo_median11_quiet_2026-08-11",
+      "measured_utc_date": "2026-08-11",
+      "repeats_per_pair": 11,
+      "statistic": "median over repeats; relative IQR and full range retained",
+      "process": "one estimator per process, single thread of control, no thread pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB threads = 1",
+      "warm_up": "numba JIT and the booster's first predict warmed before timing",
+      "timed_region": "identical to run_all_models_tsplib.py: model.estimate() on the native path, _hybrid_estimate_generic() on the hybrid path. Parsing and classical MDS excluded.",
+      "harness": "the same timer that produced the roster and classical solo passes, invoked as --models LGBM_V4 --reference '' so nothing shares the process",
+      "determinism": "every timed call reproduced the canonical pred_cost exactly; maximum relative difference 0.0 over all 109 measured instances",
+      "cache_audit": {
+        "why": "TSP_V3_LGBM_Estimator memoises features on hash(coords.tobytes()); the V4 estimator was audited for the same pattern before its repeats were trusted.",
+        "within_instance_range_over_median_pct": {
+          "median": 13.8,
+          "max": 90.6
+        },
+        "min_over_median_worst": 0.776,
+        "verdict": "no result caching: a memoised estimator collapses min/median toward 0.01, and the worst case here is 0.776, so the 11 repeats measure 11 full computations"
+      }
+    },
+    "time_ms": {
+      "n in [51,150]": {
+        "LGBM_V4": {
+          "time_ms": 5.724,
+          "N": 23
+        }
+      },
+      "n in [151,400]": {
+        "LGBM_V4": {
+          "time_ms": 7.162,
+          "N": 16
+        }
+      },
+      "n > 400": {
+        "LGBM_V4": {
+          "time_ms": 33.577,
+          "N": 39
+        }
+      },
+      "Total (all EUC_2D)": {
+        "LGBM_V4": {
+          "time_ms": 9.811,
+          "N": 78
+        }
+      }
+    },
+    "superseded_mixed_protocol_ms": {
+      "note": "what these cells held before this pass: serial_lowcontention on the native rows. It runs LOW against the solo protocol on the three smaller buckets and high above n=400, so the published total ratio understated V4's cost.",
+      "values": {
+        "n in [51,150]": 5.003,
+        "n in [151,400]": 6.643,
+        "n > 400": 34.876,
+        "Total (all EUC_2D)": 7.949
+      }
+    },
+    "v4_over_gart2_ratio": {
+      "reading": ">1 means LGBM_V4 is SLOWER than GART 2.0 in that bucket, both solo",
+      "gart2_solo_ms": {
+        "n in [51,150]": 3.644,
+        "n in [151,400]": 4.514,
+        "n > 400": 20.544,
+        "Total (all EUC_2D)": 6.122
+      },
+      "values_same_protocol": {
+        "n in [51,150]": 1.571,
+        "n in [151,400]": 1.587,
+        "n > 400": 1.634,
+        "Total (all EUC_2D)": 1.603
+      },
+      "values_previously_printed_cross_protocol": {
+        "n in [51,150]": 1.373,
+        "n in [151,400]": 1.472,
+        "n > 400": 1.698,
+        "Total (all EUC_2D)": 1.298
+      },
+      "statement": "On the single solo protocol, LGBM_V4 costs 9.811 ms over the 78 EUC_2D instances against GART 2.0's 6.122 ms, a factor of 1.603, and 33.577 ms above n=400 against 20.544 ms, a factor of 1.634. The manuscript previously printed 7.949 ms and a factor of 1.298 on the total, which was V4 on serial_lowcontention against GART 2.0 on solo."
+    }
+  }
+}

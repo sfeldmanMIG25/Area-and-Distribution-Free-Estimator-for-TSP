@@ -1,0 +1,18 @@
+{
+  "arm_B_naive_ratio_aggregate": 2.096654453825297,
+  "arm_B_naive_note": "whole 12-feature group computed, 10 discarded",
+  "n_instances": 78,
+  "reps": 3,
+  "gate_threshold": 1.35,
+  "arm_A_ratio": 1.0,
+  "arm_A_note": "arm A adds no feature; identical extraction path to frozen",
+  "arm_B_ratio_aggregate": 2.0360954596527536,
+  "arm_B_ratio_median_per_instance": 1.9039084384975298,
+  "arm_B_ratio_p90_per_instance": 2.8695425293492476,
+  "arm_B_ratio_max_per_instance": 8.031878366513345,
+  "arm_B_coop_ratio_aggregate": 2.036841107557767,
+  "arm_B_coop_ratio_median_per_instance": 1.871409068899111,
+  "arm_A_pass": true,
+  "arm_B_pass": false,
+  "arm_B_coop_pass": false
+}

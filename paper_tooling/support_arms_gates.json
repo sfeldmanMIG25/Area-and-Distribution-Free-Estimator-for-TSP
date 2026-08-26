@@ -1,0 +1,133 @@
+{
+  "study": "support+feature arms vs frozen GART 2.0",
+  "pre_registered_utc": "2026-08-11",
+  "note": "Written BEFORE any candidate model was trained or scored. A candidate ships only on a clean sweep of all 9 gates. Partial passes are a reported negative result, not a ship.",
+
+  "incumbent": {
+    "artifact": "lgbm_model_v3/gart2_final.joblib",
+    "sha256": "69d277441e20f04ecf2f29a10a610532d1a338d84b77a495822ed5359be64197",
+    "n_features": 31,
+    "target": "logit(alpha-1)",
+    "monotone": {"n_customers": -1, "dimension": -1},
+    "hyperparameters": "V3 frozen",
+    "seed": 42,
+    "trees": 1118
+  },
+
+  "control_numbers_supplied_by_coordinator": {
+    "source_nd": "Generalized_TSP_Analysis_ND/benchmark_results_ND_final.csv (production, status-screened, N=16920)",
+    "source_2d": "Generalized_TSP_Analysis/benchmark_results_2D_v3.csv (production, N=2580)",
+    "nd_test": {"MAPE": 0.6201, "SDPE": 0.9881, "MSPE": 0.1822},
+    "bench2d_overall": {"MAPE": 2.9042, "SDPE": 4.6869, "MSPE": -0.0504},
+    "bench2d_by_group": {
+      "grid": {"n": 210, "MAPE": 7.1121, "SDPE": 1.9225, "MSPE": 7.1121},
+      "line_noise": {"n": 210, "MAPE": 10.7522, "SDPE": 6.1656, "MSPE": -10.7377},
+      "cluster": {"n": 60, "MAPE": 2.1847, "SDPE": 2.7188, "MSPE": -0.9392},
+      "others": {"n": 2100, "MAPE": 1.7191, "SDPE": 2.4299, "MSPE": 0.3275}
+    },
+    "training_time_nd": {"MAPE": 0.6203, "SDPE": 0.9887},
+    "agreement_production_vs_training_time": 0.0006
+  },
+
+  "gates": [
+    {
+      "id": 1,
+      "name": "ND test no-regression",
+      "slice": "ND test split, N=16920, untouched",
+      "rule": "MAPE <= frozen + 0.02 AND SDPE <= frozen + 0.02",
+      "frozen_MAPE": 0.6201,
+      "frozen_SDPE": 0.9881,
+      "threshold_MAPE": 0.6401,
+      "threshold_SDPE": 1.0081
+    },
+    {
+      "id": 2,
+      "name": "TSPLIB EUC_2D dispersion vs Asymptotic_MST",
+      "slice": "TSPLIB EUC_2D, N=78",
+      "rule": "sd_ratio significantly < 1 vs Asymptotic_MST, Holm-adjusted p < 0.05, same family the frozen model was judged in (ood_harness.dispersion_verdict default baseline family, one candidate per call)",
+      "frozen_ratio": 0.6218,
+      "frozen_p_holm": 0.0
+    },
+    {
+      "id": 3,
+      "name": "TSPLIB EUC_2D mean gain vs Calibrated_MST_dn",
+      "slice": "TSPLIB EUC_2D, N=78",
+      "rule": "mean APE gain vs Calibrated_MST_dn remains significant, Holm p < 0.05, family = ood_harness.evaluate_candidate comparison family (all strata x all baselines), same as the frozen model",
+      "frozen_gain": 1.2094,
+      "frozen_mde": 0.9378,
+      "frozen_p_holm": 0.0016
+    },
+    {
+      "id": 4,
+      "name": "Monotonicity probe",
+      "slice": "1000 ND-test instances, seed 42, 24-point log grids: d in [2,200], n in [5,4000]",
+      "rule": ">= 99% non-increasing on BOTH swept axes AND no violation exceeding 1e-3 (deployed alpha scale)",
+      "frozen": {"dimension_pct": 100.0, "n_customers_pct": 100.0, "max_violation": 0.0}
+    },
+    {
+      "id": 5,
+      "name": "Extraction cost",
+      "slice": "78 real TSPLIB EUC_2D instances",
+      "rule": "candidate feature-extraction time / frozen feature-extraction time <= 1.35, measured back-to-back inside ONE process, interleaved, no absolute wall-clock reported",
+      "threshold_ratio": 1.35
+    },
+    {
+      "id": 6,
+      "name": "LineNoise alpha slope",
+      "slice": "2D benchmark, generator == line_noise, n >= 200, N=90",
+      "rule": "OLS slope of predicted alpha on true alpha >= 0.70",
+      "frozen_reference_V3": 0.2941,
+      "threshold": 0.70
+    },
+    {
+      "id": 7,
+      "name": "grid sub-generator MSPE",
+      "slice": "2D benchmark, generator == grid, N=210",
+      "rule": "MSPE (mean signed percent error, %) <= +4.0",
+      "frozen": 7.1121,
+      "threshold": 4.0
+    },
+    {
+      "id": 8,
+      "name": "No 2D class regression",
+      "slice": "2D benchmark, N=2580",
+      "rule": "no group regresses more than 0.15 MAPE vs the frozen GART 2.0 production row",
+      "reference_grouping": {"grid": 7.1121, "line_noise": 10.7522, "cluster": 2.1847, "others": 1.7191},
+      "supplementary_grouping_reported": ["Isotropic", "Biased", "Clustered", "Geometric", "LineNoise"],
+      "threshold_delta": 0.15
+    },
+    {
+      "id": 9,
+      "name": "TSPLIB non-Euclidean screened",
+      "slice": "TSPLIB non-EUC_2D, structural-triangle-violators excluded, N=23",
+      "rule": "no MAPE regression vs frozen AND coverage must not drop",
+      "frozen_MAPE": 2.8533,
+      "frozen_coverage": "22/23"
+    }
+  ],
+
+  "additional_directional_requirement_from_coordinator": {
+    "rule": "A shippable arm must beat 2D overall MAPE 2.9042 while holding ND at or under 0.6401. Failing that is a genuine negative result and is to be reported as one.",
+    "bench2d_overall_target": 2.9042
+  },
+
+  "adversarial_checks_pre_registered": [
+    {
+      "id": "A1",
+      "name": "augmentation-vs-benchmark leakage",
+      "test": "zero name overlap (verified independently) plus nearest-neighbour distance in standardised feature space from every benchmark line_noise/grid instance to the nearest augmentation instance, compared against the benchmark's own within-family NN distance distribution. Near-duplicates sink the result."
+    },
+    {
+      "id": "A2",
+      "name": "one-constant recalibration control",
+      "test": "frozen model multiplied by a single constant fitted on the LineNoise family (in-sample, the most generous possible version of the control). The winning arm's LineNoise gain must clearly exceed what that one constant buys."
+    }
+  ],
+
+  "reporting": {
+    "correlation_to_report": ["greedy_nn_over_mst", "mst_topology_straightness"],
+    "arms": ["A = 31 frozen features + augmentation in TRAIN only",
+             "B = 34 features (frozen + mst_topology_straightness + degeneracy_pca_effective_rank + mst_topology_deg2_straight_mean) + augmentation in TRAIN only"],
+    "preference": "Arm A strongly preferred if it clears the gates (zero inference cost increase). A is tested and reported first regardless of which is better."
+  }
+}

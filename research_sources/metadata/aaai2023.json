@@ -1,0 +1,19 @@
+{
+  "key": "aaai2023",
+  "type": "inproceedings",
+  "title": "{H-TSP}: Hierarchically Solving the Large-Scale Traveling Salesman Problem",
+  "author": "Pan, Xuanhao and Jin, Yan and Ding, Yuandong and Feng, Mingxiao and Zhao, Li and Song, Lei and Bian, Jiang",
+  "year": "2023",
+  "doi": "10.1609/aaai.v37i8.26120",
+  "bib_url": "",
+  "candidate_url": "https://ojs.aaai.org/index.php/AAAI/article/download/26120/25892",
+  "status": "downloaded",
+  "notes": "official AAAI open-access PDF",
+  "pdf_path": "research_sources\\pdf\\aaai2023.pdf",
+  "text_path": "research_sources\\text\\aaai2023.txt",
+  "markdown_path": "research_sources\\text\\aaai2023.md",
+  "sha256": "ccfc60d4f15046856c010afe060c6fcd20990fd36b8166399576556b734fa530",
+  "bytes": "222210",
+  "http_status": "200",
+  "final_url": "https://ojs.aaai.org/index.php/AAAI/article/download/26120/25892"
+}

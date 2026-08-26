@@ -21,8 +21,15 @@ def run_lkh(
     grid_size: int,
     runs: int = 1,
     time_limit_s: int = 600,
+    proc_timeout_s: int | None = None,
 ) -> Tuple[int, float, List[int]]:
-    """Run LKH-3. Returns (tour_length, runtime, tour)."""
+    """Run LKH-3. Returns (tour_length, runtime, tour).
+
+    ``time_limit_s`` is LKH's own TIME_LIMIT, which bounds the optimisation loop
+    but not preprocessing (distance matrix, candidate set). Pass
+    ``proc_timeout_s`` to additionally hard-bound the process; it raises
+    ``subprocess.TimeoutExpired``. Default None keeps the previous behaviour.
+    """
     run_id = str(uuid.uuid4())[:8]
     run_dir = os.path.join(SOLVER_SCRATCH_DIR, run_id)
     os.makedirs(run_dir, exist_ok=True)
@@ -43,7 +50,7 @@ def run_lkh(
         start_time = time.perf_counter()
         result = subprocess.run(
             [LKH_EXECUTABLE_PATH, os.path.basename(par_path)],
-            capture_output=True, text=True, cwd=run_dir,
+            capture_output=True, text=True, cwd=run_dir, timeout=proc_timeout_s,
         )
         lkh_time = time.perf_counter() - start_time
 

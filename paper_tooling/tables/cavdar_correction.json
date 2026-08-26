@@ -1,0 +1,11 @@
+{
+  "cavdar_corr_2d_n_below_min": 1320,
+  "cavdar_corr_2d_n_total": 2580,
+  "cavdar_corr_2d_pct_below_min": 51.162791,
+  "cavdar_corr_n_max": 975,
+  "cavdar_corr_n_min": 100,
+  "cavdar_corr_ratio_at_n_max": 0.981934,
+  "cavdar_corr_ratio_at_n_min": 0.867878,
+  "cavdar_corr_ratio_extrap_5000": 1.215328,
+  "cavdar_corr_step_at_n_max_pct": 1.839804
+}

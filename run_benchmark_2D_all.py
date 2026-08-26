@@ -39,12 +39,15 @@ from tsp_utils import parse_tsp_instance, parse_tsp_solution
 import tsp_utils_2 as academic
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
+from lgbm_model_v3.lgbm_estimator_gart2 import TSP_GART2_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 sys.path.append(str(SCRIPT_DIR / "lgbm_model_v4"))
 from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
+import classical_region_estimators as region_est
+from baselines_calibrated import AsymptoticMSTRatio, CalibratedMSTRatio
 
-GART_FAMILY = {"Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
+GART_FAMILY = {"GART_2.0", "Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis"
@@ -94,6 +97,10 @@ def extract_base_info(file_pair):
         "n_customers": inst_data['n_customers'],
         "dimension": inst_data['dimension'],
         "grid_size": inst_data.get('grid_size', 1000),
+        # Generator label, needed for the per-class results table. Existing
+        # cached ground-truth files predate this column; analysis falls back to
+        # the filename grammar TSP-{generator}-n{n}-g{G}-... when it is absent.
+        "distribution": inst_data.get('distribution_type', 'unknown'),
         "true_cost": sol_data['optimal_cost'],
         "mst_length": mst_length,
         "true_alpha": sol_data['optimal_cost'] / mst_length_safe,
@@ -129,24 +136,25 @@ def worker_run_estimator(row_dict, model_name, estimator_obj):
     inst_path = Path(row_dict['file_path'])
     inst_data = parse_tsp_instance(inst_path)
     coords = inst_data.coordinates
-    n = row_dict['n_customers']
     d = row_dict['dimension']
     grid_size = row_dict['grid_size']
 
-    status = 'ok'
     pred_cost = float('nan')
     t_feat = float('nan')
     t_inf = float('nan')
 
-    # Kwon: only runs inside its calibration range. Out-of-range is a recorded
-    # status row (explicit, not a silent fallback).
-    if model_name == 'Kwon' and n > academic.KWON_CALIBRATION_N_MAX:
-        status = 'kwon_out_of_calibration'
-    elif hasattr(estimator_obj, 'estimate'):
+    status = 'ok'
+    region_source = ''
+    if hasattr(estimator_obj, 'estimate'):
         res = estimator_obj.estimate(coords, d, grid_size)
         pred_cost = res['estimate']
         t_feat = res.get('feature_time', 0.0)
         t_inf = res.get('inference_time', 0.0)
+        # Region-aware estimators report why they declined an instance instead
+        # of raising, so an out-of-domain case becomes a visible status row
+        # rather than a halted run.
+        status = res.get('status', 'ok')
+        region_source = res.get('region_source', '')
     else:
         pred_cost, t_total = estimator_obj(coords)
         t_feat = t_inf = t_total / 2.0
@@ -156,11 +164,12 @@ def worker_run_estimator(row_dict, model_name, estimator_obj):
         'instance': row_dict['instance'],
         'pred_cost': pred_cost,
         'true_cost': row_dict['true_cost'],
-        'prediction_time_s': (t_feat + t_inf) if status == 'ok' else float('nan'),
+        'prediction_time_s': t_feat + t_inf,
         'feature_time_s': t_feat,
         'inference_time_s': t_inf,
         'optimal_solve_time_s': row_dict['optimal_solve_time_s'],
         'status': status,
+        'region_source': region_source,
     }
 
 def process_model(model_name, factory, base_df):
@@ -217,8 +226,8 @@ def calculate_metrics_and_print(df):
     print("                      FINAL BENCHMARK SUMMARY (2D)                      ")
     print("="*90)
 
-    # Status rows carrying NaN (e.g. Kwon out-of-calibration) are not scored.
-    # We preserve them in the CSV for auditing but exclude from metrics.
+    # Preserve any estimator-produced status rows for auditing and exclude
+    # non-success rows from aggregate metrics.
     if 'status' in df.columns:
         print("\nStatus breakdown:")
         print(df.groupby(['model', 'status']).size().unstack(fill_value=0))
@@ -320,17 +329,37 @@ def main():
     base_df = generate_base_dataframe(tasks)
     
     schedule = [
-        # --- Classic Academic Estimators ---
-        ('Cavdar', lambda: academic.estimate_tsp_cavdar),
+        # --- Qualified reference estimators ---
         # ('Vinel', lambda: academic.estimate_tsp_vinel),          # DEPRECATED: redundant with BHH in 2D
         # ('Composite', lambda: academic.estimate_tsp_composite),  # DEPRECATED: dominated by GART
-        ('BHH', lambda: academic.estimate_tsp_bhh),
         ('MST_Ratio', lambda: academic.estimate_tsp_mst_ratio),
-        ('Chien', lambda: academic.estimate_tsp_chien),
         # ('Christofides', lambda: academic.estimate_tsp_christofides),  # DEPRECATED: wall-time > solver
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
-        ('Kwon', lambda: academic.estimate_tsp_kwon),
-        ('Daganzo', lambda: academic.estimate_tsp_daganzo),
+
+        # --- Constant-ratio references ---
+        # MST_Only is the alpha = 1 floor. Asymptotic_MST is the published
+        # constant ratio beta_TSP/beta_MST, defined at d=2 only. The two
+        # Calibrated rows are fitted on the training split alone and are the
+        # honest reference for any claim that a learned alpha adds value.
+        ('MST_Only', lambda: region_est.ESTIMATORS['MST_Only']),
+        ('Asymptotic_MST', lambda: AsymptoticMSTRatio()),
+        ('Calibrated_MST_d', lambda: CalibratedMSTRatio('d')),
+        ('Calibrated_MST_dn', lambda: CalibratedMSTRatio('dn')),
+
+        # --- Classical estimators. BHH is reported twice: with the convex-hull
+        # plug-in on the full benchmark, and with the exact sampling region
+        # G^2 on the matched (i.i.d. uniform) subset, which is the quantity the
+        # theorem names. Cavdar--Sokol has a single row because its area is a
+        # statistic of the node set in the source, not a sampling region.
+        #
+        # Daganzo, Chien and Kwon--Golden--Wasil are NOT scored. Their
+        # coefficients reached this repository through a secondary transcription
+        # and their primaries are paywalled with no obtainable open-access copy,
+        # so no published number of ours may rest on them. They remain in the
+        # manuscript's literature review and nowhere else. Do not re-add.
+        ('BHH', lambda: region_est.ESTIMATORS['BHH']),
+        ('BHH_region', lambda: region_est.ESTIMATORS['BHH_region']),
+        ('Cavdar', lambda: region_est.ESTIMATORS['Cavdar']),
 
         # --- Simulation / Sampling (all DEPRECATED under the solver-time kill rule) ---
         # ('EVT', lambda: academic.estimate_tsp_evt),
@@ -338,6 +367,9 @@ def main():
         # ('Basel', lambda: academic.estimate_tsp_basel_willemain),
 
         # --- Machine Learning Models ---
+        # GART_2.0 is the production model. LGBM_V3 stays alongside it as the
+        # predecessor the paper compares against.
+        ('GART_2.0', lambda: TSP_GART2_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
         ('LGBM_V4', lambda: TSP_V4_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v4'))),
@@ -352,7 +384,14 @@ def main():
         process_model(name, factory, base_df)
 
     print("\n--- Aggregating Results ---")
-    csv_files = glob(str(BENCHMARK_RESULTS_DIR / "results_*.csv"))
+    # Aggregate the schedule's own checkpoints by name, never a wildcard. The
+    # checkpoint directory also holds ``*_as_published.csv`` audit snapshots and
+    # the checkpoints of withdrawn models; a glob would fold both back into the
+    # released CSV -- the first as duplicate rows, the second as rows for models
+    # this benchmark no longer scores.
+    csv_files = [str(p) for p in
+                 (BENCHMARK_RESULTS_DIR / f"results_{name.lower()}.csv" for name, _ in schedule)
+                 if p.exists()]
     if csv_files:
         final_df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
         final_df.to_csv(FINAL_RESULTS_FILE, index=False)

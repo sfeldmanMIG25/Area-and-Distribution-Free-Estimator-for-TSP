@@ -1,0 +1,19 @@
+{
+  "key": "chazelle1993",
+  "type": "article",
+  "title": "An optimal convex hull algorithm in any fixed dimension",
+  "author": "Chazelle, Bernard",
+  "year": "1993",
+  "doi": "10.1007/BF02573985",
+  "bib_url": "",
+  "candidate_url": "https://www.cs.princeton.edu/techreports/1991/336.pdf",
+  "status": "extraction_failed",
+  "notes": "PDF has no extractable text layer; OCR is not available in this environment",
+  "pdf_path": "research_sources\\pdf\\chazelle1993.pdf",
+  "text_path": "",
+  "markdown_path": "",
+  "sha256": "94c66772c06a368a7d5f3960a2c67d7e469eaada30a39b505b8a78e5ada44262",
+  "bytes": "13230690",
+  "http_status": "200",
+  "final_url": "https://www.cs.princeton.edu/techreports/1991/336.pdf"
+}

@@ -1,0 +1,19 @@
+{
+  "key": "akiba2019optuna",
+  "type": "inproceedings",
+  "title": "Optuna: A next-generation hyperparameter optimization framework",
+  "author": "Akiba, Takuya and Sano, Shotaro and Yanase, Toshihiko and Ohta, Takeru and Koyama, Masanori",
+  "year": "2019",
+  "doi": "10.1145/3292500.3330701",
+  "bib_url": "",
+  "candidate_url": "https://arxiv.org/pdf/1907.10902",
+  "status": "downloaded",
+  "notes": "author-posted arXiv preprint of the cited Optuna work",
+  "pdf_path": "research_sources\\pdf\\akiba2019optuna.pdf",
+  "text_path": "research_sources\\text\\akiba2019optuna.txt",
+  "markdown_path": "research_sources\\text\\akiba2019optuna.md",
+  "sha256": "a1ec86ba21a3f2e7bb774c00f8b108dc955993f39feed72f5d8ee3910b6d8a51",
+  "bytes": "1096378",
+  "http_status": "200",
+  "final_url": "https://arxiv.org/pdf/1907.10902"
+}

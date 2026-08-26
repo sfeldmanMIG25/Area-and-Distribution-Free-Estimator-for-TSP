@@ -1,0 +1,19 @@
+{
+  "key": "percus1996finite",
+  "type": "article",
+  "title": "Finite Size and Dimensional Dependence in the {Euclidean} Traveling Salesman Problem",
+  "author": "Percus, Allon G. and Martin, Olivier C.",
+  "year": "",
+  "doi": "10.1103/PhysRevLett.76.1188",
+  "bib_url": "",
+  "candidate_url": "https://scholar.cgu.edu/allon-percus/wp-content/uploads/sites/11/2013/08/tspprl.pdf",
+  "status": "downloaded",
+  "notes": "author-hosted copy of the official APS paper",
+  "pdf_path": "research_sources\\pdf\\percus1996finite.pdf",
+  "text_path": "research_sources\\text\\percus1996finite.txt",
+  "markdown_path": "research_sources\\text\\percus1996finite.md",
+  "sha256": "08af06263abb52f6f6f3a862646f4192db00be4aff324533db64863fc2b21d9c",
+  "bytes": "126011",
+  "http_status": "200",
+  "final_url": "https://scholar.cgu.edu/allon-percus/wp-content/uploads/sites/11/2013/08/tspprl.pdf"
+}

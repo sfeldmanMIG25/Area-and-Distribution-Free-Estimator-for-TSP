@@ -1,0 +1,1628 @@
+{
+ "_what": "Cost/accuracy frontier positioning for GART 2.0 against the Held-Karp 1-tree bound, the MST-ratio family and the classical closed forms.",
+ "_written_by": "paper_tooling/frontier_positioning.md build pass",
+ "_sources": {
+  "accuracy_models": "tsplib_benchmark/results/all_models_tsplib_repaired.csv",
+  "accuracy_1tree": "paper_tooling/hk1tree_frontier_table.csv, hk1tree_frontier_tsplib.csv",
+  "cost_models": "paper_tooling/gart2_timing_bank.json (tsplib_by_size_time_one_protocol, classical_region_estimators_solo, lgbm_v4_solo)",
+  "cost_1tree": "paper_tooling/hk1tree_frontier_bank.json (cost_tsplib_euc2d_78)",
+  "exact_solver": "tsplib_benchmark/concorde_solve_times.csv via all_models_tsplib_repaired.csv"
+ },
+ "corpus": {
+  "name": "TSPLIB EUC_2D",
+  "N": 78,
+  "n_min": 51,
+  "n_median": 408.5,
+  "n_max": 18512
+ },
+ "cost_statistic": "median over the 78 instances of the per-instance median over repeats, solo protocol (one estimator per process, threads pinned to 1, warmed)",
+ "cost_normalisation": {
+  "why": "the roster/classical/V4 cells were measured on a quiet box (13-16% load); the 1-tree ladder was measured this pass at 20-73% load, median 47%",
+  "method": "1-tree cells are divided by the GART 2.0 cell co-measured in the same session and multiplied by the published GART 2.0 cell",
+  "gart2_published_ms": 6.122,
+  "gart2_co_measured_with_1tree_ms": 6.0722499620169,
+  "reproduction_ratio": 0.9918735645241589,
+  "status": "ratios are primary; absolute ms are advisory",
+  "_superseded": "SUPERSEDED by cost_tsplib_euc2d_solo_2026_08_11 in paper_tooling/hk1tree_frontier_bank.json. Measured at 20-73% CPU load, and the headline arm co-measured GART 2.0 and the 1-tree in ONE process. Co-measurement moved small-n medians by up to 1.9x elsewhere in this project, in GART 2.0's favour, so these are ratios only and must not be printed beside the solo timing column. Kept for provenance -- do not quote an absolute millisecond figure from this key."
+ },
+ "table_total_corpus": [
+  {
+   "label": "Daganzo",
+   "family": "closed form",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.615,
+   "x": 0.10045736687357072,
+   "mape": 44.47694599394996,
+   "complexity": "\\Theta(n)",
+   "pareto": true
+  },
+  {
+   "label": "BHH",
+   "family": "closed form",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.645,
+   "x": 0.1053577262332571,
+   "mape": 25.1579106696716,
+   "complexity": "\\Theta(n)",
+   "pareto": true
+  },
+  {
+   "label": "Kwon_extrap",
+   "family": "closed form",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.716,
+   "x": 0.11695524338451486,
+   "mape": 54.42522319519438,
+   "complexity": "\\Theta(n)",
+   "pareto": false
+  },
+  {
+   "label": "Chien_extrap",
+   "family": "closed form",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.73,
+   "x": 0.1192420777523685,
+   "mape": 30.4075561084276,
+   "complexity": "\\Theta(n)",
+   "pareto": false
+  },
+  {
+   "label": "Cavdar",
+   "family": "closed form",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.792,
+   "x": 0.12936948709572035,
+   "mape": 23.198705610669442,
+   "complexity": "\\Theta(n)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_0_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 0.0,
+   "ms": 2.048900276312033,
+   "x": 0.33467825486965586,
+   "mape": 3.701330809423673,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_0",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 0.0,
+   "ms": 2.048900276312033,
+   "x": 0.33467825486965586,
+   "mape": 10.340837775720512,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "Asymptotic_MST",
+   "family": "MST ratio",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 2.574,
+   "x": 0.42045083306109116,
+   "mape": 3.5508452129462125,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": true
+  },
+  {
+   "label": "Calibrated_MST_dn",
+   "family": "MST ratio",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 2.621,
+   "x": 0.4281280627245998,
+   "mape": 3.765555759058194,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "Hilbert",
+   "family": "space-filling curve",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 2.642,
+   "x": 0.43155831427638025,
+   "mape": 45.20300012979752,
+   "complexity": "\\Theta(n \\log n)",
+   "pareto": false
+  },
+  {
+   "label": "MST_Only",
+   "family": "MST ratio",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 3.083,
+   "x": 0.50359359686377,
+   "mape": 11.350015636193358,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_10_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 10.0,
+   "ms": 3.4775097420678738,
+   "x": 0.5680349137647621,
+   "mape": 2.5939102148587034,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_10",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 10.0,
+   "ms": 3.4775097420678738,
+   "x": 0.5680349137647621,
+   "mape": 8.317001949387581,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_25_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 25.0,
+   "ms": 5.582213515910466,
+   "x": 0.911828408348655,
+   "mape": 1.972408934729977,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_25",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 25.0,
+   "ms": 5.582213515910466,
+   "x": 0.911828408348655,
+   "mape": 3.55170054408459,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "GART_1.0",
+   "family": "learned",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 6.119,
+   "x": 0.9995099640640314,
+   "mape": 8.456002484026858,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "GART_2.0",
+   "family": "learned",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 6.122,
+   "x": 1.0,
+   "mape": 2.554094288523791,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "LGBM_V3",
+   "family": "learned",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 8.982,
+   "x": 1.4671675922901013,
+   "mape": 3.2712819068650747,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_50_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 50.0,
+   "ms": 9.1833781339442,
+   "x": 1.5000617664070892,
+   "mape": 1.8892697086456096,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_50",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 50.0,
+   "ms": 9.1833781339442,
+   "x": 1.5000617664070892,
+   "mape": 2.520809819269093,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "LGBM_V4",
+   "family": "learned",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.811,
+   "x": 1.6025808559294348,
+   "mape": 2.9303655538962383,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "NN_V3",
+   "family": "learned",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 11.238,
+   "x": 1.8356746161385167,
+   "mape": 3.2867037809489474,
+   "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_100_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 100.0,
+   "ms": 16.191932693394985,
+   "x": 2.6448762975163325,
+   "mape": 1.4910230384036145,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_100",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 100.0,
+   "ms": 16.191932693394985,
+   "x": 2.6448762975163325,
+   "mape": 2.0362840574868355,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_200_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 200.0,
+   "ms": 30.06638249999104,
+   "x": 4.911202629858059,
+   "mape": 1.4652640371655683,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_200",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 200.0,
+   "ms": 30.06638249999104,
+   "x": 4.911202629858059,
+   "mape": 1.9954304657493172,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_500_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 500.0,
+   "ms": 71.39039945225548,
+   "x": 11.661287071586978,
+   "mape": 1.0763462994265285,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_500",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 500.0,
+   "ms": 71.39039945225548,
+   "x": 11.661287071586978,
+   "mape": 1.491092454168214,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_1000_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 1000.0,
+   "ms": 147.89778176134482,
+   "x": 24.15840930436864,
+   "mape": 0.9814468826277796,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_1000",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 1000.0,
+   "ms": 147.89778176134482,
+   "x": 24.15840930436864,
+   "mape": 1.3275724903375978,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  },
+  {
+   "label": "HK_1Tree_2000_scaled",
+   "family": "1-tree + train scalar",
+   "kind": "estimator",
+   "k": 2000.0,
+   "ms": 277.4275470332779,
+   "x": 45.316489224645196,
+   "mape": 0.8875118410617978,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": true
+  },
+  {
+   "label": "HK_1Tree_2000",
+   "family": "1-tree bound",
+   "kind": "bound",
+   "k": 2000.0,
+   "ms": 277.4275470332779,
+   "x": 45.316489224645196,
+   "mape": 1.197495999946671,
+   "complexity": "\\Theta(k n^2)",
+   "pareto": false
+  }
+ ],
+ "pareto_front_total_corpus": [
+  "Daganzo",
+  "BHH",
+  "Cavdar",
+  "HK_1Tree_0_scaled",
+  "Asymptotic_MST",
+  "HK_1Tree_10_scaled",
+  "HK_1Tree_25_scaled",
+  "HK_1Tree_50_scaled",
+  "HK_1Tree_100_scaled",
+  "HK_1Tree_200_scaled",
+  "HK_1Tree_500_scaled",
+  "HK_1Tree_1000_scaled",
+  "HK_1Tree_2000_scaled"
+ ],
+ "gart2_on_total_corpus_front": false,
+ "gart2_dominators_total_corpus": [
+  {
+   "label": "HK_1Tree_25_scaled",
+   "kind": "estimator",
+   "ms": 5.582213515910466,
+   "x": 0.911828408348655,
+   "mape": 1.972408934729977
+  }
+ ],
+ "table_by_bucket": [
+  {
+   "bucket": "n in [51,150]",
+   "label": "GART_2.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 3.644,
+   "x": 1.0,
+   "mape": 2.009119608676635
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "LGBM_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 7.039,
+   "x": 1.931668496158068,
+   "mape": 2.6746676072145044
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "NN_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.021,
+   "x": 2.475576289791438,
+   "mape": 2.980236203624884
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "GART_1.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 4.049,
+   "x": 1.1111416026344676,
+   "mape": 5.436999050184278
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Asymptotic_MST",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.156,
+   "x": 0.31723380900109766,
+   "mape": 3.5546037056555067
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Calibrated_MST_dn",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.14,
+   "x": 0.3128430296377607,
+   "mape": 4.094361611622401
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "MST_Only",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.676,
+   "x": 0.45993413830954993,
+   "mape": 13.42524011927894
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Hilbert",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.656,
+   "x": 0.1800219538968167,
+   "mape": 39.905832788218625
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "BHH",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.523,
+   "x": 0.14352360043907794,
+   "mape": 16.092808289955347
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Cavdar",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.6,
+   "x": 0.1646542261251372,
+   "mape": 14.063072903669758
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Chien_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.555,
+   "x": 0.15230515916575194,
+   "mape": 14.108168986285179
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Daganzo",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.522,
+   "x": 0.1432491767288694,
+   "mape": 17.34151999516477
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "Kwon_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.602,
+   "x": 0.16520307354555433,
+   "mape": 13.736961578944072
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "LGBM_V4",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 5.724,
+   "x": 1.570801317233809,
+   "mape": 2.282642502486919
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_0",
+   "kind": "bound",
+   "k": 0.0,
+   "ms": 0.18175862551469796,
+   "x": 0.049878876376152015,
+   "mape": 11.828778592330979
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_0_scaled",
+   "kind": "estimator",
+   "k": 0.0,
+   "ms": 0.18175862551469796,
+   "x": 0.049878876376152015,
+   "mape": 3.124510430006654
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_10",
+   "kind": "bound",
+   "k": 10.0,
+   "ms": 0.3511794111261167,
+   "x": 0.09637195695008692,
+   "mape": 8.468203413440845
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_10_scaled",
+   "kind": "estimator",
+   "k": 10.0,
+   "ms": 0.3511794111261167,
+   "x": 0.09637195695008692,
+   "mape": 2.036047431604631
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_25",
+   "kind": "bound",
+   "k": 25.0,
+   "ms": 0.5741647122658162,
+   "x": 0.15756441061081675,
+   "mape": 2.910300413087529
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_25_scaled",
+   "kind": "estimator",
+   "k": 25.0,
+   "ms": 0.5741647122658162,
+   "x": 0.15756441061081675,
+   "mape": 1.69190679471707
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_50",
+   "kind": "bound",
+   "k": 50.0,
+   "ms": 0.9964626670070675,
+   "x": 0.27345298216439834,
+   "mape": 2.089988672228928
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_50_scaled",
+   "kind": "estimator",
+   "k": 50.0,
+   "ms": 0.9964626670070675,
+   "x": 0.27345298216439834,
+   "mape": 1.6836504769548117
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_100",
+   "kind": "bound",
+   "k": 100.0,
+   "ms": 1.8170848849808632,
+   "x": 0.49865117590034663,
+   "mape": 1.563283199716661
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_100_scaled",
+   "kind": "estimator",
+   "k": 100.0,
+   "ms": 1.8170848849808632,
+   "x": 0.49865117590034663,
+   "mape": 1.1985962621007853
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_200",
+   "kind": "bound",
+   "k": 200.0,
+   "ms": 3.541484894024128,
+   "x": 0.9718674242656773,
+   "mape": 1.5689553568984074
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_200_scaled",
+   "kind": "estimator",
+   "k": 200.0,
+   "ms": 3.541484894024128,
+   "x": 0.9718674242656773,
+   "mape": 1.2220773372061025
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_500",
+   "kind": "bound",
+   "k": 500.0,
+   "ms": 7.889247926420283,
+   "x": 2.1649966867234585,
+   "mape": 0.970780406037295
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_500_scaled",
+   "kind": "estimator",
+   "k": 500.0,
+   "ms": 7.889247926420283,
+   "x": 2.1649966867234585,
+   "mape": 0.7417048868683189
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_1000",
+   "kind": "bound",
+   "k": 1000.0,
+   "ms": 14.779926695456652,
+   "x": 4.055962320377786,
+   "mape": 0.8812560661215877
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_1000_scaled",
+   "kind": "estimator",
+   "k": 1000.0,
+   "ms": 14.779926695456652,
+   "x": 4.055962320377786,
+   "mape": 0.684799961287755
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_2000",
+   "kind": "bound",
+   "k": 2000.0,
+   "ms": 26.07293627823429,
+   "x": 7.15503190950447,
+   "mape": 0.8656969657405221
+  },
+  {
+   "bucket": "n in [51,150]",
+   "label": "HK_1Tree_2000_scaled",
+   "kind": "estimator",
+   "k": 2000.0,
+   "ms": 26.07293627823429,
+   "x": 7.15503190950447,
+   "mape": 0.6840906239587392
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "GART_2.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 4.514,
+   "x": 1.0,
+   "mape": 2.489302216884664
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "LGBM_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 7.709,
+   "x": 1.7077979618963224,
+   "mape": 2.963847425560436
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "NN_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.839,
+   "x": 2.1796632698272043,
+   "mape": 3.4284121536913066
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "GART_1.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 5.027,
+   "x": 1.1136464333185645,
+   "mape": 6.029196902688985
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Asymptotic_MST",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.84,
+   "x": 0.40762073548958794,
+   "mape": 3.49909161335468
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Calibrated_MST_dn",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.911,
+   "x": 0.423349579087284,
+   "mape": 3.8339131939667395
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "MST_Only",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 2.332,
+   "x": 0.516614975631369,
+   "mape": 12.291100376807789
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Hilbert",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.436,
+   "x": 0.31812140008861317,
+   "mape": 44.3875994682312
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "BHH",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.572,
+   "x": 0.12671688081524146,
+   "mape": 16.060520354043383
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Cavdar",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.66,
+   "x": 0.14621178555604786,
+   "mape": 16.346266999621452
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Chien_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.637,
+   "x": 0.141116526362428,
+   "mape": 25.321363532521158
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Daganzo",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.558,
+   "x": 0.12361541869738592,
+   "mape": 35.93553439509224
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "Kwon_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.644,
+   "x": 0.14266725742135578,
+   "mape": 24.726190695643147
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "LGBM_V4",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 7.162,
+   "x": 1.5866194062915373,
+   "mape": 2.5263186286412314
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_0",
+   "kind": "bound",
+   "k": 0.0,
+   "ms": 0.362346851621957,
+   "x": 0.08027178813069495,
+   "mape": 11.21649871793046
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_0_scaled",
+   "kind": "estimator",
+   "k": 0.0,
+   "ms": 0.362346851621957,
+   "x": 0.08027178813069495,
+   "mape": 3.7097777423820504
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_10",
+   "kind": "bound",
+   "k": 10.0,
+   "ms": 0.8042261626268399,
+   "x": 0.17816264125539208,
+   "mape": 9.754437983418935
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_10_scaled",
+   "kind": "estimator",
+   "k": 10.0,
+   "ms": 0.8042261626268399,
+   "x": 0.17816264125539208,
+   "mape": 3.65504984329019
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_25",
+   "kind": "bound",
+   "k": 25.0,
+   "ms": 1.5394661385689912,
+   "x": 0.3410425650352218,
+   "mape": 4.738462226184018
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_25_scaled",
+   "kind": "estimator",
+   "k": 25.0,
+   "ms": 1.5394661385689912,
+   "x": 0.3410425650352218,
+   "mape": 3.1004877710018914
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_50",
+   "kind": "bound",
+   "k": 50.0,
+   "ms": 2.716343564749321,
+   "x": 0.6017597617964822,
+   "mape": 3.7618650740790285
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_50_scaled",
+   "kind": "estimator",
+   "k": 50.0,
+   "ms": 2.716343564749321,
+   "x": 0.6017597617964822,
+   "mape": 3.079891508436287
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_100",
+   "kind": "bound",
+   "k": 100.0,
+   "ms": 5.068453600572183,
+   "x": 1.1228297741630888,
+   "mape": 2.9770045960286
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_100_scaled",
+   "kind": "estimator",
+   "k": 100.0,
+   "ms": 5.068453600572183,
+   "x": 1.1228297741630888,
+   "mape": 2.396221877602888
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_200",
+   "kind": "bound",
+   "k": 200.0,
+   "ms": 10.02544560063698,
+   "x": 2.2209671246426628,
+   "mape": 2.9623166240411374
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_200_scaled",
+   "kind": "estimator",
+   "k": 200.0,
+   "ms": 10.02544560063698,
+   "x": 2.2209671246426628,
+   "mape": 2.3874016141231458
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_500",
+   "kind": "bound",
+   "k": 500.0,
+   "ms": 25.197571089187882,
+   "x": 5.58209372822062,
+   "mape": 1.9748985951354152
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_500_scaled",
+   "kind": "estimator",
+   "k": 500.0,
+   "ms": 25.197571089187882,
+   "x": 5.58209372822062,
+   "mape": 1.5185352756184851
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_1000",
+   "kind": "bound",
+   "k": 1000.0,
+   "ms": 49.59251242634219,
+   "x": 10.986378472827246,
+   "mape": 1.7404592264843362
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_1000_scaled",
+   "kind": "estimator",
+   "k": 1000.0,
+   "ms": 49.59251242634219,
+   "x": 10.986378472827246,
+   "mape": 1.3767219454728923
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_2000",
+   "kind": "bound",
+   "k": 2000.0,
+   "ms": 93.06673296064014,
+   "x": 20.617353336428916,
+   "mape": 1.5441048292826436
+  },
+  {
+   "bucket": "n in [151,400]",
+   "label": "HK_1Tree_2000_scaled",
+   "kind": "estimator",
+   "k": 2000.0,
+   "ms": 93.06673296064014,
+   "x": 20.617353336428916,
+   "mape": 1.2255559105178753
+  },
+  {
+   "bucket": "n > 400",
+   "label": "GART_2.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 20.544,
+   "x": 1.0,
+   "mape": 2.902070975259961
+  },
+  {
+   "bucket": "n > 400",
+   "label": "LGBM_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 16.475,
+   "x": 0.8019373052959502,
+   "mape": 3.7492583323224418
+  },
+  {
+   "bucket": "n > 400",
+   "label": "NN_V3",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 18.265,
+   "x": 0.8890673676012462,
+   "mape": 3.409304301835504
+  },
+  {
+   "bucket": "n > 400",
+   "label": "GART_1.0",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 18.407,
+   "x": 0.8959793613707165,
+   "mape": 11.2320529527393
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Asymptotic_MST",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.273,
+   "x": 0.4513726635514018,
+   "mape": 3.5698609119500784
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Calibrated_MST_dn",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.516,
+   "x": 0.4632009345794392,
+   "mape": 3.543600539378361
+  },
+  {
+   "bucket": "n > 400",
+   "label": "MST_Only",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.545,
+   "x": 0.46461253894080995,
+   "mape": 9.74007925258312
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Hilbert",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 9.136,
+   "x": 0.4447040498442367,
+   "mape": 48.66149396162767
+  },
+  {
+   "bucket": "n > 400",
+   "label": "BHH",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.018,
+   "x": 0.04955218068535826,
+   "mape": 34.23625938206968
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Cavdar",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.144,
+   "x": 0.055685358255451706,
+   "mape": 31.397643303945358
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Chien_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.129,
+   "x": 0.05495521806853582,
+   "mape": 42.10665828852449
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Daganzo",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 0.98,
+   "x": 0.047702492211838005,
+   "mape": 63.984058392764915
+  },
+  {
+   "bucket": "n > 400",
+   "label": "Kwon_extrap",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 1.217,
+   "x": 0.05923870716510904,
+   "mape": 90.60508312254251
+  },
+  {
+   "bucket": "n > 400",
+   "label": "LGBM_V4",
+   "kind": "estimator",
+   "k": NaN,
+   "ms": 33.577,
+   "x": 1.6343944704049842,
+   "mape": 3.4781189125243017
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_0",
+   "kind": "bound",
+   "k": 0.0,
+   "ms": 26.891039465846177,
+   "x": 1.3089485721303629,
+   "mape": 9.104088702453852
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_0_scaled",
+   "kind": "estimator",
+   "k": 0.0,
+   "ms": 26.891039465846177,
+   "x": 1.3089485721303629,
+   "mape": 4.038041522225162
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_10",
+   "kind": "bound",
+   "k": 10.0,
+   "ms": 47.51454797184186,
+   "x": 2.312818729158969,
+   "mape": 7.638114507907412
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_10_scaled",
+   "kind": "estimator",
+   "k": 10.0,
+   "ms": 47.51454797184186,
+   "x": 2.312818729158969,
+   "mape": 2.4875668804981874
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_25",
+   "kind": "bound",
+   "k": 25.0,
+   "ms": 79.87877915362104,
+   "x": 3.8881804494558527,
+   "mape": 3.4430855722728335
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_25_scaled",
+   "kind": "estimator",
+   "k": 25.0,
+   "ms": 79.87877915362104,
+   "x": 3.8881804494558527,
+   "mape": 1.675031699856804
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_50",
+   "kind": "bound",
+   "k": 50.0,
+   "ms": 138.38799132023237,
+   "x": 6.736175589964581,
+   "mape": 2.2657329552938323
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_50_scaled",
+   "kind": "estimator",
+   "k": 50.0,
+   "ms": 138.38799132023237,
+   "x": 6.736175589964581,
+   "mape": 1.5220721069081107
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_100",
+   "kind": "bound",
+   "k": 100.0,
+   "ms": 252.03124688633125,
+   "x": 12.267876114015344,
+   "mape": 1.9292966501033944
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_100_scaled",
+   "kind": "estimator",
+   "k": 100.0,
+   "ms": 252.03124688633125,
+   "x": 12.267876114015344,
+   "mape": 1.2921162288594275
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_200",
+   "kind": "bound",
+   "k": 200.0,
+   "ms": 534.2068811261662,
+   "x": 26.003060802480828,
+   "mape": 1.8502701829519288
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_200_scaled",
+   "kind": "estimator",
+   "k": 200.0,
+   "ms": 534.2068811261662,
+   "x": 26.003060802480828,
+   "mape": 1.2303689824924011
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_500",
+   "kind": "bound",
+   "k": 500.0,
+   "ms": 1266.8237592132093,
+   "x": 61.663929089428024,
+   "mape": 1.5994585785665698
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_500_scaled",
+   "kind": "estimator",
+   "k": 500.0,
+   "ms": 1266.8237592132093,
+   "x": 61.663929089428024,
+   "mape": 1.0922880653180027
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_1000",
+   "kind": "bound",
+   "k": 1000.0,
+   "ms": 2529.659622576257,
+   "x": 123.13374331076017,
+   "mape": 1.4213953103022239
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_1000_scaled",
+   "kind": "estimator",
+   "k": 1000.0,
+   "ms": 2529.659622576257,
+   "x": 123.13374331076017,
+   "mape": 0.994228374558517
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_2000",
+   "kind": "bound",
+   "k": 2000.0,
+   "ms": 4868.83015138011,
+   "x": 236.9952371193589,
+   "mape": 1.250973859366308
+  },
+  {
+   "bucket": "n > 400",
+   "label": "HK_1Tree_2000_scaled",
+   "kind": "estimator",
+   "k": 2000.0,
+   "ms": 4868.83015138011,
+   "x": 236.9952371193589,
+   "mape": 0.8687934534226468
+  }
+ ],
+ "pareto_front_by_bucket": {
+  "n > 400": [
+   "Daganzo",
+   "BHH",
+   "Cavdar",
+   "Asymptotic_MST",
+   "Calibrated_MST_dn",
+   "NN_V3",
+   "GART_2.0",
+   "HK_1Tree_10_scaled",
+   "HK_1Tree_25_scaled",
+   "HK_1Tree_50_scaled",
+   "HK_1Tree_100_scaled",
+   "HK_1Tree_200_scaled",
+   "HK_1Tree_500_scaled",
+   "HK_1Tree_1000_scaled",
+   "HK_1Tree_2000_scaled"
+  ],
+  "n in [151,400]": [
+   "HK_1Tree_0_scaled",
+   "HK_1Tree_10_scaled",
+   "HK_1Tree_25_scaled",
+   "HK_1Tree_50_scaled",
+   "GART_2.0",
+   "HK_1Tree_100_scaled",
+   "HK_1Tree_200_scaled",
+   "HK_1Tree_500_scaled",
+   "HK_1Tree_1000_scaled",
+   "HK_1Tree_2000_scaled"
+  ],
+  "n in [51,150]": [
+   "HK_1Tree_0_scaled",
+   "HK_1Tree_10_scaled",
+   "HK_1Tree_25_scaled",
+   "HK_1Tree_50_scaled",
+   "HK_1Tree_100_scaled",
+   "HK_1Tree_500_scaled",
+   "HK_1Tree_1000_scaled",
+   "HK_1Tree_2000_scaled"
+  ]
+ },
+ "gart2_dominators_by_bucket": {
+  "n > 400": [],
+  "n in [151,400]": [],
+  "n in [51,150]": [
+   {
+    "label": "HK_1Tree_25_scaled",
+    "ms": 0.5741647122658162,
+    "x": 0.15756441061081675,
+    "mape": 1.69190679471707
+   },
+   {
+    "label": "HK_1Tree_50_scaled",
+    "ms": 0.9964626670070675,
+    "x": 0.27345298216439834,
+    "mape": 1.6836504769548117
+   },
+   {
+    "label": "HK_1Tree_100_scaled",
+    "ms": 1.8170848849808632,
+    "x": 0.49865117590034663,
+    "mape": 1.1985962621007853
+   },
+   {
+    "label": "HK_1Tree_100",
+    "ms": 1.8170848849808632,
+    "x": 0.49865117590034663,
+    "mape": 1.563283199716661
+   },
+   {
+    "label": "HK_1Tree_200_scaled",
+    "ms": 3.541484894024128,
+    "x": 0.9718674242656773,
+    "mape": 1.2220773372061025
+   },
+   {
+    "label": "HK_1Tree_200",
+    "ms": 3.541484894024128,
+    "x": 0.9718674242656773,
+    "mape": 1.5689553568984074
+   }
+  ]
+ },
+ "crossing": {
+  "definition": "smallest ascent budget at which the raw 1-tree bound's MAPE over the 78 EUC_2D instances is at or below GART 2.0's",
+  "metric": "MAPE",
+  "gart2_mape_pct": 2.554094288523791,
+  "ladder_k": 50,
+  "interpolated_k": 48.893442871760584,
+  "bound_mape_pct_at_ladder_k": 2.520809819269093,
+  "cost_ms_at_ladder_k": 9.1833781339442,
+  "cost_x_gart2_at_ladder_k": 1.5000617664070892,
+  "cost_x_gart2_interleaved_arm": 1.43377974677467,
+  "cost_x_gart2_corrected_for_mirrored_clock": 1.42,
+  "paired_win_rate_of_bound_at_k50_pct": 50.0,
+  "on_SDPE_interp_k": 56.55388134720784,
+  "on_SDPE_cost_x_gart2": 1.6501213384360764,
+  "cost_x_gart2_at_k50_by_bucket": {
+   "n in [51,150]": 0.27345298216439834,
+   "n in [151,400]": 0.6017597617964822,
+   "n > 400": 6.736175589964581
+  },
+  "caveat": "the bound is one-sided; its MAPE is a duality gap, not an estimator's spread",
+  "_superseded": "SUPERSEDED by cost_tsplib_euc2d_solo_2026_08_11 in paper_tooling/hk1tree_frontier_bank.json. Measured at 20-73% CPU load, and the headline arm co-measured GART 2.0 and the 1-tree in ONE process. Co-measurement moved small-n medians by up to 1.9x elsewhere in this project, in GART 2.0's favour, so these are ratios only and must not be printed beside the solo timing column. Kept for provenance -- do not quote an absolute millisecond figure from this key."
+ },
+ "accuracy_all_corpora_MAPE_pct": {
+  "GART_2.0": {
+   "tsplib_euc2d_78": 2.554094288523791,
+   "bench_2d_2580": 2.904162908639751,
+   "nd_test_16920": 0.6201146416247372
+  },
+  "hk_raw_by_k": {
+   "0": {
+    "tsplib_euc2d_78": 10.340837775720512,
+    "bench_2d_2580": 13.898793675792213,
+    "nd_test_16920": 4.850808908806086
+   },
+   "10": {
+    "tsplib_euc2d_78": 8.317001949387581,
+    "bench_2d_2580": 8.312164499792434,
+    "nd_test_16920": 4.232627863619845
+   },
+   "25": {
+    "tsplib_euc2d_78": 3.55170054408459,
+    "bench_2d_2580": 3.5645417682407166,
+    "nd_test_16920": 2.8036329374679805
+   },
+   "50": {
+    "tsplib_euc2d_78": 2.520809819269093,
+    "bench_2d_2580": 2.6613947130839213,
+    "nd_test_16920": 1.8838466059658678
+   },
+   "100": {
+    "tsplib_euc2d_78": 2.0362840574868355,
+    "bench_2d_2580": 2.007698857146868,
+    "nd_test_16920": 1.7460160150646595
+   },
+   "200": {
+    "tsplib_euc2d_78": 1.9954304657493174,
+    "bench_2d_2580": 1.8437898230908623,
+    "nd_test_16920": 1.6370407304703538
+   },
+   "500": {
+    "tsplib_euc2d_78": 1.491092454168214,
+    "bench_2d_2580": 1.2379425770955472,
+    "nd_test_16920": 1.5611298941440725
+   },
+   "1000": {
+    "tsplib_euc2d_78": 1.3275724903375978,
+    "bench_2d_2580": 1.0958888927842996,
+    "nd_test_16920": 1.5489021859955476
+   },
+   "2000": {
+    "tsplib_euc2d_78": 1.197495999946671,
+    "bench_2d_2580": 0.9819671980857579,
+    "nd_test_16920": 1.5461265132994304
+   }
+  },
+  "hk_scaled_by_k": {
+   "0": {
+    "tsplib_euc2d_78": 3.701330809423673,
+    "bench_2d_2580": 5.664142849042746,
+    "nd_test_16920": 3.073162835538864
+   },
+   "10": {
+    "tsplib_euc2d_78": 2.5939102148587034,
+    "bench_2d_2580": 4.225181458012693,
+    "nd_test_16920": 2.50785668500455
+   },
+   "25": {
+    "tsplib_euc2d_78": 1.972408934729977,
+    "bench_2d_2580": 2.5418956790775113,
+    "nd_test_16920": 1.4447681462764825
+   },
+   "50": {
+    "tsplib_euc2d_78": 1.8892697086456098,
+    "bench_2d_2580": 2.314587431173168,
+    "nd_test_16920": 1.4847117099417935
+   },
+   "100": {
+    "tsplib_euc2d_78": 1.4910230384036145,
+    "bench_2d_2580": 1.748506558201186,
+    "nd_test_16920": 1.4268503818174074
+   },
+   "200": {
+    "tsplib_euc2d_78": 1.4652640371655683,
+    "bench_2d_2580": 1.602229651523816,
+    "nd_test_16920": 1.4215844301170633
+   },
+   "500": {
+    "tsplib_euc2d_78": 1.0763462994265283,
+    "bench_2d_2580": 1.0814990811978464,
+    "nd_test_16920": 1.4647145271086697
+   },
+   "1000": {
+    "tsplib_euc2d_78": 0.9814468826277795,
+    "bench_2d_2580": 0.9800638110441376,
+    "nd_test_16920": 1.474801053184676
+   },
+   "2000": {
+    "tsplib_euc2d_78": 0.8875118410617978,
+    "bench_2d_2580": 0.8813923018222773,
+    "nd_test_16920": 1.4768357487558732
+   }
+  },
+  "note": "cost was measured on TSPLIB only; the 2D and ND columns are accuracy alone. Median n is 90 (2D) and 75 (ND) against 408 (TSPLIB), so on those corpora the 1-tree sits in the regime where it is CHEAPER than GART 2.0, not dearer."
+ },
+ "nd_arm": {
+  "claim_tested": "the 1-tree never reaches GART 2.0 on the ND test split",
+  "measured": {
+   "gart2_mape_pct": 0.6201146416247372,
+   "best_raw_bound_mape_pct": 1.5461265132994304,
+   "crossing_dimension": 7
+  },
+  "verdict": "NOT CLAIMABLE -- the adversarial pass traced the plateau to step-size underflow in the shipped ascent (iterations_used stalls near 1141 for every d >= 15 regardless of a 2000 budget). An independent Polyak ascent at the same budget reaches 0.013% MAPE at d=20 against GART 2.0's 0.241%. The ND gap is an implementation artefact of the ascent, not a property of the relaxation."
+ },
+ "exact_solver_anchor": {
+  "solver": "Concorde",
+  "provenance": "published Waterloo record (Xeon 2.8 GHz), NOT measured on this box; order-of-magnitude only",
+  "N_instances_with_a_recorded_solve": 25,
+  "median_s": 108.12,
+  "min_s": 0.13,
+  "max_s": 11179253.91,
+  "max_instance": "d2103",
+  "gart2_median_ms": 6.122,
+  "orders_of_magnitude_span": [
+   4,
+   9
+  ],
+  "load_bearing_argument": "complexity, not the timing: branch-and-cut over an exponential subtour family admits no polynomial bound, against Theta(n log n) for GART 2.0 in d <= 3."
+ },
+ "complexity_evidence": {
+  "1tree_theta_k_n2": {
+   "per_iteration": "one exact O(n^2) Prim; held_karp_1tree.py docstring and _one_tree_dense",
+   "linearity_in_k": {
+    "instances": 78,
+    "min_R2": 0.5067357242444965,
+    "median_R2": 0.9992652958574291,
+    "frac_R2_above_0.995": 0.8076923076923077
+   },
+   "measured_loglog_slope_in_n": {
+    "k=25": 1.937,
+    "k=100": 1.947,
+    "n>=1000": [
+     2.08,
+     2.13
+    ]
+   },
+   "no_delaunay_shortcut": "at 144 pi vectors from real ascent trajectories the Delaunay-restricted 1-tree is heavier than the exact one at 141/144 (worst +1.79%), and a Delaunay-restricted ascent exceeds the published optimum on 8/49 TSPLIB instances (worst +1.445%, eil101)"
+  },
+  "gart2": {
+   "components": "compute_mst (Delaunay+Kruskal at d<=3, dense/blocked Prim at d>=4) plus cKDTree k-NN features plus O(1)-in-n LightGBM inference",
+   "feature_share_of_runtime_pct": 92.9,
+   "measured_loglog_slope_in_n": {
+    "n>=1000": 0.975,
+    "all_sizes": 0.729
+   }
+  },
+  "known_defect": "compute_mst selects _dense_mst over _blocked_prim_mst for every d >= 4 instance that fits in memory; identical MST lengths, 31-134x slower. This inflates every MST-based cost cell at d >= 4 and is not corrected here."
+ },
+ "verdict": {
+  "cheaper_than_an_exact_solver": "CONFIRMED",
+  "cheaper_than_the_1tree_bound": "CONDITIONAL -- true only above k ~ 50 on the corpus median and above n ~ 400 pointwise; false below both",
+  "middle_ground_on_the_total_corpus": "FAILS -- GART 2.0 is not on the corpus-median Pareto front once the 1-tree family is admitted",
+  "middle_ground_by_size": "HOLDS at n in [151,400] and n > 400; FAILS at n in [51,150], where HK_1Tree_100 is 0.50x the cost and 22% more accurate",
+  "what_survives": "an asymptotic separation: GART 2.0 buys bound-quality accuracy at Theta(n log n) where the 1-tree pays Theta(k n^2)"
+ },
+ "roster_leadership": {
+  "_claim": "GART 2.0 is the most accurate model in the 20-model published roster on all three corpora",
+  "tsplib_euc2d_78": {
+   "GART_2.0": 2.5540942885237916,
+   "published_runner_up": "LGBM_V3",
+   "runner_up_MAPE_pct": 3.2713
+  },
+  "bench_2d_2580": {
+   "GART_2.0": 2.904162908639751,
+   "published_runner_up": "NN_V3",
+   "runner_up_MAPE_pct": 2.9904
+  },
+  "nd_test_16920": {
+   "GART_2.0": 0.6201146416247372,
+   "published_runner_up": "LGBM_V3",
+   "runner_up_MAPE_pct": 0.877
+  },
+  "caveat_unpublished_LGBM_V4": {
+   "tsplib_MAPE_pct": 2.9304,
+   "tsplib_cost_x_GART2": 1.6026,
+   "bench_2d_MAPE_pct": 2.7329,
+   "nd_test_MAPE_pct": 0.6187,
+   "reading": "more accurate than GART 2.0 on 2D and ND, less accurate and 1.603x the cost on TSPLIB; no solo-protocol cost exists for it on 2D or ND, so the domination is unverified. The roster-leader claim holds only because V4 is not in the manuscript."
+  },
+  "_source": "tsplib_benchmark/results/all_models_tsplib_repaired.csv; Generalized_TSP_Analysis/benchmark_results_2D_repaired.csv; Generalized_TSP_Analysis_ND/benchmark_results_ND_repaired.csv; GART 2.0 rows from hk1tree_frontier_bank.json reference_models"
+ },
+ "_superseded_by_solo_cost_pass": {
+  "when": "2026-08-11",
+  "what": "SUPERSEDED by cost_tsplib_euc2d_solo_2026_08_11 in paper_tooling/hk1tree_frontier_bank.json. Measured at 20-73% CPU load, and the headline arm co-measured GART 2.0 and the 1-tree in ONE process. Co-measurement moved small-n medians by up to 1.9x elsewhere in this project, in GART 2.0's favour, so these are ratios only and must not be printed beside the solo timing column. Kept for provenance -- do not quote an absolute millisecond figure from this key.",
+  "contaminated_keys": [
+   "cost_normalisation",
+   "crossing",
+   "table_total_corpus",
+   "table_by_bucket",
+   "pareto_front_total_corpus",
+   "pareto_front_by_bucket",
+   "gart2_dominators_total_corpus",
+   "gart2_dominators_by_bucket"
+  ],
+  "replacement": "paper_tooling/hk1tree_frontier_bank.json -> cost_tsplib_euc2d_solo_2026_08_11",
+  "note": "the two table_* and pareto_* keys mix solo comparator costs with load-contaminated 1-tree costs, so their 1-tree rows are the affected part; the estimator rows in them are already solo."
+ },
+ "crossing_solo_2026_08_11": {
+  "n in [51,150]": {
+   "reached": true,
+   "ladder_k": 100,
+   "interp_k": 55.61467580214121,
+   "cost_ms_at_ladder_k": 1.7244000337086,
+   "cost_x_gart2_at_ladder_k": 0.4626653552203945,
+   "cost_ms_at_interp_k": 1.0436179144828135,
+   "cost_x_gart2_at_interp_k": 0.2800080281140568,
+   "bound_mape_pct_at_ladder_k": 1.5632831997166607,
+   "bound_mape_over_gart2_mape": 0.7780936450798777
+  },
+  "n in [151,400]": {
+   "reached": true,
+   "ladder_k": 500,
+   "interp_k": 334.9670960100309,
+   "cost_ms_at_ladder_k": 25.65495000453665,
+   "cost_x_gart2_at_ladder_k": 5.6358493900909625,
+   "cost_ms_at_interp_k": 17.095931010679912,
+   "cost_x_gart2_at_interp_k": 3.7556141151138336,
+   "bound_mape_pct_at_ladder_k": 1.9337474142133102,
+   "bound_mape_over_gart2_mape": 0.8120319332241565
+  },
+  "n > 400": {
+   "reached": true,
+   "ladder_k": 50,
+   "interp_k": 33.77804924898923,
+   "cost_ms_at_ladder_k": 121.59465000149791,
+   "cost_x_gart2_at_ladder_k": 6.649239892362413,
+   "cost_ms_at_interp_k": 89.75394550889554,
+   "cost_x_gart2_at_interp_k": 4.908073792451548,
+   "bound_mape_pct_at_ladder_k": 2.3057536184907823,
+   "bound_mape_over_gart2_mape": 0.7765761239745859
+  },
+  "Total (all EUC_2D)": {
+   "reached": true,
+   "ladder_k": 50,
+   "interp_k": 49.863683678627666,
+   "cost_ms_at_ladder_k": 8.4715000120922,
+   "cost_x_gart2_at_ladder_k": 1.461611455187286,
+   "cost_ms_at_interp_k": 8.453829600005847,
+   "cost_x_gart2_at_interp_k": 1.4585627298509904,
+   "bound_mape_pct_at_ladder_k": 2.5561632001769903,
+   "bound_mape_over_gart2_mape": 0.9984075508314605
+  }
+ }
+}

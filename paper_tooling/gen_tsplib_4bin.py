@@ -1,4 +1,14 @@
 """Emit new 4-bin TSPLIB by-size LaTeX table with all six models and per-bucket R^2_alpha."""
+
+# -- Superseded generator guard --------------------------------------------
+# This script wires the predecessor model key to the display name "GART 2.0".
+# The production model now lives in paper_tooling/model_registry.py; the guard
+# stops this file from emitting a wrong-model table into the manuscript.
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+from paper_tooling.model_registry import assert_not_superseded  # noqa: E402
+assert_not_superseded()
 import pandas as pd, numpy as np
 from pathlib import Path
 from sklearn.metrics import r2_score

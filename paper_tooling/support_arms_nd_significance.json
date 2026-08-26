@@ -1,0 +1,20 @@
+{
+  "nd_A_vs_frozen": {
+    "n": 16920,
+    "mean_diff_pp": -0.02358620394054672,
+    "frozen_mape": 0.620114641624737,
+    "candidate_mape": 0.5965284376841903,
+    "p_wilcoxon": 6.289966395468178e-33,
+    "p_ttest": 8.66736903424128e-27,
+    "pct_instances_improved": 54.036643026004725
+  },
+  "nd_B_vs_frozen": {
+    "n": 16920,
+    "mean_diff_pp": -0.055284434465349176,
+    "frozen_mape": 0.620114641624737,
+    "candidate_mape": 0.5648302071593878,
+    "p_wilcoxon": 6.848255470388245e-116,
+    "p_ttest": 1.9043928721974705e-60,
+    "pct_instances_improved": 57.618203309692674
+  }
+}

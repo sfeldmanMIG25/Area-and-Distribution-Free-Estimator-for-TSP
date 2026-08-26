@@ -1,0 +1,19 @@
+{
+  "key": "frontiers2021",
+  "type": "article",
+  "title": "Solving the Large-Scale {TSP} Problem in 1 h: {Santa Claus Challenge 2020}",
+  "author": "Mariescu-Istodor, Radu and Fr{\\\"a}nti, Pasi",
+  "year": "2021",
+  "doi": "10.3389/frobt.2021.689908",
+  "bib_url": "",
+  "candidate_url": "https://www.frontiersin.org/articles/10.3389/frobt.2021.689908/pdf",
+  "status": "downloaded",
+  "notes": "official Frontiers open-access PDF",
+  "pdf_path": "research_sources\\pdf\\frontiers2021.pdf",
+  "text_path": "research_sources\\text\\frontiers2021.txt",
+  "markdown_path": "research_sources\\text\\frontiers2021.md",
+  "sha256": "ea39be2e13ae94c78dbb10fd45ef3ba8221d796d211578d2d609e4832dd94237",
+  "bytes": "8523691",
+  "http_status": "200",
+  "final_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2021.689908/pdf"
+}

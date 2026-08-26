@@ -1,0 +1,46 @@
+{
+  "identifier_overlap": {
+    "augment__corpus_train": 0,
+    "augment__corpus_val": 0,
+    "augment__corpus_test": 0,
+    "bench2d__corpus_train": 0,
+    "bench2d__corpus_val": 0,
+    "bench2d__corpus_test": 0,
+    "nd_test__corpus_train": 0,
+    "nd_test__corpus_val": 0,
+    "nd_test__corpus_test": 16920,
+    "tsplib_euc2d__corpus_train": 0,
+    "tsplib_euc2d__corpus_val": 0,
+    "tsplib_euc2d__corpus_test": 0,
+    "tsplib_noneuc__corpus_train": 0,
+    "tsplib_noneuc__corpus_val": 0,
+    "tsplib_noneuc__corpus_test": 0,
+    "augment__bench2d": 0,
+    "augment__tsplib_euc2d": 0,
+    "augment__tsplib_noneuc": 0,
+    "augment__nd_test": 0,
+    "bench2d__nd_test": 0
+  },
+  "augment_names_in_v4_any_split": 0,
+  "corpus_split_sizes": {
+    "train": 69768,
+    "val": 19584,
+    "test": 16920
+  },
+  "spearman_gain_vs_nnaug_line_noise": [
+    0.057322323473483365,
+    0.40857663278049855
+  ],
+  "spearman_gain_vs_leafmatch_line_noise": [
+    0.26629986711621373,
+    9.352678789481342e-05
+  ],
+  "spearman_gain_vs_nnaug_grid": [
+    -0.538645839069885,
+    3.374152566041913e-17
+  ],
+  "spearman_gain_vs_leafmatch_grid": [
+    0.6543742555733955,
+    4.7509985450550056e-27
+  ]
+}

@@ -6,6 +6,10 @@ Re-derives R^2_alpha from the raw CSVs using two independent implementations
 and prints side-by-side.
 """
 import pandas as pd
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+from paper_tooling.model_registry import GART, label  # noqa: E402
 import numpy as np
 from sklearn.metrics import r2_score
 from pathlib import Path
@@ -52,14 +56,14 @@ try:
 except FileNotFoundError:
     pass
 euc = df[df["edge_weight_type"] == "EUC_2D"].copy()
-gart = euc[euc["model"] == "LGBM_V3"].copy()
+gart = euc[euc["model"] == GART].copy()
 mst = euc[euc["model"] == "MST_Ratio"].copy()
 
 # Compute R^2_alpha on the full 78-instance aggregate
-for name, sub in [("GART 2.0", gart), ("MST Ratio", mst)]:
+for name, sub in [(label(GART), gart), ("MST Ratio", mst)]:
     mst_len = sub["mst_length"]
     true_a = sub["true_cost"].values / mst_len.values
-    if name == "GART 2.0":
+    if name == label(GART):
         pred_a = sub["pred_cost"].values / mst_len.values
     else:
         pred_a = np.full(len(sub), 1.075)

@@ -1,0 +1,19 @@
+{
+  "key": "scipy2020",
+  "type": "article",
+  "title": "{SciPy} 1.0: fundamental algorithms for scientific computing in {Python}",
+  "author": "Virtanen, Pauli and Gommers, Ralf and Oliphant, Travis E. and Haberland, Matt and Reddy, Tyler and Cournapeau, David and Burovski, Evgeni and Peterson, Pearu and Weckesser, Warren and Bright, Jonathan and others",
+  "year": "2020",
+  "doi": "10.1038/s41592-019-0686-2",
+  "bib_url": "",
+  "candidate_url": "https://arxiv.org/pdf/1907.10121",
+  "status": "downloaded",
+  "notes": "author-posted arXiv preprint of the cited SciPy work",
+  "pdf_path": "research_sources\\pdf\\scipy2020.pdf",
+  "text_path": "research_sources\\text\\scipy2020.txt",
+  "markdown_path": "research_sources\\text\\scipy2020.md",
+  "sha256": "920cc79315fd277699ca61ba5f580595c60392a22908c8f06d5962a897550d1a",
+  "bytes": "1365093",
+  "http_status": "200",
+  "final_url": "https://arxiv.org/pdf/1907.10121"
+}

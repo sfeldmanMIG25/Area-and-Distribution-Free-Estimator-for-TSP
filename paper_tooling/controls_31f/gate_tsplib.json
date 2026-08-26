@@ -1,0 +1,8 @@
+{
+  "stratum": "tsplib",
+  "n_compared": 109,
+  "n_declined_both": 2,
+  "max_relative_difference": 1.8610782912583772e-16,
+  "tolerance": 1e-06,
+  "passed": true
+}

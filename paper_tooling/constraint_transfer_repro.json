@@ -1,0 +1,92 @@
+{
+  "written": "2026-08-11T12:27:00-0700",
+  "lightgbm": "4.6.0",
+  "numpy": "2.4.4",
+  "pandas": "3.0.2",
+  "python": "3.14.3",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "fits": {
+    "V4_unc_32f": {
+      "features": 32,
+      "monotone": false,
+      "role": "reproduces shipped LGBM_V4; baseline the cost is measured against",
+      "trees_by_seed": {
+        "42": 5382,
+        "43": 5382,
+        "44": 5382,
+        "45": 5382,
+        "46": 5382,
+        "47": 5382,
+        "48": 5382
+      }
+    },
+    "V4_mono_32f": {
+      "features": 32,
+      "monotone": true,
+      "role": "HEADLINE: LGBM_V4 + GART 2.0's monotone constraint, one variable changed",
+      "trees_by_seed": {
+        "42": 5382,
+        "43": 5382,
+        "44": 5382,
+        "45": 5382,
+        "46": 5382,
+        "47": 5382,
+        "48": 5382
+      }
+    },
+    "V4_unc_31f": {
+      "features": 31,
+      "monotone": false,
+      "role": "symmetric arm: V4 recipe without mst_total_length, unconstrained",
+      "trees_by_seed": {
+        "42": 5382,
+        "43": 5382,
+        "44": 5382,
+        "45": 5382,
+        "46": 5382,
+        "47": 5382,
+        "48": 5382
+      }
+    },
+    "V4_mono_31f": {
+      "features": 31,
+      "monotone": true,
+      "role": "symmetric arm: V4 recipe without mst_total_length, constrained",
+      "trees_by_seed": {
+        "42": 5382,
+        "43": 5382,
+        "44": 5382,
+        "45": 5382,
+        "46": 5382,
+        "47": 5382,
+        "48": 5382
+      }
+    },
+    "GART2_refit": {
+      "features": 31,
+      "monotone": true,
+      "role": "GART 2.0's own recipe refit at k seeds, so production carries a band too",
+      "trees_by_seed": {
+        "42": 1118,
+        "43": 1225,
+        "44": 1160,
+        "45": 1242,
+        "46": 1604,
+        "47": 1225,
+        "48": 1483
+      }
+    }
+  },
+  "gate_v4_bit_identical": true,
+  "diagnostic_gart_bit_identical": true,
+  "diagnostic_gart_trees_refit": 1118,
+  "diagnostic_gart_trees_shipped": 1118
+}

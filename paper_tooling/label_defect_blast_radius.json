@@ -1,0 +1,97 @@
+{
+  "gated_cells": 1910,
+  "variants": {
+    "as_published": {
+      "cells_moved": 0,
+      "accuracy_cells": 0,
+      "timing_cells": 0,
+      "count_cells": 0,
+      "max_abs_accuracy_delta": 0.0,
+      "accuracy_cells_by_table": {}
+    },
+    "D1_float64_2d": {
+      "cells_moved": 265,
+      "accuracy_cells": 265,
+      "timing_cells": 0,
+      "count_cells": 0,
+      "max_abs_accuracy_delta": 0.23300000000000054,
+      "accuracy_cells_by_table": {
+        "2d_by_size": 250,
+        "rank": 15
+      }
+    },
+    "D1_float64_nd": {
+      "cells_moved": 440,
+      "accuracy_cells": 375,
+      "timing_cells": 49,
+      "count_cells": 16,
+      "max_abs_accuracy_delta": 0.5199999999999996,
+      "accuracy_cells_by_table": {
+        "nd_by_dim": 201,
+        "nd_by_size": 162,
+        "rank": 12
+      }
+    },
+    "D1_float64_both": {
+      "cells_moved": 705,
+      "accuracy_cells": 640,
+      "timing_cells": 49,
+      "count_cells": 16,
+      "max_abs_accuracy_delta": 0.5199999999999996,
+      "accuracy_cells_by_table": {
+        "2d_by_size": 250,
+        "nd_by_dim": 201,
+        "nd_by_size": 162,
+        "rank": 27
+      }
+    },
+    "D2_linhp318_rescored": {
+      "cells_moved": 109,
+      "accuracy_cells": 109,
+      "timing_cells": 0,
+      "count_cells": 0,
+      "max_abs_accuracy_delta": 3.230000000000004,
+      "accuracy_cells_by_table": {
+        "rank": 17,
+        "tsplib_by_size": 92
+      }
+    },
+    "D2_linhp318_excluded": {
+      "cells_moved": 142,
+      "accuracy_cells": 121,
+      "timing_cells": 14,
+      "count_cells": 7,
+      "max_abs_accuracy_delta": 4.299999999999997,
+      "accuracy_cells_by_table": {
+        "rank": 20,
+        "tsplib_by_size": 101
+      }
+    },
+    "D3_drop_35_certified_wrong": {
+      "cells_moved": 272,
+      "accuracy_cells": 223,
+      "timing_cells": 35,
+      "count_cells": 14,
+      "max_abs_accuracy_delta": 0.3200000000000003,
+      "accuracy_cells_by_table": {
+        "nd_by_dim": 117,
+        "nd_by_size": 97,
+        "rank": 9
+      }
+    },
+    "all_repairs": {
+      "cells_moved": 847,
+      "accuracy_cells": 761,
+      "timing_cells": 63,
+      "count_cells": 23,
+      "max_abs_accuracy_delta": 4.299999999999997,
+      "accuracy_cells_by_table": {
+        "2d_by_size": 250,
+        "nd_by_dim": 201,
+        "nd_by_size": 162,
+        "rank": 47,
+        "tsplib_by_size": 101
+      }
+    }
+  }
+}

@@ -1,18 +1,23 @@
-"""Generate every numeric value needed to update Area_Free_Main.tex.
+"""Prose-number dump for Area_Free_Main.tex.
 
-Produces a structured text dump ready for paper edits:
-  - Abstract + Intro summary numbers (GART 2.0, MST Ratio, top classical)
-  - Hyperparameter table (from best_params_v3.json + booster stats)
-  - SHAP feature importance ranking (top 30)
-  - ND benchmark: by-size and by-dim with 95% bootstrap SDPE CIs
-  - 2D benchmark: by-size with bootstrap CIs
-  - TSPLIB benchmark: by-size with bootstrap CIs (EUC_2D only, 78 instances)
-  - Non-Euclidean TSPLIB: CEIL_2D, ATT, GEO, EXPLICIT
-  - Spearman/Kendall rank correlations
-  - Wall-time breakdown
+PARTLY SUPERSEDED. ``paper_tooling/build_paper_tables.py`` is the authoritative
+generator for every results *table* (2D, ND, TSPLIB, non-Euclidean) and for the
+number bank; it applies the audited screens and repaired inputs that this
+script does not. Prefer it for anything it emits.
 
-All numbers are computed from the freshly regenerated benchmark CSVs;
-none are hand-entered. Output is printed to stdout for the paper edit pass.
+Retained because it is still the only generator for four things:
+  - Spearman/Kendall rank correlations (tab:rank, Sec. "Ordering")
+  - the TSPLIB wall-time split (feature extraction vs inference)
+  - booster statistics for the hyperparameter table (trees, leaves, depth)
+  - the SHAP top-30 feature ranking (tab:shap_top)
+
+The table sections below are kept only so those four can be read in context;
+treat their numbers as a cross-check, not as copy source.
+
+Every model reference comes from ``paper_tooling.model_registry``. This script
+previously hardcoded ``"LGBM_V3"`` while printing the label "GART 2.0", so its
+rank correlations, wall-time split and booster statistics all described the
+predecessor. Do not reintroduce a model-name string literal here.
 """
 
 from __future__ import annotations
@@ -37,6 +42,15 @@ warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+
+from paper_tooling.model_registry import (  # noqa: E402
+    ALPHA_MODELS,
+    GART,
+    PRODUCTION_BOOSTER,
+    PRODUCTION_SIDECAR,
+    require_production_rows,
+)
+from paper_tooling.model_registry import label as model_label  # noqa: E402
 
 RNG_SEED = 42
 BOOT_B = 1000
@@ -130,11 +144,8 @@ d2 = d2.merge(gt2, on="instance", how="left")
 d2["alpha_true"] = np.clip(d2["true_cost"] / d2["mst_length"].replace(0, np.nan), 1.0, 2.0)
 d2["alpha_pred"] = np.clip(d2["pred_cost"] / d2["mst_length"].replace(0, np.nan), 1.0, 2.0)
 BUCKETS_2D = [(5, 10), (11, 50), (51, 100), (101, 500), (501, 1000)]
-MODELS_2D = ["LGBM_V3", "LGBM_V4", "NN_V3", "GART", "MST_Ratio", "Hilbert", "Daganzo", "Kwon", "BHH", "Chien", "Cavdar"]
-MODEL_LABEL = {"LGBM_V3": "GART 2.0", "LGBM_V4": "LGBM V4", "NN_V3": "NN V3",
-               "GART": "GART 1.0", "MST_Ratio": "MST Ratio",
-               "Hilbert": "Hilbert", "Daganzo": "Daganzo", "Kwon": "Kwon",
-               "BHH": "BHH", "Chien": "Chien", "Cavdar": "Cavdar"}
+MODELS_2D = [GART, "LGBM_V3", "LGBM_V4", "NN_V3", "GART", "MST_Ratio",
+             "Hilbert", "Daganzo", "Kwon", "BHH", "Chien", "Cavdar"]
 for lo, hi in BUCKETS_2D + [("total", "total")]:
     if lo == "total":
         sub2 = d2.copy(); label = f"Total (n={sub2['instance'].nunique()})"
@@ -146,12 +157,12 @@ for lo, hi in BUCKETS_2D + [("total", "total")]:
         sm = sub2[sub2["model"] == m]
         if len(sm) == 0:
             continue
-        at = sm["alpha_true"].values if m in ("LGBM_V3", "LGBM_V4", "NN_V3", "GART") else None
-        ap = sm["alpha_pred"].values if m in ("LGBM_V3", "LGBM_V4", "NN_V3", "GART") else None
+        at = sm["alpha_true"].values if m in ALPHA_MODELS else None
+        ap = sm["alpha_pred"].values if m in ALPHA_MODELS else None
         stats = row_stats(sm, alpha_true=at, alpha_pred=ap, time_col="prediction_time_s")
         if stats is None: continue
         r2a = f"{stats['r2_alpha']:.3f}" if np.isfinite(stats['r2_alpha']) else "---"
-        print(f"  {MODEL_LABEL[m]:<12}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
+        print(f"  {model_label(m):<28}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
               f"MAPE={stats['mape']:5.2f}  |Med|={stats['median']:5.2f}  R2={stats['r2']:.3f}  "
               f"R2a={r2a}  t={stats['time_ms']:.2f}ms")
 
@@ -169,7 +180,7 @@ if ml_col:
 dn["alpha_true"] = np.clip(dn["true_cost"] / dn["mst_length"].replace(0, np.nan), 1.0, 2.0) if "mst_length" in dn.columns else np.nan
 dn["alpha_pred"] = np.clip(dn["pred_cost"] / dn["mst_length"].replace(0, np.nan), 1.0, 2.0) if "mst_length" in dn.columns else np.nan
 BUCKETS_ND_N = [(5, 10), (11, 50), (51, 100), (101, 200), (201, 500), (501, 1000)]
-MODELS_ND = ["LGBM_V3", "LGBM_V4", "MST_Ratio", "Hilbert"]
+MODELS_ND = [GART, "LGBM_V3", "LGBM_V4", "MST_Ratio", "Hilbert"]
 for lo, hi in BUCKETS_ND_N + [("total", "total")]:
     if lo == "total":
         subn = dn.copy(); label = f"Total (n={subn['instance'].nunique()})"
@@ -181,12 +192,12 @@ for lo, hi in BUCKETS_ND_N + [("total", "total")]:
         sm = subn[subn["model"] == m]
         if len(sm) == 0:
             continue
-        at = sm["alpha_true"].values if m in ("LGBM_V3", "LGBM_V4") else None
-        ap = sm["alpha_pred"].values if m in ("LGBM_V3", "LGBM_V4") else None
+        at = sm["alpha_true"].values if m in ALPHA_MODELS else None
+        ap = sm["alpha_pred"].values if m in ALPHA_MODELS else None
         stats = row_stats(sm, alpha_true=at, alpha_pred=ap, time_col="prediction_time_s")
         if stats is None: continue
         r2a = f"{stats['r2_alpha']:.3f}" if np.isfinite(stats['r2_alpha']) else "---"
-        print(f"  {MODEL_LABEL[m]:<12}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
+        print(f"  {model_label(m):<28}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
               f"MAPE={stats['mape']:5.2f}  |Med|={stats['median']:5.2f}  R2={stats['r2']:.3f}  "
               f"R2a={r2a}  t={stats['time_ms']:.2f}ms")
 
@@ -200,8 +211,8 @@ for (lo, hi), label in zip(D_BUCKETS, D_LABELS):
     for m in MODELS_ND:
         sm = subn[subn["model"] == m]
         if len(sm) == 0: continue
-        at = sm["alpha_true"].values if m in ("LGBM_V3", "LGBM_V4") else None
-        ap = sm["alpha_pred"].values if m in ("LGBM_V3", "LGBM_V4") else None
+        at = sm["alpha_true"].values if m in ALPHA_MODELS else None
+        ap = sm["alpha_pred"].values if m in ALPHA_MODELS else None
         stats = row_stats(sm, alpha_true=at, alpha_pred=ap, time_col="prediction_time_s")
         if stats is None: continue
         r2a = f"{stats['r2_alpha']:.3f}" if np.isfinite(stats['r2_alpha']) else "---"
@@ -221,8 +232,7 @@ if ml_col:
     dt["alpha_pred"] = np.clip(dt["pred_cost"] / dt[ml_col].replace(0, np.nan), 1.0, 2.0)
 BUCKETS_TSPLIB = [(51, 150), (151, 400), (401, 10**9)]
 BUCKET_LABELS_TSPLIB = ["[51,150]", "[151,400]", ">400"]
-MODELS_TSPLIB = ["LGBM_V3", "LGBM_V4", "GART_1.0", "MST_Ratio", "Hilbert", "Daganzo", "Kwon", "BHH", "Chien", "Cavdar"]
-MODEL_LABEL_TSP = MODEL_LABEL | {"GART_1.0": "GART 1.0"}
+MODELS_TSPLIB = [GART, "LGBM_V3", "LGBM_V4", "GART_1.0", "MST_Ratio", "Hilbert", "Daganzo", "Kwon", "BHH", "Chien", "Cavdar"]
 for (lo, hi), lab in zip(BUCKETS_TSPLIB + [("total", "total")], BUCKET_LABELS_TSPLIB + ["Total"]):
     if lo == "total":
         subt = dt.copy()
@@ -233,12 +243,12 @@ for (lo, hi), lab in zip(BUCKETS_TSPLIB + [("total", "total")], BUCKET_LABELS_TS
     for m in MODELS_TSPLIB:
         sm = subt[subt["model"] == m]
         if len(sm) == 0: continue
-        at = sm["alpha_true"].values if m in ("LGBM_V3", "LGBM_V4", "GART_1.0") and "alpha_true" in sm.columns else None
-        ap = sm["alpha_pred"].values if m in ("LGBM_V3", "LGBM_V4", "GART_1.0") and "alpha_pred" in sm.columns else None
+        at = sm["alpha_true"].values if m in ALPHA_MODELS and "alpha_true" in sm.columns else None
+        ap = sm["alpha_pred"].values if m in ALPHA_MODELS and "alpha_pred" in sm.columns else None
         stats = row_stats(sm, alpha_true=at, alpha_pred=ap, time_col="total_time_s")
         if stats is None: continue
         r2a = f"{stats['r2_alpha']:.3f}" if np.isfinite(stats['r2_alpha']) else "---"
-        print(f"  {MODEL_LABEL_TSP[m]:<12}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
+        print(f"  {model_label(m):<28}  SDPE={stats['sdpe']:5.2f} [{stats['lo']:5.2f},{stats['hi']:5.2f}]  "
               f"MAPE={stats['mape']:5.2f}  |Med|={stats['median']:5.2f}  R2={stats['r2']:.3f}  "
               f"R2a={r2a}  t={stats['time_ms']:.2f}ms")
 
@@ -247,7 +257,8 @@ print("\n" + "=" * 72)
 print("TSPLIB non-Euclidean (CEIL_2D, ATT, GEO, EXPLICIT), tab:tsplib_nonEuc")
 print("=" * 72)
 dtn = pd.read_csv(ROOT / "tsplib_benchmark" / "results" / "all_models_tsplib.csv")
-dtn = dtn[(dtn["model"] == "LGBM_V3") & (dtn["status"] == "ok") & (dtn["instance"] != "brg180")].copy()
+dtn = require_production_rows(dtn)
+dtn = dtn[(dtn["status"] == "ok") & (dtn["instance"] != "brg180")].copy()
 for ewt in ["CEIL_2D", "ATT", "GEO", "EXPLICIT"]:
     sub = dtn[dtn["edge_weight_type"] == ewt]
     if len(sub) == 0:
@@ -266,28 +277,27 @@ if len(dtn_ne) > 0:
 
 # --- Rank correlations ---
 print("\n" + "=" * 72)
-print("Rank correlations (Spearman rho, Kendall tau) — GART 2.0 vs others")
+print(f"Rank correlations (Spearman rho, Kendall tau) — {model_label(GART)}")
 print("=" * 72)
 for tag, dfx in [("2D", d2), ("ND", dn), ("TSPLIB EUC_2D", dt)]:
-    g = dfx[dfx["model"] == "LGBM_V3"][["instance", "pred_cost", "true_cost"]].dropna()
+    g = require_production_rows(dfx)[["instance", "pred_cost", "true_cost"]].dropna()
     if len(g) < 2: continue
     rho, _ = spearmanr(g["pred_cost"], g["true_cost"])
     tau, _ = kendalltau(g["pred_cost"], g["true_cost"])
-    print(f"  GART 2.0 on {tag}: Spearman rho={rho:.4f}  Kendall tau={tau:.4f}")
+    print(f"  {model_label(GART)} on {tag}: Spearman rho={rho:.4f}  Kendall tau={tau:.4f}")
 
 # --- Hyperparameters + booster stats (new) ---
 print("\n" + "=" * 72)
-print("GART 2.0 hyperparameters (tab:hyperparams)")
+print(f"{model_label(GART)} hyperparameters (tab:hyperparams)")
+print(f"  artifact: {PRODUCTION_BOOSTER}")
 print("=" * 72)
 try:
-    with open(ROOT / "lgbm_model_v3" / "best_params_v3.json") as f:
-        bp = json.load(f)
-    print(json.dumps(bp, indent=2))
+    print(json.dumps(json.loads(PRODUCTION_SIDECAR.read_text(encoding="utf-8")), indent=2))
 except Exception as e:
-    print(f"  best_params_v3.json: {e}")
+    print(f"  {PRODUCTION_SIDECAR.name}: {e}")
 
 try:
-    booster = joblib.load(ROOT / "lgbm_model_v3" / "lgbm_alpha_model_v3.joblib")
+    booster = joblib.load(PRODUCTION_BOOSTER)
     inner = booster.booster_ if hasattr(booster, "booster_") else booster
     n_trees = inner.num_trees() if hasattr(inner, "num_trees") else booster.n_estimators
     # leaves per tree
@@ -303,10 +313,28 @@ try:
         r = tree_depth(node.get("right_child"))
         return 1 + max(l, r)
     depths = [tree_depth(t["tree_structure"]) for t in mdl_dump["tree_info"]]
-    print(f"\nBooster stats (new V3):")
+
+    # The manuscript's \bar D is the mean depth over *leaves*, not the mean of
+    # per-tree maximum depths -- the two differ by roughly a factor of two on an
+    # unbalanced ensemble. Emit both so the right one gets quoted.
+    def leaf_depths(node, d=0):
+        if node is None:
+            return
+        if "leaf_index" in node:
+            yield d
+            return
+        yield from leaf_depths(node.get("left_child"), d + 1)
+        yield from leaf_depths(node.get("right_child"), d + 1)
+    all_leaf_depths = [d for t in mdl_dump["tree_info"]
+                       for d in leaf_depths(t["tree_structure"])]
+
+    n_feat = len(inner.feature_name())
+    print(f"\nBooster stats ({model_label(GART)}):")
     print(f"  trees (after early stop): {n_trees}")
+    print(f"  features: {n_feat}")
     print(f"  avg leaves/tree: {np.mean(leaves):.2f}   max leaves/tree: {max(leaves) if leaves else 0}")
-    print(f"  avg depth: {np.mean(depths):.2f}   max depth: {max(depths) if depths else 0}")
+    print(f"  mean leaf depth (paper's D-bar): {np.mean(all_leaf_depths):.2f}")
+    print(f"  avg per-tree max depth: {np.mean(depths):.2f}   max depth: {max(depths) if depths else 0}")
 except Exception as e:
     print(f"  booster stats failed: {e}")
 
@@ -318,7 +346,7 @@ try:
     import shap
     from scipy import stats as sp_stats
     df_feat = pd.read_csv(ROOT / "tsp_features_v3.csv")
-    booster = joblib.load(ROOT / "lgbm_model_v3" / "lgbm_alpha_model_v3.joblib")
+    booster = joblib.load(PRODUCTION_BOOSTER)
     feature_names = booster.feature_name_ if hasattr(booster, "feature_name_") else list(booster.feature_name())
     test_df = df_feat[df_feat["split"] == "test"].sample(n=min(5000, (df_feat["split"] == "test").sum()),
                                                          random_state=RNG_SEED)
@@ -335,7 +363,7 @@ try:
 except Exception as e:
     print(f"  SHAP failed: {e}")
     # fallback: gain importance
-    booster = joblib.load(ROOT / "lgbm_model_v3" / "lgbm_alpha_model_v3.joblib")
+    booster = joblib.load(PRODUCTION_BOOSTER)
     feature_names = booster.feature_name_ if hasattr(booster, "feature_name_") else list(booster.feature_name())
     gains = booster.booster_.feature_importance(importance_type='gain') if hasattr(booster, "booster_") else booster.feature_importance(importance_type='gain')
     total = gains.sum()
@@ -346,10 +374,20 @@ except Exception as e:
 
 # --- Wall-time split on TSPLIB (GART 2.0) ---
 print("\n" + "=" * 72)
-print("Wall-time breakdown (GART 2.0 on TSPLIB EUC_2D)")
+print(f"Wall-time breakdown ({model_label(GART)} on TSPLIB EUC_2D)")
 print("=" * 72)
-gart = dt[dt["model"] == "LGBM_V3"].copy()
-if "feature_time_s" in gart.columns and "inference_time_s" in gart.columns and "total_time_s" in gart.columns:
+gart = require_production_rows(dt).copy()
+TIMING_COLS = ("feature_time_s", "inference_time_s", "total_time_s")
+_unmeasured = [c for c in TIMING_COLS if c not in gart.columns or gart[c].isna().all()]
+if _unmeasured:
+    _prov = sorted(map(str, gart.get("timing_provenance", pd.Series(dtype=str)).dropna().unique()))
+    # Never fall back to another model's timings: that substitution is exactly
+    # how the manuscript acquired the predecessor's 82.6/16.3 split.
+    print(f"  REFUSING: {GART} has no measured {', '.join(_unmeasured)}.")
+    print(f"  timing_provenance: {_prov or ['(absent)']}")
+    print("  Timings are withheld pending a quiet-machine serial measurement.")
+    print("  Do not quote a wall-time split until they are recorded.")
+else:
     ft = gart["feature_time_s"].mean()
     it = gart["inference_time_s"].mean()
     tot = gart["total_time_s"].mean()

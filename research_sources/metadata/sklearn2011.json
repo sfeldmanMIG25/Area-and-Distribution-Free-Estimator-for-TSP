@@ -1,0 +1,19 @@
+{
+  "key": "sklearn2011",
+  "type": "article",
+  "title": "Scikit-learn: Machine Learning in {Python}",
+  "author": "Pedregosa, Fabian and Varoquaux, Ga{\\\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and others",
+  "year": "2011",
+  "doi": "",
+  "bib_url": "",
+  "candidate_url": "https://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf",
+  "status": "downloaded",
+  "notes": "official JMLR open-access PDF",
+  "pdf_path": "research_sources\\pdf\\sklearn2011.pdf",
+  "text_path": "research_sources\\text\\sklearn2011.txt",
+  "markdown_path": "research_sources\\text\\sklearn2011.md",
+  "sha256": "1c338a6b3c6c1dcafda3990a8098b8b50dd6c77616361396fb75f6822c6e0778",
+  "bytes": "42310",
+  "http_status": "200",
+  "final_url": "https://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf"
+}

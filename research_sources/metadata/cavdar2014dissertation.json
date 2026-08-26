@@ -1,0 +1,19 @@
+{
+  "key": "cavdar2014dissertation",
+  "type": "phdthesis",
+  "title": "A computation-implementation parallelization approach to time-sensitive applications",
+  "author": "\\c{C}avdar, Bahar",
+  "year": "2014",
+  "doi": "",
+  "bib_url": "https://repository.gatech.edu/handle/1853/52322",
+  "candidate_url": "https://repository.gatech.edu/bitstreams/6c212776-27a6-4d47-b520-ffa3367b6e1e/download",
+  "status": "downloaded_related",
+  "notes": "institutional repository dissertation; contains the cited distribution-free estimator chapter",
+  "pdf_path": "research_sources\\pdf\\cavdar2014dissertation.pdf",
+  "text_path": "research_sources\\text\\cavdar2014dissertation.txt",
+  "markdown_path": "research_sources\\text\\cavdar2014dissertation.md",
+  "sha256": "853e6d2ef6e9b1be14c09d1db02d96c464632a31ca550acf26c3f34d6a460e50",
+  "bytes": "13064612",
+  "http_status": "200",
+  "final_url": "https://repository.gatech.edu/server/api/core/bitstreams/6c212776-27a6-4d47-b520-ffa3367b6e1e/content"
+}

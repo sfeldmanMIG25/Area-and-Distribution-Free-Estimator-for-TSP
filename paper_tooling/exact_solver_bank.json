@@ -1,0 +1,1100 @@
+{
+ "_what": "Concorde and LKH-3 wall times measured on this box over the 78 TSPLIB EUC_2D instances, and the full cost axis they anchor.",
+ "_written_by": "paper_tooling/exact_solver_analyze.py",
+ "_measured_by": "paper_tooling/exact_solver_tsplib.py",
+ "_sources": {
+  "concorde": "paper_tooling/exact_solver_tsplib_concorde.csv",
+  "lkh": "paper_tooling/exact_solver_tsplib_lkh.csv",
+  "raw_solver_logs": "paper_tooling/exact_solver_logs/<solver>/<instance>.log",
+  "estimator_cost_cells": "paper_tooling/gart2_timing_bank.json -> tsplib_by_size_time_one_protocol, classical_region_estimators_solo, lgbm_v4_solo",
+  "ladder_cost_cells": "paper_tooling/frontier_manuscript_bank.json -> tsplib.bound_ms_by_k"
+ },
+ "_relation_to_exact_solver_anchor": "frontier_manuscript_bank.json -> exact_solver_anchor is a PUBLISHED Waterloo record (Xeon 2.8 GHz and Alpha 500 MHz, 25 of the 78 instances) and says so in its own provenance field. This key is a measurement on the same box as every other number on the cost axis. The two are not interchangeable and exact_solver_anchor is left untouched: the manuscript currently prints from it.",
+ "corpus": {
+  "name": "TSPLIB EUC_2D",
+  "N": 78,
+  "n_min": 51,
+  "n_max": 18512
+ },
+ "protocol": {
+  "tag": "solver_serial_solo_capped600_2026-08-12",
+  "matches": "gart2_timing_bank.json -> tsplib_by_size_time_one_protocol (tag serial_solo_median11_quiet_2026-08-11) in everything that transfers: one solver process at a time, never two in flight, single-threaded solvers, no pool, box sampled with the same counter immediately before and throughout every timed run.",
+  "deviations": [
+   "Concorde runs under WSL2 because there is no Windows build on this box; LKH-3 and the estimator column are Windows native. Same physical cores, different environment. The two solver arms are reported separately in part for this reason and are never pooled.",
+   "Repeats are affordable only in the small-n part of the corpus: 3 runs and a median where the first run finished under 10 s, a single run above that. Every per-instance row carries its own repeat count. The estimator column is a median of 11 throughout.",
+   "The corpus median is censoring-aware rather than a mean, because the hardest instances have no finishing time at all."
+  ],
+  "cap_s": 600.0,
+  "seeds": {
+   "concorde": 99,
+   "lkh": 1
+  }
+ },
+ "machine_quietness": {
+  "concorde_arm": {
+   "sensor": "GetSystemTimes, the same quantity as \\Processor(_Total)\\% Processor Time; cross-checked in paper_tooling/quiet_box.py, max |delta| 7.6 points over four paired samples. Win32_Processor.LoadPercentage, which the older harness reads, returned 71-96% against the same 18-23%.",
+   "before_run_pct": {
+    "n": 170,
+    "min": 16.68,
+    "median": 25.535,
+    "max": 82.51
+   },
+   "during_run_pct": {
+    "n": 170,
+    "median_of_per_run_medians": 27.961515099599733,
+    "max_observed": 94.1588785046729,
+    "note": "includes the solver under measurement; both solvers are single-threaded, so on 20 logical cores the solver itself accounts for about 5 points of this."
+   },
+   "foreign_solver_processes_seen": [],
+   "comparison_protocol_window": "13-16% for the roster solo pass, 17.5-18.7% for the classical solo pass (gart2_timing_bank.json)"
+  },
+  "lkh_arm": {
+   "sensor": "GetSystemTimes, the same quantity as \\Processor(_Total)\\% Processor Time; cross-checked in paper_tooling/quiet_box.py, max |delta| 7.6 points over four paired samples. Win32_Processor.LoadPercentage, which the older harness reads, returned 71-96% against the same 18-23%.",
+   "before_run_pct": {
+    "n": 188,
+    "min": 12.72,
+    "median": 22.275,
+    "max": 77.41
+   },
+   "during_run_pct": {
+    "n": 188,
+    "median_of_per_run_medians": 24.486277269528507,
+    "max_observed": 70.0,
+    "note": "includes the solver under measurement; both solvers are single-threaded, so on 20 logical cores the solver itself accounts for about 5 points of this."
+   },
+   "foreign_solver_processes_seen": [],
+   "comparison_protocol_window": "13-16% for the roster solo pass, 17.5-18.7% for the classical solo pass (gart2_timing_bank.json)"
+  }
+ },
+ "cross_clock_check_concorde": {
+  "comparable": true,
+  "n_pairs": 78,
+  "launcher_overhead_s": {
+   "what": "Windows-side wall minus in-WSL wall: wsl.exe start, bash, mktemp, cp. Excluded from the reported Concorde time by construction, since the reported figure is the in-WSL wall.",
+   "median": 0.1069353500029482,
+   "min": -1.7180416999563644,
+   "max": 2.026696600022177
+  },
+  "clock_rate_agreement_on_runs_over_60s": {
+   "n": 21,
+   "max_relative_disagreement_pct": 2.275942148391449,
+   "median_relative_disagreement_pct": 0.15958509848809735
+  },
+  "verdict": "Once the additive launcher cost is separated out, the in-VM clock and the Windows clock agree to a fraction of a percent on the long runs. The Concorde times are therefore on the same wall-clock footing as the estimator column even though the solver runs in a VM. What the VM does cost is throughput, not timekeeping: see cap_enforcement.why_the_overshoot."
+ },
+ "cross_solver_corroboration": {
+  "_what": "Concorde and LKH-3 read the same TSPLIB files with independent parsers, distance functions and search strategies. The three places they part company are all informative.",
+  "linhp318": {
+   "concorde_on_the_shipped_file": "refused -- FIXED_EDGES_SECTION",
+   "lkh_on_the_shipped_file": {
+    "status": "best_found",
+    "cost": 41345.0,
+    "published_optimum": 41345,
+    "wall_s": 0.34073
+   },
+   "concorde_on_the_same_coordinates_without_the_fixed_edge": {
+    "cost": 42029.0,
+    "wall_s": 0.530643188,
+    "status": "optimal"
+   },
+   "reading": "LKH honours the fixed edge and returns 41345, TSPLIB's published value, which is the HAMILTONIAN PATH optimum. Concorde on the same coordinates with the fixed edge removed certifies 42029, the TOUR optimum. Both are right about different problems. The estimators on the cost axis all read coordinates only, so 42029 is the value they should be scored against -- which is what frontier_manuscript_bank.json -> labels.linhp318 already says, reached independently. This pass is a second witness for it, issued by a solver."
+  },
+  "d657": {
+   "concorde": {
+    "status": "optimal",
+    "cost": 48913.0,
+    "published_optimum": 48912,
+    "wall_s": 17.184357
+   },
+   "lkh": {
+    "status": "best_found",
+    "cost": 48912.0,
+    "published_optimum": 48912,
+    "wall_s": 1.331342
+   },
+   "published_optimum": 48912,
+   "reading": "Concorde CERTIFIES 48913; LKH finds 48912, matching the published value. A certificate cannot be wrong about its own metric, so the two are minimising over distance functions that differ on at least one edge. d657's coordinates are non-integer (875.1, 983.7, ...) and EUC_2D distances are nint(euclidean), so a value landing on a .5 boundary rounds differently under two implementations. 25 of the 78 EUC_2D instances have non-integer coordinates and this is the only one where the two solvers disagree, so it is a tie-break coincidence, not a systematic parsing difference. The discrepancy is 1 unit in 48912, or 0.002%, and it does not touch any timing on this axis.",
+   "non_integer_coordinate_instances_in_the_78": 25,
+   "of_which_disagree": 1
+  },
+  "lin318": {
+   "lkh": {
+    "status": "best_found",
+    "cost": 42143.0,
+    "published_optimum": 42029,
+    "wall_s": 0.447394
+   },
+   "reading": "LKH's worst miss on the corpus: 42143 against the optimum 42029, 0.27% high, at n=318 where it is exact almost everywhere else. One run, one seed, default trial budget -- this is what a heuristic with no certificate looks like when it is unlucky, and it is the reason the LKH column cannot substitute for the Concorde one."
+  }
+ },
+ "concorde_certified_optimal": {
+  "question_answered": "wall clock to a certificate of optimality",
+  "solver": "Concorde (branch-and-cut), build at /home/catst/concorde/TSP/concorde",
+  "invocation": "concorde -s 99 -x -o <tour> <instance>.tsp, one process, no cut server, no boss/grunt parallelism",
+  "environment": "WSL2 Ubuntu 24.04 on the host's physical cores; scratch on ext4 /tmp, not the 9p /mnt bridge",
+  "cap_s": 600.0,
+  "cap_enforcement": {
+   "mechanism": "GNU timeout -s KILL inside WSL, so the solver is killed Linux-side; killing wsl.exe from Windows would orphan it, which is the contamination that invalidated an earlier timing pass in this project.",
+   "nominal_cap_s_solver_clock": 600.0,
+   "realised_kill_walls_s": [
+    644.0,
+    651.9,
+    652.8,
+    653.9,
+    654.0,
+    654.2,
+    654.2,
+    655.4,
+    655.5,
+    655.6,
+    655.6,
+    655.7,
+    655.7,
+    655.7,
+    661.7,
+    668.0
+   ],
+   "realised_cap_wall_s_median": 655.4799405,
+   "max_overshoot_s": 67.997927,
+   "why_the_overshoot": "GNU timeout fires after 600 s of the VM's ITIMER_REAL. Both wall clocks -- date inside WSL and perf_counter on the Windows side -- report about 660 s of real time for those runs, so the VM was descheduled for roughly a tenth of each long solve. The nominal cap is in solver time; the realised cap is in wall time. One instance (fl1577) certified at 658.8 s wall, i.e. inside the 600 s solver budget but past the nominal wall figure, which is the same effect seen from the other side.",
+   "note": "Censored entries are carried at their measured wall, not at the nominal cap. Every one of them exceeds every certified time, so the ordering the censored median relies on holds."
+  },
+  "N_corpus": 78,
+  "N_scored": 77,
+  "unsupported": {
+   "n": 1,
+   "instances": [
+    "linhp318"
+   ],
+   "reason": "Concorde refuses a TSPLIB file with a FIXED_EDGES_SECTION: 'ERROR: Not set up for fixed edges'. linhp318 carries one (edge 1-214) because it is the Hamiltonian path variant of lin318 encoded as a TSP. It is the only such file in the 78.",
+   "plain_tsp_variant": {
+    "_what": "Concorde on lin318's coordinates with the FIXED_EDGES_SECTION removed -- the plain TSP that every estimator on the cost axis is actually scored against.",
+    "_written_by": "paper_tooling/exact_solver_linhp318.py",
+    "shipped_file_rejected_by_concorde": {
+     "reason": "ERROR: Not set up for fixed edges / CCutil_gettsplib failed",
+     "fixed_edge": "1 214",
+     "meaning": "TSPLIB encodes the Hamiltonian path variant of lin318 this way",
+     "only_such_instance_in_the_78": true
+    },
+    "edit_applied": {
+     "removed_lines": [
+      "FIXED_EDGES_SECTION",
+      "1 214",
+      "-1"
+     ]
+    },
+    "status": "optimal",
+    "wall_s": 0.530643188,
+    "concorde_self_time_s": 0.49,
+    "certified_optimum": 42029.0,
+    "bbnodes": 1,
+    "stored_tsplib_label_for_path_variant": 41345,
+    "project_tour_optimum_on_these_coordinates": 42029.0,
+    "agrees_with_project_repair": true,
+    "excess_of_tour_optimum_over_stored_label_pct": 1.6543717499092998,
+    "box": {
+     "before_pct": 19.843750000000004,
+     "during_pct": {
+      "n": 1,
+      "min": 25.749999999999996,
+      "median": 25.749999999999996,
+      "max": 25.749999999999996
+     }
+    },
+    "measured_utc": "2026-08-12T23:13:22Z",
+    "excluded_from_corpus_statistics": "yes -- this is a modified instance and is reported on its own"
+   }
+  },
+  "n_certified": 61,
+  "n_censored": 16,
+  "certified_pct": 79.22077922077922,
+  "median_s_corpus_censoring_aware": {
+   "value_s": 2.424253,
+   "identified": true,
+   "N": 77,
+   "n_observed": 61,
+   "n_censored": 16,
+   "censoring_pct": 20.77922077922078,
+   "lower_bound_if_unidentified_s": null
+  },
+  "median_s_certified_only": 0.477388,
+  "min_s": 0.025671,
+  "min_instance": "eil51",
+  "max_certified_s": 658.815849,
+  "max_certified_instance": "fl1577",
+  "largest_n_certified": 2392,
+  "smallest_n_censored": 1291,
+  "total_wall_hours_consumed": 3.5746981024999998,
+  "median_s_including_linhp318_plain_variant": {
+   "value_s": 1.927299,
+   "identified": true,
+   "N": 78,
+   "n_observed": 62,
+   "n_censored": 16,
+   "censoring_pct": 20.512820512820515,
+   "lower_bound_if_unidentified_s": null
+  },
+  "by_bucket": {
+   "n in [51,150]": {
+    "N": 23,
+    "n_certified": 23,
+    "n_censored": 0,
+    "median_s": {
+     "value_s": 0.07822,
+     "identified": true,
+     "N": 23,
+     "n_observed": 23,
+     "n_censored": 0,
+     "censoring_pct": 0.0,
+     "lower_bound_if_unidentified_s": null
+    },
+    "max_certified_s": 0.334383
+   },
+   "n in [151,400]": {
+    "N": 15,
+    "n_certified": 15,
+    "n_censored": 0,
+    "median_s": {
+     "value_s": 0.477388,
+     "identified": true,
+     "N": 15,
+     "n_observed": 15,
+     "n_censored": 0,
+     "censoring_pct": 0.0,
+     "lower_bound_if_unidentified_s": null
+    },
+    "max_certified_s": 8.301274
+   },
+   "n > 400": {
+    "N": 39,
+    "n_certified": 23,
+    "n_censored": 16,
+    "median_s": {
+     "value_s": 127.659225,
+     "identified": true,
+     "N": 39,
+     "n_observed": 23,
+     "n_censored": 16,
+     "censoring_pct": 41.02564102564103,
+     "lower_bound_if_unidentified_s": null
+    },
+    "max_certified_s": 658.815849
+   }
+  },
+  "censored_instances": [
+   {
+    "instance": "d1291",
+    "n": 1291,
+    "root_lp_lower_bound": 50769.93,
+    "best_tour_upper_bound": 50859.0,
+    "gap_pct_at_cap": 0.175438,
+    "published_optimum": 50801,
+    "status": "censored"
+   },
+   {
+    "instance": "fl1400",
+    "n": 1400,
+    "root_lp_lower_bound": 20120.79,
+    "best_tour_upper_bound": 20127.0,
+    "gap_pct_at_cap": 0.030864,
+    "published_optimum": 20127,
+    "status": "censored"
+   },
+   {
+    "instance": "u1817",
+    "n": 1817,
+    "root_lp_lower_bound": 57134.6,
+    "best_tour_upper_bound": 57397.0,
+    "gap_pct_at_cap": 0.459266,
+    "published_optimum": 57201,
+    "status": "censored"
+   },
+   {
+    "instance": "d2103",
+    "n": 2103,
+    "root_lp_lower_bound": 79917.9302,
+    "best_tour_upper_bound": 81377.0,
+    "gap_pct_at_cap": 1.82571,
+    "published_optimum": 80450,
+    "status": "censored"
+   },
+   {
+    "instance": "u2152",
+    "n": 2152,
+    "root_lp_lower_bound": 64240.82,
+    "best_tour_upper_bound": 64782.0,
+    "gap_pct_at_cap": 0.842424,
+    "published_optimum": 64253,
+    "status": "censored"
+   },
+   {
+    "instance": "u2319",
+    "n": 2319,
+    "root_lp_lower_bound": 234256.0,
+    "best_tour_upper_bound": 234420.0,
+    "gap_pct_at_cap": 0.070009,
+    "published_optimum": 234256,
+    "status": "censored"
+   },
+   {
+    "instance": "pcb3038",
+    "n": 3038,
+    "root_lp_lower_bound": 137682.81,
+    "best_tour_upper_bound": 137929.0,
+    "gap_pct_at_cap": 0.17881,
+    "published_optimum": 137694,
+    "status": "censored"
+   },
+   {
+    "instance": "fl3795",
+    "n": 3795,
+    "root_lp_lower_bound": 28748.1389,
+    "best_tour_upper_bound": 28782.0,
+    "gap_pct_at_cap": 0.117785,
+    "published_optimum": 28772,
+    "status": "censored"
+   },
+   {
+    "instance": "fnl4461",
+    "n": 4461,
+    "root_lp_lower_bound": 182549.75,
+    "best_tour_upper_bound": 182924.0,
+    "gap_pct_at_cap": 0.205013,
+    "published_optimum": 182566,
+    "status": "censored"
+   },
+   {
+    "instance": "rl5915",
+    "n": 5915,
+    "root_lp_lower_bound": 565098.9025,
+    "best_tour_upper_bound": 570454.0,
+    "gap_pct_at_cap": 0.947639,
+    "published_optimum": 565530,
+    "status": "censored"
+   },
+   {
+    "instance": "rl5934",
+    "n": 5934,
+    "root_lp_lower_bound": 555639.4491,
+    "best_tour_upper_bound": 560945.0,
+    "gap_pct_at_cap": 0.954855,
+    "published_optimum": 556045,
+    "status": "censored"
+   },
+   {
+    "instance": "rl11849",
+    "n": 11849,
+    "root_lp_lower_bound": 922464.3917,
+    "best_tour_upper_bound": 929094.0,
+    "gap_pct_at_cap": 0.718684,
+    "published_optimum": 923288,
+    "status": "censored"
+   },
+   {
+    "instance": "usa13509",
+    "n": 13509,
+    "root_lp_lower_bound": 19972942.7452,
+    "best_tour_upper_bound": 20077328.0,
+    "gap_pct_at_cap": 0.522633,
+    "published_optimum": 19982859,
+    "status": "censored"
+   },
+   {
+    "instance": "brd14051",
+    "n": 14051,
+    "root_lp_lower_bound": 469238.62,
+    "best_tour_upper_bound": 471362.0,
+    "gap_pct_at_cap": 0.452516,
+    "published_optimum": 469385,
+    "status": "censored"
+   },
+   {
+    "instance": "d15112",
+    "n": 15112,
+    "root_lp_lower_bound": 1572655.06,
+    "best_tour_upper_bound": 1577977.0,
+    "gap_pct_at_cap": 0.338405,
+    "published_optimum": 1573084,
+    "status": "censored"
+   },
+   {
+    "instance": "d18512",
+    "n": 18512,
+    "root_lp_lower_bound": 645052.05,
+    "best_tour_upper_bound": 648028.0,
+    "gap_pct_at_cap": 0.46135,
+    "published_optimum": 645238,
+    "status": "censored"
+   }
+  ],
+  "certificate_disagreements_with_published_optimum": [
+   {
+    "instance": "d657",
+    "concorde": 48913.0,
+    "published": 48912
+   }
+  ],
+  "vs_gart2": {
+   "gart2_median_ms": 6.122,
+   "median_ratio_x": 395.9903626265926,
+   "max_certified_ratio_x": 107614.48039856255
+  },
+  "repeats": {
+   "policy": "3 runs, median, for any instance whose first run finished under 10 s; a single run above that",
+   "n_instances_with_repeats": 46,
+   "n_instances_single_run": 32
+  }
+ },
+ "lkh3_time_to_best": {
+  "question_answered": "wall clock at which the run's best tour was first reached, from LKH's own trial trace. No optimality certificate is produced or implied.",
+  "solver": "LKH-3 (C:\\LKH\\LKH-3.exe)",
+  "invocation": "RUNS=1, SEED=1, TIME_LIMIT=600, TRACE_LEVEL=1, MAX_TRIALS left at its default of DIMENSION",
+  "environment": "Windows 11 native, the same environment as the estimator column",
+  "cap_s": 600.0,
+  "N": 78,
+  "n_with_a_tour": 78,
+  "n_censored_by_time_limit": 5,
+  "censoring_modes": {
+   "time_limit": {
+    "n": 0,
+    "instances": [],
+    "meaning": "LKH's own TIME_LIMIT stopped the optimisation loop"
+   },
+   "hard_process_timeout": {
+    "n": 5,
+    "instances": [
+     "rl11849",
+     "usa13509",
+     "brd14051",
+     "d15112",
+     "d18512"
+    ],
+    "walls_s": [
+     720.0,
+     720.0,
+     720.1,
+     720.0,
+     720.0
+    ],
+    "meaning": "LKH overran its own TIME_LIMIT and the harness's backstop process timeout (cap + 120 s) fired. TIME_LIMIT is tested at trial boundaries and does not bound candidate-set preprocessing, so at these sizes a single trial outlasts it. The best tour and its timestamp were recovered from LKH's trial trace; these rows are censored, not failed."
+   }
+  },
+  "n_matching_published_optimum": 60,
+  "matching_pct": 76.92307692307692,
+  "median_time_to_best_s": {
+   "value_s": 0.08,
+   "identified": true,
+   "N": 77,
+   "n_observed": 77,
+   "n_censored": 0,
+   "note": "uncensored: a run stopped at the cap still reported when its best tour was reached. The cap censors tour quality, which is reported in the gap fields, not this timestamp."
+  },
+  "median_total_wall_s": {
+   "value_s": 0.7032825,
+   "identified": true,
+   "N": 78,
+   "n_observed": 73,
+   "n_censored": 5,
+   "censoring_pct": 6.410256410256411,
+   "lower_bound_if_unidentified_s": null
+  },
+  "min_time_to_best_s": 0.0,
+  "max_time_to_best_s": 418.28,
+  "mean_gap_to_published_optimum_pct": 0.014710899880237304,
+  "max_gap_to_published_optimum_pct": 0.27124128577886697,
+  "worst_gap_instances": [
+   {
+    "instance": "lin318",
+    "n": 318,
+    "gap_pct": 0.27124128577886697
+   },
+   {
+    "instance": "fl1400",
+    "n": 1400,
+    "gap_pct": 0.1838326625925374
+   },
+   {
+    "instance": "fl3795",
+    "n": 3795,
+    "gap_pct": 0.16335326011399973
+   },
+   {
+    "instance": "rl1889",
+    "n": 1889,
+    "gap_pct": 0.08371875552859706
+   },
+   {
+    "instance": "rl5934",
+    "n": 5934,
+    "gap_pct": 0.07733187062198203
+   }
+  ],
+  "by_bucket": {
+   "n in [51,150]": {
+    "N": 23,
+    "median_time_to_best_s": 0.0,
+    "median_total_wall_s": 0.043053,
+    "n_matching_published_optimum": 23
+   },
+   "n in [151,400]": {
+    "N": 16,
+    "median_time_to_best_s": 0.02,
+    "median_total_wall_s": 0.318054,
+    "n_matching_published_optimum": 15
+   },
+   "n > 400": {
+    "N": 39,
+    "median_time_to_best_s": 0.93,
+    "median_total_wall_s": 14.195823,
+    "n_matching_published_optimum": 22
+   }
+  },
+  "clock_granularity_caveat": "time-to-best is read from LKH's own trace, whose timestamps are printed to 0.01 s. Below roughly n = 300 the best tour is reached inside the first tick and the value floors at 0.00; median_total_wall_s is the honest figure at those sizes and is measured by this harness, not by LKH.",
+  "vs_gart2": {
+   "gart2_median_ms": 6.122,
+   "median_total_wall_ratio_x": 114.87789937928783
+  }
+ },
+ "polyak_vs_vj_ascent_cost": {
+  "available": true,
+  "_what": "Cost of the Polyak ascent against the Volgenant-Jonker / Helsgaun ascent on TSPLIB EUC_2D. Until this pass the axis had no Polyak cost cell on TSPLIB at all: hk1tree_polyak_tsplib.csv records one ascent time per instance replicated across its k rows, because that sweep ran a single ascent to k=2000 and read the BOUNDS off at each checkpoint. Those columns are an accuracy artefact, not a per-k cost.",
+  "why_polyak_costs_more": "Polyak's step length is scaled by the gap to a feasible tour, so the ascent cannot start without one. Its k=0 cell therefore carries a nearest-neighbour tour plus 2-opt sweeps that the V&J ascent never pays for. The gap between the two arms is widest at k=0 and narrows as the ascent comes to dominate.",
+  "verdict": "On TSPLIB EUC_2D the V&J/Helsgaun ascent dominates Polyak at every budget measured: dearer AND less accurate at k = [0, 10, 25, 50, 100, 200]. This is the opposite of the ND arm, where Polyak supersedes V&J by a factor of 23 (frontier_manuscript_bank.json -> _sources.nd). The axis was already printing V&J on TSPLIB and Polyak on ND; that split is now measured rather than assumed, and it is the right split.",
+  "dominated_at_k": [
+   0,
+   10,
+   25,
+   50,
+   100,
+   200
+  ],
+  "reproducibility": "the k<=500 run at 3 repeats re-measures every checkpoint the k<=100 run took at 11 repeats, in a separate process and session. The two agree to within 1-3% at every shared k, which bounds this pass's session-to-session drift.",
+  "by_k": {
+   "0": {
+    "polyak_ms": 3.3475999953225255,
+    "vj_ms": 1.923199975863,
+    "polyak_over_vj": 1.7406406184153327,
+    "polyak_mape_pct": 10.390870956716057,
+    "vj_mape_pct": 10.390870956716055,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   "10": {
+    "polyak_ms": 4.7685999888926744,
+    "vj_ms": 3.1877000001259,
+    "polyak_over_vj": 1.495937506259791,
+    "polyak_mape_pct": 10.186937675294814,
+    "vj_mape_pct": 8.340835668103892,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   "25": {
+    "polyak_ms": 6.628100003581494,
+    "vj_ms": 5.2308000158518,
+    "polyak_over_vj": 1.2671293078487447,
+    "polyak_mape_pct": 7.926269130959954,
+    "vj_mape_pct": 3.591308273699959,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   "50": {
+    "polyak_ms": 10.009199962951243,
+    "vj_ms": 8.4715000120922,
+    "polyak_over_vj": 1.181514483699951,
+    "polyak_mape_pct": 5.975972450210248,
+    "vj_mape_pct": 2.5561632001769903,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   "100": {
+    "polyak_ms": 16.476700024213642,
+    "vj_ms": 15.092200017534099,
+    "polyak_over_vj": 1.091736128932232,
+    "polyak_mape_pct": 3.6296786160065913,
+    "vj_mape_pct": 2.052415556613017,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   "200": {
+    "polyak_ms": 30.105100013315678,
+    "vj_ms": 28.753200022037998,
+    "polyak_over_vj": 1.0470173751179526,
+    "polyak_mape_pct": 2.0879239145481323,
+    "vj_mape_pct": 2.011031398749038,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k500_r3.json (3 repeats)"
+   },
+   "500": {
+    "polyak_ms": 66.37489999411628,
+    "vj_ms": 68.45339998835689,
+    "polyak_over_vj": 0.9696362781893355,
+    "polyak_mape_pct": 1.6467160940346843,
+    "vj_mape_pct": 1.4925620098802657,
+    "N": 77,
+    "source": "paper_tooling/polyak_tsplib_timing_k500_r3.json (3 repeats)"
+   }
+  },
+  "protocol_notes": [
+   {
+    "matches": "serial_solo_median11_quiet_2026-08-11",
+    "process": "one estimator per process, single thread of control, no pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB = 1",
+    "repeats": 11,
+    "statistic": "median over repeats; median over instances of that",
+    "warm_up": "numba JIT warmed on one instance outside the clock",
+    "timed_region": "clock starts before dedup: dedup + dense matrix + constructive NN/2-opt upper bound + k Polyak steps",
+    "cap": "n <= 16384, matching the V&J solo cost pass",
+    "box_during_pct": {
+     "n": 276,
+     "min": 18.734452736318406,
+     "median": 21.9085491696963,
+     "max": 34.85225505443235
+    }
+   },
+   {
+    "matches": "serial_solo_median11_quiet_2026-08-11",
+    "process": "one estimator per process, single thread of control, no pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB = 1",
+    "repeats": 3,
+    "statistic": "median over repeats; median over instances of that",
+    "warm_up": "numba JIT warmed on one instance outside the clock",
+    "timed_region": "clock starts before dedup: dedup + dense matrix + constructive NN/2-opt upper bound + k Polyak steps",
+    "cap": "n <= 16384, matching the V&J solo cost pass",
+    "box_during_pct": {
+     "n": 323,
+     "min": 12.790518700938891,
+     "median": 21.6128533910088,
+     "max": 41.38235294117647
+    }
+   }
+  ]
+ },
+ "cost_axis": {
+  "_what": "every method on one axis, TSPLIB EUC_2D, milliseconds and multiples of GART 2.0",
+  "file": "paper_tooling/cost_axis_tsplib_euc2d.csv",
+  "gart2_reference_ms": 6.122,
+  "cheapest_ms": 0.615,
+  "dearest_ms": 2424.253,
+  "span_orders_of_magnitude": 3.595702825944184,
+  "rows": [
+   {
+    "label": "Daganzo",
+    "family": "closed form",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 0.615,
+    "x_gart2": 0.1004573669,
+    "accuracy_MAPE_pct": 44.4769459939,
+    "complexity": "\\Theta(n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "BHH",
+    "family": "closed form",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 0.645,
+    "x_gart2": 0.1053577262,
+    "accuracy_MAPE_pct": 25.1579106697,
+    "complexity": "\\Theta(n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "Kwon_extrap",
+    "family": "closed form",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 0.716,
+    "x_gart2": 0.1169552434,
+    "accuracy_MAPE_pct": 54.4252231952,
+    "complexity": "\\Theta(n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "Chien_extrap",
+    "family": "closed form",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 0.73,
+    "x_gart2": 0.1192420778,
+    "accuracy_MAPE_pct": 30.4075561084,
+    "complexity": "\\Theta(n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "Cavdar",
+    "family": "closed form",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 0.792,
+    "x_gart2": 0.1293694871,
+    "accuracy_MAPE_pct": 23.1987056107,
+    "complexity": "\\Theta(n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "HK_1Tree_0",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 0,
+    "N": 77,
+    "ms": 1.9231999759,
+    "x_gart2": 0.3141457001,
+    "accuracy_MAPE_pct": 10.3908709567,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "Asymptotic_MST",
+    "family": "MST ratio",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 2.574,
+    "x_gart2": 0.4204508331,
+    "accuracy_MAPE_pct": 3.5508452129,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "Calibrated_MST_dn",
+    "family": "MST ratio",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 2.621,
+    "x_gart2": 0.4281280627,
+    "accuracy_MAPE_pct": 3.7655557591,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "Hilbert",
+    "family": "space-filling curve",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 2.642,
+    "x_gart2": 0.4315583143,
+    "accuracy_MAPE_pct": 45.2030001298,
+    "complexity": "\\Theta(n \\log n)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "MST_Only",
+    "family": "MST ratio",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 3.083,
+    "x_gart2": 0.5035935969,
+    "accuracy_MAPE_pct": 11.3500156362,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "HK_1Tree_10",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 10,
+    "N": 77,
+    "ms": 3.1877000001,
+    "x_gart2": 0.520695851,
+    "accuracy_MAPE_pct": 8.3408356681,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "HK_1Tree_Polyak_0",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 0,
+    "N": 77,
+    "ms": 3.3475999953,
+    "x_gart2": 0.5468147657,
+    "accuracy_MAPE_pct": 10.3908709567,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   {
+    "label": "HK_1Tree_Polyak_10",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 10,
+    "N": 77,
+    "ms": 4.7685999889,
+    "x_gart2": 0.7789284529,
+    "accuracy_MAPE_pct": 10.1869376753,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   {
+    "label": "HK_1Tree_25",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 25,
+    "N": 77,
+    "ms": 5.2308000159,
+    "x_gart2": 0.8544266605,
+    "accuracy_MAPE_pct": 3.5913082737,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "GART_1.0",
+    "family": "learned",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 6.119,
+    "x_gart2": 0.9995099641,
+    "accuracy_MAPE_pct": 8.456002484,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "GART_2.0",
+    "family": "learned",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 6.122,
+    "x_gart2": 1.0,
+    "accuracy_MAPE_pct": 2.5540942885,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "HK_1Tree_Polyak_25",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 25,
+    "N": 77,
+    "ms": 6.6281000036,
+    "x_gart2": 1.082669063,
+    "accuracy_MAPE_pct": 7.926269131,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   {
+    "label": "HK_1Tree_50",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 50,
+    "N": 77,
+    "ms": 8.4715000121,
+    "x_gart2": 1.3837798125,
+    "accuracy_MAPE_pct": 2.5561632002,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "LGBM_V3",
+    "family": "learned",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 8.982,
+    "x_gart2": 1.4671675923,
+    "accuracy_MAPE_pct": 3.2712819069,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "LGBM_V4",
+    "family": "learned",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 9.811,
+    "x_gart2": 1.6025808559,
+    "accuracy_MAPE_pct": 2.9303655539,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "HK_1Tree_Polyak_50",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 50,
+    "N": 77,
+    "ms": 10.009199963,
+    "x_gart2": 1.6349558907,
+    "accuracy_MAPE_pct": 5.9759724502,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   {
+    "label": "NN_V3",
+    "family": "learned",
+    "kind": "estimator",
+    "k": "",
+    "N": 78,
+    "ms": 11.238,
+    "x_gart2": 1.8356746161,
+    "accuracy_MAPE_pct": 3.2867037809,
+    "complexity": "\\Theta(n \\log n) / \\Theta(n^2)",
+    "statistic": "median over 78 instances of the per-instance median of 11 repeats",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "gart2_timing_bank.json, tag serial_solo_median11_quiet_2026-08-11"
+   },
+   {
+    "label": "HK_1Tree_100",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 100,
+    "N": 77,
+    "ms": 15.0922000175,
+    "x_gart2": 2.4652401205,
+    "accuracy_MAPE_pct": 2.0524155566,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "HK_1Tree_Polyak_100",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 100,
+    "N": 77,
+    "ms": 16.4767000242,
+    "x_gart2": 2.691391706,
+    "accuracy_MAPE_pct": 3.629678616,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k100_r11.json (11 repeats)"
+   },
+   {
+    "label": "HK_1Tree_200",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 200,
+    "N": 77,
+    "ms": 28.753200022,
+    "x_gart2": 4.6967004283,
+    "accuracy_MAPE_pct": 2.0110313987,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "HK_1Tree_Polyak_200",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 200,
+    "N": 77,
+    "ms": 30.1051000133,
+    "x_gart2": 4.9175269542,
+    "accuracy_MAPE_pct": 2.0879239145,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k500_r3.json (3 repeats)"
+   },
+   {
+    "label": "HK_1Tree_Polyak_500",
+    "family": "1-tree bound (Polyak ascent)",
+    "kind": "bound",
+    "k": 500,
+    "N": 77,
+    "ms": 66.3748999941,
+    "x_gart2": 10.8420287478,
+    "accuracy_MAPE_pct": 1.646716094,
+    "complexity": "\\Theta(k n^2) + \\Theta(n^2) upper bound",
+    "statistic": "median over instances of the per-instance median over repeats; includes the constructive NN + 2-opt upper bound the Polyak step length requires and the V&J ascent does not",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "paper_tooling/polyak_tsplib_timing_k500_r3.json (3 repeats)"
+   },
+   {
+    "label": "HK_1Tree_500",
+    "family": "1-tree bound",
+    "kind": "bound",
+    "k": 500,
+    "N": 77,
+    "ms": 68.4533999884,
+    "x_gart2": 11.1815419778,
+    "accuracy_MAPE_pct": 1.4925620099,
+    "complexity": "\\Theta(k n^2)",
+    "statistic": "median over the matched 77 instances of the per-instance median over repeats; d18512 is above the estimator's own dense-kernel cap of 16384",
+    "environment": "Windows 11 native, one process, threads pinned to 1",
+    "ms_source": "frontier_manuscript_bank.json -> tsplib.bound_ms_by_k (hk1tree_frontier_bank.json, tag serial_solo_median11_quiet_2026-08-11_1tree)"
+   },
+   {
+    "label": "LKH-3 (time to best, no certificate)",
+    "family": "heuristic solver",
+    "kind": "heuristic solver",
+    "k": "",
+    "N": 78,
+    "ms": 703.2825,
+    "x_gart2": 114.8778993793,
+    "accuracy_MAPE_pct": 0.0147108999,
+    "complexity": "Lin-Kernighan-Helsgaun; no bound, no certificate",
+    "statistic": "median total wall over all 78 instances, censoring-aware, with 5 censored at the 600 s cap",
+    "environment": "Windows 11 native, one process",
+    "ms_source": "paper_tooling/exact_solver_tsplib_lkh.csv (this pass)"
+   },
+   {
+    "label": "Concorde (certified optimal)",
+    "family": "exact solver",
+    "kind": "exact solver",
+    "k": "",
+    "N": 77,
+    "ms": 2424.253,
+    "x_gart2": 395.9903626266,
+    "accuracy_MAPE_pct": 0.0,
+    "complexity": "branch-and-cut over an exponential cut family; no polynomial bound",
+    "statistic": "median over the 77 readable instances, censoring-aware, with 16 censored at the 600 s cap and 61 certified; linhp318 is excluded, Concorde will not read its fixed edges",
+    "environment": "WSL2 Ubuntu 24.04 on the host's physical cores, one process",
+    "ms_source": "paper_tooling/exact_solver_tsplib_concorde.csv (this pass)"
+   }
+  ]
+ }
+}

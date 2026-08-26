@@ -1,0 +1,302 @@
+{
+  "protocol": "paper_tooling/constraint_transfer_protocol.md",
+  "protocol_written": "2026-08-11T12:14:53-07:00",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "materiality_pp": 0.05,
+  "decisive_strata": [
+    "bench2d",
+    "tsplib_noneuc"
+  ],
+  "probe_clause": {
+    "pass": true,
+    "by_axis": {
+      "dimension": {
+        "median": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "pass": true
+      },
+      "n_customers": {
+        "median": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "pass": true
+      }
+    }
+  },
+  "accuracy_clause": {
+    "nd_test": {
+      "state": "LOST",
+      "decisive": false,
+      "by_metric": {
+        "mape": {
+          "v4_mono_median": 0.624557432538529,
+          "v4_mono_min": 0.6138840237457087,
+          "v4_mono_max": 0.6528027814065344,
+          "gart_median": 0.6130533460542459,
+          "gart_min": 0.6113832169484196,
+          "gart_max": 0.6251074539930609,
+          "margin_pp_v4_better": -0.011504,
+          "meets_materiality": false,
+          "bands_disjoint": false,
+          "retains": false
+        },
+        "sdpe": {
+          "v4_mono_median": 0.9743098473718268,
+          "v4_mono_min": 0.9644872149992044,
+          "v4_mono_max": 0.9896034426753282,
+          "gart_median": 0.984826192789514,
+          "gart_min": 0.9793192410797378,
+          "gart_max": 0.9919023348576405,
+          "margin_pp_v4_better": 0.010516,
+          "meets_materiality": false,
+          "bands_disjoint": false,
+          "retains": false
+        }
+      }
+    },
+    "bench2d": {
+      "state": "RETAINED",
+      "decisive": true,
+      "by_metric": {
+        "mape": {
+          "v4_mono_median": 2.7513261484797957,
+          "v4_mono_min": 2.7373307962842404,
+          "v4_mono_max": 2.788619172417616,
+          "gart_median": 2.889916305665135,
+          "gart_min": 2.871959877440756,
+          "gart_max": 2.903749242765989,
+          "margin_pp_v4_better": 0.13859,
+          "meets_materiality": true,
+          "bands_disjoint": true,
+          "retains": true
+        },
+        "sdpe": {
+          "v4_mono_median": 4.22923018004969,
+          "v4_mono_min": 4.189385376913481,
+          "v4_mono_max": 4.339456054070156,
+          "gart_median": 4.638158374299776,
+          "gart_min": 4.565432407555558,
+          "gart_max": 4.687961374441106,
+          "margin_pp_v4_better": 0.408928,
+          "meets_materiality": true,
+          "bands_disjoint": true,
+          "retains": true
+        }
+      }
+    },
+    "tsplib_euc2d": {
+      "state": "LOST",
+      "decisive": false,
+      "by_metric": {
+        "mape": {
+          "v4_mono_median": 2.959242099459291,
+          "v4_mono_min": 2.9205154221546143,
+          "v4_mono_max": 2.978255795652563,
+          "gart_median": 2.5670881315267544,
+          "gart_min": 2.54697024655928,
+          "gart_max": 2.647027964969185,
+          "margin_pp_v4_better": -0.392154,
+          "meets_materiality": false,
+          "bands_disjoint": true,
+          "retains": false
+        },
+        "sdpe": {
+          "v4_mono_median": 3.084426298233943,
+          "v4_mono_min": 2.9437575955926323,
+          "v4_mono_max": 3.1645173940629965,
+          "gart_median": 2.955086628622842,
+          "gart_min": 2.903737311399289,
+          "gart_max": 3.030259989926766,
+          "margin_pp_v4_better": -0.12934,
+          "meets_materiality": false,
+          "bands_disjoint": false,
+          "retains": false
+        }
+      }
+    },
+    "tsplib_noneuc": {
+      "state": "LOST",
+      "decisive": true,
+      "by_metric": {
+        "mape": {
+          "v4_mono_median": 2.879309101575086,
+          "v4_mono_min": 2.580667054020321,
+          "v4_mono_max": 3.364081232506973,
+          "gart_median": 3.2357943937239444,
+          "gart_min": 3.058723320715808,
+          "gart_max": 3.575210329221939,
+          "margin_pp_v4_better": 0.356485,
+          "meets_materiality": true,
+          "bands_disjoint": false,
+          "retains": false
+        },
+        "sdpe": {
+          "v4_mono_median": 3.684811887988528,
+          "v4_mono_min": 3.454482583910296,
+          "v4_mono_max": 4.086467041721162,
+          "gart_median": 3.724436428279685,
+          "gart_min": 3.390732371659144,
+          "gart_max": 4.047809418685193,
+          "margin_pp_v4_better": 0.039625,
+          "meets_materiality": false,
+          "bands_disjoint": false,
+          "retains": false
+        }
+      }
+    }
+  },
+  "outcome": "FRONTIER",
+  "supporting_paired_tests": {
+    "tsplib_euc2d": {
+      "median_seed": {
+        "V4_mono_32f": "45",
+        "GART2_refit": "47",
+        "V4_unc_32f": "43"
+      },
+      "n": 78,
+      "mean_diff_pp_neg_favours_v4_mono": 0.39215396793253626,
+      "n_v4_mono_better": 23,
+      "wilcoxon_p": 0.0002129058376414452
+    },
+    "tsplib_noneuc": {
+      "median_seed": {
+        "V4_mono_32f": "43",
+        "GART2_refit": "47",
+        "V4_unc_32f": "48"
+      },
+      "n": 22,
+      "mean_diff_pp_neg_favours_v4_mono": -0.3564852921488591,
+      "n_v4_mono_better": 16,
+      "wilcoxon_p": 0.13748931884765625
+    }
+  },
+  "symmetric_arm": {
+    "mape": {
+      "nd_test": {
+        "medians": {
+          "V4_unc_32f": 0.629842,
+          "V4_mono_32f": 0.624557,
+          "V4_unc_31f": 0.636678,
+          "V4_mono_31f": 0.633906,
+          "GART2_refit": 0.613053
+        },
+        "constraint_cost_32f_pp": -0.005284,
+        "constraint_cost_31f_pp": -0.002771,
+        "feature_value_unconstrained_pp": 0.006836,
+        "feature_value_constrained_pp": 0.009349,
+        "residual_mono31f_vs_gart_pp": 0.020853
+      },
+      "bench2d": {
+        "medians": {
+          "V4_unc_32f": 2.719507,
+          "V4_mono_32f": 2.751326,
+          "V4_unc_31f": 2.759862,
+          "V4_mono_31f": 2.787248,
+          "GART2_refit": 2.889916
+        },
+        "constraint_cost_32f_pp": 0.031819,
+        "constraint_cost_31f_pp": 0.027387,
+        "feature_value_unconstrained_pp": 0.040355,
+        "feature_value_constrained_pp": 0.035922,
+        "residual_mono31f_vs_gart_pp": -0.102668
+      },
+      "tsplib_euc2d": {
+        "medians": {
+          "V4_unc_32f": 2.923285,
+          "V4_mono_32f": 2.959242,
+          "V4_unc_31f": 2.95618,
+          "V4_mono_31f": 2.990775,
+          "GART2_refit": 2.567088
+        },
+        "constraint_cost_32f_pp": 0.035957,
+        "constraint_cost_31f_pp": 0.034595,
+        "feature_value_unconstrained_pp": 0.032895,
+        "feature_value_constrained_pp": 0.031533,
+        "residual_mono31f_vs_gart_pp": 0.423687
+      },
+      "tsplib_noneuc": {
+        "medians": {
+          "V4_unc_32f": 2.842901,
+          "V4_mono_32f": 2.879309,
+          "V4_unc_31f": 2.948669,
+          "V4_mono_31f": 2.897114,
+          "GART2_refit": 3.235794
+        },
+        "constraint_cost_32f_pp": 0.036408,
+        "constraint_cost_31f_pp": -0.051555,
+        "feature_value_unconstrained_pp": 0.105768,
+        "feature_value_constrained_pp": 0.017805,
+        "residual_mono31f_vs_gart_pp": -0.33868
+      }
+    },
+    "sdpe": {
+      "nd_test": {
+        "medians": {
+          "V4_unc_32f": 0.973924,
+          "V4_mono_32f": 0.97431,
+          "V4_unc_31f": 0.979438,
+          "V4_mono_31f": 0.985197,
+          "GART2_refit": 0.984826
+        },
+        "constraint_cost_32f_pp": 0.000386,
+        "constraint_cost_31f_pp": 0.005759,
+        "feature_value_unconstrained_pp": 0.005514,
+        "feature_value_constrained_pp": 0.010887,
+        "residual_mono31f_vs_gart_pp": 0.000371
+      },
+      "bench2d": {
+        "medians": {
+          "V4_unc_32f": 4.234551,
+          "V4_mono_32f": 4.22923,
+          "V4_unc_31f": 4.279339,
+          "V4_mono_31f": 4.298921,
+          "GART2_refit": 4.638158
+        },
+        "constraint_cost_32f_pp": -0.005321,
+        "constraint_cost_31f_pp": 0.019583,
+        "feature_value_unconstrained_pp": 0.044787,
+        "feature_value_constrained_pp": 0.069691,
+        "residual_mono31f_vs_gart_pp": -0.339237
+      },
+      "tsplib_euc2d": {
+        "medians": {
+          "V4_unc_32f": 3.007312,
+          "V4_mono_32f": 3.084426,
+          "V4_unc_31f": 3.058659,
+          "V4_mono_31f": 3.042459,
+          "GART2_refit": 2.955087
+        },
+        "constraint_cost_32f_pp": 0.077114,
+        "constraint_cost_31f_pp": -0.0162,
+        "feature_value_unconstrained_pp": 0.051346,
+        "feature_value_constrained_pp": -0.041968,
+        "residual_mono31f_vs_gart_pp": 0.087372
+      },
+      "tsplib_noneuc": {
+        "medians": {
+          "V4_unc_32f": 3.62978,
+          "V4_mono_32f": 3.684812,
+          "V4_unc_31f": 3.66229,
+          "V4_mono_31f": 3.757299,
+          "GART2_refit": 3.724436
+        },
+        "constraint_cost_32f_pp": 0.055032,
+        "constraint_cost_31f_pp": 0.095009,
+        "feature_value_unconstrained_pp": 0.03251,
+        "feature_value_constrained_pp": 0.072487,
+        "residual_mono31f_vs_gart_pp": 0.032863
+      }
+    }
+  },
+  "nd_test_note": "Excluded from the decision clause by the protocol: unconstrained LGBM_V4's published lead there is 0.0014 pp, already 36x below the 0.05 pp materiality floor fixed before looking.",
+  "symmetric_arm_note": "Three variables still separate V4_mono_31f from GART2_refit -- target transform, hyperparameters, train+val refit. The symmetric arm bounds the contribution of mst_total_length and of the constraint; it does not identify the residual."
+}

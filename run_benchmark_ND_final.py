@@ -23,6 +23,7 @@ import seaborn as sns
 import concurrent.futures
 import functools
 import gc
+import struct
 import joblib
 
 # --- Configuration ---
@@ -41,12 +42,15 @@ from tsp_utils import parse_tsp_instance, parse_tsp_solution
 import tsp_utils_2 as academic
 from linear_model_v3.estimator_linear_v3 import TSP_V3_Linear_Estimator
 from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
+from lgbm_model_v3.lgbm_estimator_gart2 import TSP_GART2_Estimator
 from interpretable_model_v3.estimator_interpretable_v3 import TSP_Interpretable_Estimator
 sys.path.append(str(SCRIPT_DIR / "lgbm_model_v4"))
 from lgbm_model_v4.lgbm_estimator_v4 import TSP_V4_LGBM_Estimator
 from nn_est_alpha_v3.estimator_v3 import TSP_V3_Neural_Estimator
+import classical_region_estimators as region_est
+from baselines_calibrated import AsymptoticMSTRatio, CalibratedMSTRatio
 
-GART_FAMILY = {"Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
+GART_FAMILY = {"GART_2.0", "Linear_V3", "LGBM_V3", "LGBM_V4", "NN_V3", "Interp_V3"}
 
 ROOT_DIR = SCRIPT_DIR
 RESULTS_DIR = ROOT_DIR / "Generalized_TSP_Analysis_ND"
@@ -116,7 +120,10 @@ def extract_base_info(inst_name):
         "n_customers": inst_data['n_customers'],
         "dimension": inst_data['dimension'],
         "grid_size": inst_data.get('grid_size', 1000),
-        "distribution": inst_data.get('distribution_type', 'unknown'),
+        # ND instances store one generator letter per axis under the plural key.
+        # The old singular lookup never matched, so this column was 'unknown'
+        # on all 16,920 rows and no per-generator breakdown was possible.
+        "distribution": "".join(inst_data.get('distribution_types', [])) or "unknown",
         "true_cost": sol_data['optimal_cost'],
         "mst_length": mst_len,
         "optimal_solve_time_s": opt_time,
@@ -143,19 +150,75 @@ def generate_base_dataframe(instance_names):
 # =============================================================================
 # 2. Model Execution Logic
 # =============================================================================
+# Header layout written by data_pipeline/instance_io.save_instance_binary:
+# n, d, grid_size, len(distribution_types), then the ascii letters, then the
+# float32 coordinate body.
+_BIN_HEADER = struct.Struct("IIII")
+
+def load_coords_fast(inst_path, n, d, grid_size):
+    """Read just the coordinates of an instance, preferring the .bin sibling.
+
+    The worker needs nothing from the instance file except the coordinate
+    array — n, d and grid_size all arrive from base_df. The .json is a ~940 KB
+    text blob whose json.load dominates a model pass (and, being pure Python
+    object construction, holds the GIL and so serialises across the worker
+    threads). The .bin sibling carries the same coordinates as a ~200 KB
+    float32 body that np.frombuffer decodes essentially for free. A 13-model
+    run therefore drops ~220,000 full JSON parses.
+
+    The binaries are not trusted blindly. Every .bin backing the ND test set
+    was verified byte-for-byte against its authoritative .json before this
+    path was enabled (16,920 of 16,920 exact), and each read re-checks the
+    header (n, d, grid_size) and body length against the values base_df
+    already carries. A disagreement raises rather than quietly falling back to
+    the .json, because a silent coordinate swap is precisely the defect this
+    check exists to catch. Falling back is allowed only when the .bin is
+    absent outright, where the authoritative source is the only source.
+    """
+    bin_path = Path(inst_path).with_suffix(".bin")
+    if not bin_path.exists():
+        return parse_tsp_instance(inst_path).coordinates
+
+    with open(bin_path, "rb") as f:
+        blob = f.read()
+
+    b_n, b_d, b_grid, dist_len = _BIN_HEADER.unpack_from(blob, 0)
+    offset = _BIN_HEADER.size + dist_len
+    if (b_n, b_d, b_grid) != (int(n), int(d), int(grid_size)):
+        raise ValueError(
+            f"{bin_path.name}: header (n={b_n}, d={b_d}, grid={b_grid}) disagrees with "
+            f"expected (n={int(n)}, d={int(d)}, grid={int(grid_size)}); .bin is stale"
+        )
+    if len(blob) - offset != b_n * b_d * 4:
+        raise ValueError(
+            f"{bin_path.name}: coordinate body is {len(blob) - offset} bytes, "
+            f"expected {b_n * b_d * 4}"
+        )
+
+    # .copy() hands back an aligned, writable array that owns its buffer, so it
+    # is interchangeable with the np.asarray(list) the JSON path produces.
+    return np.frombuffer(blob, dtype=np.float32, count=b_n * b_d,
+                         offset=offset).reshape(b_n, b_d).copy()
+
 def worker_run_estimator(row_dict, model_name, estimator_obj):
     """Strict worker. No exception handling — errors halt the pipeline."""
-    inst_path = Path(row_dict['file_path'])
-    inst_data = parse_tsp_instance(inst_path)
-    coords = inst_data.coordinates
     d = row_dict['dimension']
     grid_size = row_dict['grid_size']
+    coords = load_coords_fast(row_dict['file_path'], row_dict['n_customers'],
+                              d, grid_size)
 
+    status = 'ok'
+    region_source = ''
     if hasattr(estimator_obj, 'estimate'):
         res = estimator_obj.estimate(coords, d, grid_size)
         pred_cost = res['estimate']
         t_feat = res.get('feature_time', 0.0)
         t_inf = res.get('inference_time', 0.0)
+        # Region-aware estimators report an out-of-domain instance as a status
+        # row instead of raising, so one planar-only estimator cannot halt the
+        # whole multidimensional run.
+        status = res.get('status', 'ok')
+        region_source = res.get('region_source', '')
     else:
         pred_cost, t_total = estimator_obj(coords)
         t_feat = t_inf = t_total / 2.0
@@ -169,7 +232,8 @@ def worker_run_estimator(row_dict, model_name, estimator_obj):
         'feature_time_s': t_feat,
         'inference_time_s': t_inf,
         'optimal_solve_time_s': row_dict['optimal_solve_time_s'],
-        'status': 'ok',
+        'status': status,
+        'region_source': region_source,
     }
 
 def process_model(model_name, factory, base_df):
@@ -224,7 +288,19 @@ def calculate_metrics_and_print(df):
     print("\n" + "="*90)
     print("                      FINAL BENCHMARK SUMMARY (N-D)                      ")
     print("="*90)
-    
+
+    # Estimators that decline an instance report it as a status row with a NaN
+    # prediction (Asymptotic_MST records asymptotic_rho_undefined on every d != 2
+    # row, i.e. 16,272 of them). Those rows must leave the aggregates, exactly as
+    # the 2D runner already does; feeding them to r2_score raised
+    # "Input contains NaN" and killed the summary and the plots after the results
+    # CSV had already been written.
+    if 'status' in df.columns:
+        print("\nStatus breakdown:")
+        print(df.groupby(['model', 'status']).size().unstack(fill_value=0))
+        df = df[df['status'] == 'ok'].copy()
+    df = df.dropna(subset=['pred_cost', 'true_cost'])
+
     df['error'] = df['pred_cost'] - df['true_cost']
     df['sq_error'] = df['error'] ** 2
     
@@ -345,12 +421,29 @@ def main():
         # Cavdar: excluded — not N-dimension scalable.
         # ('Vinel', lambda: academic.estimate_tsp_vinel),          # DEPRECATED (see tsp_utils_2.py)
         # ('Composite', lambda: academic.estimate_tsp_composite),  # DEPRECATED (see tsp_utils_2.py)
-        ('BHH', lambda: academic.estimate_tsp_bhh),
+        ('BHH', lambda: region_est.ESTIMATORS['BHH']),
+        ('BHH_region', lambda: region_est.ESTIMATORS['BHH_region']),
         ('MST_Ratio', lambda: academic.estimate_tsp_mst_ratio),
-        # ('Chien', lambda: academic.estimate_tsp_chien),          # 2D-only — raises for d!=2
         ('Hilbert', lambda: academic.estimate_tsp_hilbert),
-        # Kwon and Daganzo are 2D-planar only — excluded from N-D schedule.
+        # Chien, Kwon and Daganzo were absent here by domain -- their published
+        # forms are planar. They are now absent everywhere by provenance: the
+        # coefficients came from a secondary transcription and the primaries are
+        # unobtainable, so they are scored on no benchmark. Cavdar--Sokol is
+        # likewise planar-only and is scored on the 2D and TSPLIB sets alone.
+
+        # --- Constant-ratio references ---
+        # MST_Only is the alpha = 1 floor. Asymptotic_MST is the published
+        # constant ratio, defined at d = 2 only, and records a status row
+        # elsewhere. The Calibrated rows are fitted on the training split alone
+        # and replace the author-chosen rho(d) schedule as the honest reference.
+        ('MST_Only', lambda: region_est.ESTIMATORS['MST_Only']),
+        ('Asymptotic_MST', lambda: AsymptoticMSTRatio()),
+        ('Calibrated_MST_d', lambda: CalibratedMSTRatio('d')),
+        ('Calibrated_MST_dn', lambda: CalibratedMSTRatio('dn')),
         # --- Machine Learning Models ---
+        # GART_2.0 is the production model. LGBM_V3 stays alongside it as the
+        # predecessor the paper compares against.
+        ('GART_2.0', lambda: TSP_GART2_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
         ('Linear_V3', lambda: TSP_V3_Linear_Estimator(str(SCRIPT_DIR / 'linear_model_v3'))),
         ('LGBM_V3', lambda: TSP_V3_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v3'))),
         ('LGBM_V4', lambda: TSP_V4_LGBM_Estimator(str(SCRIPT_DIR / 'lgbm_model_v4'))),
@@ -362,7 +455,12 @@ def main():
         process_model(name, factory, base_df)
 
     print("\n--- Aggregating Results ---")
-    csv_files = glob(str(CHECKPOINT_DIR / "results_*.csv"))
+    # Aggregate the schedule's own checkpoints by name, never a wildcard. The
+    # checkpoint directory also holds ``*_as_published.csv`` audit snapshots and
+    # the checkpoints of withdrawn models; a glob would fold both back in.
+    csv_files = [str(p) for p in
+                 (CHECKPOINT_DIR / f"results_{name.lower()}.csv" for name, _ in schedule)
+                 if p.exists()]
     if csv_files:
         final_df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
         final_df.to_csv(FINAL_RESULTS_FILE, index=False)

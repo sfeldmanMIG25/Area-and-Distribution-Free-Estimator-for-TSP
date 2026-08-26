@@ -1,0 +1,8 @@
+{
+  "stratum": "2d",
+  "n_compared": 2580,
+  "n_declined_both": 0,
+  "max_relative_difference": 3.9405390572466045e-16,
+  "tolerance": 1e-06,
+  "passed": true
+}

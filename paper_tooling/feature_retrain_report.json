@@ -1,0 +1,519 @@
+{
+  "slices": [
+    {
+      "model": "M0",
+      "slice": "2D Isotropic",
+      "N": 840,
+      "MAPE": 1.8362915058577183,
+      "SDPE": 2.7852506677020195,
+      "MSPE": 0.278125168475419
+    },
+    {
+      "model": "M0",
+      "slice": "2D Biased",
+      "N": 840,
+      "MAPE": 1.9932892680468286,
+      "SDPE": 2.6714540970039375,
+      "MSPE": 0.44230335880554017
+    },
+    {
+      "model": "M0",
+      "slice": "2D Clustered",
+      "N": 60,
+      "MAPE": 2.6062361184155907,
+      "SDPE": 3.5610265282939175,
+      "MSPE": -0.20581012517612218
+    },
+    {
+      "model": "M0",
+      "slice": "2D Geometric",
+      "N": 630,
+      "MAPE": 4.431044877993178,
+      "SDPE": 4.510103078188312,
+      "MSPE": 3.353492682657286
+    },
+    {
+      "model": "M0",
+      "slice": "2D LineNoise",
+      "N": 210,
+      "MAPE": 11.591800874201837,
+      "SDPE": 6.170091922438645,
+      "MSPE": -11.57430656609659
+    },
+    {
+      "model": "M0",
+      "slice": "2D grid sub-gen",
+      "N": 210,
+      "MAPE": 8.480433103401984,
+      "SDPE": 1.4873017177195111,
+      "MSPE": 8.480433103401984
+    },
+    {
+      "model": "M0",
+      "slice": "2D overall",
+      "N": 2580,
+      "MAPE": 3.3329684007375358,
+      "SDPE": 5.188037262078167,
+      "MSPE": 0.10655324286792424
+    },
+    {
+      "model": "M0",
+      "slice": "ND test",
+      "N": 16920,
+      "MAPE": 0.8769192747205671,
+      "SDPE": 1.276524110438083,
+      "MSPE": 0.35372099027292253
+    },
+    {
+      "model": "M0",
+      "slice": "TSPLIB EUC_2D",
+      "N": 78,
+      "MAPE": 3.2712819068650743,
+      "SDPE": 3.4236788134024,
+      "MSPE": 2.8712790256477607
+    },
+    {
+      "model": "M0",
+      "slice": "TSPLIB non-EUC screened",
+      "N": 23,
+      "MAPE": 4.6326684391122575,
+      "SDPE": 4.876722907491375,
+      "MSPE": -2.1379089302293113
+    },
+    {
+      "model": "MF",
+      "slice": "2D Isotropic",
+      "N": 840,
+      "MAPE": 1.6095958874483187,
+      "SDPE": 2.3952473467808306,
+      "MSPE": 0.09371382529245677
+    },
+    {
+      "model": "MF",
+      "slice": "2D Biased",
+      "N": 840,
+      "MAPE": 1.76058801238861,
+      "SDPE": 2.2921245451969816,
+      "MSPE": 0.45838011691505054
+    },
+    {
+      "model": "MF",
+      "slice": "2D Clustered",
+      "N": 60,
+      "MAPE": 2.4107863318137324,
+      "SDPE": 3.335707517921306,
+      "MSPE": -0.47699157357994887
+    },
+    {
+      "model": "MF",
+      "slice": "2D Geometric",
+      "N": 630,
+      "MAPE": 4.112837275733321,
+      "SDPE": 4.306546841687565,
+      "MSPE": 3.218400027959425
+    },
+    {
+      "model": "MF",
+      "slice": "2D LineNoise",
+      "N": 210,
+      "MAPE": 5.93900476978319,
+      "SDPE": 3.6198260201537655,
+      "MSPE": -5.860392395658665
+    },
+    {
+      "model": "MF",
+      "slice": "2D grid sub-gen",
+      "N": 210,
+      "MAPE": 8.332928142025688,
+      "SDPE": 2.0984134914389023,
+      "MSPE": 8.284742721971401
+    },
+    {
+      "model": "MF",
+      "slice": "2D overall",
+      "N": 2580,
+      "MAPE": 2.6410388143946926,
+      "SDPE": 3.8197685896339353,
+      "MSPE": 0.47753838432776236
+    },
+    {
+      "model": "MF",
+      "slice": "ND test",
+      "N": 16920,
+      "MAPE": 0.7806988962678489,
+      "SDPE": 1.1099892539792995,
+      "MSPE": 0.30474472232937383
+    },
+    {
+      "model": "MF",
+      "slice": "TSPLIB EUC_2D",
+      "N": 78,
+      "MAPE": 3.240025082009056,
+      "SDPE": 3.359799695604341,
+      "MSPE": 2.8039059152031065
+    },
+    {
+      "model": "MF",
+      "slice": "TSPLIB non-EUC screened",
+      "N": 23,
+      "MAPE": 3.525670860368322,
+      "SDPE": 4.477576051927317,
+      "MSPE": 0.12470882845434922
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D Isotropic",
+      "N": 840,
+      "MAPE": 1.5908656484394865,
+      "SDPE": 2.373886333217784,
+      "MSPE": 0.06954246130156534
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D Biased",
+      "N": 840,
+      "MAPE": 1.7408421462059251,
+      "SDPE": 2.26015733590264,
+      "MSPE": 0.4427782849438537
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D Clustered",
+      "N": 60,
+      "MAPE": 2.4246315215391983,
+      "SDPE": 3.363452796996685,
+      "MSPE": -0.38899497398356564
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D Geometric",
+      "N": 630,
+      "MAPE": 4.040741943959328,
+      "SDPE": 4.213328892257889,
+      "MSPE": 3.1653126529173305
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D LineNoise",
+      "N": 210,
+      "MAPE": 6.0813456102394605,
+      "SDPE": 3.551854474716662,
+      "MSPE": -6.011547564274267
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D grid sub-gen",
+      "N": 210,
+      "MAPE": 8.151195451870267,
+      "SDPE": 2.105796176786232,
+      "MSPE": 8.088273740088649
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "2D overall",
+      "N": 2580,
+      "MAPE": 2.6228148998601397,
+      "SDPE": 3.79079715783185,
+      "MSPE": 0.4413688803284732
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "ND test",
+      "N": 16920,
+      "MAPE": 0.7788918909698269,
+      "SDPE": 1.1030689164110175,
+      "MSPE": 0.30618268427505296
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "TSPLIB EUC_2D",
+      "N": 78,
+      "MAPE": 3.339904742490344,
+      "SDPE": 3.3485839531558446,
+      "MSPE": 2.873595132847415
+    },
+    {
+      "model": "MF_tuned",
+      "slice": "TSPLIB non-EUC screened",
+      "N": 23,
+      "MAPE": 3.5387387791845955,
+      "SDPE": 4.433275484038983,
+      "MSPE": 0.0608859697776101
+    }
+  ],
+  "linenoise_by_n": [
+    {
+      "model": "M0",
+      "n_bucket": "<=100",
+      "N": 120,
+      "MAPE": 13.760067225135126,
+      "SDPE": 5.867471392482194,
+      "MSPE": -13.754066754072456
+    },
+    {
+      "model": "M0",
+      "n_bucket": "101-400",
+      "N": 30,
+      "MAPE": 12.85093711479816,
+      "SDPE": 5.082038561010731,
+      "MSPE": -12.85093711479816
+    },
+    {
+      "model": "M0",
+      "n_bucket": "401-1000",
+      "N": 60,
+      "MAPE": 6.625700052037102,
+      "SDPE": 4.10261139126311,
+      "MSPE": -6.576470915794073
+    },
+    {
+      "model": "MF",
+      "n_bucket": "<=100",
+      "N": 120,
+      "MAPE": 5.1308643998032,
+      "SDPE": 3.3355303972009898,
+      "MSPE": -5.005046522884924
+    },
+    {
+      "model": "MF",
+      "n_bucket": "101-400",
+      "N": 30,
+      "MAPE": 9.101314824113107,
+      "SDPE": 3.165009277782488,
+      "MSPE": -9.101314824113107
+    },
+    {
+      "model": "MF",
+      "n_bucket": "401-1000",
+      "N": 60,
+      "MAPE": 5.974130482578213,
+      "SDPE": 3.4950315636320153,
+      "MSPE": -5.950622926978929
+    },
+    {
+      "model": "MF_tuned",
+      "n_bucket": "<=100",
+      "N": 120,
+      "MAPE": 5.1867746329045445,
+      "SDPE": 3.2541339607309427,
+      "MSPE": -5.067197190917631
+    },
+    {
+      "model": "MF_tuned",
+      "n_bucket": "101-400",
+      "N": 30,
+      "MAPE": 9.260158556932229,
+      "SDPE": 3.062635219528204,
+      "MSPE": -9.260158556932229
+    },
+    {
+      "model": "MF_tuned",
+      "n_bucket": "401-1000",
+      "N": 60,
+      "MAPE": 6.281081091562905,
+      "SDPE": 3.386692335852084,
+      "MSPE": -6.2759428146585545
+    }
+  ],
+  "mechanism": [
+    {
+      "model": "M0",
+      "N": 90,
+      "slope": 0.2941405491340326,
+      "intercept": 0.811006800345675,
+      "pearson_r": 0.9636028671658192,
+      "pred_alpha_std": 0.035685170493512275,
+      "true_alpha_std": 0.11690442784609245
+    },
+    {
+      "model": "MF",
+      "N": 90,
+      "slope": 0.5689837101648098,
+      "intercept": 0.4727108382072095,
+      "pearson_r": 0.9453475731195783,
+      "pred_alpha_std": 0.07036217892966462,
+      "true_alpha_std": 0.11690442784609245
+    },
+    {
+      "model": "MF_tuned",
+      "N": 90,
+      "slope": 0.5973460130627721,
+      "intercept": 0.4320074281198655,
+      "pearson_r": 0.941040613736137,
+      "pred_alpha_std": 0.07420763021693398,
+      "true_alpha_std": 0.11690442784609245
+    }
+  ],
+  "criteria": [
+    {
+      "model": "M0",
+      "criterion": 1,
+      "test": "LineNoise MAPE < 5.00",
+      "value": "11.592 (from 11.591)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "M0",
+      "criterion": 2,
+      "test": "LineNoise MSPE within +/-3.0",
+      "value": "-11.574 (from -11.574)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "M0",
+      "criterion": 3,
+      "test": "grid MSPE improves >= 2.0 pts",
+      "value": "+8.480 (from +8.480, delta -0.000)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "M0",
+      "criterion": 4,
+      "test": "ND test MAPE regression <= 0.05",
+      "value": "0.8769 (from 0.8769, delta +0.0000)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "M0",
+      "criterion": 5,
+      "test": "TSPLIB EUC_2D MAPE regression <= 0.15",
+      "value": "3.2713 (from 3.2713, delta +0.0000)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "M0",
+      "criterion": 6,
+      "test": "no Iso/Biased/Clustered regression > 0.15",
+      "value": "worst delta +0.0000 (Iso -0.000, Bia +0.000, Clu +0.000)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "M0",
+      "criterion": 7,
+      "test": "TSPLIB non-EUC screened regression <= 0.30",
+      "value": "4.6327 (from 4.6327, delta +0.0000)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "M0",
+      "criterion": 8,
+      "test": "LineNoise alpha slope (n>=200) >= 0.70",
+      "value": "0.2941 (from 0.294)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF",
+      "criterion": 1,
+      "test": "LineNoise MAPE < 5.00",
+      "value": "5.939 (from 11.591)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF",
+      "criterion": 2,
+      "test": "LineNoise MSPE within +/-3.0",
+      "value": "-5.860 (from -11.574)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF",
+      "criterion": 3,
+      "test": "grid MSPE improves >= 2.0 pts",
+      "value": "+8.285 (from +8.480, delta +0.196)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF",
+      "criterion": 4,
+      "test": "ND test MAPE regression <= 0.05",
+      "value": "0.7807 (from 0.8769, delta -0.0962)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF",
+      "criterion": 5,
+      "test": "TSPLIB EUC_2D MAPE regression <= 0.15",
+      "value": "3.2400 (from 3.2713, delta -0.0313)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF",
+      "criterion": 6,
+      "test": "no Iso/Biased/Clustered regression > 0.15",
+      "value": "worst delta -0.1954 (Iso -0.227, Bia -0.233, Clu -0.195)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF",
+      "criterion": 7,
+      "test": "TSPLIB non-EUC screened regression <= 0.30",
+      "value": "3.5257 (from 4.6327, delta -1.1070)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF",
+      "criterion": 8,
+      "test": "LineNoise alpha slope (n>=200) >= 0.70",
+      "value": "0.5690 (from 0.294)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 1,
+      "test": "LineNoise MAPE < 5.00",
+      "value": "6.081 (from 11.591)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 2,
+      "test": "LineNoise MSPE within +/-3.0",
+      "value": "-6.012 (from -11.574)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 3,
+      "test": "grid MSPE improves >= 2.0 pts",
+      "value": "+8.088 (from +8.480, delta +0.392)",
+      "verdict": "FAIL"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 4,
+      "test": "ND test MAPE regression <= 0.05",
+      "value": "0.7789 (from 0.8769, delta -0.0980)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 5,
+      "test": "TSPLIB EUC_2D MAPE regression <= 0.15",
+      "value": "3.3399 (from 3.2713, delta +0.0686)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 6,
+      "test": "no Iso/Biased/Clustered regression > 0.15",
+      "value": "worst delta -0.1816 (Iso -0.245, Bia -0.252, Clu -0.182)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 7,
+      "test": "TSPLIB non-EUC screened regression <= 0.30",
+      "value": "3.5387 (from 4.6327, delta -1.0939)",
+      "verdict": "PASS"
+    },
+    {
+      "model": "MF_tuned",
+      "criterion": 8,
+      "test": "LineNoise alpha slope (n>=200) >= 0.70",
+      "value": "0.5973 (from 0.294)",
+      "verdict": "FAIL"
+    }
+  ],
+  "verdict": "REJECT",
+  "n_pass_MF": 4
+}

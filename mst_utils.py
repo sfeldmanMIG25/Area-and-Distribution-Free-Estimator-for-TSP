@@ -17,6 +17,7 @@ import os
 from dataclasses import dataclass
 from typing import Optional
 
+from itertools import combinations
 import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
@@ -138,19 +139,25 @@ def _dense_mst(coords: np.ndarray) -> MSTResult:
 def _delaunay_mst(coords: np.ndarray) -> MSTResult:
     n = coords.shape[0]
     tri = Delaunay(coords)
-    pairs = set()
     simplices = tri.simplices
-    for s in simplices:
-        k = len(s)
-        for i in range(k):
-            for j in range(i + 1, k):
-                a, b = int(s[i]), int(s[j])
-                if a > b:
-                    a, b = b, a
-                pairs.add((a, b))
-    if not pairs:
+    d = coords.shape[1]
+    if d == 2:
+        edges_raw = np.vstack([simplices[:, [0, 1]], simplices[:, [1, 2]], simplices[:, [2, 0]]])
+    elif d == 3:
+        edges_raw = np.vstack([
+            simplices[:, [0, 1]], simplices[:, [0, 2]], simplices[:, [0, 3]],
+            simplices[:, [1, 2]], simplices[:, [1, 3]], simplices[:, [2, 3]]
+        ])
+    else:
+        k = simplices.shape[1]
+        combo_indices = np.array(list(combinations(range(k), 2)))
+        edges_raw = np.vstack([simplices[:, c] for c in combo_indices])
+
+    if edges_raw.size == 0:
         raise RuntimeError("Delaunay produced no edges")
-    arr = np.fromiter((x for p in pairs for x in p), dtype=np.int32, count=2 * len(pairs)).reshape(-1, 2)
+
+    edges_raw.sort(axis=1)
+    arr = np.unique(edges_raw, axis=0).astype(np.int32)
     diffs = coords[arr[:, 0]] - coords[arr[:, 1]]
     dists = np.linalg.norm(diffs, axis=1).astype(np.float32)
     rows = np.concatenate([arr[:, 0], arr[:, 1]])
@@ -159,6 +166,7 @@ def _delaunay_mst(coords: np.ndarray) -> MSTResult:
     sp = csr_matrix((data, (rows, cols)), shape=(n, n))
     mst_csr = minimum_spanning_tree(sp)
     return _from_csr(mst_csr, n, method="delaunay")
+
 
 
 if _HAVE_NUMBA:

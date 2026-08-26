@@ -17,7 +17,7 @@ tsplib_benchmark/
   tsplib_parser.py      # TSPLIB95 file format parser
   classical_mds.py      # Classical MDS (Torgerson 1952) embedding
   download_tsplib.py    # One-time instance downloader
-  run_tsplib_benchmark.py  # Main benchmark runner
+  run_all_models_tsplib.py # Benchmark runner (canonical)
 ```
 
 ## Quick start
@@ -27,19 +27,23 @@ tsplib_benchmark/
 python tsplib_benchmark/download_tsplib.py
 
 # 2. Run the full benchmark
-python tsplib_benchmark/run_tsplib_benchmark.py --tag my_run
+python tsplib_benchmark/run_all_models_tsplib.py
 
-# 3. Run only instances within the training range (n <= 1000)
-python tsplib_benchmark/run_tsplib_benchmark.py --exclude-over-cap --tag in_range
-
-# 4. Cap instance size
-python tsplib_benchmark/run_tsplib_benchmark.py --max-n 500 --tag small
+# 3. Cap instance size
+python tsplib_benchmark/run_all_models_tsplib.py --max-n 500
 ```
 
-Results are written to `results/tsplib_results_<timestamp>_<tag>.csv`. A
-separate `tsplib_skipped_<timestamp>_<tag>.csv` logs any instances that could
-not be processed (e.g., pla85900 exceeds memory for distance matrix
-construction).
+Results are written to `results/all_models_tsplib.csv`, which the run
+overwrites. Every (instance, model) pair produces a row: an instance that
+cannot be scored carries a `status` naming the reason rather than being
+dropped.
+
+`run_tsplib_benchmark.py`, `run_supplemental_baselines.py` and
+`backfill_kwon_daganzo.py` have been deleted. They scored Chien,
+Kwon--Golden--Wasil and Daganzo from coefficients transcribed out of a
+secondary source, and the primaries are paywalled with no obtainable
+open-access copy. Those three estimators are no longer benchmarked anywhere,
+and the superseded functions behind them in `tsp_utils_2.py` now raise.
 
 ## How instances are handled
 

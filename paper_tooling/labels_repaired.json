@@ -1,0 +1,63 @@
+{
+  "generated_by": "paper_tooling/repair_labels.py",
+  "hk_exact_max_n": 10,
+  "cert_rel_tol": 1e-07,
+  "nd": {
+    "n_instances": 106272,
+    "by_provenance": {
+      "clean_fine_quantised": 90979,
+      "D1_coarse_robust_scale": 15016,
+      "D3_coords_regenerated": 184,
+      "D2_unit_scale": 93
+    },
+    "by_status": {
+      "tour_upper_bound": 77349,
+      "exact_certified": 26557,
+      "tour_certified_optimal": 2182,
+      "quarantined_no_recoverable_truth": 184
+    },
+    "bad_labels": 15109,
+    "bad_label_pct": 14.2173,
+    "quarantined": 184,
+    "by_split_bad": {
+      "train": 9662,
+      "test": 2750,
+      "val": 2697
+    },
+    "by_split_quarantined": {
+      "train": 80,
+      "test": 74,
+      "val": 30
+    },
+    "test": {
+      "n_instances": 16920,
+      "bad_labels": 2750,
+      "quarantined": 74,
+      "label_mape_pct": 0.01098898969039703,
+      "signed_mean_pct": 0.0005951779831567555
+    }
+  },
+  "d2": {
+    "n_instances": 2580,
+    "label_mape_pct": 0.05015898049179182,
+    "signed_mean_pct": -0.04464091968724813,
+    "by_grid": {
+      "1000": {
+        "n": 1290,
+        "label_mape_pct": 0.09535958512119018,
+        "signed_mean_pct": -0.08618413058857194
+      },
+      "10000": {
+        "n": 1290,
+        "label_mape_pct": 0.004958375862393458,
+        "signed_mean_pct": -0.0030977087859243306
+      }
+    },
+    "tours_improvable_in_float": 600
+  },
+  "tsplib": {
+    "n_instances": 111,
+    "repaired": 1
+  },
+  "quarantined_total": 184
+}

@@ -1,0 +1,143 @@
+{
+  "row_order_position": {
+    "median_seed": 123,
+    "protocol_order_slope": 0.7353727198952807,
+    "permutation_band": [
+      0.6553766615531424,
+      0.8019885734349617
+    ],
+    "permutation_median": 0.7563090689211182,
+    "permutation_sd": 0.04909611378455217,
+    "pct_of_permutations_at_or_below_observed": 25.0,
+    "observed_outside_band": false,
+    "armA_comparison": "arm A reported 0.8268 while its own 8-permutation band was [0.6367, 0.8028] -- above the entire band. Arm C's protocol-order value sits inside its band."
+  },
+  "gate6_fragility": {
+    "n_fits": 15,
+    "slope_median": 0.7545219831849996,
+    "slope_band": [
+      0.6553766615531424,
+      0.8019885734349617
+    ],
+    "fits_below_0.70": 3,
+    "fits_below_0.70_pct": 20.0,
+    "closest_pass": 0.7038726203099002,
+    "worst_seed_margin": -0.00016191740031135105
+  },
+  "paired_deltas": [
+    {
+      "metric": "linenoise_slope",
+      "A_minus_C_median": 0.04163457807629378,
+      "A_minus_C_lo": -0.07286967114237153,
+      "A_minus_C_hi": 0.11151687513032993,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": 0.33910910249376514,
+      "C_minus_R0protocol_lo": 0.2983111644297209,
+      "C_minus_R0protocol_hi": 0.41157076547032756,
+      "C_minus_R0protocol_sign_consistent": true
+    },
+    {
+      "metric": "b2_grid_mspe",
+      "A_minus_C_median": -0.127852492444541,
+      "A_minus_C_lo": -0.20755724448200463,
+      "A_minus_C_hi": 0.09774189534637956,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": -5.523466891153058,
+      "C_minus_R0protocol_lo": -5.731356868511172,
+      "C_minus_R0protocol_hi": -5.247260388977642,
+      "C_minus_R0protocol_sign_consistent": true
+    },
+    {
+      "metric": "bench2d_mape",
+      "A_minus_C_median": -0.01135631296094175,
+      "A_minus_C_lo": -0.02991141720326551,
+      "A_minus_C_hi": 0.05381054427547438,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": -0.8286922167434065,
+      "C_minus_R0protocol_lo": -0.8531485602138691,
+      "C_minus_R0protocol_hi": -0.7981132964894262,
+      "C_minus_R0protocol_sign_consistent": true
+    },
+    {
+      "metric": "nd_test_mape",
+      "A_minus_C_median": 0.0008082792672068351,
+      "A_minus_C_lo": -0.005073879533470382,
+      "A_minus_C_hi": 0.00501105774959365,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": -0.024133427412005082,
+      "C_minus_R0protocol_lo": -0.029861696489978606,
+      "C_minus_R0protocol_hi": -0.014300957170428341,
+      "C_minus_R0protocol_sign_consistent": true
+    },
+    {
+      "metric": "tsplib_euc2d_sdpe",
+      "A_minus_C_median": 0.12947440028624468,
+      "A_minus_C_lo": -0.1565918460499618,
+      "A_minus_C_hi": 0.2205707422818688,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": 0.15946003689993615,
+      "C_minus_R0protocol_lo": -0.08322990151860488,
+      "C_minus_R0protocol_hi": 0.24367025670932563,
+      "C_minus_R0protocol_sign_consistent": false
+    },
+    {
+      "metric": "tsplib_noneuc_mape",
+      "A_minus_C_median": 0.017857991723182032,
+      "A_minus_C_lo": -0.3109068554566461,
+      "A_minus_C_hi": 0.15874687353067962,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": -0.6123209431811567,
+      "C_minus_R0protocol_lo": -1.145043123835455,
+      "C_minus_R0protocol_hi": -0.30501878779270086,
+      "C_minus_R0protocol_sign_consistent": true
+    },
+    {
+      "metric": "b2_line_noise_mape",
+      "A_minus_C_median": -0.0658647794453815,
+      "A_minus_C_lo": -0.1380231962434646,
+      "A_minus_C_hi": 0.474633779925691,
+      "A_minus_C_sign_consistent": false,
+      "C_minus_R0protocol_median": -4.596589625147252,
+      "C_minus_R0protocol_lo": -4.929793536901037,
+      "C_minus_R0protocol_hi": -4.394255644442719,
+      "C_minus_R0protocol_sign_consistent": true
+    }
+  ],
+  "gate2_robustness": {
+    "swap_holm_per_seed": {
+      "42": 0.08679,
+      "1": 0.15188,
+      "7": 0.05739,
+      "97": 0.06399,
+      "123": 0.09659,
+      "1729": 0.06509,
+      "2024": 0.0432
+    },
+    "reading_median_of_p": {
+      "value": 0.0650934906509349,
+      "verdict": "FAIL"
+    },
+    "reading_median_seed_model": {
+      "value": 0.0965903409659034,
+      "verdict": "FAIL"
+    },
+    "reading_majority_of_seeds": {
+      "n_pass": 1,
+      "verdict": "FAIL"
+    },
+    "reading_all_seeds": {
+      "verdict": "FAIL"
+    },
+    "reading_best_seed": {
+      "value": 0.0431956804319568,
+      "verdict": "PASS (single seed -- the exact defect this protocol exists to forbid)"
+    },
+    "detectable_holm_seeds": "6/7",
+    "pitman_morgan_holm_median": 0.000967996846667,
+    "swap_raw_p_median": 0.0092990700929907,
+    "r_xy_frozen": 0.4636442894633668,
+    "r_xy_candidate_median": 0.2226146747028074,
+    "mechanism": "The raw swap-permutation p is significant (median 0.0093); it is the Holm correction over the 18-test dispersion family that removes it. The candidate's error vector is also far less correlated with the baseline's than the frozen model's is (r_xy 0.22 vs 0.46), which is what the distribution-free test is sensitive to and the parametric Pitman-Morgan test is not.",
+    "armA_same_protocol_seeds_passing": 0
+  }
+}

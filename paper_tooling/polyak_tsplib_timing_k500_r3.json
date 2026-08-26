@@ -1,0 +1,28 @@
+{
+ "tag": "k500_r3",
+ "protocol": {
+  "matches": "serial_solo_median11_quiet_2026-08-11",
+  "process": "one estimator per process, single thread of control, no pool, OMP/OPENBLAS/MKL/NUMEXPR/VECLIB = 1",
+  "repeats": 3,
+  "statistic": "median over repeats; median over instances of that",
+  "warm_up": "numba JIT warmed on one instance outside the clock",
+  "timed_region": "clock starts before dedup: dedup + dense matrix + constructive NN/2-opt upper bound + k Polyak steps",
+  "cap": "n <= 16384, matching the V&J solo cost pass",
+  "box_during_pct": {
+   "n": 323,
+   "min": 12.790518700938891,
+   "median": 21.6128533910088,
+   "max": 41.38235294117647
+  }
+ },
+ "N_instances": 77,
+ "polyak_ms_by_k": {
+  "0": 3.313200024422258,
+  "10": 4.8952000215649605,
+  "25": 6.686599983368069,
+  "50": 9.854700008872896,
+  "100": 16.272999986540526,
+  "200": 30.105100013315678,
+  "500": 66.37489999411628
+ }
+}

@@ -1,0 +1,21 @@
+{
+  "role": "falsification check on freezing V3's hyperparameters; NOT shipped",
+  "search_space": "identical to nn_est_alpha_v3/train_v3.py",
+  "n_trials_requested": 100,
+  "n_trials_complete": 100,
+  "epochs_per_trial": 50,
+  "best_params": {
+    "hidden_dim": 192,
+    "num_blocks": 4,
+    "dropout": 0.05334741293240003,
+    "lr": 0.0013909121812608913
+  },
+  "best_val_sdpe": 1.2092349935566358,
+  "frozen_v3_params": {
+    "hidden_dim": 192,
+    "num_blocks": 4,
+    "dropout": 0.05871254182522992,
+    "lr": 0.0009842315738502602
+  },
+  "frozen_v3_val_sdpe_same_budget": 1.2146325715723838
+}

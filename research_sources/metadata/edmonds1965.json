@@ -1,0 +1,19 @@
+{
+  "key": "edmonds1965",
+  "type": "article",
+  "title": "Paths, trees, and flowers",
+  "author": "Edmonds, Jack",
+  "year": "1965",
+  "doi": "10.4153/CJM-1965-045-4",
+  "bib_url": "",
+  "candidate_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/08B492B72322C4130AE800C0610E0E21/S0008414X00039419a.pdf/div-class-title-paths-trees-and-flowers-div.pdf",
+  "status": "downloaded",
+  "notes": "official Cambridge Journal PDF",
+  "pdf_path": "research_sources\\pdf\\edmonds1965.pdf",
+  "text_path": "research_sources\\text\\edmonds1965.txt",
+  "markdown_path": "research_sources\\text\\edmonds1965.md",
+  "sha256": "c78f3a30df780ffbcf80c81221e4d84343a98a3c1abdbc9dd00eb343b3e1ff85",
+  "bytes": "2134728",
+  "http_status": "200",
+  "final_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/08B492B72322C4130AE800C0610E0E21/S0008414X00039419a.pdf/div-class-title-paths-trees-and-flowers-div.pdf"
+}

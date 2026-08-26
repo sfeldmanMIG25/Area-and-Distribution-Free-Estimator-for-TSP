@@ -4,6 +4,16 @@ per-bucket SDPE [95% CI], MAPE, Median, R^2, r_alpha, Time(ms), N, and mean
 Concorde wall time (ms). Diff these values against Area_Free_Main.tex
 Table \\ref{tab:tsplib_by_size}. No .tex file is written.
 """
+
+# -- Superseded generator guard --------------------------------------------
+# HEADLINE_MODELS / MODEL_LABEL below map the predecessor key to the display
+# name "GART 2.0". build_paper_tables.py --check now performs this same diff
+# against Area_Free_Main.tex, keyed off paper_tooling/model_registry.py.
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+from paper_tooling.model_registry import assert_not_superseded  # noqa: E402
+assert_not_superseded()
 import os
 import numpy as np
 import pandas as pd

@@ -1,0 +1,514 @@
+[
+  {
+    "name": "AUG_collinear-d2-n200-g1000-eps1em03-r0",
+    "family": "collinear",
+    "d": 2,
+    "n": 200,
+    "grid_size": 1000,
+    "params": {
+      "eps": 0.001
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.7953296999912709,
+    "solver_time_s": 0.6544643999659456,
+    "concorde_error": null,
+    "optimal_cost": 1200.7,
+    "mst_total_length": 668.5550537109375,
+    "alpha": 1.7959627907010716,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.0008331324025708982,
+    "written": true
+  },
+  {
+    "name": "AUG_collinear-d5-n400-g100-eps0p01-r0",
+    "family": "collinear",
+    "d": 5,
+    "n": 400,
+    "grid_size": 100,
+    "params": {
+      "eps": 0.01
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.9285923999850638,
+    "solver_time_s": 0.9108728999854065,
+    "concorde_error": null,
+    "optimal_cost": 759.67,
+    "mst_total_length": 674.7965698242188,
+    "alpha": 1.125776321296195,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 9.777996598674198e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_collinear-d20-n700-g10000-eps1em04-r0",
+    "family": "collinear",
+    "d": 20,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "eps": 0.0001
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 5.117297900025733,
+    "solver_time_s": 5.068532800010871,
+    "concorde_error": null,
+    "optimal_cost": 31197.0,
+    "mst_total_length": 16578.259765625,
+    "alpha": 1.8818018562290197,
+    "integrity_ok": false,
+    "integrity_problems": [
+      "float length rel-dev 0.00190 > 0.001"
+    ],
+    "float_rel_dev": 0.0018967253672919047,
+    "written": false
+  },
+  {
+    "name": "AUG_collinear-d50-n1000-g1000-eps0p03-r0",
+    "family": "collinear",
+    "d": 50,
+    "n": 1000,
+    "grid_size": 1000,
+    "params": {
+      "eps": 0.03
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 9.782010399969295,
+    "solver_time_s": 9.682208999991417,
+    "concorde_error": null,
+    "optimal_cost": 252491.6,
+    "mst_total_length": 241071.25,
+    "alpha": 1.047373338795066,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 4.103339977677989e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_subspace-d3-n200-g100-k1-r0",
+    "family": "subspace",
+    "d": 3,
+    "n": 200,
+    "grid_size": 100,
+    "params": {
+      "k": 1
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.666949000034947,
+    "solver_time_s": 0.6609402999747545,
+    "concorde_error": null,
+    "optimal_cost": 219.07,
+    "mst_total_length": 120.99737548828125,
+    "alpha": 1.8105351386007311,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.0002732101274379183,
+    "written": true
+  },
+  {
+    "name": "AUG_subspace-d10-n400-g1000-k2-r0",
+    "family": "subspace",
+    "d": 10,
+    "n": 400,
+    "grid_size": 1000,
+    "params": {
+      "k": 2
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 7.427275600028224,
+    "solver_time_s": 7.41010630002711,
+    "concorde_error": null,
+    "optimal_cost": 19484.6,
+    "mst_total_length": 16816.658203125,
+    "alpha": 1.1586487496296511,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 5.742336867020203e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_subspace-d20-n700-g10000-k3-r0",
+    "family": "subspace",
+    "d": 20,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "k": 3
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 1.36170150001999,
+    "solver_time_s": 1.3143767000292428,
+    "concorde_error": null,
+    "optimal_cost": 719904.0,
+    "mst_total_length": 643125.25,
+    "alpha": 1.1193838214251424,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 6.492147326285061e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_subspace-d50-n1000-g1000-k2-r0",
+    "family": "subspace",
+    "d": 50,
+    "n": 1000,
+    "grid_size": 1000,
+    "params": {
+      "k": 2
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 8.80538020003587,
+    "solver_time_s": 8.712625799991656,
+    "concorde_error": null,
+    "optimal_cost": 33898.1,
+    "mst_total_length": 29952.099609375,
+    "alpha": 1.131743698842064,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 4.361855522762531e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_curve-d2-n200-g1000-shapearc-r0",
+    "family": "curve",
+    "d": 2,
+    "n": 200,
+    "grid_size": 1000,
+    "params": {
+      "shape": "arc"
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.33963060000678524,
+    "solver_time_s": 0.33410790003836155,
+    "concorde_error": null,
+    "optimal_cost": 2570.0,
+    "mst_total_length": 1607.6944580078125,
+    "alpha": 1.598562455197262,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 8.628227051296013e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_curve-d3-n400-g100-shapespiral-r0",
+    "family": "curve",
+    "d": 3,
+    "n": 400,
+    "grid_size": 100,
+    "params": {
+      "shape": "spiral"
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.6347886999719776,
+    "solver_time_s": 0.6172659000148997,
+    "concorde_error": null,
+    "optimal_cost": 599.63,
+    "mst_total_length": 557.4234619140625,
+    "alpha": 1.0757171898380633,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 3.4713310472569736e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_curve-d10-n700-g10000-shapesinusoid-r0",
+    "family": "curve",
+    "d": 10,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "shape": "sinusoid"
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 2.712286999973003,
+    "solver_time_s": 2.66591119999066,
+    "concorde_error": null,
+    "optimal_cost": 52369.0,
+    "mst_total_length": 42811.2578125,
+    "alpha": 1.2232530104431862,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 8.83183653177906e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_curve-d20-n1000-g1000-shapespiral-r0",
+    "family": "curve",
+    "d": 20,
+    "n": 1000,
+    "grid_size": 1000,
+    "params": {
+      "shape": "spiral"
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 3.2389892999781296,
+    "solver_time_s": 3.1507807999732904,
+    "concorde_error": null,
+    "optimal_cost": 9138.2,
+    "mst_total_length": 8620.443359375,
+    "alpha": 1.0600614862879325,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.0001262608650252189,
+    "written": true
+  },
+  {
+    "name": "AUG_filament-d2-n200-g100-eps1em03-n_fil2-r0",
+    "family": "filament",
+    "d": 2,
+    "n": 200,
+    "grid_size": 100,
+    "params": {
+      "n_fil": 2,
+      "eps": 0.001
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.22007630002917722,
+    "solver_time_s": 0.21399429999291897,
+    "concorde_error": null,
+    "optimal_cost": 76.27,
+    "mst_total_length": 71.79306030273438,
+    "alpha": 1.0623589477644138,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.0006460765280192381,
+    "written": true
+  },
+  {
+    "name": "AUG_filament-d5-n400-g1000-eps0p01-n_fil3-r0",
+    "family": "filament",
+    "d": 5,
+    "n": 400,
+    "grid_size": 1000,
+    "params": {
+      "n_fil": 3,
+      "eps": 0.01
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.9710391999688,
+    "solver_time_s": 0.9526696999673732,
+    "concorde_error": null,
+    "optimal_cost": 7112.8,
+    "mst_total_length": 6376.927734375,
+    "alpha": 1.1153960490501187,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 9.310146417124562e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_filament-d20-n700-g10000-eps1em03-n_fil2-r0",
+    "family": "filament",
+    "d": 20,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "n_fil": 2,
+      "eps": 0.001
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.8284963999758475,
+    "solver_time_s": 0.7810544999665581,
+    "concorde_error": null,
+    "optimal_cost": 53843.0,
+    "mst_total_length": 52629.38671875,
+    "alpha": 1.0230596128306704,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 3.267497277154891e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_filament-d50-n1000-g1000-eps0p01-n_fil3-r0",
+    "family": "filament",
+    "d": 50,
+    "n": 1000,
+    "grid_size": 1000,
+    "params": {
+      "n_fil": 3,
+      "eps": 0.01
+    },
+    "solver_used": "lkh",
+    "wall_time_s": 277.21854909998365,
+    "solver_time_s": 18.58780650002882,
+    "concorde_error": "TimeoutError: Concorde exceeded 240s",
+    "optimal_cost": 89745.6,
+    "mst_total_length": 85734.671875,
+    "alpha": 1.0467830346495977,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 1.4345403607957418e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_lattice-d2-n400-g1000-jitter0-r0",
+    "family": "lattice",
+    "d": 2,
+    "n": 400,
+    "grid_size": 1000,
+    "params": {
+      "jitter": 0.0
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 3.1708234999678098,
+    "solver_time_s": 3.1540812000166625,
+    "concorde_error": null,
+    "optimal_cost": 20000.0,
+    "mst_total_length": 19950.0,
+    "alpha": 1.0025062656641603,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.0,
+    "written": true
+  },
+  {
+    "name": "AUG_lattice-d2-n1000-g100-jitter0p01-r0",
+    "family": "lattice",
+    "d": 2,
+    "n": 1000,
+    "grid_size": 100,
+    "params": {
+      "jitter": 0.01
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 5.973157800035551,
+    "solver_time_s": 5.881801699986681,
+    "concorde_error": null,
+    "optimal_cost": 3113.0,
+    "mst_total_length": 3102.61181640625,
+    "alpha": 1.003348206030422,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 3.457140248796152e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_lattice-d3-n700-g10000-jitter0p05-r0",
+    "family": "lattice",
+    "d": 3,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "jitter": 0.05
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 5.584600800008047,
+    "solver_time_s": 5.537317399983294,
+    "concorde_error": null,
+    "optimal_cost": 760004.0,
+    "mst_total_length": 746147.25,
+    "alpha": 1.0185710662339102,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 5.45861610342715e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_lattice-d10-n200-g1000-jitter0p01-r0",
+    "family": "lattice",
+    "d": 10,
+    "n": 200,
+    "grid_size": 1000,
+    "params": {
+      "jitter": 0.01
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.6182030999916606,
+    "solver_time_s": 0.6111890999600291,
+    "concorde_error": null,
+    "optimal_cost": 99215.9,
+    "mst_total_length": 98541.125,
+    "alpha": 1.0068476486340094,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 5.103363082806297e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_hexlattice-d2-n100-g100-jitter0-r0",
+    "family": "hexlattice",
+    "d": 2,
+    "n": 100,
+    "grid_size": 100,
+    "params": {
+      "jitter": 0.0
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 0.3187121000373736,
+    "solver_time_s": 0.3158038000110537,
+    "concorde_error": null,
+    "optimal_cost": 914.0,
+    "mst_total_length": 905.1427001953125,
+    "alpha": 1.0097855286274489,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 0.000312499999999556,
+    "written": true
+  },
+  {
+    "name": "AUG_hexlattice-d2-n400-g1000-jitter0p01-r0",
+    "family": "hexlattice",
+    "d": 2,
+    "n": 400,
+    "grid_size": 1000,
+    "params": {
+      "jitter": 0.01
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 1.299851200019475,
+    "solver_time_s": 1.2823395999730565,
+    "concorde_error": null,
+    "optimal_cost": 17747.5,
+    "mst_total_length": 17675.94140625,
+    "alpha": 1.0040483611087723,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 4.658405683680398e-05,
+    "written": true
+  },
+  {
+    "name": "AUG_hexlattice-d2-n700-g10000-jitter0p05-r0",
+    "family": "hexlattice",
+    "d": 2,
+    "n": 700,
+    "grid_size": 10000,
+    "params": {
+      "jitter": 0.05
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 26.272068199992646,
+    "solver_time_s": 26.224404600041453,
+    "concorde_error": null,
+    "optimal_cost": 228199.0,
+    "mst_total_length": 226232.921875,
+    "alpha": 1.008690504055313,
+    "integrity_ok": true,
+    "integrity_problems": [],
+    "float_rel_dev": 7.153794792261421e-06,
+    "written": true
+  },
+  {
+    "name": "AUG_hexlattice-d2-n1000-g1000-jitter0-r0",
+    "family": "hexlattice",
+    "d": 2,
+    "n": 1000,
+    "grid_size": 1000,
+    "params": {
+      "jitter": 0.0
+    },
+    "solver_used": "concorde",
+    "wall_time_s": 5.898648800037336,
+    "solver_time_s": 5.806927800003905,
+    "concorde_error": null,
+    "optimal_cost": 28700.0,
+    "mst_total_length": 28628.04296875,
+    "alpha": 1.0025135155528635,
+    "integrity_ok": false,
+    "integrity_problems": [
+      "float length rel-dev 0.00151 > 0.001"
+    ],
+    "float_rel_dev": 0.001510416666666549,
+    "written": false
+  }
+]

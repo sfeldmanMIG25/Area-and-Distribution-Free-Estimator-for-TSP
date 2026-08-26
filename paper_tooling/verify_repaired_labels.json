@@ -1,0 +1,57 @@
+{
+  "rel_eps": 1e-09,
+  "sources": {
+    "nd_test": {
+      "path": "paper_tooling/polyak_nd_sweep.csv",
+      "instances_with_bound": 16846,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 2.3722789086005424e-15
+    },
+    "nd_test_vj": {
+      "path": "paper_tooling/hk1tree_frontier_nd.csv",
+      "instances_with_bound": 16846,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 2.2141269813605063e-15
+    },
+    "nd_trainval": {
+      "path": "paper_tooling/hk1tree_trainval_k1000.csv",
+      "instances_with_bound": 89242,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 5.799924475931067e-15
+    },
+    "nd_invariant": {
+      "path": "paper_tooling/hk1tree_invariant_k1000.csv",
+      "instances_with_bound": 19426,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 2.2141269813605063e-15
+    },
+    "2d": {
+      "path": "paper_tooling/hk1tree_frontier_2d.csv",
+      "instances_with_bound": 2580,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 1.3067024628471651e-15
+    },
+    "tsplib_int_metric": {
+      "path": "paper_tooling/hk1tree_frontier_tsplib_int.csv",
+      "instances_with_bound": 73,
+      "quarantined_excluded": 0,
+      "no_repaired_label": 0,
+      "violations": 0,
+      "worst_excess_rel": 1.2059065258193162e-16
+    }
+  },
+  "violations": [],
+  "total_violations": 0,
+  "worst_excess_rel_any_source": 5.799924475931067e-15,
+  "verdict": "PASS"
+}

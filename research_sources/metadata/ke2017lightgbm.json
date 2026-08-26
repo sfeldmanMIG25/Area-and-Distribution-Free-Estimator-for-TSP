@@ -1,0 +1,19 @@
+{
+  "key": "ke2017lightgbm",
+  "type": "inproceedings",
+  "title": "{LightGBM}: A highly efficient gradient boosting decision tree",
+  "author": "Ke, Guolin and Meng, Qi and Finley, Thomas and Wang, Taifeng and Chen, Wei and Ma, Weidong and Ye, Qiwei and Liu, Tie-Yan",
+  "year": "2017",
+  "doi": "",
+  "bib_url": "",
+  "candidate_url": "https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf",
+  "status": "downloaded",
+  "notes": "official NeurIPS proceedings PDF",
+  "pdf_path": "research_sources\\pdf\\ke2017lightgbm.pdf",
+  "text_path": "research_sources\\text\\ke2017lightgbm.txt",
+  "markdown_path": "research_sources\\text\\ke2017lightgbm.md",
+  "sha256": "32ddfe0c7a8e1acb87c97cff904a16e0a556a8d79ebfecf772159843e736affc",
+  "bytes": "366352",
+  "http_status": "200",
+  "final_url": "https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf"
+}

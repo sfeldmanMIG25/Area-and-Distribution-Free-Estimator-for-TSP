@@ -1,4 +1,14 @@
 """Emit LaTeX tabular blocks from the regenerated CSVs. stdout only; caller splices."""
+
+# -- Superseded generator guard --------------------------------------------
+# This script wires the predecessor model key to the display name "GART 2.0".
+# The production model now lives in paper_tooling/model_registry.py; the guard
+# stops this file from emitting a wrong-model table into the manuscript.
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
+from paper_tooling.model_registry import assert_not_superseded  # noqa: E402
+assert_not_superseded()
 import pandas as pd
 from pathlib import Path
 

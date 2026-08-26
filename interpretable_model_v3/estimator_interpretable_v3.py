@@ -21,6 +21,13 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+def _signed_log1p(a):
+    # Must match train_interpretable_v3.py::_signed_log1p exactly. The experts'
+    # StandardScaler was fitted on log-space interaction products; feeding raw
+    # products here inflates them by orders of magnitude.
+    return np.sign(a) * np.log1p(np.abs(a))
+
+
 @numba.njit(fastmath=True, cache=True, parallel=True)
 def _fast_centroid_stats(coords, centroid):
     n = coords.shape[0]
@@ -41,7 +48,13 @@ class TSP_Interpretable_Estimator:
         artifacts_dir = os.path.join(model_dir, 'model_artifacts')
         self.router = joblib.load(os.path.join(artifacts_dir, 'router.joblib'))
         self.experts = joblib.load(os.path.join(artifacts_dir, 'experts.joblib'))
-        
+        # The trainer saves a stacked bundle: imputer -> base_ridge (predicts
+        # alpha) -> router -> per-leaf experts (predict the residual of alpha
+        # against base_ridge). All four parts are required at inference.
+        self.imputer = joblib.load(os.path.join(artifacts_dir, 'imputer.joblib'))
+        self.base_model = joblib.load(os.path.join(artifacts_dir, 'base_ridge.joblib'))
+        self.base_features = list(self.imputer.feature_names_in_)
+
         with open(os.path.join(artifacts_dir, 'model_metadata.json'), 'r') as f:
             raw_meta = json.load(f)
 
@@ -143,56 +156,55 @@ class TSP_Interpretable_Estimator:
         # 1. Base Features
         f_dict, mst_len = self._compute_base_features(coords, len(coords), dimension, grid_size, precomputed_mst=precomputed_mst)
         
-        # 2. Routing Setup
-        df_base = pd.DataFrame([f_dict]).fillna(0)
-        
-        # Align columns to what the Router expects
-        if self.router_features is not None:
-            for col in self.router_features:
-                if col not in df_base.columns:
-                    df_base[col] = 0.0
-            df_router_input = df_base[self.router_features]
-        else:
-            df_router_input = df_base
+        # 2. Align to the trainer's 28-column matrix and impute, exactly as
+        #    train_interpretable_v3.py does (inf -> NaN, then train-fitted median).
+        df_raw = pd.DataFrame([f_dict])
+        for col in self.base_features:
+            if col not in df_raw.columns:
+                df_raw[col] = np.nan
+        df_raw = df_raw[self.base_features].replace([np.inf, -np.inf], np.nan)
+        df_base = pd.DataFrame(
+            self.imputer.transform(df_raw), columns=self.base_features,
+        )
 
-        # 3. Get Regime (Leaf ID)
-        leaf_id = int(self.router.apply(df_router_input)[0])
-        
-        # 4. Expert Feature Preparation
-        leaf_info = self.metadata.get(leaf_id)
-        if not leaf_info:
-            # Fallback if leaf logic fails
-            t_feat = time.perf_counter() - t0
-            return {'estimate': 1.5 * mst_len, 'alpha': 1.5, 'mst_length': mst_len, 
-                    'feature_time': t_feat, 'inference_time': 0, 'regime_id': -1}
-
-        # Construct interactions required by this specific leaf
-        df_leaf = df_base.copy()
-        interaction_cols = []
-        
-        for fa, fb in leaf_info['interactions']:
-            col_name = f"{fa}_x_{fb}"
-            val_a = df_base.get(fa, 0.0).item() if fa in df_base else 0.0
-            val_b = df_base.get(fb, 0.0).item() if fb in df_base else 0.0
-            df_leaf[col_name] = val_a * val_b
-            interaction_cols.append(col_name)
-            
         t_feat = time.perf_counter() - t0
-        
-        # 5. Inference
+
+        # 3. Inference: base alpha, then a per-leaf residual correction.
         t1 = time.perf_counter()
-        expert = self.experts[leaf_id]
-        
-        # CRITICAL FIX: Filter DataFrame to ONLY the features this expert knows
-        # Order doesn't strictly matter for sklearn DataFrames, but strict set matching does.
-        required_features = leaf_info['base_features'] + interaction_cols
-        df_expert_input = df_leaf[required_features]
-        
-        alpha = expert.predict(df_expert_input)[0]
+        base_alpha = float(self.base_model.predict(df_base)[0])
+        residual = 0.0
+
+        router_cols = self.router_features or self.base_features
+        leaf_id = int(self.router.apply(df_base[router_cols])[0])
+        leaf_info = self.metadata.get(leaf_id)
+        expert = self.experts.get(leaf_id)
+
+        if leaf_info and expert is not None:
+            # Per-leaf support box: a row outside the leaf's training range is
+            # OOD for that expert, so fall back to base-only (residual = 0).
+            in_support = all(
+                lo <= float(df_base[c].iloc[0]) <= hi
+                for c, (lo, hi) in (leaf_info.get('support_box') or {}).items()
+                if c in df_base.columns
+            )
+            if in_support:
+                df_leaf = df_base.copy()
+                interaction_cols = []
+                for fa, fb in leaf_info['interactions']:
+                    col_name = f"{fa}_x_{fb}"
+                    val_a = float(df_base[fa].iloc[0]) if fa in df_base else 0.0
+                    val_b = float(df_base[fb].iloc[0]) if fb in df_base else 0.0
+                    df_leaf[col_name] = _signed_log1p(val_a) * _signed_log1p(val_b)
+                    interaction_cols.append(col_name)
+
+                required_features = leaf_info['base_features'] + interaction_cols
+                residual = float(expert.predict(df_leaf[required_features])[0])
+        else:
+            leaf_id = -1
+
+        alpha = float(np.clip(base_alpha + residual, 1.0, 2.0))
         t_inf = time.perf_counter() - t1
-        
-        alpha = np.clip(alpha, 1.0, 2.0)
-        
+
         return {
             'estimate': alpha * mst_len,
             'alpha': alpha,

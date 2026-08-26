@@ -1,0 +1,19 @@
+{
+  "key": "bertsimas1990asymptotic",
+  "type": "article",
+  "title": "An asymptotic determination of the minimum spanning tree and minimum matching constants in geometrical probability",
+  "author": "Bertsimas, Dimitris J. and van Ryzin, Garrett",
+  "year": "1990",
+  "doi": "10.1016/0167-6377(90)90065-F",
+  "bib_url": "",
+  "candidate_url": "https://web.mit.edu/dbertsim/www/papers/AppliedProbability/An%20asymptotic%20determination%20of%20the%20minimum%20spanning%20tree%20and%20minimum%20matching%20constants%20in%20geometrical%20probability.pdf",
+  "status": "downloaded",
+  "notes": "author-hosted MIT working-paper copy of the cited result",
+  "pdf_path": "research_sources\\pdf\\bertsimas1990asymptotic.pdf",
+  "text_path": "research_sources\\text\\bertsimas1990asymptotic.txt",
+  "markdown_path": "research_sources\\text\\bertsimas1990asymptotic.md",
+  "sha256": "6cd3e8b0bc082fd9cf901becf52ce77ac16dee1ee5f0e090a15cc3d527e10686",
+  "bytes": "728903",
+  "http_status": "200",
+  "final_url": "https://web.mit.edu/dbertsim/www/papers/AppliedProbability/An%20asymptotic%20determination%20of%20the%20minimum%20spanning%20tree%20and%20minimum%20matching%20constants%20in%20geometrical%20probability.pdf"
+}

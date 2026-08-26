@@ -28,5 +28,63 @@ paper_reference/*.fls
 paper_reference/*.fdb_latexmk
 paper_reference/*.synctex.gz
 paper_reference/_minted-*
+paper_reference/tmp/
+tmp/
+__pycache__/
+*.pyc
 # Keep the compressed archives (tracked via Git LFS)
 !*.zip
+
+# Evaluated tools integration artifacts & temporary files
+tools_setup.log
+benchmark_baseline.json
+benchmark_grepai.json
+benchmark_astgrep.json
+benchmark_codegraph.json
+benchmark_summary.txt
+synthetic_large_log.txt
+.grepai/
+.codegraph/
+scripts/
+sgconfig.yml
+rules/
+.cursorrules
+
+# ============================================================
+# AI agent harness — LOCAL ONLY, never commit
+# Everything below is machine-specific agent tooling. If you add
+# a new agent tool, add its config/state here too.
+# ============================================================
+.tooling/
+.mcp.json
+.claude/
+.vscode/
+.opencode/
+.continue/
+.antigravityignore
+.aider.tags.cache.v4/
+.ruff_cache/
+.serena/
+.preaug_snapshot/
+
+# --- AI / agent harness: local only, never committed ---
+CLAUDE.md
+.claude/
+.claudeignore
+.codex/
+.antigravity/
+.antigravityignore
+.serena/
+.aider*
+.github/copilot*
+graphify-out/
+.cursor/
+*.nbc
+*.nbi
+
+# --- heavy local artifacts: archived separately, not committed ---
+*.pkl
+*.bak
+*.db
+paper_tooling/*.log
+*_as_published.csv

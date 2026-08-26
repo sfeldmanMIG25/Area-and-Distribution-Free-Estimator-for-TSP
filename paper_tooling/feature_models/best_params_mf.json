@@ -1,0 +1,10 @@
+{
+    "learning_rate": 0.01303561122512888,
+    "num_leaves": 151,
+    "lambda_l1": 2.5529693461039728e-08,
+    "lambda_l2": 8.471746987003668e-06,
+    "feature_fraction": 0.6332063738136893,
+    "bagging_fraction": 0.5628094190643376,
+    "bagging_freq": 6,
+    "min_child_samples": 21
+}

@@ -1,0 +1,19 @@
+{
+  "model_alphahat_clip_after_inverse": false,
+  "model_alphahat_test_max": 1.922005404,
+  "model_alphahat_test_mean": 1.117274586,
+  "model_alphahat_test_min": 1.029493018,
+  "model_alphahat_test_n": 16920,
+  "model_alphahat_test_sd": 0.102148845,
+  "model_alphahat_train_max": 1.964724986,
+  "model_alphahat_train_mean": 1.136408972,
+  "model_alphahat_train_min": 1.000873076,
+  "model_alphahat_train_n": 69768,
+  "model_alphahat_train_sd": 0.110619159,
+  "model_alphahat_transform_inverse": "alpha = 1 + 1 / (1 + exp(-z))",
+  "model_alphahat_val_max": 1.944641803,
+  "model_alphahat_val_mean": 1.136171282,
+  "model_alphahat_val_min": 1.021819931,
+  "model_alphahat_val_n": 19584,
+  "model_alphahat_val_sd": 0.109789363
+}

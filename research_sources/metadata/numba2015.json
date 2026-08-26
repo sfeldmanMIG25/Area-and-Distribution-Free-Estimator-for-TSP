@@ -1,0 +1,19 @@
+{
+  "key": "numba2015",
+  "type": "inproceedings",
+  "title": "Numba: A {LLVM}-based {Python} {JIT} compiler",
+  "author": "Lam, Siu Kwan and Pitrou, Antoine and Seibert, Stanley",
+  "year": "2015",
+  "doi": "10.1145/2833157.2833162",
+  "bib_url": "",
+  "candidate_url": "https://numba.readthedocs.io/_/downloads/en/0.51.2/pdf/",
+  "status": "downloaded_related",
+  "notes": "official Numba documentation PDF; fallback implementation reference, not the cited ACM paper",
+  "pdf_path": "research_sources\\pdf\\numba2015.pdf",
+  "text_path": "research_sources\\text\\numba2015.txt",
+  "markdown_path": "research_sources\\text\\numba2015.md",
+  "sha256": "f201df9c2124269afbe8014be8ac33db88a84f904159a1a09ba7c6fb710d0bfa",
+  "bytes": "1713592",
+  "http_status": "200",
+  "final_url": "https://numba.readthedocs.io/_/downloads/en/0.51.2/pdf/"
+}

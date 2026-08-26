@@ -1,0 +1,134 @@
+{
+ "rows_total": 352944,
+ "rows_ok": 352944,
+ "gate_certificate": {
+  "checked": 351540,
+  "violations": 0,
+  "max_excess_pct": 2.3722789086005423e-13,
+  "rtol": 1e-09,
+  "corpora": [
+   "2d",
+   "nd",
+   "noneuc",
+   "tsplib_int"
+  ]
+ },
+ "gate_metric_convention": {
+  "tsplib": {
+   "twin": "tsplib_int",
+   "float64_rows_above_label": 61,
+   "float64_instances_above_label": [
+    "berlin52",
+    "eil101",
+    "eil76",
+    "rat783",
+    "rat99",
+    "st70",
+    "u1817",
+    "u2152"
+   ],
+   "float64_max_excess_pct": 1.4895322996253613,
+   "twin_rows_checked": 1314,
+   "twin_violations": 0,
+   "twin_max_excess_pct": 1.2059065258193162e-14,
+   "twin_instances": 73,
+   "reading": "every float64 row above the label is at or below it in the instance's own nint metric; the bound is not violated"
+  }
+ },
+ "gate_exact_dp": {
+  "instances": 360,
+  "max_n": 10,
+  "ladder_rows_checked": 6480,
+  "violations": 0,
+  "max_excess_vs_exact_pct": 6.063040094365902e-14,
+  "label_vs_exact_max_abs_pct": 5.013571364168371e-14
+ },
+ "gate_monotone": {
+  "series": 39216,
+  "violations": 0,
+  "min_step": 0.0
+ },
+ "PASS": true,
+ "coverage": [
+  {
+   "corpus": "2d",
+   "ascent": "polyak",
+   "instances": 2580,
+   "rows": 23220,
+   "n_min": 5,
+   "n_max": 1000
+  },
+  {
+   "corpus": "2d",
+   "ascent": "vj",
+   "instances": 2580,
+   "rows": 23220,
+   "n_min": 5,
+   "n_max": 1000
+  },
+  {
+   "corpus": "nd",
+   "ascent": "polyak",
+   "instances": 16846,
+   "rows": 151614,
+   "n_min": 5,
+   "n_max": 1000
+  },
+  {
+   "corpus": "nd",
+   "ascent": "vj",
+   "instances": 16846,
+   "rows": 151614,
+   "n_min": 5,
+   "n_max": 1000
+  },
+  {
+   "corpus": "noneuc",
+   "ascent": "polyak",
+   "instances": 31,
+   "rows": 279,
+   "n_min": 14,
+   "n_max": 7397
+  },
+  {
+   "corpus": "noneuc",
+   "ascent": "vj",
+   "instances": 31,
+   "rows": 279,
+   "n_min": 14,
+   "n_max": 7397
+  },
+  {
+   "corpus": "tsplib",
+   "ascent": "polyak",
+   "instances": 78,
+   "rows": 702,
+   "n_min": 51,
+   "n_max": 18512
+  },
+  {
+   "corpus": "tsplib",
+   "ascent": "vj",
+   "instances": 78,
+   "rows": 702,
+   "n_min": 51,
+   "n_max": 18512
+  },
+  {
+   "corpus": "tsplib_int",
+   "ascent": "polyak",
+   "instances": 73,
+   "rows": 657,
+   "n_min": 51,
+   "n_max": 5934
+  },
+  {
+   "corpus": "tsplib_int",
+   "ascent": "vj",
+   "instances": 73,
+   "rows": 657,
+   "n_min": 51,
+   "n_max": 5934
+  }
+ ]
+}

@@ -16,8 +16,13 @@ from pathlib import Path
 import numpy as np
 from tqdm import tqdm
 
-ROOT = Path(__file__).resolve().parent
+# The instance corpus sits at the repository root, not inside data_pipeline/.
+# Resolving to parent (this package) made the glob match zero files, so the script
+# reported "rebuilt: 0" and exited successfully while repairing nothing.
+ROOT = Path(__file__).resolve().parents[1]
 INSTANCES = ROOT / "instances"
+if not INSTANCES.is_dir():
+    raise SystemExit(f"instance directory not found: {INSTANCES}")
 
 
 def write_bin(bin_path: Path, data: dict) -> None:
@@ -40,6 +45,10 @@ def write_bin(bin_path: Path, data: dict) -> None:
 
 def main() -> None:
     json_files = sorted(INSTANCES.glob("*.json"))
+    # An empty corpus is far more likely a path bug than a genuine state; do not
+    # report success after repairing nothing.
+    if not json_files:
+        raise SystemExit(f"no JSON instances found under {INSTANCES}")
     print(f"[rebuild] {len(json_files)} JSON files → rebuild .bin")
     rebuilt = 0
     json_errors = 0

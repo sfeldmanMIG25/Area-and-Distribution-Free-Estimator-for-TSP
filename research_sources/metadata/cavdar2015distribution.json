@@ -1,0 +1,19 @@
+{
+  "key": "cavdar2015distribution",
+  "type": "article",
+  "title": "A distribution-free {TSP} tour length estimation model for random graphs",
+  "author": "{\\c{C}}avdar, Bahar and Sokol, Joel",
+  "year": "2015",
+  "doi": "10.1016/j.ejor.2014.12.020",
+  "bib_url": "",
+  "candidate_url": "https://repository.gatech.edu/bitstreams/6c212776-27a6-4d47-b520-ffa3367b6e1e/download",
+  "status": "downloaded_related",
+  "notes": "institutional repository dissertation; related open copy of the cited distribution-free estimator",
+  "pdf_path": "research_sources\\pdf\\cavdar2015distribution.pdf",
+  "text_path": "research_sources\\text\\cavdar2015distribution.txt",
+  "markdown_path": "research_sources\\text\\cavdar2015distribution.md",
+  "sha256": "853e6d2ef6e9b1be14c09d1db02d96c464632a31ca550acf26c3f34d6a460e50",
+  "bytes": "13064612",
+  "http_status": "200",
+  "final_url": "https://repository.gatech.edu/server/api/core/bitstreams/6c212776-27a6-4d47-b520-ffa3367b6e1e/content"
+}

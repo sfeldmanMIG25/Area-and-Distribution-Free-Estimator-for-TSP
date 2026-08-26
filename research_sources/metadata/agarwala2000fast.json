@@ -1,0 +1,19 @@
+{
+  "key": "agarwala2000fast",
+  "type": "article",
+  "title": "A fast and scalable radiation hybrid map construction and integration strategy",
+  "author": "Agarwala, Richa and Applegate, David L and Maglott, Donna and Schuler, Gregory D and Sch{\\\"a}ffer, Alejandro A",
+  "year": "2000",
+  "doi": "",
+  "bib_url": "",
+  "candidate_url": "https://europepmc.org/articles/PMC311427?pdf=render",
+  "status": "downloaded",
+  "notes": "Europe PMC open-access render of the official Genome Research paper",
+  "pdf_path": "research_sources\\pdf\\agarwala2000fast.pdf",
+  "text_path": "research_sources\\text\\agarwala2000fast.txt",
+  "markdown_path": "research_sources\\text\\agarwala2000fast.md",
+  "sha256": "e942b8c8f02fbeaf87530c135286981ef441b4fff598b27ae79a88965937012d",
+  "bytes": "471715",
+  "http_status": "200",
+  "final_url": "https://europepmc.org/api/getPdf?pmcid=PMC311427"
+}

@@ -1,0 +1,327 @@
+{
+  "dry_run": false,
+  "targets": [
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_results_ND_final.csv",
+      "rows": 236880,
+      "rows_unmatched": 0,
+      "rows_quarantined": 1036,
+      "rows_true_cost_changed": 294
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/base_ground_truth_nd.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_results_2D_v3.csv",
+      "rows": 64500,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/base_ground_truth_2d.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "tsplib_benchmark/results/all_models_tsplib.csv",
+      "rows": 2331,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "tsplib_benchmark/results/all_models_tsplib_repaired.csv",
+      "rows": 2331,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 19
+    },
+    {
+      "path": "tsplib_benchmark/results/all_models_tsplib_parallel_timings.csv",
+      "rows": 2220,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 18
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_asymptotic_mst.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_bhh.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_bhh_region.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_calibrated_mst_d.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_calibrated_mst_dn.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_gart_2.0.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_hilbert.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_interp_v3.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_lgbm_v3.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_lgbm_v4.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_linear_v3.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_mst_only.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_mst_ratio.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis_ND/benchmark_checkpoints/results_nn_v3.csv",
+      "rows": 16920,
+      "rows_unmatched": 0,
+      "rows_quarantined": 74,
+      "rows_true_cost_changed": 21
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_asymptotic_mst.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_bhh.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_bhh_region.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_calibrated_mst_d.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_calibrated_mst_dn.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_cavdar.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_cavdar_region.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_chien.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_chien_extrap.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_chien_region.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_daganzo.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_daganzo_region.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_gart.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_gart_2.0.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_hilbert.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_interp_v3.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_kwon.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_kwon_extrap.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_kwon_region.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_lgbm_v3.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_lgbm_v4.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_linear_v3.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_mst_only.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_mst_ratio.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    },
+    {
+      "path": "Generalized_TSP_Analysis/benchmark_checkpoints/results_nn_v3.csv",
+      "rows": 2580,
+      "rows_unmatched": 0,
+      "rows_quarantined": 0,
+      "rows_true_cost_changed": 0
+    }
+  ]
+}

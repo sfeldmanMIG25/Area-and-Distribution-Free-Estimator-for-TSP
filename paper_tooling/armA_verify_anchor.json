@@ -1,0 +1,22 @@
+{
+  "armA": {
+    "bench2d_mape": 2.053325691842113,
+    "b2_grid_mspe": 1.5400310748752315,
+    "b2_line_noise_mape": 5.781158153648984,
+    "linenoise_slope": 0.8268331131222836,
+    "nd_test_mape": 0.5965284376841903,
+    "tsplib_euc2d_mape": 2.4839325532527297,
+    "tsplib_euc2d_sdpe": 3.241992137278756,
+    "tsplib_noneuc_mape": 2.431084338226148
+  },
+  "frozen": {
+    "bench2d_mape": 2.903749242765989,
+    "b2_grid_mspe": 7.111779785317605,
+    "b2_line_noise_mape": 10.750295974830022,
+    "linenoise_slope": 0.3621117687188572,
+    "nd_test_mape": 0.620114641624737,
+    "tsplib_euc2d_mape": 2.5561741354541048,
+    "tsplib_euc2d_sdpe": 2.955086628622842,
+    "tsplib_noneuc_mape": 3.3464150371593533
+  }
+}

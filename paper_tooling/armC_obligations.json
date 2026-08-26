@@ -1,0 +1,291 @@
+{
+  "1_euc2d_dispersion_regression": {
+    "sd_ratio_vs_frozen": {
+      "median": 1.0450269278428324,
+      "lo": 1.0279348553532128,
+      "hi": 1.100090269100161,
+      "k": 7
+    },
+    "bootstrap_ci_low": {
+      "median": 0.8863095370138161,
+      "lo": 0.8683807214928905,
+      "hi": 0.9205378673662914,
+      "k": 7
+    },
+    "bootstrap_ci_high": {
+      "median": 1.271720488782735,
+      "lo": 1.2532871944463493,
+      "hi": 1.3186275871430584,
+      "k": 7
+    },
+    "p_pitman_morgan": {
+      "median": 0.4012821192462425,
+      "lo": 0.08438503350675672,
+      "hi": 0.6062455925039532,
+      "k": 7
+    },
+    "p_swap_permutation": {
+      "median": 0.8726127387261274,
+      "lo": 0.45955404459554045,
+      "hi": 0.9497050294970503,
+      "k": 7
+    },
+    "mde_sd_ratio": {
+      "median": 0.8554353684690535,
+      "lo": 0.8514583874858884,
+      "hi": 0.861371201433752,
+      "k": 7
+    },
+    "detectable_seeds": "0/7",
+    "mad_ratio": {
+      "median": 0.7513354353270794,
+      "lo": 0.7107064841300266,
+      "hi": 0.875045777188048,
+      "k": 7
+    },
+    "trimsd_ratio": {
+      "median": 0.836278653783193,
+      "lo": 0.7807079982957303,
+      "hi": 0.8682035323865752,
+      "k": 7
+    },
+    "sd_ratio_excluding_ts225": {
+      "median": 0.9460823224734198,
+      "lo": 0.9291942044946397,
+      "hi": 1.006772204060224,
+      "k": 7
+    },
+    "ts225_signed_error_pct_cand": {
+      "median": -10.03273632515248,
+      "lo": -10.284238514435444,
+      "hi": -9.769660420643831,
+      "k": 7
+    },
+    "ts225_signed_error_pct_frozen": -1.543746650005127,
+    "gate2_vs_Asymptotic_MST_sd_ratio": {
+      "median": 0.6498411861127745,
+      "lo": 0.639212624911287,
+      "hi": 0.6840818607218565,
+      "k": 7
+    }
+  },
+  "2_A2_control": {
+    "line_noise": {
+      "oracle_constant": 1.111211109620567,
+      "frozen_mape": 10.750295974830022,
+      "frozen_recalibrated_mape": 5.884879816956296,
+      "candidate_mape": {
+        "median": 5.856324595512615,
+        "lo": 5.631279451884336,
+        "hi": 6.103992304270177,
+        "k": 7
+      },
+      "frac_of_candidate_gain_the_constant_already_buys": {
+        "median": 0.9941652250839963,
+        "lo": 0.9504591626271939,
+        "hi": 1.0471584517177026,
+        "k": 7
+      },
+      "recalibrated_frozen_slope": 0.8274915586078334
+    },
+    "grid": {
+      "oracle_constant": 0.9285797504227645,
+      "frozen_mape": 7.111779785317605,
+      "frozen_recalibrated_mape": 1.303758847275227,
+      "candidate_mape": {
+        "median": 1.562236583429317,
+        "lo": 1.4002263707329066,
+        "hi": 1.6173871735443721,
+        "k": 7
+      },
+      "frac_of_candidate_gain_the_constant_already_buys": {
+        "median": 1.046576398588291,
+        "lo": 1.016889892548557,
+        "hi": 1.0570815281014159,
+        "k": 7
+      },
+      "recalibrated_frozen_slope": 0.877662997952855
+    },
+    "slope_view": {
+      "candidate_linenoise_slope": {
+        "median": 0.7353727198952807,
+        "lo": 0.6998380825996886,
+        "hi": 0.7824906896006563,
+        "k": 7
+      },
+      "recalibrated_frozen_slope": 0.4023826203247474,
+      "margin": {
+        "median": 0.3329900995705333,
+        "lo": 0.2974554622749412,
+        "hi": 0.38010806927590884,
+        "k": 7
+      },
+      "required": 0.25
+    }
+  },
+  "3_line_noise_provenance": {
+    "source": "data_pipeline/augment_gen.py:1018-1031 (batch 2 note)",
+    "statement": "The augmentation's rho targets were chosen by profiling the 210 benchmark line_noise instances: their rho medians (0.94 / 5.23 / 25.19 / 45.66 across n buckets, max 96.3) drove batch 2's rho grid of (2, 4, 8, 16, 32, 64, 100). No benchmark instance and no benchmark label was ever read into training, so this is not leakage; but the coverage was deliberately aimed at the evaluation set's locus and must be disclosed as test-locus-targeted coverage.",
+    "batch2_rho_grid": [
+      2.0,
+      4.0,
+      8.0,
+      16.0,
+      32.0,
+      64.0,
+      100.0
+    ]
+  },
+  "4_pre_registration_caveats": {
+    "0a_threshold_inherited": "The 0.70 slope threshold of gate 6 is not fresh. augmentation_v2_criteria.csv (2026-08-10 22:02:37) already carried 'LineNoise alpha-slope (n>=200) >= 0.70 (from 0.28)' and scored an earlier augmented arm against it (FAIL, 0.4286). Gate 7's '<= +4.0' likewise restates an outcome already shown reachable. Arm C itself was not scored before its gates were fixed, but the thresholds were not chosen blind.",
+    "0b_rule_found_by_looking": "The de-contamination rule was discovered by adversarial leave-one-family-out, which observed that removing the d=2 lattice rows improves grid. The rule as stated is outcome-independent and was re-registered and re-run from scratch here; the previous run's numbers are discarded, not carried forward.",
+    "0c_row_order_defect_this_run_fixes": "Arm A's reported point estimates were the favourable extreme of their own nuisance distribution (slope 0.8268 above the entire 8-permutation band [0.6367, 0.8028]). Every arm C statistic here is a 7-seed median with the full band."
+  },
+  "5_nd_gain_decomposition": {
+    "net_mape_gain_pp": {
+      "median": 0.029861696489978606,
+      "lo": 0.015053344883540931,
+      "hi": 0.03589465762915511,
+      "k": 7
+    },
+    "median_instance_delta_pp": {
+      "median": -0.013706599260604736,
+      "lo": -0.016754128269544144,
+      "hi": -0.007325308880104908,
+      "k": 7
+    },
+    "pct_of_held_out_instances_that_get_worse": {
+      "median": 44.04255319148936,
+      "lo": 43.114657210401894,
+      "hi": 46.56028368794326,
+      "k": 7
+    },
+    "statement": "Net ND MAPE improves, but the median instance moves only a few thousandths of a percentage point and roughly half of held-out instances get worse. It is a trade of accuracy on already-easy instances for accuracy on the harder half, not a uniform improvement."
+  },
+  "6_augment_stratum_held_out": {
+    "held_out_5fold_refit_MAPE": 2.1333856220854157,
+    "held_out_n": 850,
+    "held_out_by_fold": {
+      "0": 2.6947,
+      "1": 2.18,
+      "2": 2.047,
+      "3": 1.9684,
+      "4": 1.7768
+    },
+    "in_sample_MAPE_EXCLUDED": {
+      "median": 0.6114457900052045,
+      "lo": 0.53444935058376,
+      "hi": 0.8014455765730706,
+      "k": 7
+    },
+    "frozen_MAPE_on_same_rows": 11.979725771987075,
+    "statement": "The in-sample augment figure is excluded per the protocol. The held-out value is a 5-fold refit over the 850 retained rows: each fold's rows are scored by a model trained without them."
+  },
+  "row_order_sensitivity_at_median_seed": {
+    "median_seed": 123,
+    "n_permutations": 8,
+    "definition": "median seed = the seed whose LineNoise slope is the median of the 7, i.e. the gate-6 statistic",
+    "linenoise_slope": {
+      "median": 0.7563090689211182,
+      "lo": 0.6553766615531424,
+      "hi": 0.8019885734349617,
+      "k": 8
+    },
+    "protocol_order_value_at_that_seed": 0.7353727198952807,
+    "b2_line_noise_mape": {
+      "median": 5.890295935309361,
+      "lo": 5.741860735300408,
+      "hi": 6.111732275675851,
+      "k": 8
+    },
+    "b2_grid_mspe": {
+      "median": 1.4331453053703442,
+      "lo": 1.3131118881136103,
+      "hi": 1.557598180534164,
+      "k": 8
+    },
+    "tsplib_euc2d_sdpe": {
+      "median": 3.0984928999090284,
+      "lo": 2.9760444096929626,
+      "hi": 3.213189819673877,
+      "k": 8
+    },
+    "permutation_seeds_below_gate6_threshold": 2
+  },
+  "order_only_control_R0_protocol_order": {
+    "why": "Protocol s2's fixed concatenation order re-sorts the corpus block and is itself a row-order change relative to the frozen fit. This arm isolates that change: same 7 seeds, protocol order, zero augmentation rows.",
+    "linenoise_slope": {
+      "median": 0.3768293435582888,
+      "lo": 0.3621117687188572,
+      "hi": 0.4245451681691495,
+      "k": 7
+    },
+    "b2_grid_mspe": {
+      "median": 6.81173877255806,
+      "lo": 6.762559290671384,
+      "hi": 7.111779785317605,
+      "k": 7
+    },
+    "bench2d_mape": {
+      "median": 2.860988993869696,
+      "lo": 2.8335093246893623,
+      "hi": 2.903749242765989,
+      "k": 7
+    },
+    "nd_test_mape": {
+      "median": 0.6136862405262866,
+      "lo": 0.6083534114075869,
+      "hi": 0.6235772094049068,
+      "k": 7
+    },
+    "tsplib_euc2d_sdpe": {
+      "median": 2.955086628622842,
+      "lo": 2.9134553605185496,
+      "hi": 3.164696081533566,
+      "k": 7
+    }
+  },
+  "arm_A_under_the_same_protocol": {
+    "linenoise_slope": {
+      "median": 0.7933164560105235,
+      "lo": 0.7096210184582847,
+      "hi": 0.818051792039287,
+      "k": 7
+    },
+    "b2_grid_mspe": {
+      "median": 1.325349830483611,
+      "lo": 1.2302662990682838,
+      "hi": 1.465714627568338,
+      "k": 7
+    },
+    "bench2d_mape": {
+      "median": 2.037856204829261,
+      "lo": 2.000158496041522,
+      "hi": 2.05862765222143,
+      "k": 7
+    },
+    "tsplib_euc2d_sdpe": {
+      "median": 3.167110946435879,
+      "lo": 3.054458134743692,
+      "hi": 3.3159971868800158,
+      "k": 7
+    },
+    "disp_p_swap_holm": {
+      "median": 0.0993900609939006,
+      "lo": 0.0643935606439356,
+      "hi": 0.223977602239776,
+      "k": 7
+    },
+    "seeds_with_swap_p_below_0p05": "0/7"
+  },
+  "directional_requirement_bench2d_overall": {
+    "target": 2.9042,
+    "candidate": {
+      "median": 2.0494239995030976,
+      "lo": 2.004817107945956,
+      "hi": 2.054279354084467,
+      "k": 7
+    },
+    "met": true
+  }
+}

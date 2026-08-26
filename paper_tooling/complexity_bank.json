@@ -1,0 +1,272 @@
+{
+  "_what": "Asymptotic cost of every estimator family, derived from the code and checked against measurement. Numbers only -- no manuscript prose was edited.",
+  "protocol": {
+    "measured_utc_date": "2026-08-11",
+    "machine_load_pct_at_start": 67.0,
+    "quiet_box": false,
+    "load_note": "Three other claude processes were resident. Every figure below is a back-to-back median inside ONE process on the same n grid, so RATIOS and LOG-LOG SLOPES are sound. Absolute milliseconds are advisory and should be re-taken on a quiet box before they are quoted as absolutes.",
+    "threads": "OMP/MKL/OPENBLAS/NUMEXPR pinned to 1; cKDTree workers=1",
+    "statistic": "median of 2-5 repeats after warm-up (JIT and first call outside the clock)",
+    "geometry": "uniform on [0,1000]^d unless noted; greedy crossover also checked on 20-cluster Gaussian",
+    "cross_check": "compute_features(d=2, n=85900) measured here at 1312 ms against the published harness GART 2.0 feature_time of 1365 ms on pla85900 -- 3.9% apart, so this bench reproduces the published protocol."
+  },
+
+  "derived_complexity": {
+    "_reading": "n points, d dimensions. 'dominant' is the leading term as implemented, not as the algorithm is usually quoted.",
+
+    "classical_closed_forms": {
+      "members": ["BHH", "Daganzo", "Chien", "Kwon", "Cavdar"],
+      "code": "classical_region_estimators.RegionEstimator.estimate",
+      "published_formula_cost": "O(nd)",
+      "as_implemented": "Theta(d n log n)",
+      "dominant_term_source": "np.unique(coords, axis=0) row-dedup in the shared estimate() wrapper -- a void-view lexsort, O(d n log n). The published arithmetic is O(nd) and is a rounding error next to it.",
+      "measured_share_of_total": {"n=1000": 0.29, "n=10000": 0.69, "n=40000": 0.77, "n=85900": 0.79},
+      "hull_variant": {
+        "branch": "region_from_points(prefer_hull=True) calls ConvexHull only when d <= HULL_MAX_DIM = 3",
+        "d_le_3": "O(n log n), Qhull; measured 5.9 ms at n=85900 d=2, 17% of BHH total, log-log slope 0.674 (SUBlinear -- hull vertex count grows like log n for uniform points, so per-point cost falls)",
+        "d_ge_4": "hull is never computed; silently falls through to the O(nd) bounding box and records region_source='bounding_box'",
+        "consequence": "the exponential n^floor(d/2) hull blow-up the paper cites as a motivation is switched off by the cap and never occurs at runtime. Verified: BHH at d=50 n=1000 returns region_source='bounding_box'.",
+        "switch_point": "d = 3 -> 4"
+      },
+      "sampling_region_variant": "O(nd); region_from_grid is O(1) and no hull or bbox pass runs on the region itself"
+    },
+
+    "mst_ratio_family": {
+      "members": ["MST_Only (alpha=1)", "Calibrated rho(d)", "Calibrated rho(d,n)", "Asymptotic MST ratio"],
+      "code": "mst_utils.compute_mst -- three data-dependent branches",
+      "branch_1_delaunay": {
+        "condition": "d <= 3 and n >= d+2 (tried FIRST, at every n)",
+        "cost": "O(n log n) time, O(n) memory",
+        "constant_dominated_by": "Qhull Delaunay, then np.unique on ~3n (d=2) or ~6n (d=3) candidate edge rows, then scipy Kruskal on the sparse graph",
+        "measured_ms_d2": {"1000": 4.65, "10000": 56.2, "40000": 249.5, "85900": 633.4},
+        "measured_slope_n_ge_3000": 1.145,
+        "delaunay_alone_ms_at_85900": 318.9,
+        "d3_penalty": "d=3 costs 6.2x d=3-vs-d=2 at n=10000 (307.9 ms vs 49.9 ms) -- more tetrahedra per point and 6 edges each"
+      },
+      "branch_2_dense": {
+        "condition": "d >= 4 and 16*n^2 bytes <= MST_DENSE_BUDGET_GB (default 8 GiB) => n <= 23170",
+        "cost": "O(n^2 d) for cdist + O(n^2 log n) for scipy's Kruskal over the ~n^2 materialized edges; the SORT dominates for d < log n",
+        "measured_slope": 2.21,
+        "memory": "peak ~12 n^2 bytes (float64 cdist then float32 cast) plus scipy's CSR buffers"
+      },
+      "branch_3_blocked_prim": {
+        "condition": "n > 23170 with d >= 4, or Delaunay raises",
+        "cost": "Theta(n^2 d) time, O(n) memory, numba scalar loop, no sort",
+        "measured_slope": 2.13
+      },
+      "switch_points": ["d = 3 -> 4 (Delaunay to dense)", "n = 23170 at d >= 4 (dense to blocked Prim), memory-driven not time-driven"],
+      "table_row_in_manuscript": "O(n^2 d)",
+      "discrepancy": "The manuscript's O(n^2 d) row is wrong on both benchmarks where these models are timed. In d<=3 the code takes Delaunay and is O(n log n); in d>=4 the implemented dominant term is the n^2 log n Kruskal sort, not n^2 d."
+    },
+
+    "gart2": {
+      "code": "lgbm_model_v3/feature_engineering_gart2.compute_features + TSP_GART2_Estimator.predict",
+      "total": "Theta(n log n) in d<=3; Theta(n^2 d + n^2 log n) in d>=4 -- i.e. exactly the MST family's class, times a constant",
+      "measured_slope_n_ge_3000": {"harness_total": 1.000, "harness_feature": 1.008, "microbench_compute_features": 1.013},
+      "component_share_at_n_85900_d2": {
+        "compute_mst": 0.483, "greedy_nn": 0.343, "tree_diameter": 0.108,
+        "pca_canonicalize": 0.002, "remainder_percentiles_adjacency_scipy_stats": 0.064
+      },
+      "pca_canonicalize": {"cost": "O(n d^2 + d^3)", "measured_slope": 0.988, "ms_at_85900_d2": 3.2, "note": "0.2% of the block at d=2; only competitive with the MST when d^2 approaches n"},
+      "tree_diameter": {"cost": "Theta(n) work, two BFS passes", "measured_slope": 1.330, "ms_at_85900": 141.9, "note": "slope exceeds 1 because it is a pure-Python deque BFS over a list-of-lists adjacency -- pointer chasing, so the constant grows with working-set size"},
+      "greedy_nn": {
+        "code": "greedy_nn_tour_length, piecewise at DENSE_CAP = 3000",
+        "dense_branch": {"condition": "n <= 3000", "cost": "Theta(n^2 d) time, Theta(n^2) memory (cdist, 8n^2 bytes)", "measured_slope": 2.021},
+        "candlist_branch": {
+          "condition": "n > 3000",
+          "cost": "O(n log n) worst case; Theta(n) as measured",
+          "measured_slope": 0.941,
+          "why_not_n_log_n": "The kd-tree work (build + one batched k=17 query, C code) is O(n log n) but only 31-35% of the pass. The other 65-69% is the main loop: n-1 iterations of ~6 NumPy calls each, at a FLAT 3.44-3.64 us/step across n=10k..86k. An interpreted Theta(n) term with a microsecond constant swamps the log factor over every n the paper reports.",
+          "interpreted_loop_us_per_step": {"10000": 3.58, "40000": 3.64, "85900": 3.44},
+          "rebuild_policy": "tree rebuilt when stale >= 0.5*|remaining|, so rebuild cost telescopes geometrically to O(n log n) amortized"
+        },
+        "measured_ms": {"10000": 57.3, "20000": 102.4, "40000": 212.7, "85900": 450.1}
+      },
+      "inference": {
+        "cost": "O(K * Dbar) = O(1) in n and d",
+        "K_trees": 1118,
+        "measured_ms_median": 1.277,
+        "measured_p10_p90_ms": [1.045, 1.482],
+        "constant_dominated_by": "pandas DataFrame construction and the LightGBM Python predict() wrapper, NOT tree traversal. Evidence: LGBM_V3 has fewer trees yet infers in 3.872 ms, 3.0x slower than GART 2.0's 1118-tree ensemble."
+      }
+    },
+
+    "gart1": {
+      "code": "tsp_utils_2._calculate_gart_features",
+      "cost": "Theta(n^2 d) time AND Theta(n^2) memory",
+      "dominant_term_source": "cdist(coords, coords) materialized purely to take a per-row min for the 1-NN mean/std. Two scalars bought with an n x n matrix.",
+      "measured_slope_n_gt_3000": 1.791,
+      "measured_slope_11849_to_33810": 1.97,
+      "us_per_point_by_band": {"1000-3000": 12.8, "3000-10000": 20.2, "10000-40000": 46.0},
+      "hard_failure": "no pla85900 row exists in the timing corpus for GART 1.0; the dense matrix at n=85900 needs ~59 GB. GART 2.0 completes the same instance in 1.399 s.",
+      "unguarded_hull": "_calculate_gart_features calls ConvexHull with no dimension cap (unlike classical_region_estimators' HULL_MAX_DIM=3), so it would hit the n^floor(d/2) blow-up at d>=4. Moot in practice -- GART 1.0 is only ever run at d=2."
+    },
+
+    "hilbert": {
+      "code": "tsp_utils_2.estimate_tsp_hilbert, p=16",
+      "manuscript_row": "O(n log n)",
+      "as_implemented": "Theta(n d p) interpreted + O(n log n) argsort, with the FIRST term dominating",
+      "dominant_term_source": "HilbertCurve.distances_from_points over a Python list-of-lists -- pure-Python bit interleaving, n*d*p operations at interpreter speed. The argsort is invisible next to it.",
+      "measured_slope": 0.990,
+      "measured_r2": 0.999,
+      "us_per_point_flat_across_4_orders": [6.445, 6.307, 6.377, 6.332, 6.212, 6.246],
+      "note": "the only estimator measured whose per-point cost does not drift at all; O(n log n) is a correct upper bound but Theta(n d p) is what the machine executes"
+    },
+
+    "learned_controls": {
+      "linear_31f_and_nn_31f": "identical feature block to GART 2.0, so identical Theta(n log n) / Theta(n^2 d) feature cost; the head is O(1) in n",
+      "nn_head": "4 gated residual blocks at hidden_dim 192 => ~1.5e5 FLOPs per prediction, O(1) in n; measured 1.534 ms, again wrapper-dominated",
+      "lgbm_v3_and_nn_v3_are_cheaper_at_large_n": "0.889 s and 0.883 s against GART 2.0's 1.399 s at pla85900, because the V3 30-feature set omits greedy_nn_over_mst. The 0.510 s gap is that one feature (measured standalone at 0.450 s)."
+    },
+
+    "held_karp_1tree_bound": {
+      "STATUS": "NOT IMPLEMENTED ANYWHERE IN THE REPOSITORY",
+      "searched": "*.py, *.tex, *.md -- the only 'Held-Karp' in the codebase is solvers/exact.py's exponential bitmask DP, which is the exact solver and is explicitly flagged in tsp_utils_2 as 'misnamed historically'. No Lagrangian ascent, no subgradient loop, no 1-tree anywhere.",
+      "consequence": "the manuscript's middle-ground claim currently has no measured upper anchor",
+      "derived_cost_per_ascent_iteration": "Theta(n^2 d) -- a minimum spanning tree on V\\{1} under the perturbed cost c'_ij = c_ij + pi_i + pi_j, plus an O(n) scan for the two cheapest edges at node 1",
+      "why_no_delaunay_fast_path": "The node potentials pi break the Euclidean metric, so after iteration 1 the perturbed MST is NOT a subgraph of the Delaunay triangulation. The O(n log n) route that MST_Only and GART 2.0 both take in d<=3 is unavailable to the 1-tree bound at every iteration but the first. This is the structural reason the bound is a whole complexity class above the MST family rather than a constant factor above it.",
+      "total": "Theta(k n^2 d) for k ascent iterations",
+      "measured_fair_implementation": {
+        "note": "numba O(n^2) Prim reading perturbed cost on the fly, O(n) memory -- deliberately efficient so the anchor is not a strawman",
+        "log_log_slope": 1.991,
+        "ms_per_iteration": {"200": 0.11, "500": 0.51, "1000": 1.90, "2000": 6.08, "4000": 22.60, "8000": 111.90, "16000": 830.49},
+        "seconds_at_k_50": {"1000": 0.09, "4000": 1.13, "8000": 5.60, "16000": 41.52},
+        "seconds_at_k_100": {"1000": 0.19, "4000": 2.26, "8000": 11.19, "16000": 83.05},
+        "seconds_at_k_n_over_2": {"1000": 0.95, "4000": 45.19, "8000": 447.62, "16000": 6643.94}
+      },
+      "measured_naive_scipy_implementation": {
+        "note": "dense perturbed matrix + scipy minimum_spanning_tree (Kruskal, n^2 sort) -- reported so the anchor's sensitivity to implementation is visible",
+        "ms_per_iteration": {"1000": 119.63, "4000": 2673.94, "8000": 12429.64},
+        "penalty_vs_fair": "63x at n=1000, 111x at n=8000"
+      }
+    },
+
+    "exact_solver": {
+      "code": "solvers/exact.py (n <= EXACT_N_MAX = 20), solvers/concorde.py above that",
+      "bitmask_dp": "Theta(n^2 2^n) time, Theta(n 2^n) memory; at n=20 the dp array alone is 8*20*2^20 = 168 MB",
+      "concorde": "branch-and-cut; no polynomial bound, worst case exponential",
+      "role": "upper anchor, unbounded"
+    }
+  },
+
+  "middle_ground_ledger_d2": {
+    "_what": "the claim the paper needs, with both sides measured. n=1000 and n=16000, d=2.",
+    "n_1000": {
+      "classical_closed_form_BHH_ms": 0.79,
+      "mst_family_ms": 4.65,
+      "gart2_ms": 12.3,
+      "held_karp_1tree_k50_ms": 95.0,
+      "held_karp_1tree_k_n_over_2_ms": 950.0,
+      "exact_ms": "unbounded",
+      "gart2_over_mst": 2.6,
+      "onetree_k50_over_gart2": 7.7
+    },
+    "n_16000": {
+      "mst_family_ms": 84.4,
+      "gart2_ms": 197.0,
+      "held_karp_1tree_k50_ms": 41520.0,
+      "held_karp_1tree_k_n_over_2_ms": 6643940.0,
+      "gart2_over_mst": 2.3,
+      "onetree_k50_over_gart2": 211.0
+    },
+    "gart2_over_mst_only_by_n_band": {
+      "0-100": 2.29, "100-400": 1.99, "400-1000": 2.13,
+      "1000-3000": 2.34, "3000-10000": 2.33, "10000+": 2.12
+    },
+    "gart2_over_hilbert_by_n_band": {
+      "0-100": 6.05, "100-400": 3.48, "400-1000": 2.31,
+      "1000-3000": 2.25, "3000-10000": 2.26, "10000+": 2.14
+    },
+    "interpretation": "GART 2.0 holds a FLAT 2.0-2.3x over the MST-ratio family across four orders of magnitude in n -- same complexity class, constant multiplier. Against the 1-tree bound the gap GROWS as Theta(n/log n), from 7.7x at n=1000 to 211x at n=16000, because the 1-tree is Theta(k n^2) with no Delaunay path and GART 2.0 is Theta(n log n). The 6.05x penalty against Hilbert at n<100 is fixed inference overhead, not scaling; it decays to 2.14x by n>10000."
+  },
+
+  "discrepancies_theory_vs_measurement": [
+    {
+      "id": "D1",
+      "severity": "high",
+      "claim": "brief states the greedy-NN pass 'adds roughly 95 ms at n>10,000'",
+      "measured": "57.3 ms at n=10000, 102.4 ms at n=20000, 212.7 ms at n=40000, 450.1 ms at n=85900",
+      "verdict": "95 ms is a point value at n~20000 that has been read as a plateau. The pass is Theta(n) and unbounded; at pla85900 it is 4.7x the quoted figure and 34% of the entire feature block.",
+      "constant_hiding_what": "nothing algorithmic. 65-69% of the pass is the interpreted main loop at a flat 3.4-3.6 us/step; the kd-tree O(n log n) C work is the minority. The derived complexity is right; the growth is linear and the constant is the Python interpreter."
+    },
+    {
+      "id": "D2",
+      "severity": "high",
+      "claim": "mst_utils.compute_mst prefers _dense_mst for d>=4 up to n=23170, on the stated rationale that 'dense wins up to its memory limit'",
+      "measured": "_blocked_prim_mst beats _dense_mst by 42-123x on every (n,d) pair tested. n=1000 d=4: 122.5 ms vs 1.7 ms (70.6x). n=4000 d=4: 2674 ms vs 21.8 ms (122.8x). The gap WIDENS with n.",
+      "verdict": "The rationale compares dense against Delaunay, which is sound, but the dispatch then applies it against blocked Prim, which it never tested. Dense pays an n^2 log n Kruskal sort over ~n^2 materialized edges; Prim pays n^2 d with no sort and O(n) memory. Prim dominates on both axes.",
+      "blast_radius": "every d>=4 instance below n=23170 -- i.e. the entire 16,920-instance ND benchmark (n<=1000, d up to 100). Not a correctness issue and it does not touch the published TSPLIB timing column, which is all d=2 Delaunay. It does mean any ND wall-clock number is inflated ~40-120x, and it makes the ND benchmark far more expensive to regenerate than it needs to be."
+    },
+    {
+      "id": "D3",
+      "severity": "medium",
+      "claim": "feature_engineering_gart2.DENSE_CAP = 3000, documented as 'n at or below which the dense (JIT) greedy path is cheaper than building k-NN candidate lists'",
+      "measured": "crossover is n ~ 2100 on uniform points and n ~ 2200 on 20-cluster Gaussian points. At the cap itself, dense costs 30.0 ms against candlist's 19.0 ms.",
+      "verdict": "the cap is ~1.4x too high; instances in 2100 < n <= 3000 pay up to 58% more than necessary on the greedy pass. Robust across both geometries tested, so it is not a clustering artifact."
+    },
+    {
+      "id": "D4",
+      "severity": "medium",
+      "claim": "manuscript Table (benchmark models) lists the classical closed forms at O(nd)",
+      "measured": "np.unique(coords, axis=0) inside the shared estimate() wrapper is 29% of BHH's runtime at n=1000 rising to 79% at n=85900",
+      "verdict": "as implemented they are Theta(d n log n), not O(nd). The published arithmetic really is O(nd); the wrapper's row-dedup is what the clock sees. Either state the wrapper cost or note that the O(nd) figure excludes preprocessing shared by all models."
+    },
+    {
+      "id": "D5",
+      "severity": "medium",
+      "claim": "manuscript Table lists MST_Only / Asymptotic / Calibrated rho(d) / Calibrated rho(d,n) / Linear / NN at O(n^2 d)",
+      "measured": "all of them route through compute_mst, which takes the Delaunay branch at d<=3 -- measured slope 1.145, 633 ms at n=85900, not quadratic",
+      "verdict": "the O(n^2 d) row is wrong for the 2D and TSPLIB benchmarks, which are exactly where these models are timed. Line 219 already grants the O(n log n) Delaunay path to GART 2.0; the same path is taken by every one of these rows. In d>=4 the row is also mis-stated, since the implemented dominant term is n^2 log n (Kruskal) rather than n^2 d."
+    },
+    {
+      "id": "D6",
+      "severity": "low",
+      "claim": "manuscript line 219: 'Below n=3000 the greedy tour, not the MST, is therefore the leading term of 2D extraction'",
+      "measured": "n=500: MST 2.57 ms vs greedy 0.80 ms (MST leads). n=1000: 4.65 vs 3.54 (MST leads). n=2000: 9.04 vs 13.60 (greedy leads). n=3000: 13.89 vs 29.96 (greedy leads).",
+      "verdict": "true only on roughly 1500 <= n <= 3000, not for all n below 3000. Below n~1500 the MST is still the leading term."
+    },
+    {
+      "id": "D7",
+      "severity": "low",
+      "claim": "manuscript line 283 lists the Hilbert baseline at O(n log n)",
+      "measured": "slope 0.990 with r^2 0.999 and per-point cost flat at 6.2-6.4 us across n=51..85900",
+      "verdict": "correct as an upper bound but not what dominates. The executed cost is Theta(n d p) in interpreted Python (p=16 bit-interleaving over a list-of-lists); the argsort's log factor is not detectable."
+    },
+    {
+      "id": "D8",
+      "severity": "informational",
+      "claim": "convex-hull cost 'matters and differs by d'",
+      "measured": "d=2 hull is 5.9 ms at n=85900 -- 0.4% of GART 2.0, 17% of BHH -- with a SUBlinear slope of 0.674. For d>=4 HULL_MAX_DIM=3 switches the hull off entirely.",
+      "verdict": "the hull never costs anything at runtime in this codebase. The n^floor(d/2) blow-up cited in the introduction as motivation is real in theory but is disabled by the cap, so it should be presented as a design reason for the cap rather than as a measured cost of the classical baselines."
+    }
+  ],
+
+  "measured_components_d2_ms": {
+    "_grid": [500, 1000, 2000, 3000, 4000, 6000, 10000, 20000, 40000, 85900],
+    "compute_mst":      [2.57, 4.65, 9.04, 13.89, 17.73, 27.54, 56.16, 110.14, 249.47, 633.41],
+    "delaunay_only":    [1.06, 2.00, 3.53, 4.97, 7.20, 11.26, 21.63, 49.26, 115.45, 318.93],
+    "greedy_candlist":  [5.94, 8.34, 12.91, 19.36, 23.37, 36.42, 57.30, 102.44, 212.74, 450.13],
+    "greedy_dense":     [0.80, 3.54, 13.60, 29.96, 54.27, 122.58, 327.43, 1415.54, null, null],
+    "tree_diameter":    [0.30, 0.54, 1.43, 1.89, 2.16, 4.56, 6.27, 20.72, 55.96, 141.90],
+    "pca_canonicalize": [0.06, 0.06, 0.08, 0.10, 0.12, 0.16, 0.31, 0.44, 0.89, 3.22],
+    "convex_hull":      [0.49, 0.47, 0.54, 0.56, 0.78, 0.76, 1.04, 1.94, 2.80, 5.85],
+    "np_unique_rows":   [0.12, 0.23, 0.46, 0.75, 1.00, 1.63, 3.06, 6.33, 13.23, 29.48],
+    "kdtree_build_query_k17": [0.60, 1.25, 2.61, 4.02, 5.46, 8.71, 16.11, 33.10, 66.87, 153.56],
+    "compute_features_31": [5.92, 10.99, 39.01, 48.72, 47.21, 82.66, 118.23, 252.52, 543.84, 1312.10]
+  },
+
+  "measured_slopes_n_ge_3000": {
+    "_what": "log-log exponent p in t ~ n^p",
+    "from_published_harness_euc2d": {
+      "GART_2.0_total": 1.000, "GART_2.0_feature": 1.008, "GART_2.0_inference": 0.043,
+      "MST_Only": 1.191, "Asymptotic_MST": 1.192, "Calibrated_MST_dn": 1.195,
+      "Hilbert": 0.996, "LGBM_V3": 1.038, "NN_V3": 1.015, "GART_1.0": 1.791
+    },
+    "from_component_microbench": {
+      "compute_mst_d2": 1.145, "delaunay_only": 1.231, "greedy_candlist": 0.941,
+      "greedy_dense": 2.021, "tree_diameter": 1.330, "pca_canonicalize": 0.988,
+      "convex_hull_d2": 0.674, "np_unique_rows": 1.102, "compute_features_31": 1.013,
+      "onetree_iteration_fair": 1.991, "dense_mst_d8": 2.21, "blocked_prim_d8": 2.13
+    }
+  }
+}

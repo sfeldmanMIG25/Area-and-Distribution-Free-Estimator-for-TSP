@@ -1,0 +1,19 @@
+{
+  "key": "kruskal1956",
+  "type": "article",
+  "title": "On the shortest spanning subtree of a graph and the traveling salesman problem",
+  "author": "Kruskal, Joseph B.",
+  "year": "1956",
+  "doi": "10.1090/S0002-9939-1956-0078686-7",
+  "bib_url": "",
+  "candidate_url": "https://www.ams.org/proc/1956-007-01/S0002-9939-1956-0078686-7/S0002-9939-1956-0078686-7.pdf",
+  "status": "download_failed",
+  "notes": "response is not a PDF",
+  "pdf_path": "",
+  "text_path": "",
+  "markdown_path": "",
+  "sha256": "",
+  "bytes": "",
+  "http_status": "200",
+  "final_url": "https://pubs.ams.org/journals/proc/1956-007-01/S0002-9939-1956-0078686-7/S0002-9939-1956-0078686-7.pdf"
+}

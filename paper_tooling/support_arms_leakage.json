@@ -1,0 +1,13 @@
+{
+  "leakage": {
+    "n_augment": 874,
+    "overlap_corpus_train": 0,
+    "overlap_corpus_val": 0,
+    "overlap_corpus_test": 0,
+    "overlap_augment": 874,
+    "overlap_bench2d": 0,
+    "overlap_nd_test": 0,
+    "overlap_tsplib_euc2d": 0,
+    "overlap_tsplib_noneuc": 0
+  }
+}

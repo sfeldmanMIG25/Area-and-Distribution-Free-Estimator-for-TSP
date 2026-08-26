@@ -1,0 +1,123 @@
+{
+  "static": [
+    {
+      "file": "features_ext\\group_local_id.py",
+      "sha256": "c3849e190ef38e3f",
+      "n_lines": 445,
+      "imports": [
+        "__future__",
+        "numpy",
+        "scipy.spatial"
+      ],
+      "target_symbol_hits": [],
+      "rng_symbol_hits": [],
+      "text_hits_in_code": {
+        "optimal_cost": 0,
+        "tour": 1,
+        "solve": 2,
+        "solution": 0
+      }
+    },
+    {
+      "file": "features_ext\\group_degeneracy.py",
+      "sha256": "b0d427d54d807574",
+      "n_lines": 391,
+      "imports": [
+        "__future__",
+        "numpy"
+      ],
+      "target_symbol_hits": [],
+      "rng_symbol_hits": [],
+      "text_hits_in_code": {
+        "optimal_cost": 0,
+        "tour": 0,
+        "solve": 1,
+        "solution": 0
+      }
+    },
+    {
+      "file": "features_ext\\group_mst_topology.py",
+      "sha256": "540a7221eaea576d",
+      "n_lines": 457,
+      "imports": [
+        "__future__",
+        "mst_utils",
+        "numpy",
+        "scipy.sparse",
+        "scipy.sparse.csgraph",
+        "scipy.spatial.distance"
+      ],
+      "target_symbol_hits": [],
+      "rng_symbol_hits": [],
+      "text_hits_in_code": {
+        "optimal_cost": 0,
+        "tour": 0,
+        "solve": 1,
+        "solution": 0
+      }
+    },
+    {
+      "file": "features_ext\\__init__.py",
+      "sha256": "c97d96e8d4d556a9",
+      "n_lines": 11,
+      "imports": [],
+      "target_symbol_hits": [],
+      "rng_symbol_hits": [],
+      "text_hits_in_code": {
+        "optimal_cost": 0,
+        "tour": 0,
+        "solve": 0,
+        "solution": 0
+      }
+    }
+  ],
+  "data": {
+    "augmentation": {
+      "n": 880,
+      "in_train": 0,
+      "in_train_or_val": 0,
+      "in_corpus_at_all": 0,
+      "examples": []
+    },
+    "2D benchmark": {
+      "n": 2580,
+      "in_train": 0,
+      "in_train_or_val": 0,
+      "in_corpus_at_all": 0,
+      "examples": []
+    },
+    "TSPLIB": {
+      "n": 111,
+      "in_train": 0,
+      "in_train_or_val": 0,
+      "in_corpus_at_all": 0,
+      "examples": []
+    },
+    "features_extended_rows": 106272,
+    "features_extended_matches_corpus": true
+  },
+  "determinism": {
+    "n_sample": 40,
+    "repeat_max_diff": 0.0,
+    "vs_training_file_max_diff": 3.552713678800501e-15,
+    "row_permutation_max_diff_raw": 0.8460294683774587,
+    "row_permutation_max_diff_canonicalised": 0.0,
+    "row_permutation_by_n": {
+      "200": 5.329070518200751e-15,
+      "9": 0.5285828978593237,
+      "80": 5.684341886080802e-14,
+      "7": 0.31071720120649315,
+      "30": 2.842170943040401e-14,
+      "1000": 7.105427357601002e-15,
+      "40": 0.0,
+      "300": 1.0658141036401503e-14,
+      "8": 0.8460294683774587,
+      "70": 1.0658141036401503e-14,
+      "90": 1.4210854715202004e-14,
+      "600": 7.105427357601002e-15,
+      "400": 7.105427357601002e-15,
+      "5": 4.884981308350689e-15
+    },
+    "scale_shift_max_diff": 2.1316282072803006e-14
+  }
+}
