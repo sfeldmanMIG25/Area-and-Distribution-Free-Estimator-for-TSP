@@ -88,3 +88,4 @@ graphify-out/
 *.db
 paper_tooling/*.log
 *_as_published.csv
+paper_reference/*.png

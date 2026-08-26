@@ -2312,27 +2312,9 @@ CLAIMS: list[Claim] = [
 
     # -- 5.5 exact solver ----------------------------------------------------
     Claim(
-        id="frontier.exact.n_solves",
-        anchor=r"Over the {v} TSPLIB instances for which a Concorde solve time is on record",
-        expect="frontier:exact_solver_anchor/N_instances_with_a_recorded_solve",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.exact.median_seconds",
-        anchor=r"the published median is {v} seconds against GART 2.0's",
-        expect="frontier:exact_solver_anchor/median_s",
-        tol=("dp", 1),
-    ),
-    Claim(
         id="frontier.exact.gart2_ms",
-        anchor=r"seconds against GART 2.0's {v} milliseconds, and the recorded range",
+        anchor=r"On that protocol GART 2.0 costs {v}~ms over the full EUC\_2D set",
         expect="frontier:exact_solver_anchor/gart2_median_ms",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.exact.min_seconds",
-        anchor=r"the recorded range runs from {v} seconds to more than eleven million",
-        expect="frontier:exact_solver_anchor/min_s",
         tol=("dp", 2),
     ),
 
