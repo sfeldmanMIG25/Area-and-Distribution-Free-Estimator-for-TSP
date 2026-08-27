@@ -589,12 +589,7 @@ CLAIMS: list[Claim] = [
     # -- derived + scaled: a fraction quoted as a percentage ------------------
 
     # -- model-artifact facts: sidecar source, follows the production model ---
-    Claim(
-        id="methods.model.n_features",
-        anchor=r"The following subsections describe its {v} input features",
-        expect="sidecar:n_features",
-        tol="exact",
-    ),
+    # withdrawn methods.model.n_features: section roadmap sentence deleted; the 31-feature count is asserted at the start of subsec:features and in subsec:shap
     Claim(
         id="methods.model.n_trees",
         anchor=r"The resulting ensemble contains {v} trees with {~} leaves per tree",
@@ -813,7 +808,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.shap.top2_share",
-        anchor=r"those two features carry {v}\% of it between them. Four of the top ten features are MST-derived, five are geometric, and the greedy ratio is the remaining one. Node count and dimension jointly contribute {~}\%, the two bounding-hypervolume features",
+        anchor=r"those two features carry {v}\% of it between them; node count and dimension jointly contribute {~}\%.",
         expect="= {shap_feature_mst_dominance_ratio_share_pct}"
                " + {shap_feature_greedy_nn_over_mst_share_pct}",
         tol=("dp", 1),
@@ -823,22 +818,12 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.shap.size_dimension_share",
-        anchor=r"Node count and dimension jointly contribute {v}\%, the two bounding-hypervolume features",
+        anchor=r"node count and dimension jointly contribute {v}\%. The greedy ratio ranking second",
         expect="bank:shap_family_size_dimension_share_pct",
         tol=("dp", 1),
     ),
-    Claim(
-        id="methods.shap.bounding_share",
-        anchor=r"the two bounding-hypervolume features {v}\%",
-        expect="bank:shap_family_bounding_hypervolume_share_pct",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="methods.shap.centroid_share",
-        anchor=r"the four centroid-distance descriptors {v}\%. The greedy ratio ranking second",
-        expect="bank:shap_family_centroid_share_pct",
-        tol=("dp", 1),
-    ),
+    # withdrawn methods.shap.bounding_share: third-tier share breakdown cut from prose; the full ranking remains in Table tab:shap_top
+    # withdrawn methods.shap.centroid_share: third-tier share breakdown cut from prose; the full ranking remains in Table tab:shap_top
     Claim(
         id="appendix.shap.group_mst_share",
         anchor=r"the nineteen MST-derived features carry {v}\%",
@@ -876,18 +861,8 @@ CLAIMS: list[Claim] = [
     # anchored: Section 4.1 no longer describes the 30-feature predecessor as a
     # reported row, so "the same learner on 30 of the 31 inputs" is gone. The
     # production feature count is still checked at its other sites.
-    Claim(
-        id="app.oracle_constant.c",
-        anchor=r"constant over these instances is ${v}$ at {~}\%. MSPE",
-        no_generator=_ORACLE_REASON,
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="app.oracle_constant.mape",
-        anchor=r"constant over these instances is ${~}$ at {v}\%. MSPE",
-        no_generator=_ORACLE_REASON,
-        tol=("dp", 2),
-    ),
+    # withdrawn app.oracle_constant.c: caption statement removed; the body assertions are tracked by application.oracle_c_23_restated and application.oracle_mape_23_total
+    # withdrawn app.oracle_constant.mape: caption statement removed; the body assertions are tracked by application.oracle_mape_23_restated and application.oracle_mape_23_total
 
     # =======================================================================
     # Re-audit pass of 2026-08-11: seven findings closed.  Every number the
@@ -1272,18 +1247,7 @@ CLAIMS: list[Claim] = [
         ),
         tol=("dp", 4),
     ),
-    Claim(
-        id="application.greedy_gate.train_lo",
-        anchor=r"the training split's own minimum is ${v}$, and \texttt{si1032} is below both",
-        no_generator=(
-            "Minimum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv: "
-            "1.046482. Same fact as methods.greedy_gate.train_lo, restated in the "
-            "tab:tsplib_nonEuc caption so the decline decision states which floor it "
-            "used. si1032's 1.0260 is below both floors, so the decision is invariant "
-            "to the choice. Settle as for methods.greedy_gate.train_lo."
-        ),
-        tol=("dp", 4),
-    ),
+    # withdrawn application.greedy_gate.train_lo: caption statement removed; the training-split range [1.0465,2.1295] is asserted in subsec:features
 
     # -- N-J: the tuning comparison, and which two boosters it is over -------
     Claim(
@@ -1359,7 +1323,7 @@ CLAIMS: list[Claim] = [
     # -- N-D: the probe protocol, published with the claim it bounds ---------
     Claim(
         id="methods.probe.grid_points",
-        anchor=r"swept on log-spaced grids of {v} points",
+        anchor=r"on log-spaced grids of {v} points, $d$ from",
         expect="bank:cons_probe_gart_2_0_n_customers_grid_points",
         note=(
             "paper_tooling/v4_study.py::PROBE_GRID_POINTS = 24, the requested grid "
@@ -1403,7 +1367,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.probe.n_hi",
-        anchor=r"$n$ from {~} to {v}, against a tolerance",
+        anchor=r"$n$ from {~} to {v}, deliberately overshooting",
         no_generator=(
             "paper_tooling/v4_study.py::PROBE_N_GRID upper endpoint = 4000, four times "
             "the largest node count in the SYNTHETIC corpora (n=1000). It is NOT four "
@@ -1417,18 +1381,7 @@ CLAIMS: list[Claim] = [
         ),
         tol="exact",
     ),
-    Claim(
-        id="methods.probe.tolerance_base",
-        anchor=r"against a tolerance of ${v}^{-9}$ in $\alpha$ units",
-        no_generator=(
-            "paper_tooling/v4_study.py::PROBE_TOL = 1e-9, the acceptance tolerance in "
-            "alpha units below which a sweep difference is counted as float noise "
-            "rather than as a monotonicity violation. The manuscript prints it as "
-            "10^-9, so the base 10 is the numeral tokenised here. Protocol constant. "
-            "Settle by banking the probe protocol constants under probe_* keys."
-        ),
-        tol="exact",
-    ),
+    # withdrawn methods.probe.tolerance_base: tolerance sentence cut in the condensation; PROBE_TOL remains a code constant and no prose asserts it
 
     # -- N-A: the rho(d) -> rho(d,n) gap is not the largest step -------------
     Claim(
@@ -1528,16 +1481,7 @@ CLAIMS: list[Claim] = [
         expect="bank:2d_by_genclass_geometric_other_gart_2_0_mspe_pct",
         tol=("dp", 2),
     ),
-    Claim(
-        id="appendix.genclass.benchmark_n",
-        anchor=r"the six row counts still sum to the {v} instances of the benchmark",
-        expect="bank:2d_by_genclass_total_gart_2_0_n",
-        tol="exact",
-        note="build_paper_tables.load_2d asserts this sum: each class count is checked "
-             "against GEN_CLASSES and their total against the benchmark's instance "
-             "count, so a split that dropped or double-counted a generator fails there "
-             "rather than printing a wrong Total.",
-    ),
+    # withdrawn appendix.genclass.benchmark_n: caption sum-check sentence removed; the 2{,}580 total is asserted in subsec:datasets and the tab:frontier_2d caption
 
     # -- N-H: the network beats the extended-block variant on five of eight --
     Claim(
@@ -1552,41 +1496,13 @@ CLAIMS: list[Claim] = [
         no_generator=_GATE_CONST("upper endpoint 2.209; the observed maximum is 2.209372"),
         tol=("dp", 3),
     ),
-    Claim(
-        id="application.greedy_gate.corpus_lo",
-        anchor=r"falls below the in-distribution floor ${v}$ the gate applies",
-        no_generator=_GATE_CONST("lower endpoint 1.035, the floor si1032 fails"),
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="application.si1032.greedy_ratio",
-        anchor=r"\texttt{si1032}, whose greedy-to-MST ratio ${v}$ falls below",
-        no_generator=(
-            "greedy_nn_over_mst of si1032 on the hybrid non-Euclidean path: 1.0260. "
-            "Computed inside tsplib_benchmark/run_all_models_tsplib.py::_run_one_instance "
-            "and used only by the coverage gate, so the instance is recorded with a "
-            "status row rather than a prediction and the value reaches no results CSV. "
-            "Settle by persisting the gate input on declined rows."
-        ),
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="application.noneuc.gart_scored_n",
-        anchor=r"GART 2.0 is therefore scored on {v} instances against 23 for the reference",
-        expect="bank:tsplib_nonEuc_total_gart_2_0_n",
-        tol="exact",
-    ),
-    Claim(
-        id="application.noneuc.reference_scored_n",
-        anchor=r"scored on {~} instances against {v} for the reference",
-        expect="bank:tsplib_nonEuc_total_fixed_alpha_1_136_n",
-        tol="exact",
-        note="Fixed_Alpha scores all 23; GART 2.0 declines si1032. The asymmetry "
-             "is why the Total row is not a like-for-like comparison.",
-    ),
+    # withdrawn application.greedy_gate.corpus_lo: caption statement removed; the corpus gate range [1.035,2.209] is asserted in subsec:features
+    # withdrawn application.si1032.greedy_ratio: caption digit cut in the condensation; si1032's decline at the coverage gate is stated without the ratio
+    # withdrawn application.noneuc.gart_scored_n: caption N-accounting removed; the 22-of-23 accounting is asserted in the body of the non-Euclidean results section
+    # withdrawn application.noneuc.reference_scored_n: caption N-accounting removed; the 22-of-23 accounting is asserted in the body of the non-Euclidean results section
     Claim(
         id="methods.optuna.n_trials",
-        anchor=r"on TSPLIB, and {v} trials, 60 of them completed",
+        anchor=r"estimator (TPE), {v} trials, 60 of them completed",
         no_generator=(
             "lgbm_model_v3/gart2_optuna.db, study 'gart2': SELECT COUNT(*) FROM trials "
             "-> 200. Settle as for methods.optuna.trials_complete."
@@ -1956,7 +1872,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.load_sensitivity_gart2",
-        anchor=r"at the crossing budget against {v} for GART 2.0",
+        anchor=r"at the crossing budget of 50 against {v} for GART 2.0",
         expect="frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
         tol=("dp", 2),
     ),
@@ -1974,7 +1890,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.capped_seconds",
-        anchor=r"that single instance takes {v} seconds against GART 2.0's",
+        anchor=r"at the top of the ladder, {v} seconds against",
         expect="frontier:tsplib/capped_tail/hk_ms_by_k/500",
         tol=("dp", 0),
         scale=0.001,
@@ -1982,13 +1898,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.capped_gart2_ms",
-        anchor=r"seconds against GART 2.0's {v} milliseconds on those same three repeats",
+        anchor=r"seconds against {v} milliseconds (the",
         expect="frontier:tsplib/capped_tail/gart2_ms",
         tol=("dp", 0),
     ),
     Claim(
         id="frontier.tsplib.harness_d18512_ms",
-        anchor=r"the {v}~ms quoted for this instance in",
+        anchor=r"(the {v}~ms of Section~\ref{subsec:cost_accounting} is the same work",
         no_generator=(
             "Same 239 ms as discussion.d18512_gart2_time, cross-referenced here "
             "so that two figures for one instance -- 237.42 ms solo, 239 ms "
@@ -2002,7 +1918,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.table_caption_n",
-        anchor=r"cost/accuracy ladder, {v} instances matched between both arms",
+        anchor=r"cost/accuracy ladder over the {v} matched instances",
         expect="frontier:tsplib/N_matched",
         tol="exact",
     ),
@@ -2128,7 +2044,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.table_caption_n",
-        anchor=r"cost/accuracy ladder, all {v} held-out instances, Polyak ascent",
+        anchor=r"cost/accuracy ladder, all {v} scored instances, Polyak ascent",
         expect="frontier:nd/N",
         tol="exact",
     ),
@@ -2244,7 +2160,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.labels.overlap_total: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="frontier.labels.corrupt_population",
-        anchor=r"The {v} quarantined instances of Section~\ref{subsec:provenance} carry no recoverable label",
+        anchor=r"The {v} quarantined instances above carry no recoverable label",
         no_generator=(
             "Size of the reference-tour audit's corrupt bucket, 184, restated "
             "from Section 3.3. Same artifact and same settle-by as "
@@ -2614,7 +2530,7 @@ CLAIMS: list[Claim] = [
     # =======================================================================
     Claim(
         id="figure.boxplot_nd.hk_budget",
-        anchor=r"drawn at the ascent budget $k={v}$ at which Table",
+        anchor=r"1-tree bound is drawn at ascent budget $k={v}$",
         no_generator=(
             "Drawing decision, not a measurement: "
             "paper_reference/regenerate_boxplots.py::HK_BUDGET, the ascent "
@@ -2623,22 +2539,8 @@ CLAIMS: list[Claim] = [
             "read, the way the table builder emits paper_numbers.json."
         ),
     ),
-    Claim(
-        id="figure.boxplot_2d.hk_budget",
-        anchor=r"drawn at the same ascent budget $k={v}$ as in Figures",
-        no_generator=(
-            "Same constant as figure.boxplot_nd.hk_budget: "
-            "paper_reference/regenerate_boxplots.py::HK_BUDGET."
-        ),
-    ),
-    Claim(
-        id="figure.boxplot_tsplib.hk_budget",
-        anchor=r"Section~\ref{sec:frontier} at ascent budget $k={v}$. This is the stratum",
-        no_generator=(
-            "Same constant as figure.boxplot_nd.hk_budget: "
-            "paper_reference/regenerate_boxplots.py::HK_BUDGET."
-        ),
-    ),
+    # withdrawn figure.boxplot_2d.hk_budget: caption now inherits axes and bound budget from fig:boxplot_nd by reference; the budget is asserted once, in that caption
+    # withdrawn figure.boxplot_tsplib.hk_budget: caption now inherits axes and bound budget from fig:boxplot_nd by reference; the budget is asserted once, in that caption
 
     # -- Section 6: the certified bound on the non-Euclidean set --------------
     # Section 6 previously ended without scoring the comparator the rest of the
@@ -2688,7 +2590,7 @@ CLAIMS: list[Claim] = [
     # -- Section 5.2: what "corpus median" is a median of ---------------------
     Claim(
         id="frontier.tsplib.throughput_x",
-        anchor=r"puts the same pair at {v} instead, because the bound is cheap",
+        anchor=r"the same pair reads {v}, because the bound is cheap",
         expect="costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
         tol=("dp", 2),
         note="The second aggregation of the same pair at the same budget: the sum "
@@ -2810,7 +2712,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.caption_n",
-        anchor=r"cost/accuracy ladder, all {v} instances, both subgradient step rules",
+        anchor=r"cost/accuracy ladder, all {v} instances, both step rules",
         expect="costfront:cells/2d/groups/Total (all 2D)/N",
         tol="exact",
     ),
@@ -2927,7 +2829,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.noneuc.caption_n",
-        anchor=r"cost/accuracy ladder, the {v} instances both methods score",
+        anchor=r"ladder over the {v} instances both methods score",
         expect="costfront:cells/noneuc/instance_accounting/matched",
         tol="exact",
     ),
@@ -3028,13 +2930,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.load.bias_lo",
-        anchor=r"printed above is between {v} and {~} of what the same pair",
+        anchor=r"cost multiple above is between {v} and {~} of its quiet-box value",
         expect="costfront:load_control/bias_in_a_cost_ratio/0",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.load.bias_hi",
-        anchor=r"printed above is between {~} and {v} of what the same pair",
+        anchor=r"cost multiple above is between {~} and {v} of its quiet-box value",
         expect="costfront:load_control/bias_in_a_cost_ratio/200",
         tol=("dp", 2),
     ),
@@ -3055,7 +2957,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.load.flip_after",
-        anchor=r"whose {~} becomes {v}. Second, the checkpointed protocol",
+        anchor=r"whose {~} becomes {v}. And the checkpointed protocol",
         expect="= {costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/"
                "x_gart2_typical} / {costfront:load_control/bias_in_a_cost_ratio/200}",
         tol=("dp", 2),
@@ -3064,7 +2966,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.amort.2d_lo",
-        anchor=r"shares nothing between rungs costs {v} to {~} times the checkpointed",
+        anchor=r"sharing nothing between rungs, costs {v} to {~} times the checkpointed",
         expect="costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
         tol=("dp", 2),
     ),
@@ -3177,7 +3079,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="provenance.verify.n",
-        anchor=r"Across the ${v}$ bound checks the released artifacts supply",
+        anchor=r"Across the {v} bound checks the released artifacts supply",
         expect="frontier:labels/repair_verify_instances_checked",
         tol="exact",
         note="The Label Validation copy of the verification count; the Label "
@@ -3185,7 +3087,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="provenance.verify.worst_excess",
-        anchor=r"zero violations, the worst relative excess being ${v}\times10^{-15}$",
+        anchor=r"the worst relative excess being ${v}\times10^{-15}$",
         no_generator=_WORST_EXCESS_REASON,
         tol=("dp", 1),
     ),
