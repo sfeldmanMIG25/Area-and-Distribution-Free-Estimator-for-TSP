@@ -53,6 +53,7 @@ plt.rcParams.update({
     "axes.spines.right": False,
     "savefig.dpi": 300,
     "savefig.bbox": "tight",
+    "savefig.pad_inches": 0.02,
     "figure.facecolor": "white",
 })
 
@@ -115,13 +116,13 @@ def draw_accuracy_grid(mape: pd.DataFrame, counts: pd.DataFrame) -> None:
             if not np.isfinite(v):
                 continue
             shade = im.norm(v)
-            ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=7.0,
+            ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=8.4,
                     color="white" if shade > 0.62 else "#1a1a1a")
 
     ax.set_xticks(range(ncol))
     ax.set_xticklabels(SIZE_LABELS)
     ax.set_yticks(range(nrow))
-    ax.set_yticklabels([("100  (held out)" if d == 100 else str(d)) for d in order])
+    ax.set_yticklabels([("100 (held-out)" if d == 100 else str(d)) for d in order])
     ax.set_xlabel("Instance size $n$")
     ax.set_ylabel("Dimension $d$")
 
@@ -130,10 +131,10 @@ def draw_accuracy_grid(mape: pd.DataFrame, counts: pd.DataFrame) -> None:
         ax.axhline(split, color="#c0392b", lw=1.8)
         ax.get_yticklabels()[-1].set_color("#c0392b")
 
-    ax.set_title("GART 2.0 mean absolute error (\\%) by dimension and instance size",
+    ax.set_title("GART 2.0 mean absolute percentage error (%) by dimension and instance size",
                  pad=26, loc="left", fontweight="bold")
-    ax.text(0, 1.035, "error falls toward the bottom right — larger instances "
-                      "and higher dimensions are both easier",
+    ax.text(0, 1.035, "error falls toward the large-instance, high-dimension corner "
+                      "of the trained grid; the held-out row runs the other way",
             transform=ax.transAxes, fontsize=8.2, color="#555555")
 
     ax.set_xticks(np.arange(-0.5, ncol, 1), minor=True)
@@ -142,7 +143,7 @@ def draw_accuracy_grid(mape: pd.DataFrame, counts: pd.DataFrame) -> None:
     ax.tick_params(which="minor", length=0)
 
     cb = fig.colorbar(im, ax=ax, pad=0.02, fraction=0.035)
-    cb.set_label("Mean absolute error (\\% of optimal tour length, log scale)", fontsize=8)
+    cb.set_label("Mean absolute percentage error (% of reference tour cost, log scale)", fontsize=8)
 
     for suffix in ("pdf", "png"):
         fig.savefig(HERE / f"accuracy_grid.{suffix}")
@@ -189,7 +190,7 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     spec = [
         ("classical", C_CLASSICAL, "o", "Çavdar–Sokol (closed form)"),
         ("gart", C_GART, "o", "GART 2.0"),
-        ("bound", C_BOUND, "D", f"Held–Karp bound ({BOUND_K} ascent steps)"),
+        ("bound", C_BOUND, "D", f"Held–Karp 1-tree bound ($k{{=}}{BOUND_K}$)"),
     ]
     for key, colour, marker, label in spec:
         d = series[key].sort_values("n")
@@ -204,7 +205,7 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
         ax.scatter(cen.n, cen.ms, marker="^", s=34, facecolors="none",
                    edgecolors=C_EXACT, linewidths=1.1, zorder=5)
         ax.scatter([], [], marker="^", s=34, facecolors="none", edgecolors=C_EXACT,
-                   linewidths=1.1, label=f"Exact solve hit the time cap ({len(cen)} instances)")
+                   linewidths=1.1, label=f"Exact solve hit the wall-clock cap ({len(cen)} instances)")
 
     ax.set_xscale("log")
     ax.set_yscale("log")
@@ -212,7 +213,7 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     ax.set_ylabel("Wall time per instance (ms, log scale)")
     ax.set_title("Cost of an estimate, a certified bound, and an exact solve",
                  pad=24, loc="left", fontweight="bold")
-    ax.text(0, 1.035, "TSPLIB EUC_2D, every series measured on the same machine",
+    ax.text(0, 1.035, "TSPLIB95 EUC_2D, every series measured on the same machine",
             transform=ax.transAxes, fontsize=8.2, color="#555555")
     ax.grid(True, which="major", ls=":", lw=0.6, color="#bbbbbb")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False,

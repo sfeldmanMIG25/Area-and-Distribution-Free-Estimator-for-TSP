@@ -1,47 +1,45 @@
-# LGBM V3 (GART 2.0) - LightGBM Alpha Estimator
+# lgbm_model_v3 — GART 2.0 (released) and the legacy V3 model
 
-The primary model for TSP tour length estimation. Predicts an adjustment
-coefficient alpha = optimal_cost / MST_length, enabling fast tour length
-estimation as `alpha * MST_length`.
+This directory holds two models. **GART 2.0 is the released model.** The V3
+files are legacy. Do not use the V3 files for new work.
 
-## Files
+## GART 2.0 (released model)
+
+GART 2.0 predicts the ratio alpha = tour cost / MST length, and returns the
+estimate `alpha * MST_length`. The frozen booster has 31 input features and
+1,118 trees. It uses a logit-transformed target and monotone constraints.
 
 | File | Purpose |
 |------|---------|
-| `LGBM_Alpha_Model_V3.py` | Training pipeline with Optuna hyperparameter search (100 trials). Loads `tsp_features_v3.csv`, splits into train/val/test, tunes LightGBM, and saves the final model. |
-| `lgbm_estimator_v3.py` | Production estimator class (`TSP_V3_LGBM_Estimator`). Computes the 29-feature V3 feature set on-the-fly with Numba acceleration, loads the trained model, and returns predictions. |
-| `LGBM_Alpha_Model_V3_2d_test.py` | 2D-specific benchmark test variant. |
-| `quick_check_lgmb_v3.py` | Quick validation script for sanity-checking model loads. |
-| `lgbm_alpha_model_v3.joblib` | Trained LightGBM model artifact (~50 MB). |
-| `best_params_v3.json` | Best hyperparameters from Optuna search. |
-| `feature_importance_v3.png` | Feature importance plot (top 30 features by split count). |
+| `gart2_final.joblib` | The frozen released booster. The paper's results come from this file. |
+| `gart2_final.json` | Sidecar with the booster's metadata (features, trees, split sizes). |
+| `lgbm_estimator_gart2.py` | Released wrapper class `TSP_GART2_Estimator`. Loads `gart2_final.joblib` and computes features on the fly. |
+| `feature_engineering_gart2.py` | Feature computation for the 31-feature set. |
+| `train_gart2.py`, `train_gart2_logit.py`, `train_gart2_monotone.py` | Training scripts, in the order the model developed. |
+| `freeze_gart2_final.py` | Freezes the trained booster and writes the sidecar. |
+| `gart2_optuna.db` | Optuna study for the hyperparameter search the paper reports and rejects. |
+| `gart2_logit_*.joblib`, `gart2_mono_*.joblib` | Control boosters for the paper's tuning and constraint comparisons. |
 
-## Usage
+### Usage
 
 ```python
-from lgbm_model_v3.lgbm_estimator_v3 import TSP_V3_LGBM_Estimator
+from lgbm_model_v3.lgbm_estimator_gart2 import TSP_GART2_Estimator
 
-estimator = TSP_V3_LGBM_Estimator('path/to/lgbm_model_v3')
-result = estimator.estimate(coordinates, dimension=2, grid_size=1000)
-# result = {'estimate': float, 'alpha': float, 'mst_length': float,
-#           'feature_time': float, 'inference_time': float}
+estimator = TSP_GART2_Estimator()
+result = estimator.estimate(coordinates, dimension=2)
+# result contains: estimate, alpha, mst_length, timings
 ```
 
-## Training details
+## Legacy V3 model (do not use)
 
-- **Dataset:** 51,819 synthetic instances (2D-100D, n=10-1000, various distributions)
-- **Target:** alpha clipped to [1.0, 2.0]
-- **Tuning:** 100 Optuna trials minimizing validation RMSE
-- **Final model:** Trained on train+val sets at the optimal iteration count
-- **Key hyperparameters:** lr=0.0129, num_leaves=142, feature_fraction=0.66, bagging_fraction=0.43
+The V3 model is the predecessor of GART 2.0. It is kept so that old results
+stay reproducible. It is not the model the paper calls GART 2.0.
 
-## Feature set (29 features)
-
-The V3 feature set is dimension-agnostic and MST-centric:
-
-- **Metadata (2):** n_customers, dimension
-- **Geometric spread (3):** bounding_hypervolume, node_density, aspect_ratio
-- **Centroid distribution (4):** mean, std, max, IQR of centroid distances
-- **MST edge statistics (11):** total_length, mean, std, skew, kurtosis, max, q10/q25/q50/q75/q90
-- **MST clustering proxies (3):** dominance_ratio, gap_ratio, large_edge_count
-- **MST topology (6):** leaf_ratio, degree_mean/std/max, diameter, diameter_normalized
+| File | Purpose |
+|------|---------|
+| `LGBM_Alpha_Model_V3.py` | Legacy V3 training pipeline (Optuna search on `tsp_features_v3.csv`). |
+| `lgbm_estimator_v3.py` | Legacy V3 wrapper class `TSP_V3_LGBM_Estimator` (29 features). |
+| `LGBM_Alpha_Model_V3_2d_test.py` | Legacy 2D benchmark test variant. |
+| `lgbm_alpha_model_v3.joblib` | Legacy V3 model artifact. |
+| `best_params_v3.json`, `optuna_study_v3.db` | Legacy V3 search outputs. |
+| `feature_importance_v3.png`, `test_metrics_v3.json` | Legacy V3 diagnostics. |

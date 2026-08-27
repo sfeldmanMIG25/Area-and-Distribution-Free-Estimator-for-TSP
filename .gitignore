@@ -89,3 +89,27 @@ graphify-out/
 paper_tooling/*.log
 *_as_published.csv
 paper_reference/*.png
+
+# --- experiment and verification outputs: regenerable from released scripts ---
+__pycache__/
+*.log
+*.joblib
+*.pt
+paper_tooling/*.csv
+paper_tooling/*.txt
+paper_tooling/*_models/
+paper_tooling/*_out/
+paper_tooling/loaded_box_*/
+paper_tooling/exact_solver_logs/
+paper_tooling/controls_31f/
+benchmark_checkpoints/
+*_repaired.csv
+*_pre_gart2.csv
+*_timings.csv
+alpha_coverage/*.csv
+nn_est_alpha_v3/nn_31f_seeds/
+
+# --- research source copies: rights-unclear, local only ---
+research_sources/text/
+research_sources/pdf/
+research_sources/SOURCES_MANIFEST.csv

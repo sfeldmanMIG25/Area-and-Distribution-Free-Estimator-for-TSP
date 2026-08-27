@@ -740,7 +740,7 @@ def compute_classical(d2: pd.DataFrame, euc: pd.DataFrame) -> pd.DataFrame:
     rnd = d2[d2["generator"] == "random"]
     count = int(rnd["instance"].nunique())
     for m in CLASSICAL_MATCHED:
-        rows.append(_classical_row("B", r"2D \texttt{random} (uniform on $[0,G]^2$)", "b_random",
+        rows.append(_classical_row("B", r"2D \texttt{random} (uniform on $[0,G]^2$)\\ matched domain", "b_random",
                                    count, m, rnd[rnd["model"] == m], "prediction_time_s"))
     for anchor, label, slug in CLASSICAL_SUBDOMAINS:
         inst = set(rnd.loc[rnd["model"] == anchor, "instance"])
@@ -1198,7 +1198,7 @@ def main() -> None:
     tables["tsplib_nonEuc"] = ne
 
     rank = pd.concat([compute_rank(d2, "2D", "2d"),
-                      compute_rank(dn, "ND", "nd"),
+                      compute_rank(dn, "Multidimensional", "nd"),
                       compute_rank(with_31f_controls(euc), r"TSPLIB EUC\_2D", "tsplib_euc2d")],
                      ignore_index=True)
     rank.to_csv(OUT / "table_rank.csv", index=False)

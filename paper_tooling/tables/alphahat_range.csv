@@ -1,0 +1,4 @@
+split,n,n_expected,alphahat_min,alphahat_max,alphahat_mean,alphahat_sd,structural_lower,structural_upper,clip_after_inverse,transform_inverse
+train,69768,69768,1.0008730758180537,1.9647249861445584,1.136408972364575,0.11061915900601697,1.0,2.0,False,alpha = 1 + 1 / (1 + exp(-z))
+val,19584,19584,1.02181993068782,1.9446418033416735,1.1361712821134902,0.10978936297521782,1.0,2.0,False,alpha = 1 + 1 / (1 + exp(-z))
+test,16920,16920,1.029493018435211,1.922005404453004,1.1172745861749973,0.10214884462605374,1.0,2.0,False,alpha = 1 + 1 / (1 + exp(-z))

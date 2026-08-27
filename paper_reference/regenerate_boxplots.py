@@ -49,7 +49,7 @@ PATH_HK_TSPLIB = ROOT / "paper_tooling" / "hk1tree_frontier_tsplib.csv"
 # panels so a reader compares boxes and not budgets.
 HK_BUDGET = 100
 HK_KEY = "HK_1tree"
-HK_LABEL = r"Held–Karp bound ($k{=}100$)"
+HK_LABEL = r"Held–Karp 1-tree bound ($k{=}100$)"
 
 # (benchmark-CSV key, box label). The keys come from the registry so a model
 # swap does not have to be repeated here; the box labels stay short because
@@ -74,7 +74,7 @@ FULL_2D = [
     GART_2_0,
     HK_BOUND,
     ("GART", "GART 1.0"),
-    ("Calibrated_MST_dn", r"Calibrated MST $\hat\rho(d,n)$"),
+    ("Calibrated_MST_dn", r"Calibrated MST ratio $\hat\rho(d,n)$"),
     ("Asymptotic_MST", "Asymptotic MST ratio"),
     ("MST_Only", r"$L_{\mathrm{MST}}$ ($\alpha=1$)"),
     ("Hilbert", "Custom Hilbert sort"),
@@ -82,7 +82,7 @@ FULL_2D = [
 FULL_ND = [
     GART_2_0,
     HK_BOUND,
-    ("Calibrated_MST_dn", r"Calibrated MST $\hat\rho(d,n)$"),
+    ("Calibrated_MST_dn", r"Calibrated MST ratio $\hat\rho(d,n)$"),
     ("MST_Only", r"$L_{\mathrm{MST}}$ ($\alpha=1$)"),
     ("BHH_region", "BHH (sampling region)"),
     ("Hilbert", "Custom Hilbert sort"),
@@ -92,7 +92,7 @@ FULL_TSPLIB = [
     HK_BOUND,
     ("GART_1.0", "GART 1.0"),
     ("Asymptotic_MST", "Asymptotic MST ratio"),
-    ("Calibrated_MST_dn", r"Calibrated MST $\hat\rho(d,n)$"),
+    ("Calibrated_MST_dn", r"Calibrated MST ratio $\hat\rho(d,n)$"),
     ("MST_Only", r"$L_{\mathrm{MST}}$ ($\alpha=1$)"),
     ("Hilbert", "Custom Hilbert sort"),
 ]
@@ -101,7 +101,7 @@ COLORS = {
     "GART 2.0": "#0077BB",
     "GART 1.0": "#009988",
     HK_LABEL: "#AA3377",
-    r"Calibrated MST $\hat\rho(d,n)$": "#EE7733",
+    r"Calibrated MST ratio $\hat\rho(d,n)$": "#EE7733",
     "Asymptotic MST ratio": "#CC3311",
 }
 DEFAULT_COLOR = "#BBBBBB"
@@ -192,6 +192,7 @@ plt.rcParams.update(
         "figure.dpi": 150,
         "savefig.dpi": 300,
         "savefig.bbox": "tight",
+        "savefig.pad_inches": 0.02,
         "axes.spines.top": False,
         "axes.spines.right": False,
     }
@@ -342,7 +343,7 @@ def plot_2d(df: pd.DataFrame) -> None:
     df = pd.concat([df, _hk_rows(PATH_HK_2D)], ignore_index=True)
     paired, n = _paired_subset(df, FULL_2D)
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
-    _draw_boxplot(ax, paired, FULL_2D, f"Full 2D synthetic benchmark (N = {n:,} per estimator)")
+    _draw_boxplot(ax, paired, FULL_2D, f"2D diverse synthetic benchmark (N = {n:,} per estimator)")
     _save(fig, "boxplot_2d_errors")
 
 
@@ -351,7 +352,7 @@ def plot_nd(df: pd.DataFrame) -> None:
     paired, n = _paired_subset(df, FULL_ND)
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
     _draw_boxplot(ax, paired, FULL_ND,
-                  f"Full multidimensional benchmark (N = {n:,} per estimator)")
+                  f"Multidimensional benchmark (N = {n:,} per estimator)")
     _save(fig, "boxplot_nd_errors")
 
 
@@ -366,7 +367,7 @@ def plot_tsplib(df: pd.DataFrame) -> None:
 
     paired, n = _paired_subset(df, FULL_TSPLIB)
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
-    _draw_boxplot(ax, paired, FULL_TSPLIB, f"Full EUC_2D benchmark (N = {n} per estimator)")
+    _draw_boxplot(ax, paired, FULL_TSPLIB, f"TSPLIB95 EUC_2D benchmark (N = {n} per estimator)")
     _save(fig, "boxplot_tsplib_errors")
 
 

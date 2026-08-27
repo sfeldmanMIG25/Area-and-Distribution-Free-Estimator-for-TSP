@@ -1,0 +1,3 @@
+instance_name,split,n_customers,dimension,raw_alpha
+N1000_D15_G100_pchergphhtgncoe_59,train,1000,15,0.9748226941843801
+N5_D2_G100_oc_33,val,5,2,2.059517974949788

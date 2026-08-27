@@ -89,7 +89,7 @@ into an entry: tolerance, provenance and the mismatch message are all per-number
                     p-value of 0.0049 and on a MAPE of 9.8; the
                     ``max(0.005, 0.5%)`` cap it replaced did not, and was 103% of
                     the former while rejecting every honest rendering of the
-                    latter's [1,10) neighbours.
+                    latter's [1,10) neighbors.
     ``("dp", k)``   this claim is asserted to ``k`` decimal places: half a unit
                     in the ``k``-th decimal.  Tightening only -- ``k`` coarser
                     than the significant-figure floor is raised to the floor, so
@@ -242,7 +242,7 @@ _NN31F_REASON_TEXT = (
 # correct output: the manuscript prose is stale and has not been rewritten yet.
 # The checker's job is to say so; rewriting is deliberately not done here,
 # because the arm A decision will move the values again.
-# Feature counts of the two predecessor-vector controls.  Read off the shipped
+# Feature counts of the two predecessor-vector controls.  Read off the released
 # artifacts, not off any table: the "(same features)" label in the results
 # tables is inaccurate and is corrected in the prose instead, because the label
 # is the join key ``build_paper_tables.py --check`` differs on.
@@ -262,17 +262,70 @@ _NN_V3_NFEAT_REASON = (
     "_LINEAR_V3_NFEAT_REASON, under control_nn_v3_n_features."
 )
 
-# The MAPE-minimising constant multiple of L_MST over the 23 screened
+# The MAPE-minimizing constant multiple of L_MST over the 23 screened
 # non-EUC_2D instances.  Flagged UNGENERATED in prose_claims.py as
 # app.oracle_constant_23; one exporter covers the 78, the 111 and the 23.
 _ORACLE_REASON = (
-    "MAPE-minimising constant multiple of L_MST over the 23 screened non-EUC_2D "
+    "MAPE-minimizing constant multiple of L_MST over the 23 screened non-EUC_2D "
     "TSPLIB95 instances: c* = 1.1718 reaching 7.55% MAPE. Recorded in "
     "paper_tooling/prose_claims.py as app.oracle_constant_23, state CORRECT / "
     "UNGENERATED. Settle with the oracle-constant exporter named there: "
     "oracle_constant_<set>_{c,mape_pct}, model-independent, covering the 78 "
     "EUC_2D, the 111 and these 23."
 )
+
+_ORACLE_78_REASON = (
+    "MAPE-minimizing constant multiple of L_MST over the 78 TSPLIB EUC_2D "
+    "instances: c* = 1.1275 reaching 3.52% MAPE. Same status as "
+    "app.oracle_constant.c: settle with the oracle-constant exporter named in "
+    "paper_tooling/prose_claims.py, oracle_constant_<set>_{c,mape_pct}, "
+    "model-independent, covering the 78 EUC_2D, the 111 and the 23."
+)
+
+_ORACLE_111_REASON = (
+    "MAPE-minimizing constant multiple of L_MST over the full 111-instance "
+    "TSPLIB set: c* = 1.134, the value the fixed alpha=1.136 reference is "
+    "compared against. Settle with the same oracle-constant exporter as "
+    "app.oracle_constant.c, which covers the 78, the 111 and the 23."
+)
+
+_FIXED_ALPHA_REASON = (
+    "Design constant of the Fixed_Alpha reference estimator, the multiplier "
+    "1.136 hardcoded in the benchmark roster; the bank spells it inside its "
+    "own key names (tsplib_nonEuc_total_fixed_alpha_1_136_*) but exports no "
+    "key holding the value itself. A roster constant, not a measurement. "
+    "Settle by banking the roster constants."
+)
+
+_BUDGET25_REASON = (
+    "Ascent-budget rung k=25: the budget from which GART 2.0 is strictly "
+    "better than the raw Volgenant--Jonker bound on both cost and accuracy in "
+    "the plane, read off Table tab:frontier_2d and the two larger size bands "
+    "of tab:sizestrat. A rung of the measured ladder, chosen for the "
+    "sentence; no bank key names the first-dominating budget. Settle by "
+    "exporting a first-dominating-budget key from the frontier bank."
+)
+
+_WORST_EXCESS_REASON = (
+    "Worst relative excess of a released label over its own certified bound "
+    "among the 145,013 B <= L checks: 5.8e-15, computed by "
+    "paper_tooling/verify_repaired_labels.py, whose banked summary "
+    "(frontier:labels/repair_verify_*) carries the check count and the "
+    "violation count but not the worst excess. The prose prints the mantissa "
+    "5.8 before a literal 10^{-15}. Settle by banking "
+    "repair_verify_worst_excess alongside the other two."
+)
+
+
+def _generalization(row: str) -> str:
+    """Reason text for a generalization-refit number: exact experiment and value."""
+    return (
+        f"paper_tooling/generalization_experiments.py: {row}. The refit "
+        "protocol holds hyperparameters and seed fixed and varies only the "
+        "training data; its summary is released with the results but not "
+        "exported into paper_numbers.json, so there is no bank key. Settle by "
+        "banking the E-series refit metrics under generalization_* keys."
+    )
 
 
 def _row31f(fname: str, row: str, value: str) -> str:
@@ -308,7 +361,7 @@ def _probe(row: str) -> str:
     )
 
 
-# The shipped GART 2.0 booster is absent from v4_study._model_registry(), so the
+# The released GART 2.0 booster is absent from v4_study._model_registry(), so the
 # canonical v4_study_gart2_probe.csv has no row for it.  Re-measured under the
 # identical protocol into v4_study_gart2_probe_shipped.csv.
 _PROBE_SHIPPED = "paper_tooling/v4_study_gart2_probe_shipped.csv, model=GART_2.0"
@@ -331,20 +384,6 @@ def _LINENOISE(field: str) -> str:
         "having linenoise_geometry emit on_face_frac per instance and "
         "corpus_statistics bank the slice's median, its quartile alpha medians "
         "and its Spearman rho under corpus_linenoise_onface_* keys."
-    )
-
-
-def _zcell(row: str) -> str:
-    """Reason text for a provenance alpha z-score: exact file and printed field."""
-    return (
-        f"paper_tooling/audit_alpha_cell_zscores.py, {row}. Convention stated in "
-        "that module's docstring: per (d,n) cell, the affected rows' mean "
-        "alpha_stored standardized by the mean and ddof=1 standard deviation of "
-        "the same cell's unaffected rows, reading "
-        "paper_tooling/reference_tour_audit.csv and writing "
-        "paper_tooling/reference_tour_alpha_zscores.csv. Not exported into "
-        "paper_numbers.json. Settle by banking that CSV under "
-        "provenance_alpha_z_* keys."
     )
 
 
@@ -417,7 +456,7 @@ _SIZE_BUCKET = (
 
 
 def _GATE_CONST(which: str) -> str:
-    """Reason for an endpoint of the shipped greedy-ratio coverage gate."""
+    """Reason for an endpoint of the released greedy-ratio coverage gate."""
     return (
         f"lgbm_model_v3/feature_engineering_gart2.py::TRAIN_GREEDY_RANGE = "
         f"(1.035, 2.209), {which}. Its docstring states the interval is taken over "
@@ -609,7 +648,7 @@ CLAIMS: list[Claim] = [
     #
     # Sign convention, inherited from build_paper_tables.paired_test and carried
     # unchanged into the bank: mean_diff / ci_lo / ci_hi are |APE| of the
-    # production model minus |APE| of the baseline, so a NEGATIVE value favours
+    # production model minus |APE| of the baseline, so a NEGATIVE value favors
     # the production model. The manuscript states two of these comparisons from
     # the *baseline's* point of view, which is why those entries negate in
     # ``expect`` rather than pointing at some other key. Negating in the
@@ -876,82 +915,22 @@ CLAIMS: list[Claim] = [
     # -- N4: SDPE is the primary precision metric (Section 4.3), and on the
     #    Kwon domain the V3-feature network's SDPE is below GART 2.0's, so
     #    "wins on every matched domain" failed on the paper's own metric.
-    Claim(
-        id="provenance.z.n_cells",
-        anchor=r"The {~} rows fall in {v} $(d,n)$ cells",
-        no_generator=_zcell("printed field 'cells containing an affected row' = 29"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.n_rows",
-        anchor=r"The {v} rows fall in {~} $(d,n)$ cells",
-        no_generator=_zcell("printed field 'affected rows covered' = 184"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.min_reference",
-        anchor=r"none of which retains fewer than {v} unaffected rows",
-        no_generator=_zcell("printed field 'smallest reference group' = 219"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.n_over",
-        anchor=r"{v} of the {~} cells depart by more than {~} standard deviations",
-        no_generator=_zcell("printed field 'cells with |z| > 1.6' = 17"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.n_cells_again",
-        anchor=r"{~} of the {v} cells depart by more than {~} standard deviations",
-        no_generator=_zcell("printed field 'cells containing an affected row' = 29"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.threshold",
-        anchor=r"depart by more than {v} standard deviations and those",
-        no_generator=_zcell(
-            "the module constant THRESHOLD = 1.6, the bound the superseded "
-            "sentence asserted and the one this sentence reports against"),
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="provenance.z.rows_over",
-        anchor=r"and those {~} hold {v} of the {~} rows",
-        no_generator=_zcell("printed field 'cells with |z| > 1.6' holding-count = 95"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.n_over_again",
-        anchor=r"and those {v} hold {~} of the {~} rows",
-        no_generator=_zcell("printed field 'cells with |z| > 1.6' = 17"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.n_rows_again",
-        anchor=r"hold {~} of the {v} rows; the largest departure",
-        no_generator=_zcell("printed field 'affected rows covered' = 184"),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.z.max",
-        anchor=r"the largest departure is $-{v}$, at $d={~}$",
-        no_generator=_zcell(
-            "printed field 'largest departure' = -15.9261, the cell d=25, n=1000, "
-            "which holds 1 affected row against 245 unaffected"),
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="provenance.z.max_d",
-        anchor=r"the largest departure is $-{~}$, at $d={v}$",
-        no_generator=_zcell(
-            "printed field 'largest departure' cell coordinate d = 25"),
-        tol="exact",
-    ),
+    # withdrawn provenance.z.n_cells: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.n_rows: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.min_reference: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.n_over: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.n_cells_again: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.threshold: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.rows_over: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.n_over_again: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.n_rows_again: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.max: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.z.max_d: journey narrative removed per author directive (editorial restructure)
 
     # -- N7: GART 2.0 (V4 features).  Scored on every benchmark, present in the
-    #    tidy tables, absent from the manuscript, and better than the shipped
+    #    tidy tables, absent from the manuscript, and better than the released
     #    model on three of the four strata.  Enumerated here with the reason it
-    #    was not shipped.  The shipped model's own probe row did not exist --
+    #    was not released.  The released model's own probe row did not exist --
     #    v4_study._model_registry() omits PRODUCTION_BOOSTER -- so it was
     #    re-measured under the identical protocol.
 
@@ -1224,9 +1203,11 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="discussion.rank.tsplib_close5_gart1",
-        anchor=r"and trails it after, at {v}\%, the only ordering change",
+        anchor=r"GART 1.0 trails GART 2.0 on the TSPLIB close-pair statistic at the tighter threshold, at {v}\%. Cost accuracy",
         expect="bank:rank_tsplib_euc2d_gart_1_0_close5_pct",
         tol=("dp", 1),
+        note="Re-anchored after the editorial restructure: the close-pair sentence "
+             "was rewritten and this is the one GART 1.0 figure it still prints.",
     ),
     Claim(
         id="discussion.rank.tsplib_close5_pairs",
@@ -1272,7 +1253,7 @@ CLAIMS: list[Claim] = [
         anchor=r"the training split alone spans the narrower $[{v},2.1295]$",
         no_generator=(
             "Minimum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv "
-            "(69,768 rows): 1.046482. The shipped constant "
+            "(69,768 rows): 1.046482. The released constant "
             "feature_engineering_gart2.TRAIN_GREEDY_RANGE = (1.035, 2.209) is the "
             "range over the FULL corpus, as its own docstring states; this entry "
             "records the training split's own range, which the manuscript now "
@@ -1347,7 +1328,7 @@ CLAIMS: list[Claim] = [
             "is measured against -- same logit target, same unconstrained fit, "
             "hyperparameters the only difference -- and 0.622598 - 0.611239 = 0.011359 "
             "is the 0.011 the sentence quotes. Scoring the tuned booster against the "
-            "SHIPPED model instead gives 0.008876, because the shipped model also "
+            "SHIPPED model instead gives 0.008876, because the released model also "
             "carries the monotone constraint; that pairing would confound the search "
             "with the constraint. Settle by banking v4_study_allmodels_strata.csv."
         ),
@@ -1502,43 +1483,20 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- S2 / N-F: the per-class ladder in Section 4.6 -----------------------
-    Claim(
-        id="discussion.genclass.geom_other_mape",
-        anchor=r"on the biased class, {v}\% on the two represented geometric-structure generators",
-        expect="bank:2d_by_genclass_geometric_other_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="discussion.genclass.grid_mape",
-        anchor=r"on the clustered class, {v}\% on the \texttt{grid} generator",
-        expect="bank:2d_by_genclass_geometric_grid_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="discussion.genclass.worst_represented",
-        anchor=r"no represented row exceeds {v}\%, which locates the model's weakness",
-        expect="bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-        tol=("dp", 2),
-        note="Clustered is the worst of the four represented rows at 2.1847; the two "
-             "unrepresented rows, grid at 7.1121 and Line Noise at 10.7522, are the "
-             "only ones above it.",
-    ),
-    Claim(
-        id="discussion.genclass.grid_sdpe",
-        anchor=r"the failure is almost pure bias: SDPE is {v}, the lowest GART 2.0 records",
-        expect="bank:2d_by_genclass_geometric_grid_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-        note="1.9225, against 2.2309 / 2.5157 / 2.6082 / 2.7188 / 6.1656 on the other "
-             "five rows. The error on grid is a level shift, not scatter: MSPE equals "
-             "MAPE to the last digit at +7.1121.",
-    ),
+    # withdrawn discussion.genclass.geom_other_mape: journey narrative removed per author directive (editorial restructure); the value is still checked at its Section 4.5 site by results_2d.geom_other_mape
+    # withdrawn discussion.genclass.grid_mape: journey narrative removed per author directive (editorial restructure); the value is still checked at its Section 4.5 site by results_2d.grid_mape
+    # withdrawn discussion.genclass.worst_represented: journey narrative removed per author directive (editorial restructure)
+    # withdrawn discussion.genclass.grid_sdpe: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="discussion.genclass.grid_floor_mape",
-        anchor=r"the $\alpha=1$ floor at {v}\%, and \texttt{grid} is the only row",
+        anchor=r"the $\alpha=1$ floor is more accurate than the released model, at {v}\%, the only row",
         expect="bank:2d_by_genclass_geometric_grid_l_mathrm_mst_alpha_1_mape_pct",
         tol=("dp", 2),
-        note="4.5047 against GART 2.0's 7.1121. grid is the only bucket anywhere in "
-             "the paper where the alpha=1 floor is more accurate than the shipped "
+        note="Re-anchored after the editorial restructure: the per-class ladder "
+             "paragraph is gone and the fact now lives in the Section 4.5 sentence "
+             "'on \\texttt{grid} the $\\alpha=1$ floor is more accurate than the "
+             "released model, at 4.54\\%'. grid is the only bucket anywhere in the "
+             "paper where the alpha=1 floor is more accurate than the released "
              "model on MAPE.",
     ),
     Claim(
@@ -1642,7 +1600,7 @@ CLAIMS: list[Claim] = [
             "paper_tooling/v4_study_allmodels_strata.csv, stratum=nd_test: "
             "GART2_logit_v3hp mape 0.622598 minus GART2_logit_tuned mape 0.611239 = "
             "0.011359. Tuned against untuned with the hyperparameters the only "
-            "difference; see methods.optuna.untuned_nd for why the shipped model is "
+            "difference; see methods.optuna.untuned_nd for why the released model is "
             "the wrong control. Settle by banking v4_study_allmodels_strata.csv."
         ),
         tol=("dp", 3),
@@ -1717,27 +1675,22 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="discussion.genclass.isotropic_mape",
-        anchor=r"GART 2.0's MAPE is {v}\% on the isotropic class",
+        anchor=r"GART 2.0 ranges from {v}\% MAPE on the isotropic class to {~}\% on Line Noise",
         expect="bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
         tol=("dp", 2),
+        note="Re-anchored after the editorial restructure: the per-class ladder "
+             "paragraph is gone and the class extremes now open the Section 4.5 "
+             "disaggregation paragraph.",
     ),
-    Claim(
-        id="discussion.genclass.biased_mape",
-        anchor=r"on the isotropic class, {v}\% on the biased class",
-        expect="bank:2d_by_genclass_biased_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="discussion.genclass.clustered_mape",
-        anchor=r"geometric-structure generators, {v}\% on the clustered class",
-        expect="bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn discussion.genclass.biased_mape: journey narrative removed per author directive (editorial restructure)
+    # withdrawn discussion.genclass.clustered_mape: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="discussion.genclass.linenoise_mape",
-        anchor=r"\texttt{grid} generator, and {v}\% on Line Noise. The two worst rows",
+        anchor=r"ranges from {~}\% MAPE on the isotropic class to {v}\% on Line Noise",
         expect="bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
         tol=("dp", 2),
+        note="Re-anchored after the editorial restructure; see "
+             "discussion.genclass.isotropic_mape.",
     ),
     Claim(
         id="discussion.timing.feature_share_pct",
@@ -1826,48 +1779,11 @@ CLAIMS: list[Claim] = [
     # -- introduction --------------------------------------------------------
 
     # -- Section 3.3, the withdrawn sentence ---------------------------------
-    Claim(
-        id="provenance.certified_wrong_total",
-        anchor=r"certifies {v} stored costs across the whole corpus",
-        expect="frontier:labels/total_proven_wrong",
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.certified_wrong_in_184",
-        anchor=r"coordinates, and {v} of those {~} are inside these {~} rows",
-        expect="frontier:labels/by_tour_audit_bucket/corrupt",
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.certified_wrong_total_restated",
-        anchor=r"coordinates, and {~} of those {v} are inside these {~} rows",
-        expect="frontier:labels/total_proven_wrong",
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.corrupt_tour_count_in_new_sentence",
-        anchor=r"coordinates, and {~} of those {~} are inside these {v} rows",
-        no_generator=(
-            "Size of the reference-tour audit's corrupt bucket, 184. Recomputed "
-            "by paper_tooling/audit_reference_tours.py into "
-            "reference_tour_audit.csv, rows with bucket=='corrupt'; that file "
-            "is not exported into paper_numbers.json, so there is no bank key. "
-            "Settle by having audit_reference_tours.py emit its four bucket "
-            "counts under provenance_bucket_* keys."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="provenance.corrupt_tour_count_removal",
-        anchor=r"removing all {v} instances from the multidimensional benchmark",
-        no_generator=(
-            "Same 184 as provenance.corrupt_tour_count_in_new_sentence, in the "
-            "sentence that follows it. Pre-existing prose; it re-keys against "
-            "prose_baseline only because the sentence before it was rewritten "
-            "when the 'stale field is the tour permutation' claim was withdrawn."
-        ),
-        tol="exact",
-    ),
+    # withdrawn provenance.certified_wrong_total: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.certified_wrong_in_184: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.certified_wrong_total_restated: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.corrupt_tour_count_in_new_sentence: journey narrative removed per author directive (editorial restructure)
+    # withdrawn provenance.corrupt_tour_count_removal: journey narrative removed per author directive (editorial restructure)
 
     # -- Discussion timing numbers that re-keyed when the paragraph gained a
     #    pointer to the new section.  Pre-existing prose, now given generators.
@@ -1926,13 +1842,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.matched_n",
-        anchor=r"both arms are compared on the {v} of the {~} EUC\_2D instances",
+        anchor=r"both methods are compared on the {v} of the {~} EUC\_2D instances",
         expect="frontier:tsplib/N_matched",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.euc2d_n",
-        anchor=r"both arms are compared on the {~} of the {v} EUC\_2D instances",
+        anchor=r"both methods are compared on the {~} of the {v} EUC\_2D instances",
         expect="frontier:tsplib/N_euc2d",
         tol="exact",
     ),
@@ -2017,7 +1933,7 @@ CLAIMS: list[Claim] = [
         anchor=r"uncalibrated certificate reaches {v}\% lower error at {~} times the cost. In the middle bucket",
         expect="= 100 * (1 - {frontier:tsplib/n in [51,150]/crossing_bound_over_gart2_mape})",
         tol=("dp", 1),
-        note="The uncalibrated, certified bound against the shipped estimator "
+        note="The uncalibrated, certified bound against the released estimator "
              "in the bucket where the estimator loses on both axes.",
     ),
     Claim(
@@ -2145,13 +2061,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.corpus_weighted_budget",
-        anchor=r"the cost ratio at a budget of {v} is {~}",
+        anchor=r"puts the cost ratio at a budget of {v} at {~}.",
         expect="frontier:nd/best_budget_k",
         tol="exact",
     ),
     Claim(
         id="frontier.nd.corpus_weighted_cost_x",
-        anchor=r"the cost ratio at a budget of {~} is {v}",
+        anchor=r"puts the cost ratio at a budget of {~} at {v}.",
         expect="frontier:nd/bound_x_gart2_corpus_weighted_by_k/200",
         tol=("dp", 2),
     ),
@@ -2182,7 +2098,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.concorde_subset_n",
-        anchor=r"On the {v} instances whose label came from an exact solver",
+        anchor=r"On the {v} scored instances whose label the generation run recorded as a Concorde-proven optimum",
         expect="frontier:nd/concorde_subset/N",
         tol="exact",
     ),
@@ -2319,51 +2235,16 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- 5.6 labels ----------------------------------------------------------
-    Claim(
-        id="frontier.labels.total_evaluated",
-        anchor=r"Applying it to all {v} labelled instances in this project",
-        expect="frontier:labels/total_evaluated",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.refuted_total",
-        anchor=r"against the released labels, refutes {v} of them, and {~} of those sit in a set",
-        expect="frontier:labels/total_proven_wrong",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.refuted_scored",
-        anchor=r"against the released labels, refutes {~} of them, and {v} of those sit in a set",
-        expect="frontier:labels/proven_wrong_in_a_scored_set",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.refuted_nd_test",
-        anchor=r"By split they are {v} in the multidimensional test partition",
-        expect="frontier:labels/proven_wrong_nd_test",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.worst_excess",
-        anchor=r"the worst overshoots its label by {v}\%",
-        expect="frontier:labels/worst_excess_pct_nd_test",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.labels.overlap_count",
-        anchor=r"is near-total, since {v} of the {~} lie inside that section's {~} inconsistent-tour instances",
-        expect="frontier:labels/by_tour_audit_bucket/corrupt",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.overlap_total",
-        anchor=r"is near-total, since {~} of the {v} lie inside that section's {~} inconsistent-tour instances",
-        expect="frontier:labels/total_proven_wrong",
-        tol="exact",
-    ),
+    # withdrawn frontier.labels.total_evaluated: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.refuted_total: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.refuted_scored: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.refuted_nd_test: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.worst_excess: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.overlap_count: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.overlap_total: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="frontier.labels.corrupt_population",
-        anchor=r"lie inside that section's {v} inconsistent-tour instances",
+        anchor=r"The {v} quarantined instances of Section~\ref{subsec:provenance} carry no recoverable label",
         no_generator=(
             "Size of the reference-tour audit's corrupt bucket, 184, restated "
             "from Section 3.3. Same artifact and same settle-by as "
@@ -2375,81 +2256,42 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.labels.linhp318_label",
-        anchor=r"Its stored label, {v}, is the fixed-edge Hamiltonian-path optimum",
+        anchor=r"so its published {v} is a path optimum no tour on those coordinates can attain",
         expect="frontier:labels/linhp318/stored_label",
         tol="exact",
     ),
     Claim(
         id="frontier.labels.linhp318_tour_opt",
-        anchor=r"the tour optimum on those coordinates is {v}",
+        anchor=r"scored there against the tour optimum on those coordinates, {v}, which is",
         expect="frontier:labels/linhp318/tour_optimum_on_its_coordinates",
         tol="exact",
     ),
-    Claim(
-        id="frontier.labels.linhp318_bound",
-        anchor=r"with no slack at all, is {v}. Every estimator",
-        expect="frontier:labels/linhp318/onetree_bound_integer_metric",
-        tol=("dp", 0),
-    ),
+    # withdrawn frontier.labels.linhp318_bound: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="frontier.labels.tsplib_files_scanned",
-        anchor=r"A scan of all {v} files found no second unrecognised section keyword",
+        anchor=r"over the full {v}-instance TSPLIB set",
         expect="frontier:labels/linhp318/tsplib_files_scanned",
         tol="exact",
+        note="Re-anchored after the editorial restructure: the file-scan sentence "
+             "is gone; the same 111, the size of the full TSPLIB set, is now "
+             "asserted in Section 6's oracle-constant sentence.",
     ),
-    Claim(
-        id="frontier.labels.gart2_mape_as_published",
-        anchor=r"matched-corpus MAPE from {v}\% to {~}\% and leaves the raw",
-        expect="frontier:tsplib_label_variants/as_published/gart2_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.labels.gart2_mape_repaired",
-        anchor=r"matched-corpus MAPE from {~}\% to {v}\% and leaves the raw",
-        expect="frontier:tsplib_label_variants/linhp318_repaired/gart2_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.labels.interp_crossing_as_published",
-        anchor=r"the interpolated crossing moves only from {v} to {~} under the repair",
-        expect="frontier:tsplib_label_variants/as_published/crossing_interp_k",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="frontier.labels.interp_crossing_repaired",
-        anchor=r"moves only from {~} to {v} under the repair and to",
-        expect="frontier:tsplib_label_variants/linhp318_repaired/crossing_interp_k",
-        tol=("dp", 1),
-        note="The robust statistic. The printed ladder rung moves 50 -> 100 "
-             "over a 0.04-point margin; the interpolated crossing moves 4.",
-    ),
-    Claim(
-        id="frontier.labels.repaired_margin",
-        anchor=r"cuts the margin at that rung from {~} to {v} percentage points",
-        expect="= {frontier:tsplib_label_variants/linhp318_repaired/crossing_margin_pp}",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="frontier.labels.cal_margin",
-        anchor=r"because its margin is {v} percentage points rather than {~}",
-        expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/crossing_margin_pp",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.labels.repaired_margin_restated",
-        anchor=r"its margin is {~} percentage points rather than {v}.",
-        expect="= {frontier:tsplib_label_variants/linhp318_repaired/crossing_margin_pp}",
-        tol=("dp", 3),
-    ),
+    # withdrawn frontier.labels.gart2_mape_as_published: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.gart2_mape_repaired: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.interp_crossing_as_published: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.interp_crossing_repaired: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.repaired_margin: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.cal_margin: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.repaired_margin_restated: journey narrative removed per author directive (editorial restructure)
 
     # -- 5.7 verdict ---------------------------------------------------------
     Claim(
         id="frontier.verdict.cheaper_above_n",
-        anchor=r"it is cheaper above roughly {v} nodes in the plane",
+        anchor=r"cheaper than a 1-tree bound above roughly {v} nodes in the plane",
         no_generator=(
             "Upper edge of the TSPLIB size buckets of Table "
             "\\ref{tab:tsplib_by_size}, n=400, quoted as the size above which "
-            "the ordering favours GART 2.0. It names a bucket boundary this "
+            "the ordering favors GART 2.0. It names a bucket boundary this "
             "paper fixed a priori, not a fitted changepoint; no artifact "
             "estimates a crossover in n because the ladder is measured per "
             "bucket. Settle by fitting the cost/accuracy crossover as a "
@@ -2460,7 +2302,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.verdict.dearer_below_n",
-        anchor=r"and dearer below roughly {v}. And it is not uniformly closer",
+        anchor=r"in the plane and dearer below roughly {v}. Its accuracy sits",
         no_generator=(
             "Upper edge of the smallest TSPLIB size bucket, n=150, quoted as "
             "the size below which the certified bound wins on both axes. Same "
@@ -2484,7 +2326,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.verdict.margin_to_converged_bound",
-        anchor=r"set against {v} points from the converged bound on the same set",
+        anchor=r"EUC\_2D set, against {v} points from the converged bound on the same set",
         expect="= {frontier:tsplib78/gart2_mape_pct}"
                " - {frontier:tsplib78/bound_converged_mape_pct}",
         tol=("dp", 2),
@@ -2562,19 +2404,19 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="rank.close10.gart_2d",
-        anchor=r"threshold GART obtains {v}\%, {~}\%, and {~}\%",
+        anchor=r"threshold GART 2.0 obtains {v}\%, {~}\%, and {~}\%. Every pair set",
         expect="bank:rank_2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_nd",
-        anchor=r"threshold GART obtains {~}\%, {v}\%, and {~}\%",
+        anchor=r"threshold GART 2.0 obtains {~}\%, {v}\%, and {~}\%. Every pair set",
         expect="bank:rank_nd_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_tsplib",
-        anchor=r"threshold GART obtains {~}\%, {~}\%, and {v}\%",
+        anchor=r"threshold GART 2.0 obtains {~}\%, {~}\%, and {v}\%. Every pair set",
         expect="bank:rank_tsplib_euc2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
@@ -2646,7 +2488,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="rank.close10.threshold",
-        anchor=r"claim. At a {v}\% threshold GART obtains",
+        anchor=r"claim. At a {v}\% threshold GART 2.0 obtains",
         no_generator=("Design constant, not a measurement: the wider of the two "
                       "close-pair bands, fixed a priori in build_paper_tables. "
                       "The bank stores the cells the threshold produces, not "
@@ -2677,189 +2519,80 @@ CLAIMS: list[Claim] = [
     ),
     # -- Section 5.8, the repair. Numbers come from
     # paper_tooling/labels_repaired.json via frontier_manuscript_bank.json.
-    Claim(
-        id="dataset.repair.corpus_pct",
-        anchor=r"returned a cost that is wrong on {v}\% of the corpus",
-        expect="frontier:labels/repair_nd_bad_label_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn dataset.repair.corpus_pct: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="provenance.quarantine.nd_test",
-        anchor=r"{v} of them fall in the multidimensional test partition",
+        anchor=r"{v} of the {~} fall in the multidimensional test partition",
         expect="frontier:labels/repair_quarantined_nd_test",
         tol="exact",
     ),
     Claim(
         id="provenance.quarantine.scored_nd",
-        anchor=r"scored on the remaining {v} instances throughout",
+        anchor=r"scored on the remaining ${v}$ instances throughout",
         expect="frontier:labels/repair_nd_test_scored",
         tol="exact",
     ),
-    Claim(
-        id="labels.mech.d1",
-        anchor=r"one path: {v} carry the coarse verification scale",
-        expect="frontier:labels/repair_nd_d1_coarse_robust_scale",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.d2",
-        anchor=r"coarse verification scale, {v} the unit",
-        expect="frontier:labels/repair_nd_d2_unit_scale",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.clean",
-        anchor=r"scale, and {v} the generator's own resolution",
-        expect="frontier:labels/repair_nd_clean_fine_quantised",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.bad_total",
-        anchor=r"{v} labels of {~} are therefore wrong",
-        expect="frontier:labels/repair_nd_bad_labels",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.corpus_n",
-        anchor=r"{~} labels of {v} are therefore wrong",
-        expect="frontier:labels/repair_corpus_nd_instances",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.corpus_pct",
-        anchor=r"are therefore wrong, {v}\% of the corpus",
-        expect="frontier:labels/repair_nd_bad_label_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="labels.mech.bad_train",
-        anchor=r"of the corpus, {v} in training",
-        expect="frontier:labels/repair_nd_bad_train",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.bad_val",
-        anchor=r"in training, {v} in validation",
-        expect="frontier:labels/repair_nd_bad_val",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.mech.bad_test",
-        anchor=r"in validation and {v} in test",
-        expect="frontier:labels/repair_nd_bad_test",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.repair.exact_n",
-        anchor=r"For the {v} instances with $n\le10$ we solve exactly with the Held--Karp",
-        expect="frontier:labels/repair_nd_exact_certified",
-        tol="exact",
-    ),
+    # withdrawn labels.mech.d1: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.d2: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.clean: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.bad_total: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.corpus_n: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.corpus_pct: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.bad_train: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.bad_val: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.mech.bad_test: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.repair.exact_n: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="labels.repair.hk_max_n",
-        anchor=r"Above $n={v}$ the label becomes the float64 length",
+        anchor=r"at $n\le{v}$ the label is the exact Held--Karp dynamic-programming optimum",
         expect="frontier:labels/repair_hk_exact_max_n",
         tol="exact",
+        note="Re-anchored after the editorial restructure: the repair-mechanics "
+             "paragraph is gone; the exact-solve size cap survives in the Label "
+             "Certification description of how the released labels are built.",
     ),
     Claim(
         id="labels.repair.certified_by_bound",
-        anchor=r"upgraded to certified: {v} instances",
+        anchor=r"the label is certified after the fact, {v} instances",
         expect="frontier:labels/repair_nd_tour_certified_optimal",
         tol="exact",
+        note="Re-anchored after the editorial restructure into the Label "
+             "Certification subsection.",
     ),
-    Claim(
-        id="labels.repair.d2_n",
-        anchor=r"because all {v} of its labels are $\mathrm{nint}$ sums",
-        expect="frontier:labels/repair_d2_instances",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.repair.d2_signed",
-        anchor=r"mean signed error $-{v}\%$ overall",
-        expect="= -1 * {frontier:labels/repair_d2_label_signed_mean_pct}",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="labels.repair.d2_signed_g1000",
-        anchor=r"$-{v}\%$ at $G=1000$ against",
-        expect="= -1 * {frontier:labels/repair_d2_grid1000_signed_mean_pct}",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="labels.repair.d2_signed_g10000",
-        anchor=r"against $-{v}\%$ at $G=10^4$",
-        expect="= -1 * {frontier:labels/repair_d2_grid10000_signed_mean_pct}",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="labels.repair.d2_improvable",
-        anchor=r"and {v} of the stored tours are beatable in float64",
-        expect="frontier:labels/repair_d2_tours_improvable_in_float",
-        tol="exact",
-    ),
+    # withdrawn labels.repair.d2_n: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.repair.d2_signed: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.repair.d2_signed_g1000: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.repair.d2_signed_g10000: journey narrative removed per author directive (editorial restructure)
+    # withdrawn labels.repair.d2_improvable: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="labels.verify.n",
-        anchor=r"Across the {v} bound checks that six independent sources supply",
+        anchor=r"Across the {v} bound checks the released artifacts supply there are zero violations of $B\le L$",
         expect="frontier:labels/repair_verify_instances_checked",
         tol="exact",
+        note="Re-anchored after the editorial restructure: the Label Certification "
+             "copy of the verification count. The Label Validation copy of the "
+             "same fact is provenance.verify.n.",
     ),
-    Claim(
-        id="labels.verify.violations",
-        anchor=r"there are {v} violations",
-        expect="frontier:labels/repair_verify_total_violations",
-        tol="exact",
-    ),
-    Claim(
-        id="labels.effect.nd_label_mape",
-        anchor=r"MAPE {v}\%, {~} defective labels low",
-        expect="frontier:labels/repair_nd_test_label_mape_pct",
-        tol=("dp", 3),
-    ),
+    # withdrawn labels.verify.violations: journey narrative removed per author directive (editorial restructure); the count is now written as the word 'zero', which carries no numeral to check
+    # withdrawn labels.effect.nd_label_mape: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="conclusion.repair.quarantined",
-        anchor=r"The remaining {v} instances (0.173\%) disagree",
+        anchor=r"The {v} instances ({~}\%) that fail are \emph{quarantined} rather than scored",
         expect="frontier:labels/repair_quarantined_total",
         tol="exact",
+        note="Re-anchored after the editorial restructure: the conclusion sentence "
+             "is gone and the quarantine count now lives in Section 3's Label "
+             "Validation subsection.",
     ),
-    Claim(
-        id="frontier.labels.raw_margin_as_published",
-        anchor=r"cuts the margin at that rung from {v} to {~} percentage points",
-        expect="= {frontier:tsplib_label_variants/as_published/crossing_margin_pp}",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="frontier.labels.interp_crossing_excluded",
-        anchor=r"under the repair and to {v} under deletion",
-        expect="frontier:tsplib_label_variants/linhp318_excluded/crossing_interp_k",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="frontier.labels.gart2_mape_excluded_new",
-        anchor=r"Deleting the instance instead would move the crossing to {~} and the multiple to {v}",
-        expect="frontier:tsplib_label_variants/linhp318_excluded/crossing_cost_x_gart2",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.labels.crossing_k_excluded",
-        anchor=r"Deleting the instance instead would move the crossing to {v} and the multiple to {~}",
-        expect="frontier:tsplib_label_variants/linhp318_excluded/crossing_ladder_k",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.crossing_k_repaired",
-        anchor=r"leaves the raw bound's crossing budget at {v} and its cost multiple at {~}",
-        expect="frontier:tsplib_label_variants/linhp318_repaired/crossing_ladder_k",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.labels.crossing_x_repaired",
-        anchor=r"leaves the raw bound's crossing budget at {~} and its cost multiple at {v}",
-        expect="frontier:tsplib_label_variants/linhp318_repaired/crossing_cost_x_gart2",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.labels.raw_margin_as_published: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.interp_crossing_excluded: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.gart2_mape_excluded_new: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.crossing_k_excluded: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.crossing_k_repaired: journey narrative removed per author directive (editorial restructure)
+    # withdrawn frontier.labels.crossing_x_repaired: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="results_nd.sdpe_501_1000",
-        anchor=r"and {v}\% at $n\in[501,1000]$. Against the as-published",
+        anchor=r"and {v}\% at $n\in[501,1000]$. Across dimension groups",
         expect="bank:nd_by_size_501_1000_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),    # =======================================================================
@@ -2915,7 +2648,7 @@ CLAIMS: list[Claim] = [
     # carries no bound row for this corpus.
     Claim(
         id="application.bound.like_for_like_n",
-        anchor=r"On the {v} of this set that both methods score",
+        anchor=r"On the {v} instances both methods score over all {~} non-EUC\_2D files --- a set wider",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/N",
         tol="exact",
         note="Instances scored by both GART 2.0 and the 1-tree bound; the bound "
@@ -2923,7 +2656,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="application.bound.gart_mape",
-        anchor=r"both methods score, GART 2.0 obtains {v}\% MAPE against",
+        anchor=r"GART 2.0 obtains {v}\% MAPE against {~}\% for the raw certified bound",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct",
     ),
     Claim(
@@ -3200,17 +2933,10 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- Section 5.4: the two step rules, scored against each other -----------
-    Claim(
-        id="frontier.steps.vj_lead_top_k",
-        anchor=r"at every budget below {v} on the 2D corpus",
-        no_generator=(
-            "An ascent budget: the top rung of Table~\\ref{tab:frontier_2d}, above "
-            "which the comparison is not run. Nothing to settle."
-        ),
-    ),
+    # withdrawn frontier.steps.vj_lead_top_k: sentence corrected in the final consistency pass; 500 is no longer asserted there
     Claim(
         id="frontier.steps.vj_2d_mape",
-        anchor=r"on the 2D corpus, {v}\% against {~}\% at a budget of",
+        anchor=r"of a percentage point, {v}\% against {~}\% at a budget of",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
         tol=("dp", 3),
     ),
@@ -3267,13 +2993,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.gates.series_2d",
-        anchor=r"monotone in $k$, over all {v} series on the 2D corpus",
+        anchor=r"over all {v} series on the 2D corpus and the {~} the bound covers",
         expect="costfront:cells/2d/gates/vj_ckpt/monotone_in_k/series",
         tol="exact",
     ),
     Claim(
         id="frontier.gates.series_noneuc",
-        anchor=r"series on the 2D corpus and all {v} on the non-Euclidean one",
+        anchor=r"series on the 2D corpus and the {v} the bound covers on the non-Euclidean one",
         expect="costfront:cells/noneuc/gates/vj_ckpt/monotone_in_k/series",
         tol="exact",
     ),
@@ -3359,5 +3085,626 @@ CLAIMS: list[Claim] = [
         anchor=r"and {~} to {v} times on the non-Euclidean one",
         expect="costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
         tol=("dp", 2),
+    ),
+
+    # =======================================================================
+    # Editorial restructure of 2026-08-26.  The process/journey narrative was
+    # removed per author directive; sections were reordered and retitled, and
+    # the surviving facts moved to new homes (label validation into Section 3's
+    # Label Validation subsection, label certification into Section 6's Label
+    # Certification subsection).  Every tier-1 numeral the restructure surfaced
+    # as unregistered is registered below rather than absorbed into the
+    # baseline; tier-2 incidental integers ride the recorded backlog.
+    # =======================================================================
+
+    # -- introduction: two literature figures -------------------------------
+    Claim(
+        id="intro.lastmile.share_pct",
+        anchor=r"accounts for approximately {v}\% of total shipping costs by one industry estimate",
+        no_generator=(
+            "Literature figure quoted from the cited industry estimate "
+            "(finmile2025), not a quantity this project generates. Settle only "
+            "against the source itself; no artifact can back it."
+        ),
+        tol="exact",
+    ),
+    Claim(
+        id="related.varol.sub1pct",
+        anchor=r"report sub-{v}\% deviation on standard distributions",
+        no_generator=(
+            "Literature figure quoted from varol2023neural's own reported "
+            "accuracy, not a quantity this project generates. Settle only "
+            "against the source itself."
+        ),
+        tol="exact",
+    ),
+
+    # -- Section 3: target preparation and the inverse transform ------------
+    Claim(
+        id="methods.target.train_outlier",
+        anchor=r"one training row at {v} and one validation row at {~}",
+        no_generator=(
+            "The single training-split row of tsp_features_v4.csv whose raw "
+            "alpha falls below 1: 0.975, clipped to the endpoint by target "
+            "preparation. No artifact exports the corpus alpha extrema. Settle "
+            "by having corpus_statistics.py bank them under corpus_alpha_*."
+        ),
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="methods.target.val_outlier",
+        anchor=r"one training row at {~} and one validation row at {v}",
+        no_generator=(
+            "The single validation-split row of tsp_features_v4.csv whose raw "
+            "alpha exceeds 2: 2.060, clipped to the endpoint by target "
+            "preparation. Companion to methods.target.train_outlier; settle "
+            "the same way."
+        ),
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="methods.transform.pred_lo",
+        anchor=r"test predictions $\hat\alpha$ fell in $[{v},{~}]$",
+        no_generator=(
+            "Minimum released-model prediction over the 16,920 multidimensional "
+            "test rows: 1.029, the check that the logit inverse is not "
+            "saturating. Recomputed from the released per-instance predictions; "
+            "not exported into paper_numbers.json. Settle by banking the "
+            "prediction extrema under prediction_range_*."
+        ),
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="methods.transform.pred_hi",
+        anchor=r"test predictions $\hat\alpha$ fell in $[{~},{v}]$",
+        no_generator=(
+            "Maximum released-model prediction over the 16,920 multidimensional "
+            "test rows: 1.922. Companion to methods.transform.pred_lo; settle "
+            "the same way."
+        ),
+        tol=("dp", 3),
+    ),
+
+    # -- Section 3.3, Label Validation: the two screens ---------------------
+    Claim(
+        id="provenance.quarantine.pct",
+        anchor=r"The {~} instances ({v}\%) that fail are \emph{quarantined}",
+        expect="= 100 * {frontier:labels/repair_quarantined_total}"
+               " / {frontier:labels/repair_corpus_nd_instances}",
+        tol=("dp", 3),
+        note="The quarantine share, checked as the derivation 184/106,272 so "
+             "the two counts and the percentage cannot drift apart.",
+    ),
+    Claim(
+        id="provenance.verify.n",
+        anchor=r"Across the ${v}$ bound checks the released artifacts supply",
+        expect="frontier:labels/repair_verify_instances_checked",
+        tol="exact",
+        note="The Label Validation copy of the verification count; the Label "
+             "Certification copy of the same fact is labels.verify.n.",
+    ),
+    Claim(
+        id="provenance.verify.worst_excess",
+        anchor=r"zero violations, the worst relative excess being ${v}\times10^{-15}$",
+        no_generator=_WORST_EXCESS_REASON,
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="labels.verify.worst_excess",
+        anchor=r"zero violations of $B\le L$, the worst relative excess being ${v}\times10^{-15}$",
+        no_generator=_WORST_EXCESS_REASON,
+        tol=("dp", 1),
+    ),
+
+    # -- Section 4.3, the metric definitions --------------------------------
+    Claim(
+        id="metrics.sdpe.bias_example_pct",
+        anchor=r"an estimator that is uniformly {v}\% high scores an SDPE of zero",
+        no_generator=(
+            "Illustrative constant in the statement that SDPE is blind to "
+            "bias; a rhetorical example, not a measurement. Nothing to settle."
+        ),
+        tol="exact",
+    ),
+    Claim(
+        id="metrics.sdpe.pct_factor",
+        anchor=r"the leading factor of {v} expresses SDPE in percentage points",
+        no_generator=(
+            "Unit-conversion constant in the displayed SDPE definition; a "
+            "design constant of the metric, not a measurement. Nothing to "
+            "settle."
+        ),
+        tol="exact",
+    ),
+    Claim(
+        id="metrics.ci.level_pct",
+        anchor=r"We accompany each SDPE with a {v}\% bootstrap confidence interval over {~} resamples",
+        no_generator=(
+            "Confidence level of the bootstrap intervals, fixed in "
+            "build_paper_tables.py; a protocol constant, not a measurement. "
+            "Settle by banking the bootstrap protocol constants."
+        ),
+        tol="exact",
+    ),
+
+    # -- Section 4.4/4.5, results restatements ------------------------------
+    Claim(
+        id="results.tsplib95.euc2d_n",
+        anchor=r"The benchmark contains {v} EUC\_2D instances with $n$ from",
+        expect="bank:tsplib_by_size_total_gart_2_0_n",
+        tol="exact",
+    ),
+    Claim(
+        id="results_nd.sdpe_d2",
+        anchor=r"Across dimension groups it falls from {v}\% at $d=2$ to {~}\% at $d\in[30,50]$",
+        expect="bank:nd_by_dim_d2_gart_2_0_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="results_nd.sdpe_d30_50",
+        anchor=r"falls from {~}\% at $d=2$ to {v}\% at $d\in[30,50]$",
+        expect="bank:nd_by_dim_d30_50_gart_2_0_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="results_nd.bhh_region_mape_restated",
+        anchor=r"BHH's {v}\% error deserves its own explanation",
+        expect="bank:nd_by_size_total_bhh_sampling_region_mape_pct",
+        tol=("dp", 2),
+        note="Restatement of results_nd.bhh_region_mape at the head of the "
+             "paragraph that explains the figure.",
+    ),
+    Claim(
+        id="results_nd.uniform_axes_share",
+        anchor=r"only {v}\% of axes are uniform, so the region measure",
+        no_generator=(
+            "Share of corpus axes with a uniform marginal: 68.7% of the "
+            "2,444,256 axes, the census Section 3.2 prints from the corpus "
+            "generation metadata. No artifact exports it. Settle by having "
+            "corpus_statistics.py bank the axis-type census under "
+            "corpus_axis_mix_*."
+        ),
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="results.tsplib.alpha_sd",
+        anchor=r"has mean {~} and standard deviation {v}, so a single well-chosen constant",
+        no_generator=(
+            "Standard deviation of realized alpha over the 78 TSPLIB EUC_2D "
+            "instances: 0.0558 (mean 1.1306), recomputed from the released "
+            "per-instance results. No artifact exports the TSPLIB alpha "
+            "moments. Settle by banking them under corpus_tsplib_alpha_*."
+        ),
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="results.tsplib.oracle_c",
+        anchor=r"The MAPE-minimizing constant on these instances is ${v}$ and reaches {~}\%",
+        no_generator=_ORACLE_78_REASON,
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="results.tsplib.oracle_mape",
+        anchor=r"constant on these instances is ${~}$ and reaches {v}\%, so no constant multiplier",
+        no_generator=_ORACLE_78_REASON,
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="results.tsplib.sdpe_overlap_lo",
+        anchor=r"SDPE intervals overlap, on $[{v},{~}]$",
+        expect="= max({tsplib_by_size_gt400_gart_2_0_sdpe_lo},"
+               " {tsplib_by_size_gt400_asymptotic_mst_ratio_sdpe_lo})",
+        tol=("dp", 2),
+        note="The overlap of the two bucket CIs, checked as the derivation "
+             "max(lo_a, lo_b) so the printed interval tracks both bands.",
+    ),
+    Claim(
+        id="results.tsplib.sdpe_overlap_hi",
+        anchor=r"SDPE intervals overlap, on $[{~},{v}]$",
+        expect="= min({tsplib_by_size_gt400_gart_2_0_sdpe_hi},"
+               " {tsplib_by_size_gt400_asymptotic_mst_ratio_sdpe_hi})",
+        tol=("dp", 2),
+    ),
+
+    # -- Section 4.5, the generalization refits -----------------------------
+    Claim(
+        id="general.e0.mape",
+        anchor=r"reading {v}\% MAPE over the {~} scored rows",
+        expect="bank:nd_by_dim_total_gart_2_0_mape_pct",
+        tol=("dp", 4),
+        note="The baseline refit reproduces the released model bit-for-bit, so "
+             "its MAPE is the released model's banked figure at four decimals.",
+    ),
+    Claim(
+        id="general.e1.train_share",
+        anchor=r"from training, {v}\% of the training rows, raises test MAPE",
+        no_generator=_generalization(
+            "E1 leave-dimensions-out: the d=15 and d=25 strata are 11.8% of "
+            "the training rows"),
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="general.e1.d15_before",
+        anchor=r"raises test MAPE at $d=15$ from {v}\% to {~}\% and at $d=25$ from",
+        no_generator=_generalization(
+            "E1: test MAPE at d=15 under the full training set, 0.50%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e1.d15_after",
+        anchor=r"raises test MAPE at $d=15$ from {~}\% to {v}\% and at $d=25$ from",
+        no_generator=_generalization(
+            "E1: test MAPE at d=15 with d=15 and d=25 withheld, 0.58%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e1.d25_before",
+        anchor=r"and at $d=25$ from {v}\% to {~}\%, while the neighboring",
+        no_generator=_generalization(
+            "E1: test MAPE at d=25 under the full training set, 0.35%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e1.d25_after",
+        anchor=r"and at $d=25$ from {~}\% to {v}\%, while the neighboring",
+        no_generator=_generalization(
+            "E1: test MAPE at d=25 with d=15 and d=25 withheld, 0.38%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e2.msigned_before",
+        anchor=r"mean signed error rises from $+{v}$\% to $+{~}$\%, a factor of",
+        no_generator=_generalization(
+            "E2 leave-large-n-out: mean signed error on n in (200,1000] under "
+            "the full training set, +0.28%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e2.msigned_after",
+        anchor=r"mean signed error rises from $+{~}$\% to $+{v}$\%, a factor of",
+        no_generator=_generalization(
+            "E2: mean signed error on n in (200,1000] when training only on "
+            "n<=200, +0.51%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="general.e2.msigned_factor",
+        anchor=r"\%, a factor of {v}. Neither held-out regime",
+        no_generator=_generalization(
+            "E2: the ratio of the two mean signed errors, 0.51/0.28 = 1.8"),
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="coverage.decontaminated_slope",
+        anchor=r"clears ten of eleven gates at a median slope of {v}, but forfeits",
+        no_generator=(
+            "Median dispersion slope of the de-contaminated augmentation "
+            "candidate over its seven pre-registered seeds: 0.735, from the "
+            "released repair-study statistics. Not exported into "
+            "paper_numbers.json. Settle by banking the repair-study gate "
+            "outcomes under repair_study_*."
+        ),
+        tol=("dp", 3),
+    ),
+
+    # -- Section 4.6, rank agreement and calibration ------------------------
+    Claim(
+        id="rank.global.gart_2d_rho",
+        anchor=r"Spearman $\rho$/Kendall $\tau$ of {v}/{~} on 2D",
+        expect="bank:rank_2d_gart_2_0_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.gart_2d_tau",
+        anchor=r"Spearman $\rho$/Kendall $\tau$ of {~}/{v} on 2D",
+        expect="bank:rank_2d_gart_2_0_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.global.gart_nd_rho",
+        anchor=r"on 2D, {v}/{~} on the multidimensional set",
+        expect="bank:rank_nd_gart_2_0_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.gart_nd_tau",
+        anchor=r"on 2D, {~}/{v} on the multidimensional set",
+        expect="bank:rank_nd_gart_2_0_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.global.gart_tsplib_rho",
+        anchor=r"on the multidimensional set, and {v}/{~} on TSPLIB EUC\_2D; the",
+        expect="bank:rank_tsplib_euc2d_gart_2_0_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.gart_tsplib_tau",
+        anchor=r"on the multidimensional set, and {~}/{v} on TSPLIB EUC\_2D; the",
+        expect="bank:rank_tsplib_euc2d_gart_2_0_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.global.floor_2d_rho",
+        anchor=r"the $\alpha=1$ control obtains {v}/{~}, {~}/{~}, and {~}/{~}. Cross-instance",
+        expect="bank:rank_2d_l_mathrm_mst_alpha_1_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.floor_2d_tau",
+        anchor=r"control obtains {~}/{v}, {~}/{~}, and {~}/{~}. Cross-instance",
+        expect="bank:rank_2d_l_mathrm_mst_alpha_1_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.global.floor_nd_rho",
+        anchor=r"control obtains {~}/{~}, {v}/{~}, and {~}/{~}. Cross-instance",
+        expect="bank:rank_nd_l_mathrm_mst_alpha_1_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.floor_nd_tau",
+        anchor=r"control obtains {~}/{~}, {~}/{v}, and {~}/{~}. Cross-instance",
+        expect="bank:rank_nd_l_mathrm_mst_alpha_1_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.global.floor_tsplib_rho",
+        anchor=r"control obtains {~}/{~}, {~}/{~}, and {v}/{~}. Cross-instance",
+        expect="bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_spearman_rho",
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="rank.global.floor_tsplib_tau",
+        anchor=r"control obtains {~}/{~}, {~}/{~}, and {~}/{v}. Cross-instance",
+        expect="bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_kendall_tau",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="rank.close5.threshold",
+        anchor=r"For pairs satisfying $|L_A-L_B|/\max(L_A,L_B)<{v}\%$, GART 2.0 orders",
+        no_generator=("Design constant, the narrower close-pair band. Same "
+                      "status as rank.close10.threshold."),
+        tol="exact",
+    ),
+    Claim(
+        id="rank.close5.gart_2d",
+        anchor=r"GART 2.0 orders {v}\% of {~} 2D pairs",
+        expect="bank:rank_2d_gart_2_0_close5_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="rank.close5.gart_nd",
+        anchor=r"2D pairs, {v}\% of {~} multidimensional pairs",
+        expect="bank:rank_nd_gart_2_0_close5_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="discussion.gt400.mape",
+        anchor=r"while its tour-cost MAPE remains {v}\%, so the cost-level result",
+        expect="bank:tsplib_by_size_gt400_gart_2_0_mape_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="discussion.paired.ci_level_pct",
+        anchor=r"percentage points with a {v}\% interval of $[-{~},-{~}]$",
+        no_generator=(
+            "Confidence level of the paired bootstrap interval, fixed in "
+            "build_paper_tables.py; a protocol constant, not a measurement. "
+            "Settle by banking the bootstrap protocol constants."
+        ),
+        tol="exact",
+    ),
+    Claim(
+        id="discussion.disp.gart_sdpe",
+        anchor=r"its larger gain is dispersion, {v}\% SDPE against {~}\%",
+        expect="bank:tsplib_by_size_total_gart_2_0_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="discussion.disp.asym_sdpe",
+        anchor=r"is dispersion, {~}\% SDPE against {v}\%",
+        expect="bank:tsplib_by_size_total_asymptotic_mst_ratio_sdpe_pct",
+        tol=("dp", 2),
+    ),
+
+    # -- Section 4.7, cost accounting ---------------------------------------
+    Claim(
+        id="costacct.lgbm_share_pct",
+        anchor=r"against {v}\% on LightGBM inference",
+        no_generator=_timing(
+            "tsplib_by_size_time_one_protocol: the lgbm inference share of "
+            "total_time_s over the 78 EUC_2D instances, 5.03%"),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="costacct.mst_rows_lo",
+        anchor=r"roughly twice the {v}--{~}~ms of the rows that build an MST or a Hilbert sort",
+        expect="bank:tsplib_by_size_total_asymptotic_mst_ratio_time_ms",
+        tol=("dp", 2),
+        note="The cheapest of the MST-ratio and Hilbert rows on the one-protocol "
+             "Time column.",
+    ),
+    Claim(
+        id="costacct.mst_rows_hi",
+        anchor=r"roughly twice the {~}--{v}~ms of the rows that build an MST or a Hilbert sort",
+        expect="bank:tsplib_by_size_total_l_mathrm_mst_alpha_1_time_ms",
+        tol=("dp", 2),
+        note="The dearest of the MST-ratio and Hilbert rows on the one-protocol "
+             "Time column.",
+    ),
+    Claim(
+        id="costacct.gt400_gart_ms",
+        anchor=r"the most expensive row in the table at {v}~ms",
+        expect="bank:tsplib_by_size_gt400_gart_2_0_time_ms",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="costacct.nd_median_gart_ms",
+        anchor=r"cost the same, {v}~ms against {~}~ms, since most",
+        expect="bank:nd_by_size_total_gart_2_0_time_ms",
+        tol=("dp", 0),
+    ),
+    Claim(
+        id="costacct.nd_median_ref_ms",
+        anchor=r"cost the same, {~}~ms against {v}~ms, since most",
+        no_generator=(
+            "Median reference-tour generation time over the multidimensional "
+            "benchmark: 122 ms, from the released benchmark harness timing "
+            "columns, which paper_numbers.json does not aggregate. Settle by "
+            "exporting reference-tour timing under nd_reference_time_* keys."
+        ),
+        tol=("dp", 0),
+    ),
+    Claim(
+        id="costacct.nd_large_ref_ms",
+        anchor=r"the reference tour takes {v}~ms against GART 2.0's {~}~ms",
+        no_generator=(
+            "Median reference-tour generation time on the n in [501,1000] "
+            "bucket of the multidimensional benchmark: 3,799 ms, from the "
+            "released benchmark harness timing columns, which "
+            "paper_numbers.json does not aggregate. Settle by exporting "
+            "reference-tour timing under nd_reference_time_* keys."
+        ),
+        tol=("dp", 0),
+    ),
+    Claim(
+        id="costacct.d18512_scale",
+        anchor=r"and more than ${v}\times$ the largest training instance",
+        no_generator=(
+            "d18512's node count as a multiple of the n=1000 training cap: "
+            "18,512 / 1,000 = 18.5, printed floored as 'more than 18x'. "
+            "Arithmetic over two constants asserted elsewhere; settle by "
+            "deriving the multiple in the bank."
+        ),
+        tol="exact",
+    ),
+
+    # -- the ascent-budget-25 rung, at its three sites ----------------------
+    Claim(
+        id="abstract.frontier.budget25",
+        anchor=r"strictly better than the bound on both axes from an ascent budget of {v} upward. The reason is structural",
+        no_generator=_BUDGET25_REASON,
+        tol="exact",
+    ),
+    Claim(
+        id="frontier.verdict.budget25",
+        anchor=r"strictly better than the bound on both axes from an ascent budget of {v} upward in the plane",
+        no_generator=_BUDGET25_REASON,
+        tol="exact",
+    ),
+    Claim(
+        id="conclusion.frontier.budget25",
+        anchor=r"strictly better than the bound on both axes, from an ascent budget of {v} upward in the plane",
+        no_generator=_BUDGET25_REASON,
+        tol="exact",
+    ),
+
+    # -- Section 6: the fixed multiplier and the oracle constants -----------
+    Claim(
+        id="application.fixed_alpha.constant",
+        anchor=r"a fixed $\alpha={v}$ close to the MAPE-minimizing constant",
+        no_generator=_FIXED_ALPHA_REASON,
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="application.oracle_constant_111",
+        anchor=r"close to the MAPE-minimizing constant ${v}$ over the full {~}-instance TSPLIB set",
+        no_generator=_ORACLE_111_REASON,
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="application.oracle_c_23_restated",
+        anchor=r"The MAPE-minimizing constant over these {~} instances is ${v}$ and reaches",
+        no_generator=_ORACLE_REASON,
+        tol=("dp", 4),
+    ),
+    Claim(
+        id="application.oracle_mape_23_restated",
+        anchor=r"over these {~} instances is ${~}$ and reaches {v}\%, which is the floor",
+        no_generator=_ORACLE_REASON,
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="application.fixed_alpha.constant_scored",
+        anchor=r"for the fixed $\alpha={v}$ multiplier scored on all {~}, and",
+        no_generator=_FIXED_ALPHA_REASON,
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="application.oracle_mape_23_total",
+        anchor=r"multiplier scored on all {~}, and {v}\% for the MAPE-minimizing constant on this set",
+        no_generator=_ORACLE_REASON,
+        tol=("dp", 2),
+    ),
+
+    # -- appendices ----------------------------------------------------------
+    Claim(
+        id="appendix.training.test_share_restated",
+        anchor=r"lifts the corpus-level test share to the ${v}\%$ above",
+        expect="= 100 * {sidecar:rows.test} / {sidecar:rows.total}",
+        tol=("dp", 2),
+        note="Checked as the derivation 16,920/106,272 over the frozen sidecar "
+             "so the share follows whatever model ships.",
+    ),
+    Claim(
+        id="appendix.lit.chien_daganzo_cavdar",
+        anchor=r"give a Daganzo-form coefficient of ${v}$ and",
+        no_generator=(
+            "Coefficient transcribed from the cited secondary record "
+            "(cavdar2015distribution) for Chien's Daganzo-form equation; a "
+            "literature quotation, not a generated quantity. Settle only "
+            "against the source itself."
+        ),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="appendix.lit.chien_daganzo_choi",
+        anchor=r"and \citet{choi2021adjustment} give ${v}$, against the",
+        no_generator=(
+            "Coefficient transcribed from the cited secondary record "
+            "(choi2021adjustment) for the same Chien equation; a literature "
+            "quotation. Settle only against the source itself."
+        ),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="appendix.lit.chien_review_coeff",
+        anchor=r"against the ${v}$ of the ${~}\bar r+{~}\sqrt{nR}$ form",
+        no_generator=(
+            "Coefficient of the sqrt(nR) term in the Chien form carried by the "
+            "figliozzi2009planning review; a literature quotation. Settle only "
+            "against the source itself."
+        ),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="appendix.lit.chien_formula_coeff",
+        anchor=r"of the ${~}\bar r+{v}\sqrt{nR}$ form that review carries",
+        no_generator=(
+            "The same 0.67 restated inside the displayed form; same literature "
+            "status as appendix.lit.chien_review_coeff."
+        ),
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="appendix.controls.linear_clustered_mape",
+        anchor=r"reaching {v}\% MAPE on the clustered class against {~}\%, eight times",
+        expect="bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="appendix.controls.released_clustered_mape",
+        anchor=r"on the clustered class against {v}\%, eight times the released model's error",
+        expect="bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="appendix.controls.linear_clustered_r2alpha",
+        anchor=r"eight times the released model's error, at $R^2_\alpha=-{v}$",
+        expect="= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
+        tol=("dp", 2),
+        note="Adverse result kept explicit; the minus sign is in the anchor so "
+             "a sign flip reports ANCHOR_MISSING.",
     ),
 ]

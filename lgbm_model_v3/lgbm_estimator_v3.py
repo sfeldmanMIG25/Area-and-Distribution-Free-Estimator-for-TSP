@@ -1,3 +1,10 @@
+"""LEGACY: the V3 predecessor model. This is NOT GART 2.0.
+
+The released model is ``gart2_final.joblib``, wrapped by
+``TSP_GART2_Estimator`` in ``lgbm_estimator_gart2.py``. This file is kept
+only so that old V3 results stay reproducible.
+"""
+
 import os
 import sys
 
