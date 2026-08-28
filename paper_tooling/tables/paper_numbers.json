@@ -6687,7 +6687,7 @@
   "gen_shipped_test_all_n_trees": 1118,
   "gen_shipped_test_all_sdpe_pct": 0.9881,
   "gen_shipped_test_all_train_rows": null,
-  "manuscript_table_cells": 1638,
+  "manuscript_table_cells": 362,
   "model_alphahat_clip_after_inverse": false,
   "model_alphahat_test_max": 1.922005404,
   "model_alphahat_test_mean": 1.117274586,

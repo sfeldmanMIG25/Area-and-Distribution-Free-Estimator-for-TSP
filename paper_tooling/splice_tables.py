@@ -52,16 +52,9 @@ FRAG = Path(__file__).resolve().parent / "tables"
 # 2" across two \resizebox floats and this script cut the fragment in half to
 # feed them. It is one longtable now, so the split is gone.
 SIMPLE: dict[str, str] = {
-    "tab:nd_by_size": "table_nd_by_size.tex",
-    "tab:nd_by_dim": "table_nd_by_dim.tex",
-    "tab:2d_by_size": "table_2d_by_size.tex",
     "tab:tsplib_by_size": "table_tsplib_by_size.tex",
     "tab:tsplib_nonEuc": "table_tsplib_nonEuc.tex",
-    "tab:genclass": "table_2d_by_genclass.tex",
     "tab:classical": "table_classical.tex",
-    # Internal \midrule separators between the benchmark blocks sit inside the
-    # body span, so they are replaced along with the rows.
-    "tab:rank": "table_rank.tex",
 }
 
 

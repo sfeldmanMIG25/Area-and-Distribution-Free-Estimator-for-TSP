@@ -2,48 +2,173 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-08-28T02:57:17+00:00",
+    "at": "2026-08-28T04:03:06+00:00",
     "kind": "update",
-    "reason": "Flow repairs after the sweep: orphaned referents fixed (calibrated-row subject restored, These-sessions antecedent, neither-with-one-antecedent), fused budget clause split, duplicated sentence de-duplicated, rho symbol spelled out; every printed value unchanged",
+    "reason": "Wave-7 structure cut toward the author's 20-page form: six detail appendices removed (per-class, rank, paired, per-dimension, two per-size); their grids are released tidy tables and the body pointers now name the released artifacts; 16 claims withdrawn with their sections, the two frontier bucket claims re-anchored to inline bucket definitions, manuscript machine-checked cells 1,638 to 362; every surviving printed value unchanged (0 mismatched)",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "6634e5243f60b003eb66dfdecbd78f4edc2a4ee334ec724cd59e77b74cb00ee2",
+    "tex_sha256": "9c0c9a5cb592c67383fbc2351977c6eb25b82618c6a6300caa71c5c9fce7cb15",
     "production_model": "GART_2.0",
-    "n_entries": 339,
-    "n_keys": 339,
+    "n_entries": 333,
+    "n_keys": 333,
     "absorbed": [
-      "sec-methodology/mst-edge-and-topological-features :: 10 :: tier2:unmarked :: ctx:f091bcfe10d5",
-      "sec-methodology/mst-edge-and-topological-features :: 25 :: tier2:unmarked :: ctx:242cd0bca94d",
-      "sec-methodology/mst-edge-and-topological-features :: 50 :: tier2:unmarked :: ctx:c5f5b6df2bef",
-      "sec-methodology/mst-edge-and-topological-features :: 75 :: tier2:unmarked :: ctx:6bf01e4fb067",
-      "sec-methodology/mst-edge-and-topological-features :: 90 :: tier2:unmarked :: ctx:a7c97a957b98",
-      "sec-evaluation/subsec-coverage :: 874 :: tier2:unmarked :: ctx:98b2d7599d27",
-      "sec-evaluation/subsec-coverage :: 2.89 :: tier1:unit :: ctx:649b581d8a9c",
-      "sec-evaluation/subsec-coverage :: 2.04 :: tier1:unit :: ctx:eab3cd2f0639",
-      "sec-evaluation/subsec-coverage :: 10.82 :: tier1:unit :: ctx:cfe68fdc3094",
-      "sec-evaluation/subsec-coverage :: 5.83 :: tier1:unit :: ctx:d3a070acb672",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:0e9e729efcd1"
+      "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:b4f00562a46e",
+      "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:680ee89e524e",
+      "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:26fa4e559f31",
+      "sec-frontier/subsec-frontier-other :: 500 :: tier2:unmarked :: ctx:4e8fee4f1760",
+      "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:14bd7faebb26",
+      "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:8662049fdf7f"
     ],
     "pruned": [
-      "sec-evaluation/subsec-coverage :: 10.82 :: tier1:unit :: ctx:b55c186733a0",
-      "sec-evaluation/subsec-coverage :: 2.04 :: tier1:unit :: ctx:d9b1a224de0d",
-      "sec-evaluation/subsec-coverage :: 2.89 :: tier1:unit :: ctx:f07366783e85",
-      "sec-evaluation/subsec-coverage :: 5.83 :: tier1:unit :: ctx:8ed905427494",
-      "sec-evaluation/subsec-coverage :: 874 :: tier2:unmarked :: ctx:45effb6835d8",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:5fd3733caa6a",
-      "sec-methodology/mst-edge-and-topological-features :: 10 :: tier2:unmarked :: ctx:501bb6e79314",
-      "sec-methodology/mst-edge-and-topological-features :: 25 :: tier2:unmarked :: ctx:dc8cc089bd83",
-      "sec-methodology/mst-edge-and-topological-features :: 50 :: tier2:unmarked :: ctx:5bb0676a1168",
-      "sec-methodology/mst-edge-and-topological-features :: 75 :: tier2:unmarked :: ctx:1483d7e19ee0",
-      "sec-methodology/mst-edge-and-topological-features :: 90 :: tier2:unmarked :: ctx:5ca32739c8bd"
+      "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:8d181e91df50",
+      "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:610bcffc46f7",
+      "appendix:app-nd-detail-dim :: 16{,}846 :: tier2:unmarked :: ctx:b27dc7723b31",
+      "appendix:app-paired :: 1{,}000 :: tier2:unmarked :: ctx:52fb9a976351",
+      "appendix:app-paired :: 95 :: tier1:unit :: ctx:9626c64524d9",
+      "appendix:app-rank :: 10 :: tier1:unit :: ctx:c8a4b0c862e8",
+      "appendix:app-rank :: 2580 :: tier2:unmarked :: ctx:4f76809a89f7",
+      "appendix:app-rank :: 3{,}326{,}910 :: tier2:unmarked :: ctx:c8281f5abd74",
+      "appendix:app-rank :: 78 :: tier2:unmarked :: ctx:f3b936ee5926",
+      "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:b15d8c503c99",
+      "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:9d683ebf7257",
+      "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:db600cabd66f"
     ],
-    "claims_withdrawn": [],
+    "claims_withdrawn": [
+      {
+        "id": "appendix.genclass.geom_class_mspe",
+        "state": "MATCHED",
+        "expect": "= ({2d_by_genclass_geometric_grid_gart_2_0_n} * {2d_by_genclass_geometric_grid_gart_2_0_mspe_pct} + {2d_by_genclass_geometric_other_gart_2_0_n} * {2d_by_genclass_geometric_other_gart_2_0_mspe_pct}) / ({2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n})",
+        "line": 985,
+        "printed": 2.74,
+        "expected": 2.744173
+      },
+      {
+        "id": "appendix.genclass.geom_class_n",
+        "state": "MATCHED",
+        "expect": "= {2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n}",
+        "line": 985,
+        "printed": 630.0,
+        "expected": 630.0
+      },
+      {
+        "id": "appendix.genclass.geom_other_mspe",
+        "state": "MATCHED",
+        "expect": "bank:2d_by_genclass_geometric_other_gart_2_0_mspe_pct",
+        "line": 985,
+        "printed": 0.58,
+        "expected": 0.58221
+      },
+      {
+        "id": "appendix.rank.2d_close10_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_2d_gart_2_0_close10_pairs",
+        "line": 1067,
+        "printed": 152306.0,
+        "expected": 152306.0
+      },
+      {
+        "id": "appendix.rank.2d_close5_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_2d_gart_2_0_close5_pairs",
+        "line": 1067,
+        "printed": 74826.0,
+        "expected": 74826.0
+      },
+      {
+        "id": "appendix.rank.close5_threshold",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 1067,
+        "printed": 5.0,
+        "expected": null
+      },
+      {
+        "id": "appendix.rank.direct_scan_pairs",
+        "state": "MATCHED",
+        "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
+        "line": 1067,
+        "printed": 141885435.0,
+        "expected": 141885435.0
+      },
+      {
+        "id": "appendix.rank.nd_close10_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_nd_gart_2_0_close10_pairs",
+        "line": 1067,
+        "printed": 3262149.0,
+        "expected": 3262149.0
+      },
+      {
+        "id": "appendix.rank.nd_close5_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_nd_gart_2_0_close5_pairs",
+        "line": 1067,
+        "printed": 1647719.0,
+        "expected": 1647719.0
+      },
+      {
+        "id": "appendix.rank.nd_n",
+        "state": "MATCHED",
+        "expect": "bank:rank_nd_gart_2_0_n",
+        "line": 1067,
+        "printed": 16846.0,
+        "expected": 16846.0
+      },
+      {
+        "id": "appendix.rank.nd_universe",
+        "state": "MATCHED",
+        "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
+        "line": 1067,
+        "printed": 141885435.0,
+        "expected": 141885435.0
+      },
+      {
+        "id": "appendix.rank.nd_universe_rounded",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 1067,
+        "printed": 142.0,
+        "expected": null
+      },
+      {
+        "id": "appendix.rank.quarantined_nd",
+        "state": "MATCHED",
+        "expect": "frontier:labels/repair_quarantined_nd_test",
+        "line": 1067,
+        "printed": 74.0,
+        "expected": 74.0
+      },
+      {
+        "id": "appendix.rank.tsplib_close10_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_tsplib_euc2d_gart_2_0_close10_pairs",
+        "line": 1067,
+        "printed": 105.0,
+        "expected": 105.0
+      },
+      {
+        "id": "appendix.rank.tsplib_close5_pairs",
+        "state": "MATCHED",
+        "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
+        "line": 1067,
+        "printed": 54.0,
+        "expected": 54.0
+      },
+      {
+        "id": "appendix.rank.tsplib_universe",
+        "state": "MATCHED",
+        "expect": "= {tsplib_by_size_total_gart_2_0_n} * ({tsplib_by_size_total_gart_2_0_n} - 1) / 2",
+        "line": 1067,
+        "printed": 3003.0,
+        "expected": 3003.0
+      }
+    ],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 40,
-    "absorbed": 1074,
-    "pruned": 1326,
-    "claims_withdrawn": 490,
+    "records": 42,
+    "absorbed": 1087,
+    "pruned": 1345,
+    "claims_withdrawn": 506,
     "mismatched_claims_withdrawn": 0
   },
   "entries": {
@@ -212,10 +337,10 @@
       "example": "...-collinear Line Noise class at 9.14\\% against 10.82\\% and finishes marginally ahead on aggregate ...",
       "first_recorded": "2026-08-13T04:33:29+00:00"
     },
-    "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:8d181e91df50": {
+    "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:14bd7faebb26": {
       "count": 1,
       "example": "...5 to 146.2~ms per instance against GART 2.0's 103.3 to 147.8~ms, slower on five of the six genera...",
-      "first_recorded": "2026-08-13T04:33:29+00:00"
+      "first_recorded": "2026-08-28T04:03:06+00:00"
     },
     "appendix:app-hyperparams :: 137.5 :: tier1:range :: ctx:1714e39dfc47": {
       "count": 1,
@@ -227,10 +352,10 @@
       "example": "...on the 2D diverse benchmark it costs 137.5 to 146.2~ms per instance against GART 2.0's 103.3 to 1...",
       "first_recorded": "2026-08-13T04:33:29+00:00"
     },
-    "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:610bcffc46f7": {
+    "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:8662049fdf7f": {
       "count": 1,
       "example": "...2~ms per instance against GART 2.0's 103.3 to 147.8~ms, slower on five of the six generator class...",
-      "first_recorded": "2026-08-13T04:33:29+00:00"
+      "first_recorded": "2026-08-28T04:03:06+00:00"
     },
     "appendix:app-hyperparams :: 2.89 :: tier1:unit :: ctx:3095e44ae87f": {
       "count": 1,
@@ -252,10 +377,10 @@
       "example": "...report them as one: the network was fitted on 30 columns and the linear model on 28 against th...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
-    "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:8fa3f5efebc2": {
+    "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:3b4269686b7d": {
       "count": 1,
       "example": "...near model on 28 against the released block's 31, and neither was fitted on the released featu...",
-      "first_recorded": "2026-08-27T05:34:30+00:00"
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "appendix:app-hyperparams :: 4.61 :: tier1:unit :: ctx:a91e4ac9c2eb": {
       "count": 1,
@@ -360,41 +485,6 @@
     "appendix:app-mds :: 99.9 :: tier1:unit :: ctx:b2c5fb75eada": {
       "count": 1,
       "example": "...pairs. Five capped instances do not reach the 99.9\\% target: \\texttt{att532}, \\texttt{pa561}, \\t...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-nd-detail-dim :: 16{,}846 :: tier2:unmarked :: ctx:b27dc7723b31": {
-      "count": 1,
-      "example": "...Multidimensional benchmark by dimension; same 16{,}846 scored instances as Table~\\ref{tab:nd_by_size...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "appendix:app-paired :: 1{,}000 :: tier2:unmarked :: ctx:52fb9a976351": {
-      "count": 1,
-      "example": "...e, with a 95\\% paired bootstrap interval over 1{,}000 resamples of instances, and a Wilcoxon signed...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-paired :: 95 :: tier1:unit :: ctx:9626c64524d9": {
-      "count": 1,
-      "example": "...nt error, GART 2.0 minus the baseline, with a 95\\% paired bootstrap interval over 1{,}000 resa...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-rank :: 10 :: tier1:unit :: ctx:c8a4b0c862e8": {
-      "count": 1,
-      "example": "...ify at the 5\\% threshold and 3{,}262{,}149 at 10\\%; the corresponding 2D counts are 74{,}826 a...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-rank :: 2580 :: tier2:unmarked :: ctx:4f76809a89f7": {
-      "count": 1,
-      "example": "...s exact and no random seed enters it: $\\binom{2580}{2}=3{,}326{,}910$ pairs on 2D, $\\binom{78}{2...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-rank :: 3{,}326{,}910 :: tier2:unmarked :: ctx:c8281f5abd74": {
-      "count": 1,
-      "example": "...nd no random seed enters it: $\\binom{2580}{2}=3{,}326{,}910$ pairs on 2D, $\\binom{78}{2}=3{,}003$ on TSPL...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
-    },
-    "appendix:app-rank :: 78 :: tier2:unmarked :: ctx:f3b936ee5926": {
-      "count": 1,
-      "example": "...{2580}{2}=3{,}326{,}910$ pairs on 2D, $\\binom{78}{2}=3{,}003$ on TSPLIB EUC\\_2D and $\\binom{16...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
     "appendix:app-shap :: 16{,}920 :: tier2:unmarked :: ctx:c03a2877efb9": {
@@ -882,10 +972,10 @@
       "example": "...00$, and every training instance with $\\alpha>1.7$ has $n\\le10$. Its $\\alpha$ distribution has ...",
       "first_recorded": "2026-08-11T14:04:14+00:00"
     },
-    "sec-evaluation/subsec-coverage :: 10.82 :: tier1:precision :: ctx:808a34c4dcec": {
+    "sec-evaluation/subsec-coverage :: 10.82 :: tier1:precision :: ctx:966e84162bd9": {
       "count": 1,
       "example": "...error is almost entirely one-sided: MSPE is $-10.82$, so the model under-predicts. Two explanatio...",
-      "first_recorded": "2026-08-12T14:41:17+00:00"
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-evaluation/subsec-coverage :: 10.82 :: tier1:unit :: ctx:1c8c7cc33dde": {
       "count": 1,
@@ -967,10 +1057,10 @@
       "example": "...w is a plain concordant fraction and sits at $0.5$ under an unrelated ordering. Global rank cor...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
-    "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:b15d8c503c99": {
+    "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:26fa4e559f31": {
       "count": 1,
       "example": "...d difference in absolute percent error with a 1{,}000-resample paired bootstrap and a Wilcoxon sign...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "first_recorded": "2026-08-28T04:03:06+00:00"
     },
     "sec-evaluation/subsec-discussion :: 400 :: tier2:unmarked :: ctx:4022bd6e1af1": {
       "count": 1,
@@ -1062,10 +1152,10 @@
       "example": "...ometry: it shares the four generators and the 68.7\\% uniform axis mix of the training split, and...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:78d436a57a19": {
+    "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:8525c8fa9908": {
       "count": 1,
-      "example": "...tor where its published assumptions hold. The 210 instances of the \\texttt{random} generator, t...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "example": "...omain its published assumptions describe. The 210 instances of the \\texttt{random} generator, t...",
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 10.27 :: tier1:unit :: ctx:b74d97e6e72d": {
       "count": 1,
@@ -1242,20 +1332,20 @@
       "example": "...eaches 9.71\\%/7.26\\%, the custom Hilbert sort 21.21\\%/14.40\\%, and BHH given the exact sampling r...",
       "first_recorded": "2026-08-12T21:37:55+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:9d683ebf7257": {
+    "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:680ee89e524e": {
       "count": 1,
-      "example": "...nonetheless cuts its MAPE from 39.07\\% to the 28.01\\% in Table~\\ref{tab:nd_by_dim}, which isolate...",
-      "first_recorded": "2026-08-27T05:34:30+00:00"
+      "example": "...ull nonetheless cuts its MAPE from 39.07\\% to 28.01\\%, which isolates how much of the convex-hull...",
+      "first_recorded": "2026-08-28T04:03:06+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 3.0 :: tier2:unmarked :: ctx:517bb6b2e61d": {
       "count": 1,
       "example": "...training split by a factor of 2.9 on MAPE and 3.0 on SDPE. The $\\alpha=1$ floor reaches 9.71\\%/...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:db600cabd66f": {
+    "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:b4f00562a46e": {
       "count": 1,
-      "example": "...he convex hull nonetheless cuts its MAPE from 39.07\\% to the 28.01\\% in Table~\\ref{tab:nd_by_dim}...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
+      "example": "...he convex hull nonetheless cuts its MAPE from 39.07\\% to 28.01\\%, which isolates how much of the ...",
+      "first_recorded": "2026-08-28T04:03:06+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 501 :: tier2:unmarked :: ctx:21e0030b8bdc": {
       "count": 1,
@@ -1472,15 +1562,15 @@
       "example": "...The cost figure in each cell is a median over 20 timed instances against an accuracy figure ov...",
       "first_recorded": "2026-08-14T22:24:08+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:0e9e729efcd1": {
-      "count": 1,
-      "example": "... only in the plane and at $d=3$, from roughly 200 nodes upward. The comparison is not circula...",
-      "first_recorded": "2026-08-28T02:57:17+00:00"
-    },
     "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:882e5b71f60d": {
       "count": 1,
       "example": "... at $d=3$, against 0.450\\% at 143.9~ms for $k=200$; and 0.251\\% at 58.2~ms at $d=4$, against 0....",
       "first_recorded": "2026-08-28T02:48:09+00:00"
+    },
+    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f93dc0e135a2": {
+      "count": 1,
+      "example": "... only in the plane and at $d=3$, from roughly 200 nodes upward. The comparison is not circula...",
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:3eabead18e84": {
       "count": 1,
@@ -1502,6 +1592,11 @@
       "example": "...at every 2D budget that runs an ascent except 200, where the two are separated by half a hundre...",
       "first_recorded": "2026-08-27T05:34:30+00:00"
     },
+    "sec-frontier/subsec-frontier-other :: 500 :: tier2:unmarked :: ctx:4e8fee4f1760": {
+      "count": 1,
+      "example": "...red comparisons. On the 610 instances with $n>500$, nothing on the ladder dominates: the raw bo...",
+      "first_recorded": "2026-08-28T04:03:06+00:00"
+    },
     "sec-frontier/subsec-frontier-tsplib :: 50 :: tier2:unmarked :: ctx:278e65882d83": {
       "count": 1,
       "example": "... and a noisy window at the crossing budget of 50 against 1.05 for GART 2.0, so every published...",
@@ -1512,10 +1607,10 @@
       "example": "...rpus 62.74\\% composed of instances of at most 100 nodes, and that is the regime the aggregate d...",
       "first_recorded": "2026-08-14T22:24:08+00:00"
     },
-    "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:dbba0a4c1ba9": {
+    "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:c331634535f9": {
       "count": 1,
       "example": "...question a practitioner asks. Below roughly 200 nodes, prefer the certified bound at any dime...",
-      "first_recorded": "2026-08-28T02:48:09+00:00"
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-frontier/subsec-frontier-verdict :: 62.74 :: tier1:unit :: ctx:44db21914c38": {
       "count": 1,
@@ -1697,20 +1792,20 @@
       "example": "...inite inputs, and it is never binding. On the 16{,}920 multidimensional test predictions $\\hat\\alpha...",
       "first_recorded": "2026-08-27T06:33:43+00:00"
     },
-    "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:31080cbdb034": {
+    "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:558f465cc1a9": {
       "count": 1,
       "example": "...tonicity on 8.4\\% of the dimension sweeps and 19.0\\% of the size sweeps. The constraint is there...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b": {
       "count": 1,
       "example": "...aribus sweep of either variable; a probe over 1{,}000 held-out instances accordingly returns 100\\% ...",
       "first_recorded": "2026-08-11T14:04:14+00:00"
     },
-    "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:b48e074ab1ec": {
+    "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:0a3ae1b9bcf2": {
       "count": 1,
-      "example": "...tree traversal. The trained model performs $K=1{,}118$ traversals with empirical mean root-to-leaf ...",
-      "first_recorded": "2026-08-11T14:04:14+00:00"
+      "example": "...inference cost. The trained model performs $K=1{,}118$ traversals with empirical mean root-to-leaf ...",
+      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-methodology/subsec-model-training :: 3000 :: tier2:unmarked :: ctx:1e207dc51bf1": {
       "count": 1,
@@ -1811,50 +1906,29 @@
       "state": "MATCHED",
       "expect": "bank:manuscript_table_cells",
       "line": 716,
-      "printed": 1638.0,
-      "expected": 1638.0
+      "printed": 362.0,
+      "expected": 362.0
     },
     "appendix.controls.linear_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-      "line": 1501,
+      "line": 1112,
       "printed": 17.9,
       "expected": 17.871637
     },
     "appendix.controls.linear_clustered_r2alpha": {
       "state": "MATCHED",
       "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-      "line": 1501,
+      "line": 1112,
       "printed": 9.53,
       "expected": 9.526199
     },
     "appendix.controls.released_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-      "line": 1501,
+      "line": 1112,
       "printed": 2.2,
       "expected": 2.241039
-    },
-    "appendix.genclass.geom_class_mspe": {
-      "state": "MATCHED",
-      "expect": "= ({2d_by_genclass_geometric_grid_gart_2_0_n} * {2d_by_genclass_geometric_grid_gart_2_0_mspe_pct} + {2d_by_genclass_geometric_other_gart_2_0_n} * {2d_by_genclass_geometric_other_gart_2_0_mspe_pct}) / ({2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n})",
-      "line": 985,
-      "printed": 2.74,
-      "expected": 2.744173
-    },
-    "appendix.genclass.geom_class_n": {
-      "state": "MATCHED",
-      "expect": "= {2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n}",
-      "line": 985,
-      "printed": 630.0,
-      "expected": 630.0
-    },
-    "appendix.genclass.geom_other_mspe": {
-      "state": "MATCHED",
-      "expect": "bank:2d_by_genclass_geometric_other_gart_2_0_mspe_pct",
-      "line": 985,
-      "printed": 0.58,
-      "expected": 0.58221
     },
     "appendix.lit.chien_daganzo_cavdar": {
       "state": "NO_GENERATOR",
@@ -1887,107 +1961,16 @@
     "appendix.mds.explicit_gart_mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-      "line": 1531,
+      "line": 1142,
       "printed": 3.01,
       "expected": 3.01277
     },
     "appendix.mds.geo_stress_max": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1531,
+      "line": 1142,
       "printed": 0.2363,
       "expected": null
-    },
-    "appendix.rank.2d_close10_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_2d_gart_2_0_close10_pairs",
-      "line": 1067,
-      "printed": 152306.0,
-      "expected": 152306.0
-    },
-    "appendix.rank.2d_close5_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_2d_gart_2_0_close5_pairs",
-      "line": 1067,
-      "printed": 74826.0,
-      "expected": 74826.0
-    },
-    "appendix.rank.close5_threshold": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 1067,
-      "printed": 5.0,
-      "expected": null
-    },
-    "appendix.rank.direct_scan_pairs": {
-      "state": "MATCHED",
-      "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
-      "line": 1067,
-      "printed": 141885435.0,
-      "expected": 141885435.0
-    },
-    "appendix.rank.nd_close10_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_nd_gart_2_0_close10_pairs",
-      "line": 1067,
-      "printed": 3262149.0,
-      "expected": 3262149.0
-    },
-    "appendix.rank.nd_close5_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_nd_gart_2_0_close5_pairs",
-      "line": 1067,
-      "printed": 1647719.0,
-      "expected": 1647719.0
-    },
-    "appendix.rank.nd_n": {
-      "state": "MATCHED",
-      "expect": "bank:rank_nd_gart_2_0_n",
-      "line": 1067,
-      "printed": 16846.0,
-      "expected": 16846.0
-    },
-    "appendix.rank.nd_universe": {
-      "state": "MATCHED",
-      "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
-      "line": 1067,
-      "printed": 141885435.0,
-      "expected": 141885435.0
-    },
-    "appendix.rank.nd_universe_rounded": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 1067,
-      "printed": 142.0,
-      "expected": null
-    },
-    "appendix.rank.quarantined_nd": {
-      "state": "MATCHED",
-      "expect": "frontier:labels/repair_quarantined_nd_test",
-      "line": 1067,
-      "printed": 74.0,
-      "expected": 74.0
-    },
-    "appendix.rank.tsplib_close10_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_tsplib_euc2d_gart_2_0_close10_pairs",
-      "line": 1067,
-      "printed": 105.0,
-      "expected": 105.0
-    },
-    "appendix.rank.tsplib_close5_pairs": {
-      "state": "MATCHED",
-      "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
-      "line": 1067,
-      "printed": 54.0,
-      "expected": 54.0
-    },
-    "appendix.rank.tsplib_universe": {
-      "state": "MATCHED",
-      "expect": "= {tsplib_by_size_total_gart_2_0_n} * ({tsplib_by_size_total_gart_2_0_n} - 1) / 2",
-      "line": 1067,
-      "printed": 3003.0,
-      "expected": 3003.0
     },
     "appendix.shap.group_geometric_share": {
       "state": "MATCHED",
@@ -3406,7 +3389,7 @@
     "methods.optuna.n_trials": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 200.0,
       "expected": null
     },
@@ -3420,14 +3403,14 @@
     "methods.optuna.trials_complete": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 60.0,
       "expected": null
     },
     "methods.optuna.trials_pruned": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 140.0,
       "expected": null
     },
@@ -3441,28 +3424,28 @@
     "methods.optuna.tuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 0.6112,
       "expected": null
     },
     "methods.optuna.tuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 2.6364,
       "expected": null
     },
     "methods.optuna.untuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 0.6226,
       "expected": null
     },
     "methods.optuna.untuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1458,
+      "line": 1069,
       "printed": 2.4725,
       "expected": null
     },
@@ -12303,6 +12286,199 @@
         "sec-methodology/mst-edge-and-topological-features :: 90 :: tier2:unmarked :: ctx:5ca32739c8bd"
       ],
       "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-08-28T03:52:49+00:00",
+      "kind": "update",
+      "reason": "Register rewrite into the author's voice: 64 paragraphs recast as flat declaratives per the anti-claudism skill; every number-bearing sentence preserved verbatim (0 mismatched, 0 anchor faults)",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "2ca4ada8998703128e033efc1295d34422c3f44280adb298cd55b069d9860176",
+      "production_model": "GART_2.0",
+      "n_entries": 339,
+      "n_keys": 339,
+      "absorbed": [
+        "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:558f465cc1a9",
+        "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:0a3ae1b9bcf2",
+        "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:8525c8fa9908",
+        "sec-evaluation/subsec-coverage :: 10.82 :: tier1:precision :: ctx:966e84162bd9",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f93dc0e135a2",
+        "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:c331634535f9",
+        "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:3b4269686b7d"
+      ],
+      "pruned": [
+        "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:8fa3f5efebc2",
+        "sec-evaluation/subsec-coverage :: 10.82 :: tier1:precision :: ctx:808a34c4dcec",
+        "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:78d436a57a19",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:0e9e729efcd1",
+        "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:dbba0a4c1ba9",
+        "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:31080cbdb034",
+        "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:b48e074ab1ec"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-08-28T04:03:06+00:00",
+      "kind": "update",
+      "reason": "Wave-7 structure cut toward the author's 20-page form: six detail appendices removed (per-class, rank, paired, per-dimension, two per-size); their grids are released tidy tables and the body pointers now name the released artifacts; 16 claims withdrawn with their sections, the two frontier bucket claims re-anchored to inline bucket definitions, manuscript machine-checked cells 1,638 to 362; every surviving printed value unchanged (0 mismatched)",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "9c0c9a5cb592c67383fbc2351977c6eb25b82618c6a6300caa71c5c9fce7cb15",
+      "production_model": "GART_2.0",
+      "n_entries": 333,
+      "n_keys": 333,
+      "absorbed": [
+        "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:b4f00562a46e",
+        "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:680ee89e524e",
+        "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:26fa4e559f31",
+        "sec-frontier/subsec-frontier-other :: 500 :: tier2:unmarked :: ctx:4e8fee4f1760",
+        "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:14bd7faebb26",
+        "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:8662049fdf7f"
+      ],
+      "pruned": [
+        "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:8d181e91df50",
+        "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:610bcffc46f7",
+        "appendix:app-nd-detail-dim :: 16{,}846 :: tier2:unmarked :: ctx:b27dc7723b31",
+        "appendix:app-paired :: 1{,}000 :: tier2:unmarked :: ctx:52fb9a976351",
+        "appendix:app-paired :: 95 :: tier1:unit :: ctx:9626c64524d9",
+        "appendix:app-rank :: 10 :: tier1:unit :: ctx:c8a4b0c862e8",
+        "appendix:app-rank :: 2580 :: tier2:unmarked :: ctx:4f76809a89f7",
+        "appendix:app-rank :: 3{,}326{,}910 :: tier2:unmarked :: ctx:c8281f5abd74",
+        "appendix:app-rank :: 78 :: tier2:unmarked :: ctx:f3b936ee5926",
+        "sec-evaluation/subsec-discussion :: 1{,}000 :: tier2:unmarked :: ctx:b15d8c503c99",
+        "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:9d683ebf7257",
+        "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:db600cabd66f"
+      ],
+      "claims_withdrawn": [
+        {
+          "id": "appendix.genclass.geom_class_mspe",
+          "state": "MATCHED",
+          "expect": "= ({2d_by_genclass_geometric_grid_gart_2_0_n} * {2d_by_genclass_geometric_grid_gart_2_0_mspe_pct} + {2d_by_genclass_geometric_other_gart_2_0_n} * {2d_by_genclass_geometric_other_gart_2_0_mspe_pct}) / ({2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n})",
+          "line": 985,
+          "printed": 2.74,
+          "expected": 2.744173
+        },
+        {
+          "id": "appendix.genclass.geom_class_n",
+          "state": "MATCHED",
+          "expect": "= {2d_by_genclass_geometric_grid_gart_2_0_n} + {2d_by_genclass_geometric_other_gart_2_0_n}",
+          "line": 985,
+          "printed": 630.0,
+          "expected": 630.0
+        },
+        {
+          "id": "appendix.genclass.geom_other_mspe",
+          "state": "MATCHED",
+          "expect": "bank:2d_by_genclass_geometric_other_gart_2_0_mspe_pct",
+          "line": 985,
+          "printed": 0.58,
+          "expected": 0.58221
+        },
+        {
+          "id": "appendix.rank.2d_close10_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_2d_gart_2_0_close10_pairs",
+          "line": 1067,
+          "printed": 152306.0,
+          "expected": 152306.0
+        },
+        {
+          "id": "appendix.rank.2d_close5_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_2d_gart_2_0_close5_pairs",
+          "line": 1067,
+          "printed": 74826.0,
+          "expected": 74826.0
+        },
+        {
+          "id": "appendix.rank.close5_threshold",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 1067,
+          "printed": 5.0,
+          "expected": null
+        },
+        {
+          "id": "appendix.rank.direct_scan_pairs",
+          "state": "MATCHED",
+          "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
+          "line": 1067,
+          "printed": 141885435.0,
+          "expected": 141885435.0
+        },
+        {
+          "id": "appendix.rank.nd_close10_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_nd_gart_2_0_close10_pairs",
+          "line": 1067,
+          "printed": 3262149.0,
+          "expected": 3262149.0
+        },
+        {
+          "id": "appendix.rank.nd_close5_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_nd_gart_2_0_close5_pairs",
+          "line": 1067,
+          "printed": 1647719.0,
+          "expected": 1647719.0
+        },
+        {
+          "id": "appendix.rank.nd_n",
+          "state": "MATCHED",
+          "expect": "bank:rank_nd_gart_2_0_n",
+          "line": 1067,
+          "printed": 16846.0,
+          "expected": 16846.0
+        },
+        {
+          "id": "appendix.rank.nd_universe",
+          "state": "MATCHED",
+          "expect": "= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2",
+          "line": 1067,
+          "printed": 141885435.0,
+          "expected": 141885435.0
+        },
+        {
+          "id": "appendix.rank.nd_universe_rounded",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 1067,
+          "printed": 142.0,
+          "expected": null
+        },
+        {
+          "id": "appendix.rank.quarantined_nd",
+          "state": "MATCHED",
+          "expect": "frontier:labels/repair_quarantined_nd_test",
+          "line": 1067,
+          "printed": 74.0,
+          "expected": 74.0
+        },
+        {
+          "id": "appendix.rank.tsplib_close10_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_tsplib_euc2d_gart_2_0_close10_pairs",
+          "line": 1067,
+          "printed": 105.0,
+          "expected": 105.0
+        },
+        {
+          "id": "appendix.rank.tsplib_close5_pairs",
+          "state": "MATCHED",
+          "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
+          "line": 1067,
+          "printed": 54.0,
+          "expected": 54.0
+        },
+        {
+          "id": "appendix.rank.tsplib_universe",
+          "state": "MATCHED",
+          "expect": "= {tsplib_by_size_total_gart_2_0_n} * ({tsplib_by_size_total_gart_2_0_n} - 1) / 2",
+          "line": 1067,
+          "printed": 3003.0,
+          "expected": 3003.0
+        }
+      ],
       "mismatched_at_record": []
     }
   ]

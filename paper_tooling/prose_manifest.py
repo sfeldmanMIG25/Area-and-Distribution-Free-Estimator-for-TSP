@@ -1430,35 +1430,9 @@ CLAIMS: list[Claim] = [
              "paper where the alpha=1 floor is more accurate than the released "
              "model on MAPE.",
     ),
-    Claim(
-        id="appendix.genclass.geom_class_n",
-        anchor=r"Reported inside the {v}-instance class aggregate",
-        expect="= {2d_by_genclass_geometric_grid_gart_2_0_n}"
-               " + {2d_by_genclass_geometric_other_gart_2_0_n}",
-        tol="exact",
-        note="630, the Geometric Struct. count of tab:dataset_counts, which the two "
-             "reported sub-rows still sum to.",
-    ),
-    Claim(
-        id="appendix.genclass.geom_class_mspe",
-        anchor=r"carries that aggregate to $+{v}$ MSPE",
-        expect="= ({2d_by_genclass_geometric_grid_gart_2_0_n}"
-               " * {2d_by_genclass_geometric_grid_gart_2_0_mspe_pct}"
-               " + {2d_by_genclass_geometric_other_gart_2_0_n}"
-               " * {2d_by_genclass_geometric_other_gart_2_0_mspe_pct})"
-               " / ({2d_by_genclass_geometric_grid_gart_2_0_n}"
-               " + {2d_by_genclass_geometric_other_gart_2_0_n})",
-        tol=("dp", 2),
-        note="The instance-weighted mean of the two sub-rows reproduces the +2.7842 "
-             "the undivided Geometric row used to print, which is the point: grid's "
-             "+7.1121 over 210 instances is what carried it.",
-    ),
-    Claim(
-        id="appendix.genclass.geom_other_mspe",
-        anchor=r"while the two represented generators sit at $+{v}$",
-        expect="bank:2d_by_genclass_geometric_other_gart_2_0_mspe_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn appendix.genclass.geom_class_n: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.genclass.geom_class_mspe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.genclass.geom_other_mspe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     # withdrawn appendix.genclass.benchmark_n: caption sum-check sentence removed; the 2{,}580 total is asserted in subsec:datasets and the tab:frontier_2d caption
 
     # -- N-H: the network beats the extended-block variant on five of eight --
@@ -2297,66 +2271,16 @@ CLAIMS: list[Claim] = [
         expect="bank:rank_tsplib_euc2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
-    Claim(
-        id="appendix.rank.nd_universe",
-        anchor=r"$\binom{16846}{2}={v}$ on the multidimensional set",
-        expect=("= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2"),
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.nd_n",
-        anchor=r"$\binom{{v}}{2}=141{,}885{,}435$ on the multidimensional set",
-        expect="bank:rank_nd_gart_2_0_n",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.quarantined_nd",
-        anchor=r"multidimensional set, the {v} quarantined instances of",
-        expect="frontier:labels/repair_quarantined_nd_test",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.nd_close5_pairs",
-        anchor=r"Of the multidimensional pairs {v} qualify at the 5\% threshold",
-        expect="bank:rank_nd_gart_2_0_close5_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.nd_close10_pairs",
-        anchor=r"qualify at the 5\% threshold and {v} at 10\%",
-        expect="bank:rank_nd_gart_2_0_close10_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.2d_close5_pairs",
-        anchor=r"the corresponding 2D counts are {v} and {~},",
-        expect="bank:rank_2d_gart_2_0_close5_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.2d_close10_pairs",
-        anchor=r"the corresponding 2D counts are {~} and {v},",
-        expect="bank:rank_2d_gart_2_0_close10_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.tsplib_close5_pairs",
-        anchor=r"the TSPLIB EUC\_2D counts {v} and {~}.",
-        expect="bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.tsplib_close10_pairs",
-        anchor=r"the TSPLIB EUC\_2D counts {~} and {v}.",
-        expect="bank:rank_tsplib_euc2d_gart_2_0_close10_pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.direct_scan_pairs",
-        anchor=r"agree pair-for-pair with a direct scan of all {v} pairs.",
-        expect=("= {rank_nd_gart_2_0_n} * ({rank_nd_gart_2_0_n} - 1) / 2"),
-        tol="exact",
-    ),
+    # withdrawn appendix.rank.nd_universe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.nd_n: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.quarantined_nd: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.nd_close5_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.nd_close10_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.2d_close5_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.2d_close10_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.tsplib_close5_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.tsplib_close10_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.direct_scan_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     Claim(
         id="rank.close5.pairs_tsplib_restated",
         anchor=r"and on TSPLIB {v} pairs cannot support",
@@ -2372,28 +2296,9 @@ CLAIMS: list[Claim] = [
                       "the threshold."),
         tol="exact",
     ),
-    Claim(
-        id="appendix.rank.close5_threshold",
-        anchor=r"qualify at the {v}\% threshold and",
-        no_generator=("Design constant, the narrower close-pair band. Same "
-                      "status as rank.close10.threshold."),
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.tsplib_universe",
-        anchor=r"$\binom{78}{2}={v}$ on TSPLIB EUC\_2D",
-        expect="= {tsplib_by_size_total_gart_2_0_n} * ({tsplib_by_size_total_gart_2_0_n} - 1) / 2",
-        tol="exact",
-    ),
-    Claim(
-        id="appendix.rank.nd_universe_rounded",
-        anchor=r"The {v} million multidimensional pairs are never held at once",
-        no_generator=("Rounded restatement of appendix.rank.nd_universe "
-                      "(141,885,435) in the same paragraph, to three "
-                      "significant figures. The exact figure is checked one "
-                      "sentence earlier."),
-        tol="exact",
-    ),
+    # withdrawn appendix.rank.close5_threshold: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.tsplib_universe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
+    # withdrawn appendix.rank.nd_universe_rounded: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     # -- Section 5.8, the repair. Numbers come from
     # paper_tooling/labels_repaired.json via frontier_manuscript_bank.json.
     # withdrawn dataset.repair.corpus_pct: journey narrative removed per author directive (editorial restructure)
@@ -2591,7 +2496,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.2d.cal_crossing_mape: cut in the verbosity sweep; readback of a tab:frontier_2d cell; the table carries the value
     Claim(
         id="frontier.2d.small_bucket_n",
-        anchor=r"On the {v} instances of its smallest size bucket",
+        anchor=r"On the {v} instances with $n\le10$, the raw bound",
         expect="costfront:cells/2d/groups/n in [5,10]/N",
         tol="exact",
     ),
@@ -2634,7 +2539,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.large_bucket_n",
-        anchor=r"On the {v} instances of its largest, nothing on the ladder",
+        anchor=r"On the {v} instances with $n>500$, nothing on the ladder",
         expect="costfront:cells/2d/groups/n in [501,1000]/N",
         tol="exact",
     ),
