@@ -615,28 +615,8 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- printed-precision on a one-decimal metric, region-variant sensitive --
-    Claim(
-        id="metrics.bhh_region.mspe_uniform",
-        anchor=r"BHH given the exact sampling region carries a $-{v}$\% offset",
-        expect="= -1 * {2d_random_by_size_total_bhh_sampling_region_mspe_pct}",
-        tol=("dp", 2),
-        note="Replaces metrics.daganzo.sdpe_uniform. The example of a bias that "
-             "SDPE alone cannot see used to be Daganzo's strip constant; that "
-             "estimator is withdrawn (unobtainable primary), so the sentence now "
-             "uses BHH on the same i.i.d.-uniform subset, where the signed error "
-             "-8.65 exceeds the 7.76 dispersion and makes the same point. The "
-             "prose prints the magnitude after a literal minus sign, hence the "
-             "sign flip in the expression.",
-    ),
-    Claim(
-        id="metrics.bhh_region.sdpe_uniform",
-        anchor=r"offset on uniform instances with only {v}\% SDPE",
-        expect="bank:2d_random_by_size_total_bhh_sampling_region_sdpe_pct",
-        tol=("dp", 2),
-        note="The *_sampling_region_* variant is the right provenance: the "
-             "sentence says 'given the exact sampling region'. The plain BHH key "
-             "for the same subset reads 17.63.",
-    ),
+    # withdrawn metrics.bhh_region.mspe_uniform: metric-justification illustration cut per author; the values stay machine-checked in the classical tables
+    # withdrawn metrics.bhh_region.sdpe_uniform: metric-justification illustration cut per author; the values stay machine-checked in the classical tables
 
     # -----------------------------------------------------------------------
     # SIGNIFICANCE
@@ -995,18 +975,8 @@ CLAIMS: list[Claim] = [
     # -- Section 4.6: the V4 cost comparison, now single-protocol ------------
 
     # -- Section 5: the accepted count and the V4 row ------------------------
-    Claim(
-        id="application.noneuc.screen_n",
-        anchor=r"On the {~} of the {v} screened instances it accepts",
-        expect="bank:tsplib_nonEuc_total_fixed_alpha_1_136_n",
-        tol="exact",
-    ),
-    Claim(
-        id="application.noneuc.accept_n",
-        anchor=r"On the {v} of the {~} screened instances it accepts",
-        expect="bank:tsplib_nonEuc_total_gart_2_0_n",
-        tol="exact",
-    ),
+    # withdrawn application.noneuc.screen_n: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
+    # withdrawn application.noneuc.accept_n: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
 
     # -- conclusion ----------------------------------------------------------
     # -- pre-existing numbers the open-set pass re-keyed ---------------------
@@ -1168,12 +1138,7 @@ CLAIMS: list[Claim] = [
         expect="bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
         tol="exact",
     ),
-    Claim(
-        id="application.noneuc.gart_sdpe",
-        anchor=r"GART 2.0 has aggregate SDPE {v}\% and MAPE",
-        expect="bank:tsplib_nonEuc_total_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn application.noneuc.gart_sdpe: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
     # =======================================================================
     # Structural pass of 2026-08-11: S1 (LGBM_V3 admitted to the enumerated
     # baseline set, sixteen -> seventeen), S2 (`grid` split out of the
@@ -2255,19 +2220,19 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="rank.close10.gart_2d",
-        anchor=r"threshold GART 2.0 obtains {v}\%, {~}\%, and {~}\%. Every pair set",
+        anchor=r"threshold GART 2.0 obtains {v}\%, {~}\%, and {~}\%. The percentages remain",
         expect="bank:rank_2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_nd",
-        anchor=r"threshold GART 2.0 obtains {~}\%, {v}\%, and {~}\%. Every pair set",
+        anchor=r"threshold GART 2.0 obtains {~}\%, {v}\%, and {~}\%. The percentages remain",
         expect="bank:rank_nd_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_tsplib",
-        anchor=r"threshold GART 2.0 obtains {~}\%, {~}\%, and {v}\%. Every pair set",
+        anchor=r"threshold GART 2.0 obtains {~}\%, {~}\%, and {v}\%. The percentages remain",
         expect="bank:rank_tsplib_euc2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
@@ -2657,14 +2622,14 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.noneuc.vj_crossing_mape",
-        anchor=r"times GART 2.0 and reads {v}\% against {~}\%. The accuracy factor",
+        anchor=r"times GART 2.0 and reads {v}\% against {~}\%. The two step rules",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "vj_ckpt/25/raw_MAPE_pct",
         tol=("dp", 3),
     ),
     Claim(
         id="frontier.noneuc.vj_crossing_gart_mape",
-        anchor=r"and reads {~}\% against {v}\%. The accuracy factor",
+        anchor=r"and reads {~}\% against {v}\%. The two step rules",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
         tol=("dp", 3),
     ),
@@ -2708,14 +2673,14 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.steps.pk_noneuc_mape",
-        anchor=r"on the non-Euclidean corpus, {v}\% against {~}\%. The assignment",
+        anchor=r"on the non-Euclidean corpus, {v}\% against {~}\%. The timing sessions",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "polyak_ckpt/200/raw_MAPE_pct",
         tol=("dp", 3),
     ),
     Claim(
         id="frontier.steps.vj_noneuc_mape",
-        anchor=r"corpus, {~}\% against {v}\%. The assignment of Section",
+        anchor=r"corpus, {~}\% against {v}\%. The timing sessions behind",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "vj_ckpt/200/raw_MAPE_pct",
         tol=("dp", 3),
@@ -2933,7 +2898,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="metrics.ci.level_pct",
-        anchor=r"We accompany each SDPE with a {v}\% bootstrap confidence interval and suppress",
+        anchor=r"Each SDPE carries a {v}\% bootstrap confidence interval, suppressed",
         no_generator=(
             "Confidence level of the bootstrap intervals, fixed in "
             "build_paper_tables.py; a protocol constant, not a measurement. "
@@ -3280,18 +3245,8 @@ CLAIMS: list[Claim] = [
         no_generator=_ORACLE_REASON,
         tol=("dp", 2),
     ),
-    Claim(
-        id="application.fixed_alpha.constant_scored",
-        anchor=r"for the fixed $\alpha={v}$ multiplier scored on all {~}, and",
-        no_generator=_FIXED_ALPHA_REASON,
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="application.oracle_mape_23_total",
-        anchor=r"multiplier scored on all {~}, and {v}\% for the MAPE-minimizing constant on this set",
-        no_generator=_ORACLE_REASON,
-        tol=("dp", 2),
-    ),
+    # withdrawn application.fixed_alpha.constant_scored: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
+    # withdrawn application.oracle_mape_23_total: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
 
     # -- appendices ----------------------------------------------------------
     Claim(
