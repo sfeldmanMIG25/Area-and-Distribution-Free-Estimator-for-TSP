@@ -771,13 +771,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.floor_mape",
-        anchor=r"and the $\alpha=1$ floor's {v}\%. A factor of",
+        anchor=r"and the $\alpha=1$ floor's {v}\%.",
         expect="bank:classical_b_random_l_mathrm_mst_alpha_1_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="discussion.r2alpha.tsplib_gt400",
-        anchor=r"TSPLIB bucket has $R^2_\alpha=-{v}$,",
+        anchor=r"TSPLIB bucket has $R^2_\alpha=-{v}$:",
         expect="= -1 * {tsplib_by_size_gt400_gart_2_0_r2_alpha}",
         tol=("dp", 3),
         note="Adverse result: negative R^2_alpha means the model predicts alpha "
@@ -806,16 +806,7 @@ CLAIMS: list[Claim] = [
         expect="bank:shap_feature_greedy_nn_over_mst_share_pct",
         tol=("dp", 1),
     ),
-    Claim(
-        id="methods.shap.top2_share",
-        anchor=r"those two features carry {v}\% of it between them; node count and dimension jointly contribute {~}\%.",
-        expect="= {shap_feature_mst_dominance_ratio_share_pct}"
-               " + {shap_feature_greedy_nn_over_mst_share_pct}",
-        tol=("dp", 1),
-        note="Anchor runs long only to separate this copy from the appendix one, "
-             "whose sentence says 'bounding-hypervolume descriptors' where "
-             "Section 3.6 says 'features'.",
-    ),
+    # withdrawn methods.shap.top2_share: cut in the verbosity sweep; the two component shares remain in prose and tab:shap_top carries the full ranking
     Claim(
         id="methods.shap.size_dimension_share",
         anchor=r"node count and dimension jointly contribute {v}\%. The greedy ratio ranking second",
@@ -1077,7 +1068,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.bhh.uniform_sdpe",
-        anchor=r"\% signed against {v}\% SDPE, which is what an asymptotic",
+        anchor=r"\% signed against {v}\% SDPE, as an asymptotic",
         expect="bank:classical_b_random_bhh_sampling_region_sdpe_pct",
         tol=("dp", 2),
     ),
@@ -1114,7 +1105,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.n",
-        anchor=r"suggest. On the {v} uniform instances it obtains",
+        anchor=r"suggest (Table~\ref{tab:classical}). On the {v} uniform instances it obtains",
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),
@@ -1162,20 +1153,7 @@ CLAIMS: list[Claim] = [
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),
-    Claim(
-        id="matched.cavdar_factor",
-        anchor=r"A factor of {v} over \c{C}avdar--Sokol on i.i.d.\ uniform draws",
-        expect="= {classical_b_random_cavdar_sokol_mape_pct}"
-               " / {classical_b_random_gart_2_0_mape_pct}",
-        tol=("dp", 1),
-        note="Replaces matched.kwon_factor. Kwon--Golden--Wasil was the strongest "
-             "classical estimator this paper reported and is now withdrawn "
-             "(unobtainable primary), so the headline factor is taken over the "
-             "strongest surviving one: 8.162786 / 1.313575 = 6.214 on the 210 "
-             "i.i.d.-uniform instances. The factor is LARGER than the 2.7 it "
-             "replaces because the comparator is weaker on its own domain, not "
-             "because GART 2.0 improved -- 1.313575 is unchanged.",
-    ),
+    # withdrawn matched.cavdar_factor: cut in the verbosity sweep; the factor is arithmetic over the 1.31 and 8.16 MAPE figures in the same sentence
     Claim(
         id="discussion.rank.tsplib_close5_gart1",
         anchor=r"GART 1.0 trails GART 2.0 on the TSPLIB close-pair statistic at the tighter threshold, at {v}\%. Cost accuracy",
@@ -1728,26 +1706,9 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- 5.1 the bound and the ascent ----------------------------------------
-    Claim(
-        id="frontier.ascent.vj_higher_pct",
-        anchor=r"the higher bound on {v}\% of instances",
-        expect="frontier:nd/vj_higher_than_polyak_pct_at_k2000",
-        tol=("dp", 2),
-        note="Evidence that neither ascent attains max_pi w(pi), which is why "
-             "every accuracy figure in this section is a floor.",
-    ),
-    Claim(
-        id="frontier.ascent.converged_single",
-        anchor=r"multidimensional error from {v}\% to {~}\%",
-        expect="frontier:nd/bound_mape_pct_by_k/2000",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="frontier.ascent.converged_envelope",
-        anchor=r"multidimensional error from {~}\% to {v}\%",
-        expect="frontier:nd/two_ascent_envelope_mape_pct_by_k/2000",
-        tol=("dp", 4),
-    ),
+    # withdrawn frontier.ascent.vj_higher_pct: cut in the verbosity sweep; arm-vs-arm bookkeeping; the released ladder banks carry both arms
+    # withdrawn frontier.ascent.converged_single: cut in the verbosity sweep; arm-vs-arm bookkeeping; the released ladder banks carry both arms
+    # withdrawn frontier.ascent.converged_envelope: cut in the verbosity sweep; arm-vs-arm bookkeeping; the released ladder banks carry both arms
 
     # -- 5.2 TSPLIB ----------------------------------------------------------
     Claim(
@@ -1798,13 +1759,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_k",
-        anchor=r"At a budget of {v} it costs {~} times GART 2.0 and reaches",
+        anchor=r"At a budget of {v} the calibrated row costs {~} times GART 2.0 and reaches",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/crossing_ladder_k",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_cost_x",
-        anchor=r"At a budget of {~} it costs {v} times GART 2.0 and reaches",
+        anchor=r"At a budget of {~} the calibrated row costs {v} times GART 2.0 and reaches",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/x_gart2_by_k/25",
         tol=("dp", 2),
     ),
@@ -2038,7 +1999,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.closes_exactly_pct",
-        anchor=r"rather than a bound, on {v}\% of the split",
+        anchor=r"rather than a bound, on {v}\% of the scored multidimensional split",
         expect="frontier:nd/relaxation_closes_exactly_pct",
         tol=("dp", 1),
     ),
@@ -2604,18 +2565,8 @@ CLAIMS: list[Claim] = [
     # of the all-benchmark study. paper_numbers.json carries no bound row for
     # either corpus and the accuracy bank carries no cost column, so this is the
     # only source for the pairs these sentences assert.
-    Claim(
-        id="frontier.2d.gart_ms",
-        anchor=r"GART 2.0 costs {v}~ms on the typical instance at",
-        expect="costfront:cells/2d/groups/Total (all 2D)/gart2_ms",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.2d.gart_mape",
-        anchor=r"on the typical instance at {v}\% MAPE. The raw certified bound",
-        expect="costfront:cells/2d/groups/Total (all 2D)/gart2_MAPE_pct",
-        tol=("dp", 3),
-    ),
+    # withdrawn frontier.2d.gart_ms: cut in the verbosity sweep; readback of tab:frontier_2d's GART row; the table carries the value
+    # withdrawn frontier.2d.gart_mape: cut in the verbosity sweep; readback of tab:frontier_2d's GART row; the table carries the value
     Claim(
         id="frontier.2d.raw_crossing_k",
         anchor=r"Volgenant--Jonker step at a budget of {v}, at {~} times the cost",
@@ -2624,35 +2575,20 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.raw_crossing_cost_x",
-        anchor=r"at a budget of {~}, at {v} times the cost for {~}\% MAPE",
+        anchor=r"at a budget of {~}, at {v} times the cost with a paired win rate",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/x_gart2_typical",
         tol=("dp", 2),
     ),
-    Claim(
-        id="frontier.2d.raw_crossing_mape",
-        anchor=r"times the cost for {v}\% MAPE and a paired win rate",
-        expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/raw_MAPE_pct",
-        tol=("dp", 3),
-    ),
+    # withdrawn frontier.2d.raw_crossing_mape: cut in the verbosity sweep; readback of a tab:frontier_2d cell; the table carries the value
     Claim(
         id="frontier.2d.raw_crossing_win",
-        anchor=r"and a paired win rate of {v}\%; the calibrated row",
+        anchor=r"with a paired win rate of {v}\%; the calibrated row",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/"
                "win_rate_vs_gart2_pct/raw",
         tol=("dp", 1),
     ),
-    Claim(
-        id="frontier.2d.cal_crossing_cost_x",
-        anchor=r"a rung earlier, at {v} times the cost for {~}\%. The reversal",
-        expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/x_gart2_typical",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.2d.cal_crossing_mape",
-        anchor=r"times the cost for {v}\%. The reversal is monotone",
-        expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/cal_MAPE_pct",
-        tol=("dp", 3),
-    ),
+    # withdrawn frontier.2d.cal_crossing_cost_x: cut in the verbosity sweep; readback of a tab:frontier_2d cell; the table carries the value
+    # withdrawn frontier.2d.cal_crossing_mape: cut in the verbosity sweep; readback of a tab:frontier_2d cell; the table carries the value
     Claim(
         id="frontier.2d.small_bucket_n",
         anchor=r"On the {v} instances of its smallest size bucket",
@@ -2838,19 +2774,19 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.steps.vj_lead_top_k: sentence corrected in the final consistency pass; 500 is no longer asserted there
     Claim(
         id="frontier.steps.vj_2d_mape",
-        anchor=r"of a percentage point, {v}\% against {~}\% at a budget of",
+        anchor=r"widest at a budget of {~}, {v}\% against {~}\%.",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
         tol=("dp", 3),
     ),
     Claim(
         id="frontier.steps.pk_2d_mape",
-        anchor=r"{~}\% against {v}\% at a budget of {~}, and Polyak leads it",
+        anchor=r"widest at a budget of {~}, {~}\% against {v}\%.",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/polyak_ckpt/25/raw_MAPE_pct",
         tol=("dp", 3),
     ),
     Claim(
         id="frontier.steps.2d_k",
-        anchor=r"at a budget of {v}, and Polyak leads it from a budget of",
+        anchor=r"the gap is widest at a budget of {v},",
         no_generator=(
             "An ascent budget: the rung at which the two step rules are compared on "
             "the 2D corpus. Nothing to settle."
@@ -2858,7 +2794,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.steps.noneuc_k",
-        anchor=r"and Polyak leads it from a budget of {v} on the non-Euclidean corpus",
+        anchor=r"Polyak leads from a budget of {v} on the non-Euclidean corpus",
         no_generator=(
             "An ascent budget: the rung from which the Polyak arm leads on the "
             "non-Euclidean corpus, read off Table~\\ref{tab:frontier_noneuc}. "
@@ -2881,30 +2817,10 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- Section 5.4: the validity gates over both cost tables ----------------
-    Claim(
-        id="frontier.gates.pairs_2d",
-        anchor=r"zero spread across all {v} instance--budget pairs of the 2D corpus",
-        expect="costfront:cells/2d/gates/vj_ckpt/determinism/pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.gates.pairs_noneuc",
-        anchor=r"of the 2D corpus and all {v} of the non-Euclidean one",
-        expect="costfront:cells/noneuc/gates/vj_ckpt/determinism/pairs",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.gates.series_2d",
-        anchor=r"over all {v} series on the 2D corpus and the {~} the bound covers",
-        expect="costfront:cells/2d/gates/vj_ckpt/monotone_in_k/series",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.gates.series_noneuc",
-        anchor=r"series on the 2D corpus and the {v} the bound covers on the non-Euclidean one",
-        expect="costfront:cells/noneuc/gates/vj_ckpt/monotone_in_k/series",
-        tol="exact",
-    ),
+    # withdrawn frontier.gates.pairs_2d: cut in the verbosity sweep; QA paragraph removed; the released code carries the checks
+    # withdrawn frontier.gates.pairs_noneuc: cut in the verbosity sweep; QA paragraph removed; the released code carries the checks
+    # withdrawn frontier.gates.series_2d: cut in the verbosity sweep; QA paragraph removed; the released code carries the checks
+    # withdrawn frontier.gates.series_noneuc: cut in the verbosity sweep; QA paragraph removed; the released code carries the checks
 
     # -- Section 5.4: what the loaded box does to the cost multiples ----------
     # The bias runs against the bound, so it is reported rather than corrected
@@ -3099,15 +3015,7 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- Section 4.3, the metric definitions --------------------------------
-    Claim(
-        id="metrics.sdpe.bias_example_pct",
-        anchor=r"an estimator that is uniformly {v}\% high scores an SDPE of zero",
-        no_generator=(
-            "Illustrative constant in the statement that SDPE is blind to "
-            "bias; a rhetorical example, not a measurement. Nothing to settle."
-        ),
-        tol="exact",
-    ),
+    # withdrawn metrics.sdpe.bias_example_pct: cut in the verbosity sweep; illustrative hypothetical, not a measurement
     Claim(
         id="metrics.sdpe.pct_factor",
         anchor=r"the leading factor of {v} expresses SDPE in percentage points",
@@ -3120,7 +3028,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="metrics.ci.level_pct",
-        anchor=r"We accompany each SDPE with a {v}\% bootstrap confidence interval over {~} resamples",
+        anchor=r"We accompany each SDPE with a {v}\% bootstrap confidence interval and suppress",
         no_generator=(
             "Confidence level of the bootstrap intervals, fixed in "
             "build_paper_tables.py; a protocol constant, not a measurement. "
@@ -3150,7 +3058,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="results_nd.bhh_region_mape_restated",
-        anchor=r"BHH's {v}\% error deserves its own explanation",
+        anchor=r"BHH's {v}\% error is not a defect",
         expect="bank:nd_by_size_total_bhh_sampling_region_mape_pct",
         tol=("dp", 2),
         note="Restatement of results_nd.bhh_region_mape at the head of the "
@@ -3278,7 +3186,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="coverage.decontaminated_slope",
-        anchor=r"clears ten of eleven gates at a median slope of {v}, but forfeits",
+        anchor=r"clears ten of its own eleven gates at a median slope of {v}, but forfeits",
         no_generator=(
             "Median dispersion slope of the de-contaminated augmentation "
             "candidate over its seven pre-registered seeds: 0.735, from the "
@@ -3290,78 +3198,18 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- Section 4.6, rank agreement and calibration ------------------------
-    Claim(
-        id="rank.global.gart_2d_rho",
-        anchor=r"Spearman $\rho$/Kendall $\tau$ of {v}/{~} on 2D",
-        expect="bank:rank_2d_gart_2_0_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.gart_2d_tau",
-        anchor=r"Spearman $\rho$/Kendall $\tau$ of {~}/{v} on 2D",
-        expect="bank:rank_2d_gart_2_0_kendall_tau",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="rank.global.gart_nd_rho",
-        anchor=r"on 2D, {v}/{~} on the multidimensional set",
-        expect="bank:rank_nd_gart_2_0_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.gart_nd_tau",
-        anchor=r"on 2D, {~}/{v} on the multidimensional set",
-        expect="bank:rank_nd_gart_2_0_kendall_tau",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="rank.global.gart_tsplib_rho",
-        anchor=r"on the multidimensional set, and {v}/{~} on TSPLIB EUC\_2D; the",
-        expect="bank:rank_tsplib_euc2d_gart_2_0_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.gart_tsplib_tau",
-        anchor=r"on the multidimensional set, and {~}/{v} on TSPLIB EUC\_2D; the",
-        expect="bank:rank_tsplib_euc2d_gart_2_0_kendall_tau",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="rank.global.floor_2d_rho",
-        anchor=r"the $\alpha=1$ control obtains {v}/{~}, {~}/{~}, and {~}/{~}. Cross-instance",
-        expect="bank:rank_2d_l_mathrm_mst_alpha_1_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.floor_2d_tau",
-        anchor=r"control obtains {~}/{v}, {~}/{~}, and {~}/{~}. Cross-instance",
-        expect="bank:rank_2d_l_mathrm_mst_alpha_1_kendall_tau",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="rank.global.floor_nd_rho",
-        anchor=r"control obtains {~}/{~}, {v}/{~}, and {~}/{~}. Cross-instance",
-        expect="bank:rank_nd_l_mathrm_mst_alpha_1_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.floor_nd_tau",
-        anchor=r"control obtains {~}/{~}, {~}/{v}, and {~}/{~}. Cross-instance",
-        expect="bank:rank_nd_l_mathrm_mst_alpha_1_kendall_tau",
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="rank.global.floor_tsplib_rho",
-        anchor=r"control obtains {~}/{~}, {~}/{~}, and {v}/{~}. Cross-instance",
-        expect="bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_spearman_rho",
-        tol=("dp", 4),
-    ),
-    Claim(
-        id="rank.global.floor_tsplib_tau",
-        anchor=r"control obtains {~}/{~}, {~}/{~}, and {~}/{v}. Cross-instance",
-        expect="bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_kendall_tau",
-        tol=("dp", 3),
-    ),
+    # withdrawn rank.global.gart_2d_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.gart_2d_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.gart_nd_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.gart_nd_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.gart_tsplib_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.gart_tsplib_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_2d_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_2d_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_nd_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_nd_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_tsplib_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
+    # withdrawn rank.global.floor_tsplib_tau: cut in the verbosity sweep; readback of tab:rank; the table carries the values
     Claim(
         id="rank.close5.threshold",
         anchor=r"For pairs satisfying $|L_A-L_B|/\max(L_A,L_B)<{v}\%$, GART 2.0 orders",
