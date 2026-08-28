@@ -222,20 +222,26 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     ax.set_ylim(all_ms.min() * 0.55, all_ms.max() * 1.8)
     ax.autoscale(False)
 
-    # Fitted log-log trend of the solved runs, past the small-n floor.  Solid
-    # over the solved range, dashed beyond it; the censored runs (cost > cap)
-    # sit under its continuation, so the exit through the top edge understates
-    # nothing.
+    # The exact curve runs the full length of its data, like every other
+    # series: solid through log-binned medians of the solved runs, then dashed
+    # at the fitted tail slope until it leaves the top of the chart.  The
+    # censored runs (cost > cap) sit under that continuation, so the exit
+    # understates nothing.
     FIT_MIN_N = 200
     big = obs[obs.n >= FIT_MIN_N]
-    slope, icept = np.polyfit(np.log10(big.n), np.log10(big.ms), 1)
+    slope, _ = np.polyfit(np.log10(big.n), np.log10(big.ms), 1)
     n_solved = obs.n.max()
-    xs = np.geomspace(FIT_MIN_N, ax.get_xlim()[1], 300)
-    ys = 10.0 ** (icept + slope * np.log10(xs))
-    solid = xs <= n_solved
-    ax.plot(xs[solid], ys[solid], color=C_EXACT, lw=1.3, alpha=0.75, zorder=3)
-    ax.plot(xs[~solid], ys[~solid], color=C_EXACT, lw=1.3, alpha=0.75, ls="--", zorder=3)
-    print(f"  exact trend: slope {slope:.2f} on {len(big)} solved runs with n >= {FIT_MIN_N}; "
+    edges = np.geomspace(obs.n.min(), n_solved, 9)
+    which = np.clip(np.digitize(obs.n, edges), 1, len(edges) - 1)
+    binned = (obs.assign(b=which).groupby("b")
+                 .agg(n=("n", "median"), ms=("ms", "median")).sort_values("n"))
+    ax.plot(binned.n, binned.ms, color=C_EXACT, lw=1.3, alpha=0.8, zorder=3)
+    n0, y0 = binned.n.iloc[-1], binned.ms.iloc[-1]
+    xs = np.geomspace(n0, ax.get_xlim()[1], 200)
+    ax.plot(xs, y0 * (xs / n0) ** slope, color=C_EXACT, lw=1.3, alpha=0.8,
+            ls="--", zorder=3)
+    print(f"  exact curve: {len(binned)} binned medians to n={int(n0)}, tail slope "
+          f"{slope:.2f} from {len(big)} solved runs with n >= {FIT_MIN_N}; "
           f"{len(cen)} capped runs not drawn")
 
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False,
