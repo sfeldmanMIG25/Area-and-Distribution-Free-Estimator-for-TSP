@@ -320,7 +320,7 @@ SDPE decreases monotonically across all six size buckets, from 1.56\% at $n\le10
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{accuracy_grid.pdf}
-\caption{GART 2.0 MAPE by dimension and instance-size band, log color scale. The red rule separates the trained dimensions from the held-out $d=100$ row, the one row whose error grows with instance size.}
+\caption{GART 2.0 MAPE by dimension and instance-size band; the red rule marks the held-out $d=100$ row.}
 \label{fig:accgrid}
 \end{figure}
 
@@ -606,7 +606,7 @@ Table~\ref{tab:complexity} states the dominant term of every family in this pape
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{cost_scaling.pdf}
-\caption{Per-instance cost against instance size on TSPLIB95 EUC\_2D, log--log, every series on one machine. The exact solver's capped runs make its curve a lower bound.}
+\caption{Per-instance cost against instance size on TSPLIB95 EUC\_2D.}
 \label{fig:costscale}
 \end{figure}
 
@@ -616,7 +616,7 @@ The separation is planar, and we do not extend it. On the multidimensional bench
 
 \begin{table}[!htbp]
 \centering
-\caption{Dominant per-instance cost of each family as the released code executes it; $k$ is the ascent budget, $h$ the Hilbert order.}
+\caption{Dominant per-instance cost of each family as the released code executes it.}
 \label{tab:complexity}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.25}
@@ -642,7 +642,7 @@ Exact solver & $\Theta(n^{2}2^{n})$ for the Held--Karp dynamic program; branch-a
 
 \subsection{Comparison with an Exact Solver} \label{subsec:frontier_exact}
 
-This paper's cost argument has always had an unbounded anchor above it, and that anchor is a floor. We measured Concorde on this machine over the whole EUC\_2D benchmark, on the same box as every other number on the cost axis, so no cross-hardware correction is needed. It proves optimality on most of the corpus in well under a second and takes minutes on the rest; the largest instances reach the wall-clock cap without proving anything, which makes the exact solver's cost a lower bound rather than a measurement. Figure~\ref{fig:costscale} draws it beside the estimator, the closed form and the certified bound, and the four families separate by roughly five orders of magnitude at the largest instance. The load-bearing statement is the complexity rather than the ratio: branch-and-cut over an exponential family of subtour constraints admits no polynomial bound, and even the Held--Karp dynamic program \citep{heldkarp1962}, the exact method this paper's own label pipeline uses at small $n$, is $\Theta(n^{2}2^{n})$, so every row of Table~\ref{tab:complexity} is asymptotically cheaper than an exact solve and being cheaper than one distinguishes nothing among them. The comparison that discriminates is the one against the 1-tree, which is polynomial, certified, and in the same cost decade as the estimators.
+This paper's cost argument has always had an unbounded anchor above it, and that anchor is a floor. We measured Concorde on this machine over the whole EUC\_2D benchmark, on the same box as every other number on the cost axis, so no cross-hardware correction is needed. It proves optimality on most of the corpus in well under a second and takes minutes on the rest; the largest instances reach the wall-clock cap without proving anything, which makes the exact solver's cost a lower bound rather than a measurement. Figure~\ref{fig:costscale} draws the solved runs beside the estimator, the closed form and the certified bound, the solver's fitted trend continuing off the chart where the cap censors it, and the four families separate by roughly five orders of magnitude at the largest instance. The load-bearing statement is the complexity rather than the ratio: branch-and-cut over an exponential family of subtour constraints admits no polynomial bound, and even the Held--Karp dynamic program \citep{heldkarp1962}, the exact method this paper's own label pipeline uses at small $n$, is $\Theta(n^{2}2^{n})$, so every row of Table~\ref{tab:complexity} is asymptotically cheaper than an exact solve and being cheaper than one distinguishes nothing among them. The comparison that discriminates is the one against the 1-tree, which is polynomial, certified, and in the same cost decade as the estimators.
 
 \subsection{Operating Regime} \label{subsec:frontier_verdict}
 

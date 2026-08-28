@@ -9,8 +9,10 @@ The held-out d=100 row is separated because it is extrapolation, not fit.
 Figure B, ``cost_scaling``: per-instance wall time against instance size on the
 TSPLIB EUC_2D benchmark, for the closed-form classical estimator, GART 2.0, the
 certified 1-tree bound, and an exact solve.  Every series is measured on the
-same machine.  Concorde runs that hit the wall-clock cap are drawn as censored,
-so the exact arm is a *lower* bound on its own cost.
+same machine.  Concorde runs that hit the wall-clock cap are not drawn; the
+solver's fitted log-log trend continues past its last solved instance and exits
+the top of the chart, which is the story: the exact solve leaves the measurable
+window while the bound climbs steeply and the estimator barely climbs at all.
 
 Run:
     <project python> paper_reference/regenerate_scaling_figures.py
@@ -201,21 +203,41 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     obs, cen = ex[~ex.censored], ex[ex.censored]
     ax.scatter(obs.n, obs.ms, marker="s", s=13, color=C_EXACT,
                label="Exact solve (Concorde)", zorder=4, linewidths=0)
-    if len(cen):
-        ax.scatter(cen.n, cen.ms, marker="^", s=34, facecolors="none",
-                   edgecolors=C_EXACT, linewidths=1.1, zorder=5)
-        ax.scatter([], [], marker="^", s=34, facecolors="none", edgecolors=C_EXACT,
-                   linewidths=1.1, label=f"Exact solve hit the wall-clock cap ({len(cen)} instances)")
 
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.set_xlabel("Instance size $n$ (log scale)")
-    ax.set_ylabel("Wall time per instance (ms, log scale)")
+    ax.set_xlabel("Instance size $n$")
+    ax.set_ylabel("Wall time per instance (ms)")
     ax.set_title("Cost of an estimate, a certified bound, and an exact solve",
-                 pad=24, loc="left", fontweight="bold")
-    ax.text(0, 1.035, "TSPLIB95 EUC_2D, every series measured on the same machine",
-            transform=ax.transAxes, fontsize=8.2, color="#555555")
+                 pad=10, loc="left", fontweight="bold")
     ax.grid(True, which="major", ls=":", lw=0.6, color="#bbbbbb")
+
+    # Axis limits from the measured data alone, then freeze them so the exact
+    # solver's trend can leave through the top edge instead of stretching it.
+    all_ms = np.concatenate([series[k].ms.to_numpy() for k in ("classical", "gart", "bound")]
+                            + [obs.ms.to_numpy()])
+    all_n = np.concatenate([series[k].n.to_numpy() for k in ("classical", "gart", "bound")]
+                           + [obs.n.to_numpy()])
+    ax.set_xlim(all_n.min() * 0.85, all_n.max() * 1.15)
+    ax.set_ylim(all_ms.min() * 0.55, all_ms.max() * 1.8)
+    ax.autoscale(False)
+
+    # Fitted log-log trend of the solved runs, past the small-n floor.  Solid
+    # over the solved range, dashed beyond it; the censored runs (cost > cap)
+    # sit under its continuation, so the exit through the top edge understates
+    # nothing.
+    FIT_MIN_N = 200
+    big = obs[obs.n >= FIT_MIN_N]
+    slope, icept = np.polyfit(np.log10(big.n), np.log10(big.ms), 1)
+    n_solved = obs.n.max()
+    xs = np.geomspace(FIT_MIN_N, ax.get_xlim()[1], 300)
+    ys = 10.0 ** (icept + slope * np.log10(xs))
+    solid = xs <= n_solved
+    ax.plot(xs[solid], ys[solid], color=C_EXACT, lw=1.3, alpha=0.75, zorder=3)
+    ax.plot(xs[~solid], ys[~solid], color=C_EXACT, lw=1.3, alpha=0.75, ls="--", zorder=3)
+    print(f"  exact trend: slope {slope:.2f} on {len(big)} solved runs with n >= {FIT_MIN_N}; "
+          f"{len(cen)} capped runs not drawn")
+
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False,
               ncol=2, borderaxespad=0.0, handletextpad=0.6, columnspacing=1.8)
 
