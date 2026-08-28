@@ -2808,28 +2808,8 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- Section 3: target preparation and the inverse transform ------------
-    Claim(
-        id="methods.target.train_outlier",
-        anchor=r"one training row at {v} and one validation row at {~}",
-        no_generator=(
-            "The single training-split row of tsp_features_v4.csv whose raw "
-            "alpha falls below 1: 0.975, clipped to the endpoint by target "
-            "preparation. No artifact exports the corpus alpha extrema. Settle "
-            "by having corpus_statistics.py bank them under corpus_alpha_*."
-        ),
-        tol=("dp", 3),
-    ),
-    Claim(
-        id="methods.target.val_outlier",
-        anchor=r"one training row at {~} and one validation row at {v}",
-        no_generator=(
-            "The single validation-split row of tsp_features_v4.csv whose raw "
-            "alpha exceeds 2: 2.060, clipped to the endpoint by target "
-            "preparation. Companion to methods.target.train_outlier; settle "
-            "the same way."
-        ),
-        tol=("dp", 3),
-    ),
+    # withdrawn methods.target.train_outlier: clipping mechanics moved out of the body; app:code prints both raw values at full precision
+    # withdrawn methods.target.val_outlier: clipping mechanics moved out of the body; app:code prints both raw values at full precision
     Claim(
         id="methods.transform.pred_lo",
         anchor=r"test predictions $\hat\alpha$ fell in $[{v},{~}]$",

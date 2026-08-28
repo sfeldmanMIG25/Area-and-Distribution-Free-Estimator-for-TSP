@@ -2,134 +2,58 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-08-28T05:09:52+00:00",
+    "at": "2026-08-28T23:30:36+00:00",
     "kind": "update",
-    "reason": "Sonnet-swarm defluff of section 4 onward per author: metric and method justifications cut, protocol We recast, announcements, readbacks and aphorisms deleted (86 edits applied, 4 skipped to keep float pointers); SHAP expansion parenthetical removed; metrics block reduced to definitions; 7 claims withdrawn where their illustration or readback sentence was cut, 8 re-anchored; every surviving printed value unchanged (0 mismatched)",
+    "reason": "Implementation-detail sweep per author: code mechanics (clipping epsilons, traversal arithmetic, greedy candidate-list switchover, dense-matrix notes, warm-up mechanics, dispatch thresholds) removed from the body; the appendices now define both timing protocols and carry a GART 1.0 extractor note; 2 claims withdrawn, values preserved verbatim elsewhere (0 mismatched)",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "e1ef346c3b0cece5c31cb63fadb7d7563bfc95adf7f0138eb923729464bc0341",
+    "tex_sha256": "28ba3631eecb330b989b22a52b5e0299a026f39330705dee56a1a43f5e3b72e0",
     "production_model": "GART_2.0",
-    "n_entries": 322,
-    "n_keys": 322,
+    "n_entries": 317,
+    "n_keys": 317,
     "absorbed": [
-      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7a11bec36b96",
-      "sec-methodology/subsec-shap :: 5{,}000 :: tier2:unmarked :: ctx:1273ab719b49",
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:083ddf509580",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:ba756c057f6d",
-      "sec-evaluation/subsec-generalization :: 1{,}118 :: tier2:unmarked :: ctx:dad7cf8382bf",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:958a25a7e288",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:6bcb6ee6d924",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b1a54e9f7722",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:6b28685dedb1",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:6b28685dedb1",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:d5d2b0aec056",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:0ce3d32f8af3",
-      "appendix:app-training/app-nd-grid-counts :: 69{,}768 :: tier2:unmarked :: ctx:7035af996cba",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:95d44356b1aa",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:ff50ba2141e9",
-      "appendix:app-labels :: 15 :: tier2:unmarked :: ctx:ede8b741078b",
-      "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:084f6bc878c6",
-      "appendix:app-bench-details :: 690 :: tier2:unmarked :: ctx:fb2c3092ada3",
-      "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:d7242d921e91"
+      "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:d299789b2624",
+      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7780ec2b09a6",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:b9b8e3c8cd2e",
+      "appendix:app-code :: 64 :: tier2:unmarked :: ctx:7354ad0d307c",
+      "appendix:app-code :: 11 :: tier2:unmarked :: ctx:d78fb3e95008"
     ],
     "pruned": [
-      "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:12bc9791609c",
-      "appendix:app-bench-details :: 690 :: tier2:unmarked :: ctx:7fbc3a46a48c",
-      "appendix:app-features-geo :: 11 :: tier2:unmarked :: ctx:0a2aa3c5a250",
-      "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:3b4269686b7d",
-      "appendix:app-labels :: 15 :: tier2:unmarked :: ctx:632f36dc4140",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:1a4e48ef45d7",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:7489cdfaf5a8",
-      "appendix:app-training/app-nd-grid-counts :: 100 :: tier2:unmarked :: ctx:7fc21347d4d8",
-      "appendix:app-training/app-nd-grid-counts :: 10{,}000 :: tier2:unmarked :: ctx:393bf488b60e",
-      "appendix:app-training/app-nd-grid-counts :: 1{,}000 :: tier2:unmarked :: ctx:b299b416c407",
-      "appendix:app-training/app-nd-grid-counts :: 69{,}768 :: tier2:unmarked :: ctx:834a40d56702",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 10.48 :: tier1:unit :: ctx:9b6dd1d8dfe3",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:463cc342d51a",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 3.34 :: tier1:unit :: ctx:46149957a3b0",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 8.26 :: tier1:unit :: ctx:656816ee18cc",
-      "sec-evaluation :: 14.19 :: tier1:unit :: ctx:e4b6a9ee30fa",
-      "sec-evaluation :: 30.95 :: tier1:unit :: ctx:7d9e7a23ed4a",
-      "sec-evaluation/subsec-generalization :: 0.62 :: tier1:unit :: ctx:d048537ff9bc",
-      "sec-evaluation/subsec-generalization :: 1{,}118 :: tier2:unmarked :: ctx:6671a048b1af",
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:a0e617c84ac9",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:a2aca5c5671b",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:b026f09d57ef",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:baf6e1087198",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:6c7c06392823",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:e590eb08ee1f",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f93dc0e135a2",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:3eabead18e84",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:b026f09d57ef",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:c331634535f9",
-      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:c377e4d3451b",
-      "sec-methodology/subsec-shap :: 5{,}000 :: tier2:unmarked :: ctx:7f6a829281c7"
+      "appendix:app-code :: 11 :: tier2:unmarked :: ctx:c94a765d95f1",
+      "appendix:app-code :: 64 :: tier2:unmarked :: ctx:fd0f9702e031",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:fbda6069b3ab",
+      "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:2e3a8f309ac8",
+      "sec-methodology/subsec-model-training :: 1.3 :: tier1:unit :: ctx:7ae39b8153b6",
+      "sec-methodology/subsec-model-training :: 16 :: tier2:unmarked :: ctx:f876fa75357b",
+      "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:0a3ae1b9bcf2",
+      "sec-methodology/subsec-model-training :: 3000 :: tier2:unmarked :: ctx:1e207dc51bf1",
+      "sec-methodology/subsec-model-training :: 40 :: tier2:unmarked :: ctx:e5a8cedcb96c",
+      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7a11bec36b96"
     ],
     "claims_withdrawn": [
       {
-        "id": "application.fixed_alpha.constant_scored",
+        "id": "methods.target.train_outlier",
         "state": "NO_GENERATOR",
         "expect": "(no generator)",
-        "line": 691,
-        "printed": 1.136,
+        "line": 136,
+        "printed": 0.975,
         "expected": null
       },
       {
-        "id": "application.noneuc.accept_n",
-        "state": "MATCHED",
-        "expect": "bank:tsplib_nonEuc_total_gart_2_0_n",
-        "line": 691,
-        "printed": 22.0,
-        "expected": 22.0
-      },
-      {
-        "id": "application.noneuc.gart_sdpe",
-        "state": "MATCHED",
-        "expect": "bank:tsplib_nonEuc_total_gart_2_0_sdpe_pct",
-        "line": 691,
-        "printed": 3.89,
-        "expected": 3.893062
-      },
-      {
-        "id": "application.noneuc.screen_n",
-        "state": "MATCHED",
-        "expect": "bank:tsplib_nonEuc_total_fixed_alpha_1_136_n",
-        "line": 691,
-        "printed": 23.0,
-        "expected": 23.0
-      },
-      {
-        "id": "application.oracle_mape_23_total",
+        "id": "methods.target.val_outlier",
         "state": "NO_GENERATOR",
         "expect": "(no generator)",
-        "line": 691,
-        "printed": 7.55,
+        "line": 136,
+        "printed": 2.06,
         "expected": null
-      },
-      {
-        "id": "metrics.bhh_region.mspe_uniform",
-        "state": "MATCHED",
-        "expect": "= -1 * {2d_random_by_size_total_bhh_sampling_region_mspe_pct}",
-        "line": 191,
-        "printed": 8.65,
-        "expected": 8.651108
-      },
-      {
-        "id": "metrics.bhh_region.sdpe_uniform",
-        "state": "MATCHED",
-        "expect": "bank:2d_random_by_size_total_bhh_sampling_region_sdpe_pct",
-        "line": 191,
-        "printed": 7.76,
-        "expected": 7.755817
       }
     ],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 43,
-    "absorbed": 1107,
-    "pruned": 1376,
-    "claims_withdrawn": 513,
+    "records": 44,
+    "absorbed": 1112,
+    "pruned": 1386,
+    "claims_withdrawn": 515,
     "mismatched_claims_withdrawn": 0
   },
   "entries": {
@@ -243,20 +167,20 @@
       "example": "...00_pchergphhtgncoe_59} (training, raw $\\alpha=0.974823$) and \\path{N5_D2_G100_oc_33} (validation, ra...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "appendix:app-code :: 11 :: tier2:unmarked :: ctx:c94a765d95f1": {
+    "appendix:app-code :: 11 :: tier2:unmarked :: ctx:d78fb3e95008": {
       "count": 1,
-      "example": "... 13th Gen machine with 64\\,GB RAM and Windows 11. Concorde 03.12.19 and LKH-3 3.0.13 generated...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
+      "example": "... 13th Gen machine with 64\\,GB RAM and Windows 11. The cold protocol times one harness invocati...",
+      "first_recorded": "2026-08-28T23:30:36+00:00"
     },
     "appendix:app-code :: 2.059518 :: tier1:precision :: ctx:a3569aadb9ba": {
       "count": 1,
       "example": "...th{N5_D2_G100_oc_33} (validation, raw $\\alpha=2.059518$). The GART 2.0 pipeline uses SciPy \\citep{s...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "appendix:app-code :: 64 :: tier2:unmarked :: ctx:fd0f9702e031": {
+    "appendix:app-code :: 64 :: tier2:unmarked :: ctx:7354ad0d307c": {
       "count": 1,
-      "example": "...llected on one Intel i7 13th Gen machine with 64\\,GB RAM and Windows 11. Concorde 03.12.19 and...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
+      "example": "...llected on one Intel i7 13th Gen machine with 64\\,GB RAM and Windows 11. The cold protocol tim...",
+      "first_recorded": "2026-08-28T23:30:36+00:00"
     },
     "appendix:app-features :: 11 :: tier2:unmarked :: ctx:d5c0e9074200": {
       "count": 1,
@@ -678,10 +602,10 @@
       "example": "...he raw certified bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.51\\% a...",
       "first_recorded": "2026-08-12T21:37:55+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:fbda6069b3ab": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:b9b8e3c8cd2e": {
       "count": 1,
       "example": "... \\centering \\caption{Paired evaluation on the 23 screened non-EUC\\_2D instances. GART 2.0 decl...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "first_recorded": "2026-08-28T23:30:36+00:00"
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 3.38 :: tier1:unit :: ctx:52a4bcc58a66": {
       "count": 1,
@@ -1673,25 +1597,15 @@
       "example": "...0$. Instances are partitioned into training ($69{,}768$), validation ($19{,}584$), and test ($16{,}9...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:2e3a8f309ac8": {
+    "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:d299789b2624": {
       "count": 1,
       "example": "...election} \\label{subsec:features} We extract 31 features from each instance: eleven geometric...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "sec-methodology/subsec-model-training :: 1.3 :: tier1:unit :: ctx:7ae39b8153b6": {
-      "count": 1,
-      "example": "... The ensemble performs approximately $K\\bar D=1.3\\times10^4$ comparisons per prediction, indepe...",
-      "first_recorded": "2026-08-28T02:48:09+00:00"
+      "first_recorded": "2026-08-28T23:30:36+00:00"
     },
     "sec-methodology/subsec-model-training :: 147.80 :: tier1:precision :: ctx:12b24a3692a6": {
       "count": 1,
       "example": "...ith 148 leaves per tree as the growth cap and 147.80 realized on average; its configuration is rep...",
       "first_recorded": "2026-08-11T14:04:14+00:00"
-    },
-    "sec-methodology/subsec-model-training :: 16 :: tier2:unmarked :: ctx:f876fa75357b": {
-      "count": 1,
-      "example": "...)$ for $n\\le3000$ and switches to precomputed 16-neighbor candidate lists with an exact neares...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
     },
     "sec-methodology/subsec-model-training :: 16{,}920 :: tier2:unmarked :: ctx:0e8706b8428d": {
       "count": 1,
@@ -1708,30 +1622,15 @@
       "example": "...aribus sweep of either variable; a probe over 1{,}000 held-out instances accordingly returns 100\\% ...",
       "first_recorded": "2026-08-11T14:04:14+00:00"
     },
-    "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:0a3ae1b9bcf2": {
-      "count": 1,
-      "example": "...inference cost. The trained model performs $K=1{,}118$ traversals with empirical mean root-to-leaf ...",
-      "first_recorded": "2026-08-28T03:52:49+00:00"
-    },
-    "sec-methodology/subsec-model-training :: 3000 :: tier2:unmarked :: ctx:1e207dc51bf1": {
-      "count": 1,
-      "example": "...sited fallback above that threshold. Below $n=3000$ the greedy tour, not the MST, is therefore t...",
-      "first_recorded": "2026-08-11T14:04:14+00:00"
-    },
-    "sec-methodology/subsec-model-training :: 40 :: tier2:unmarked :: ctx:e5a8cedcb96c": {
-      "count": 1,
-      "example": "...t-to-leaf depth $\\bar D\\approx11.83$ (maximum 40). The ensemble performs approximately $K\\bar ...",
-      "first_recorded": "2026-08-28T02:48:09+00:00"
-    },
     "sec-methodology/subsec-shap :: 16{,}920 :: tier2:unmarked :: ctx:9f505dc43124": {
       "count": 1,
       "example": "...eased booster, on a 5{,}000-row sample of the 16{,}920-row held-out test split. The MST dominance ra...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
-    "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7a11bec36b96": {
+    "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7780ec2b09a6": {
       "count": 1,
       "example": "...Importance}\\label{subsec:shap} We assess the 31-feature set with mean absolute SHAP magnitude...",
-      "first_recorded": "2026-08-28T05:09:52+00:00"
+      "first_recorded": "2026-08-28T23:30:36+00:00"
     },
     "sec-methodology/subsec-shap :: 5{,}000 :: tier2:unmarked :: ctx:1273ab719b49": {
       "count": 1,
@@ -1797,7 +1696,7 @@
     "appendix.classical.panel_b_n": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_gart_2_0_n",
-      "line": 917,
+      "line": 919,
       "printed": 210.0,
       "expected": 210.0
     },
@@ -1818,21 +1717,21 @@
     "appendix.controls.linear_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-      "line": 1082,
+      "line": 1084,
       "printed": 17.9,
       "expected": 17.871637
     },
     "appendix.controls.linear_clustered_r2alpha": {
       "state": "MATCHED",
       "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-      "line": 1082,
+      "line": 1084,
       "printed": 9.53,
       "expected": 9.526199
     },
     "appendix.controls.released_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-      "line": 1082,
+      "line": 1084,
       "printed": 2.2,
       "expected": 2.241039
     },
@@ -1867,14 +1766,14 @@
     "appendix.mds.explicit_gart_mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-      "line": 1112,
+      "line": 1114,
       "printed": 3.01,
       "expected": 3.01277
     },
     "appendix.mds.geo_stress_max": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1112,
+      "line": 1114,
       "printed": 0.2363,
       "expected": null
     },
@@ -3260,7 +3159,7 @@
     "methods.optuna.n_trials": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 200.0,
       "expected": null
     },
@@ -3274,14 +3173,14 @@
     "methods.optuna.trials_complete": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 60.0,
       "expected": null
     },
     "methods.optuna.trials_pruned": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 140.0,
       "expected": null
     },
@@ -3295,28 +3194,28 @@
     "methods.optuna.tuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 0.6112,
       "expected": null
     },
     "methods.optuna.tuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 2.6364,
       "expected": null
     },
     "methods.optuna.untuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 0.6226,
       "expected": null
     },
     "methods.optuna.untuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1039,
+      "line": 1041,
       "printed": 2.4725,
       "expected": null
     },
@@ -3389,20 +3288,6 @@
       "line": 172,
       "printed": 14.1,
       "expected": 14.132265
-    },
-    "methods.target.train_outlier": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 136,
-      "printed": 0.975,
-      "expected": null
-    },
-    "methods.target.val_outlier": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 136,
-      "printed": 2.06,
-      "expected": null
     },
     "methods.transform.pred_hi": {
       "state": "NO_GENERATOR",
@@ -12458,6 +12343,54 @@
           "line": 191,
           "printed": 7.76,
           "expected": 7.755817
+        }
+      ],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-08-28T23:30:36+00:00",
+      "kind": "update",
+      "reason": "Implementation-detail sweep per author: code mechanics (clipping epsilons, traversal arithmetic, greedy candidate-list switchover, dense-matrix notes, warm-up mechanics, dispatch thresholds) removed from the body; the appendices now define both timing protocols and carry a GART 1.0 extractor note; 2 claims withdrawn, values preserved verbatim elsewhere (0 mismatched)",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "28ba3631eecb330b989b22a52b5e0299a026f39330705dee56a1a43f5e3b72e0",
+      "production_model": "GART_2.0",
+      "n_entries": 317,
+      "n_keys": 317,
+      "absorbed": [
+        "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:d299789b2624",
+        "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7780ec2b09a6",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:b9b8e3c8cd2e",
+        "appendix:app-code :: 64 :: tier2:unmarked :: ctx:7354ad0d307c",
+        "appendix:app-code :: 11 :: tier2:unmarked :: ctx:d78fb3e95008"
+      ],
+      "pruned": [
+        "appendix:app-code :: 11 :: tier2:unmarked :: ctx:c94a765d95f1",
+        "appendix:app-code :: 64 :: tier2:unmarked :: ctx:fd0f9702e031",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:fbda6069b3ab",
+        "sec-methodology/subsec-features :: 31 :: tier2:unmarked :: ctx:2e3a8f309ac8",
+        "sec-methodology/subsec-model-training :: 1.3 :: tier1:unit :: ctx:7ae39b8153b6",
+        "sec-methodology/subsec-model-training :: 16 :: tier2:unmarked :: ctx:f876fa75357b",
+        "sec-methodology/subsec-model-training :: 1{,}118 :: tier2:unmarked :: ctx:0a3ae1b9bcf2",
+        "sec-methodology/subsec-model-training :: 3000 :: tier2:unmarked :: ctx:1e207dc51bf1",
+        "sec-methodology/subsec-model-training :: 40 :: tier2:unmarked :: ctx:e5a8cedcb96c",
+        "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:7a11bec36b96"
+      ],
+      "claims_withdrawn": [
+        {
+          "id": "methods.target.train_outlier",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 136,
+          "printed": 0.975,
+          "expected": null
+        },
+        {
+          "id": "methods.target.val_outlier",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 136,
+          "printed": 2.06,
+          "expected": null
         }
       ],
       "mismatched_at_record": []
