@@ -192,7 +192,7 @@ We compare GART 2.0 against seven baselines in four families: classical region-b
 
 \paragraph{Constructive heuristic.} The Hilbert row builds a tour from a bare $d$-dimensional Hilbert ordering after independent per-axis min--max normalization to a 16-bit grid. It constructs a tour rather than estimating one, and the planar guarantee of \citet{bartholdi1982heuristic} does not transfer to this multidimensional variant.
 
-\paragraph{Certified lower bound.}  The Held--Karp 1-tree bound \citep{heldkarp1970,heldkarp1971} returns a proven lower bound on the optimal tour, at a cost fixed by an explicit ascent budget $k$. Two rows carry it, differing only in the step rule of the subgradient ascent: the Volgenant--Jonker schedule \citep{volgenant1982}, which consults no upper bound, and the Polyak step \citep{polyak1969}, which sizes each move from the gap to a constructively built tour. Both are scored on all four benchmarks -- the 2D diverse set, the multidimensional set, TSPLIB EUC\_2D, and the non-EUC\_2D TSPLIB instances -- both raw and scaled by a single constant fitted per budget on the training split, and Section~\ref{sec:frontier} reports them in full.  
+\paragraph{Certified lower bound.}  The Held--Karp 1-tree bound \citep{heldkarp1970,heldkarp1971} returns a proven lower bound on the optimal tour, at a cost fixed by an explicit ascent budget $k$. The ascent runs under either of two step rules: the Volgenant--Jonker schedule \citep{volgenant1982}, which consults no upper bound, and the Polyak step \citep{polyak1969}, which sizes each move from the gap to a constructively built tour. Both are scored on all four benchmarks -- the 2D diverse set, the multidimensional set, TSPLIB EUC\_2D, and the non-EUC\_2D TSPLIB instances -- both raw and scaled by a single constant fitted per budget on the training split, and Section~\ref{sec:frontier} reports them in full.  
 
 \paragraph{Region measure and matched domains.} A \emph{matched domain} is the subset of a benchmark on which a classical estimator's own published assumptions hold, so that scoring it there measures the method rather than the mismatch. Every synthetic generator draws coordinates inside $[0,G]^d$ for a coordinate-grid side length $G$, so the sampling region measure is $G^d$ exactly. BHH is the only estimator here whose source names that measure; on the synthetic benchmarks it appears as two rows, one given $G^d$ and one given the convex hull of the realized sample. Both are reported because the region measure is the source-faithful input only where the generator is uniform on that region: a near-collinear point set has one-dimensional effective support, and handing an area-based estimator $G^2$ inflates its prediction by an amount that describes the data and not the estimator. TSPLIB defines no sampling region at all, so there BHH receives the convex hull as a stated plug-in. \c{C}avdar--Sokol takes no region input: its $A$ is the area of the rectangle covering the nodes, a statistic of the sample, so it has a single row on every benchmark and supplying it $G^2$ would be our construction rather than its authors'.  
 
@@ -201,42 +201,42 @@ We compare GART 2.0 against seven baselines in four families: classical region-b
 \renewcommand{\arraystretch}{1.25}
 \setlength{\LTcapwidth}{\textwidth}
 \begin{longtable}{@{}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.170\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.315\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.195\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.110\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.165\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.360\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.060\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.100\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.105\textwidth-8pt\relax}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.210\textwidth-8pt\relax}@{}}
-\caption{Benchmark roster. ``Domain'' is the range each source fits or derives; Section~\ref{subsec:matched_domain} rescores the classical estimators inside it.}\label{tab:benchmark_models}\\
+\caption{Benchmark roster. D and N are the dimension and instance-size range each source fits or derives; Section~\ref{subsec:matched_domain} rescores the classical estimators inside their domains.}\label{tab:benchmark_models}\\
 \toprule
-\textbf{Estimator} & \textbf{Formula} & \textbf{Domain} & \textbf{Cost} & \textbf{Source} \\
+\textbf{Estimator} & \textbf{Formula} & \textbf{D} & \textbf{N} & \textbf{Cost} & \textbf{Source} \\
 \midrule
 \endfirsthead
-\multicolumn{5}{@{}l}{\footnotesize\itshape Table~\thetable{} continued from the previous page}\\
+\multicolumn{6}{@{}l}{\footnotesize\itshape Table~\thetable{} continued from the previous page}\\
 \toprule
-\textbf{Estimator} & \textbf{Formula} & \textbf{Domain} & \textbf{Cost} & \textbf{Source} \\
+\textbf{Estimator} & \textbf{Formula} & \textbf{D} & \textbf{N} & \textbf{Cost} & \textbf{Source} \\
 \midrule
 \endhead
-\multicolumn{5}{@{}l}{\textit{Classical region-based estimators}} \\
+\multicolumn{6}{@{}l}{\textit{Classical region-based estimators}} \\
 \midrule
-BHH & $\beta_d\, n^{(d-1)/d} \mathcal{V}^{1/d}$, $\mathcal{V}$ the sampling-region measure & i.i.d.\ uniform, $n\to\infty$ & $O(nd)$ & \citet{bhh1959,johnson1996asymptotic,bertsimas1990asymptotic} \\
-\c{C}avdar--Sokol & $2.791\sqrt{n\,\mathrm{cstdev}_x\mathrm{cstdev}_y}+0.2669\sqrt{n\,\mathrm{stdev}_x\mathrm{stdev}_y A/(\bar c_x\bar c_y)}$ & Minimum-area rectangle; $n\ge100$ correction & $O(nd)$ & \citet{cavdar2014dissertation} \\
+BHH & $\beta_d\, n^{(d-1)/d} \mathcal{V}^{1/d}$, i.i.d.\ uniform on a region of measure $\mathcal{V}$ & $\ge2$ & $\to\infty$ & $O(nd)$ & \citet{bhh1959,johnson1996asymptotic,bertsimas1990asymptotic} \\
+\c{C}avdar--Sokol & $2.791\sqrt{n\,\mathrm{cstdev}_x\mathrm{cstdev}_y}+0.2669\sqrt{n\,\mathrm{stdev}_x\mathrm{stdev}_y A/(\bar c_x\bar c_y)}$ & 2 & $[100,975]$ & $O(nd)$ & \citet{cavdar2014dissertation} \\
 \midrule
-\multicolumn{5}{@{}l}{\textit{Constant-ratio references}} \\
+\multicolumn{6}{@{}l}{\textit{Constant-ratio references}} \\
 \midrule
-$L_{\mathrm{MST}}$ ($\alpha=1$) & $L_{\mathrm{MST}}$ & All & $O(n^2d)$ & Lower bound of Eq.~\eqref{eq:bounds} \\
-Asymptotic MST ratio & $(\beta_{\mathrm{TSP}}/\beta_{\mathrm{MST}})\,L_{\mathrm{MST}}\approx1.1253\,L_{\mathrm{MST}}$ & $d=2$, uniform, $n\to\infty$ & $O(n^2d)$ & \citet{johnson1996asymptotic,cortinaborja2000mst} \\
-Calibrated MST ratio $\hat\rho(d,n)$ & $\hat\rho(d,n)\,L_{\mathrm{MST}}$, per dimension--size cell & Trained cells & $O(n^2d)$ & This work \\
+$L_{\mathrm{MST}}$ ($\alpha=1$) & $L_{\mathrm{MST}}$ & any & any & $O(n^2d)$ & Lower bound of Eq.~\eqref{eq:bounds} \\
+Asymptotic MST ratio & $(\beta_{\mathrm{TSP}}/\beta_{\mathrm{MST}})\,L_{\mathrm{MST}}\approx1.1253\,L_{\mathrm{MST}}$, uniform limit & 2 & $\to\infty$ & $O(n^2d)$ & \citet{johnson1996asymptotic,cortinaborja2000mst} \\
+Calibrated MST ratio $\hat\rho(d,n)$ & $\hat\rho(d,n)\,L_{\mathrm{MST}}$, one constant per trained cell & $[2,50]$ & $[5,1000]$ & $O(n^2d)$ & This work \\
 \midrule
-\multicolumn{5}{@{}l}{\textit{Prior model and constructive heuristic}} \\
+\multicolumn{6}{@{}l}{\textit{Prior model and constructive heuristic}} \\
 \midrule
-GART 1.0 & 2D-only feature set, GBDT regression on $\alpha$ & $d=2$ & $O(n^2)$ & \citet{gart2025} \\
-Custom Hilbert sort & Bare $d$-dimensional ordering, per-axis normalized, Hilbert order $h=16$ & Constructs a tour & $O(n\log n)$ & After \citet{bartholdi1982heuristic} \\
+GART 1.0 & 2D-only feature set, GBDT regression on $\alpha$ & 2 & any & $O(n^2)$ & \citet{gart2025} \\
+Custom Hilbert sort & Bare $d$-dimensional Hilbert ordering, per-axis normalized, order $h=16$; returns a tour & any & any & $O(n\log n)$ & After \citet{bartholdi1982heuristic} \\
 \midrule
-\multicolumn{5}{@{}l}{\textit{Certified lower bound}} \\
+\multicolumn{6}{@{}l}{\textit{Certified lower bound}} \\
 \midrule
-Held--Karp 1-tree, Volgenant--Jonker step, budget $k$ & the incumbent $\hat w_k=\max_{j\le k}w(\pi_j)$ over $k$ ascent steps; step schedule consults no upper bound & Any symmetric distances, any $d$; certificate & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,heldkarp1971,volgenant1982,helsgaun2000} \\
-Held--Karp 1-tree, Polyak step, budget $k$ & The same bound; step $\gamma(\mathrm{UB}-w)/\lVert g\rVert^{2}$ against a constructive tour & Any symmetric distances, any $d$; certificate & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,polyak1969} \\
-Calibrated 1-tree & $c_k$ times either bound, $c_k$ fitted per budget on the training split & As trained & $\Theta(n^2 d + k n^2)$ & This work \\
+Held--Karp 1-tree ascent, budget $k$ & incumbent $\hat w_k=\max_{j\le k}w(\pi_j)$ under the Volgenant--Jonker or Polyak step; certified lower bound & any & any & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,heldkarp1971,volgenant1982,polyak1969,helsgaun2000} \\
+Calibrated 1-tree & $c_k\hat w_k$, one scalar per budget, fitted on the planar training split; not a certificate & 2 & $[5,1000]$ & $\Theta(n^2 d + k n^2)$ & This work \\
 \bottomrule
 \end{longtable}
 \endgroup
