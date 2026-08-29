@@ -789,7 +789,7 @@ CLAIMS: list[Claim] = [
     # withdrawn methods.shap.top2_share: cut in the verbosity sweep; the two component shares remain in prose and tab:shap_top carries the full ranking
     Claim(
         id="methods.shap.size_dimension_share",
-        anchor=r"node count and dimension jointly contribute {v}\%. The greedy ratio ranking second",
+        anchor=r"node count and dimension jointly contribute {v}\%. Appendix",
         expect="bank:shap_family_size_dimension_share_pct",
         tol=("dp", 1),
     ),
@@ -1075,7 +1075,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.n",
-        anchor=r"suggest (Table~\ref{tab:classical}). On the {v} uniform instances it obtains",
+        anchor=r"suggest (Appendix~\ref{app:classical}). On the {v} uniform instances it obtains",
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),

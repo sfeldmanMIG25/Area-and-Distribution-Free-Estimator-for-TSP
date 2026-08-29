@@ -54,7 +54,6 @@ FRAG = Path(__file__).resolve().parent / "tables"
 SIMPLE: dict[str, str] = {
     "tab:tsplib_by_size": "table_tsplib_by_size.tex",
     "tab:tsplib_nonEuc": "table_tsplib_nonEuc.tex",
-    "tab:classical": "table_classical.tex",
 }
 
 
