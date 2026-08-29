@@ -207,7 +207,7 @@ We compare GART 2.0 against seven baselines in four families: classical region-b
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.100\textwidth-8pt\relax}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.105\textwidth-8pt\relax}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.210\textwidth-8pt\relax}@{}}
-\caption{Benchmark roster. D and N are the dimension and instance-size range each source fits or derives; Section~\ref{subsec:matched_domain} rescores the classical estimators inside their domains.}\label{tab:benchmark_models}\\
+\caption{Benchmark roster. D and N are the dimension and instance-size range each source fits or derives; a dash means the method reads only a distance matrix, so no dimension applies. Section~\ref{subsec:matched_domain} rescores the classical estimators inside their domains.}\label{tab:benchmark_models}\\
 \toprule
 \textbf{Estimator} & \textbf{Formula} & \textbf{D} & \textbf{N} & \textbf{Cost} & \textbf{Source} \\
 \midrule
@@ -219,24 +219,24 @@ We compare GART 2.0 against seven baselines in four families: classical region-b
 \endhead
 \multicolumn{6}{@{}l}{\textit{Classical region-based estimators}} \\
 \midrule
-BHH & $\beta_d\, n^{(d-1)/d} \mathcal{V}^{1/d}$, i.i.d.\ uniform on a region of measure $\mathcal{V}$ & $\ge2$ & $\to\infty$ & $O(nd)$ & \citet{bhh1959,johnson1996asymptotic,bertsimas1990asymptotic} \\
-\c{C}avdar--Sokol & $2.791\sqrt{n\,\mathrm{cstdev}_x\mathrm{cstdev}_y}+0.2669\sqrt{n\,\mathrm{stdev}_x\mathrm{stdev}_y A/(\bar c_x\bar c_y)}$ & 2 & $[100,975]$ & $O(nd)$ & \citet{cavdar2014dissertation} \\
+BHH & $\beta_d\, n^{(d-1)/d} \mathcal{V}^{1/d}$, i.i.d.\ uniform on a region of measure $\mathcal{V}$ & $[2,\infty)$ & $\to\infty$ & $O(nd)$ & \citet{bhh1959,johnson1996asymptotic,bertsimas1990asymptotic} \\
+\c{C}avdar--Sokol & $2.791\sqrt{n\,\mathrm{cstdev}_x\mathrm{cstdev}_y}+0.2669\sqrt{n\,\mathrm{stdev}_x\mathrm{stdev}_y A/(\bar c_x\bar c_y)}$ & $\{2\}$ & $[100,975]$ & $O(nd)$ & \citet{cavdar2014dissertation} \\
 \midrule
 \multicolumn{6}{@{}l}{\textit{Constant-ratio references}} \\
 \midrule
-$L_{\mathrm{MST}}$ ($\alpha=1$) & $L_{\mathrm{MST}}$ & any & any & $O(n^2d)$ & Lower bound of Eq.~\eqref{eq:bounds} \\
-Asymptotic MST ratio & $(\beta_{\mathrm{TSP}}/\beta_{\mathrm{MST}})\,L_{\mathrm{MST}}\approx1.1253\,L_{\mathrm{MST}}$, uniform limit & 2 & $\to\infty$ & $O(n^2d)$ & \citet{johnson1996asymptotic,cortinaborja2000mst} \\
+$L_{\mathrm{MST}}$ ($\alpha=1$) & $L_{\mathrm{MST}}$ & -- & $[3,\infty)$ & $O(n^2d)$ & Lower bound of Eq.~\eqref{eq:bounds} \\
+Asymptotic MST ratio & $(\beta_{\mathrm{TSP}}/\beta_{\mathrm{MST}})\,L_{\mathrm{MST}}\approx1.1253\,L_{\mathrm{MST}}$, uniform limit & $\{2\}$ & $\to\infty$ & $O(n^2d)$ & \citet{johnson1996asymptotic,cortinaborja2000mst} \\
 Calibrated MST ratio $\hat\rho(d,n)$ & $\hat\rho(d,n)\,L_{\mathrm{MST}}$, one constant per trained cell & $[2,50]$ & $[5,1000]$ & $O(n^2d)$ & This work \\
 \midrule
 \multicolumn{6}{@{}l}{\textit{Prior model and constructive heuristic}} \\
 \midrule
-GART 1.0 & 2D-only feature set, GBDT regression on $\alpha$ & 2 & any & $O(n^2)$ & \citet{gart2025} \\
-Custom Hilbert sort & Bare $d$-dimensional Hilbert ordering, per-axis normalized, order $h=16$; returns a tour & any & any & $O(n\log n)$ & After \citet{bartholdi1982heuristic} \\
+GART 1.0 & 2D-only feature set, GBDT regression on $\alpha$ & $\{2\}$ & $[3,\infty)$ & $O(n^2)$ & \citet{gart2025} \\
+Custom Hilbert sort & Bare $d$-dimensional Hilbert ordering, per-axis normalized, order $h=16$; returns a tour & $[2,\infty)$ & $[3,\infty)$ & $O(n\log n)$ & After \citet{bartholdi1982heuristic} \\
 \midrule
 \multicolumn{6}{@{}l}{\textit{Certified lower bound}} \\
 \midrule
-Held--Karp 1-tree ascent, budget $k$ & incumbent $\hat w_k=\max_{j\le k}w(\pi_j)$ under the Volgenant--Jonker or Polyak step; certified lower bound & any & any & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,heldkarp1971,volgenant1982,polyak1969,helsgaun2000} \\
-Calibrated 1-tree & $c_k\hat w_k$, one scalar per budget, fitted on the planar training split; not a certificate & 2 & $[5,1000]$ & $\Theta(n^2 d + k n^2)$ & This work \\
+1-tree, Volgenant--Jonker step & incumbent $\hat w_k=\max_{j\le k}w(\pi_j)$ over budget $k$; the schedule consults no upper bound & -- & $[3,\infty)$ & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,heldkarp1971,volgenant1982,helsgaun2000} \\
+1-tree, Polyak step & the same incumbent; step $\gamma(\mathrm{UB}-w)/\lVert g\rVert^{2}$ against a constructive tour & -- & $[3,\infty)$ & $\Theta(n^2 d + k n^2)$ & \citet{heldkarp1970,polyak1969} \\
 \bottomrule
 \end{longtable}
 \endgroup
