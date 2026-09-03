@@ -307,7 +307,32 @@ The multidimensional benchmark is 16{,}920 held-out instances, of which the 16{,
 \label{fig:boxplot_nd}
 \end{figure}
 
-GART 2.0 obtains 0.62\% MAPE and 0.99\% SDPE overall. The strongest baseline in the roster of Section~\ref{subsec:bench_models} that uses no learned model is the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%, so the learned $\alpha$ improves on a lookup table of 102 constants fitted on the same training split by a factor of 2.9 on MAPE and 3.0 on SDPE. The $\alpha=1$ floor reaches 9.71\%/7.26\%, the custom Hilbert sort 21.21\%/14.40\%, and BHH given the exact sampling region 28.01\%/13.57\%. Figure~\ref{fig:boxplot_nd} draws the certified Held--Karp 1-tree bound beside them.  Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
+GART 2.0 obtains 0.62\% MAPE and 0.99\% SDPE overall (Table~\ref{tab:results_nd}). The strongest baseline in the roster of Section~\ref{subsec:bench_models} that uses no learned model is the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%, so the learned $\alpha$ improves on a lookup table of 102 constants fitted on the same training split by a factor of 2.9 on MAPE and 3.0 on SDPE. The $\alpha=1$ floor reaches 9.71\%/7.26\%, the custom Hilbert sort 21.21\%/14.40\%, and BHH given the exact sampling region 28.01\%/13.57\%. Figure~\ref{fig:boxplot_nd} draws the certified Held--Karp 1-tree bound beside them.  Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
+
+\begin{table}[!htbp]
+\centering
+\caption{Multidimensional benchmark results, by dimension band.}
+\label{tab:results_nd}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.05}
+{\small%
+\begin{tabular}{@{}lrrrrrrrrrrr@{}}
+\toprule
+ & & \multicolumn{2}{c}{GART 2.0} & \multicolumn{2}{c}{$\hat\rho(d,n)$} & \multicolumn{2}{c}{$\alpha=1$} & \multicolumn{2}{c}{BHH} & \multicolumn{2}{c}{Hilbert} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}\cmidrule(lr){11-12}
+Bucket & Count & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE \\
+\midrule
+$d=2$ & 647 & \textbf{1.57} & \textbf{2.37} & 4.05 & 6.19 & 19.14 & 9.78 & 18.93 & 30.92 & 29.74 & 15.75 \\
+$d=3$--$5$ & 1{,}944 & \textbf{1.07} & \textbf{1.71} & 2.53 & 4.05 & 14.96 & 7.67 & 26.81 & 24.14 & 35.70 & 15.72 \\
+$d=6$--$10$ & 3{,}238 & \textbf{0.64} & \textbf{1.01} & 1.79 & 2.98 & 11.92 & 6.46 & 27.58 & 10.28 & 32.52 & 13.82 \\
+$d=15$--$25$ & 1{,}942 & \textbf{0.42} & \textbf{0.68} & 1.40 & 2.46 & 9.40 & 5.98 & 26.98 & 6.17 & 24.58 & 11.71 \\
+$d=30$--$50$ & 3{,}228 & \textbf{0.29} & \textbf{0.48} & 1.29 & 2.31 & 8.02 & 5.94 & 28.17 & 4.34 & 17.07 & 7.99 \\
+$d=100$ & 5{,}847 & \textbf{0.59} & \textbf{0.44} & 1.78 & 2.21 & 6.73 & 5.93 & 29.92 & 2.76 & 10.35 & 4.60 \\
+\textbf{Total} & 16{,}846 & \textbf{0.62} & \textbf{0.99} & 1.82 & 2.94 & 9.71 & 7.26 & 28.01 & 13.57 & 21.21 & 14.40 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
 
 SDPE decreases monotonically across all six size buckets, from 1.56\% at $n\le10$ to 0.46\% at $n\in[201,500]$ and 0.45\% at $n\in[501,1000]$. Across dimension groups it falls from 2.37\% at $d=2$ to 0.48\% at $d\in[30,50]$ (Figure~\ref{fig:accgrid}), and falls again, to 0.44\%, at the unseen $d=100$, while MAPE rises there from 0.29\% to 0.59\%. The $d=100$ result is favorable-direction extrapolation.
 
@@ -331,7 +356,33 @@ BHH's 28.01\% error is not a defect of the reimplementation. The dominant term i
 \label{fig:boxplot_2d}
 \end{figure}
 
-GART 2.0 obtains 2.89\% MAPE and 4.68\% SDPE overall (Figure~\ref{fig:boxplot_2d}), against 5.76\%/9.38\% for the calibrated ratio $\hat\rho(d,n)$, 7.30\%/7.90\% for GART 1.0, 9.20\%/11.55\% for the asymptotic ratio, and 17.95\%/10.27\% for the $\alpha=1$ floor. Its SDPE stays below 5.9\% in every size bucket and falls to 2.75\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30.95\% MAPE against 14.19\% SDPE, a gap that identifies its error as a near-constant positive offset and not scatter, the signature a space-filling-curve tour should produce. 
+GART 2.0 obtains 2.89\% MAPE and 4.68\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), against 5.76\%/9.38\% for the calibrated ratio $\hat\rho(d,n)$, 7.30\%/7.90\% for GART 1.0, 9.20\%/11.55\% for the asymptotic ratio, and 17.95\%/10.27\% for the $\alpha=1$ floor. Its SDPE stays below 5.9\% in every size bucket and falls to 2.75\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30.95\% MAPE against 14.19\% SDPE, a gap that identifies its error as a near-constant positive offset and not scatter, the signature a space-filling-curve tour should produce.
+
+\begin{table}[!htbp]
+\centering
+\caption{2D diverse benchmark results, by generator class.}
+\label{tab:results_2d}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.05}
+{\small%
+\begin{tabular}{@{}lrrrrrrrrrrr@{}}
+\toprule
+ & & \multicolumn{2}{c}{GART 2.0} & \multicolumn{2}{c}{GART 1.0} & \multicolumn{2}{c}{$\hat\rho(d,n)$} & \multicolumn{2}{c}{Asymptotic} & \multicolumn{2}{c}{$\alpha=1$} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}\cmidrule(lr){11-12}
+Bucket & Count & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE & MAPE & SDPE \\
+\midrule
+Isotropic & 840 & \textbf{1.47} & \textbf{2.23} & 5.38 & 5.18 & 3.31 & 5.11 & 7.12 & 8.77 & 17.15 & 7.79 \\
+Biased & 840 & \textbf{1.79} & \textbf{2.51} & 7.93 & 7.97 & 3.21 & 5.24 & 8.22 & 10.09 & 18.36 & 8.97 \\
+Geometric: Grid\textsuperscript{$\dagger$} & 210 & \textbf{7.07} & \textbf{1.92} & 11.90 & 4.97 & 15.99 & 6.42 & 9.43 & 6.76 & 4.54 & 6.01 \\
+Geometric: Boundary, X-Central & 420 & \textbf{1.96} & \textbf{2.60} & 5.50 & 5.33 & 2.99 & 5.06 & 6.69 & 8.87 & 17.01 & 7.89 \\
+Clustered & 60 & \textbf{2.24} & \textbf{2.75} & 5.41 & 6.71 & 7.94 & 5.36 & 10.50 & 6.36 & 20.46 & 5.65 \\
+Line Noise\textsuperscript{$\dagger$} & 210 & \textbf{10.82} & \textbf{6.09} & 12.03 & 14.90 & 20.45 & 8.64 & 25.88 & 12.01 & 34.13 & 10.67 \\
+\textbf{Total} & 2{,}580 & \textbf{2.89} & \textbf{4.68} & 7.30 & 7.90 & 5.76 & 9.38 & 9.20 & 11.55 & 17.95 & 10.27 \\
+\bottomrule
+\multicolumn{12}{l}{\footnotesize $^{\dagger}$ Not represented in training.} \\
+\end{tabular}%
+}
+\end{table} 
 
 GART 2.0 ranges from 1.47\% MAPE on the isotropic class to 10.82\% on Line Noise, and every estimator degrades on Line Noise in the same direction: the calibrated ratio moves from 3.31\% to 20.45\%, the asymptotic ratio from 7.12\% to 25.88\%, and the $\alpha=1$ floor from 17.15\% to 34.13\%. Near-collinear point sets drive $\alpha$ toward its upper bound of 2, and no estimator anchored on a typical ratio tracks that. On the 210 \texttt{grid} instances GART 2.0 reads 7.07\% MAPE against 1.96\% on the 420 Geometric Struct.\ instances that are represented, and its MSPE equals that MAPE exactly, so every one of those predictions is high. Realized $\alpha$ averages 1.05 on \texttt{grid} against 1.56 on Line Noise, so the two unrepresented generators sit at opposite ends of the target range and the estimator errs toward the middle on both. Both therefore confound unseen geometry with an extreme target value. On \texttt{grid} the $\alpha=1$ floor is more accurate than the released model, at 4.54\%, the only row in this paper on which the floor beats it.
 
@@ -599,7 +650,7 @@ Can a learned estimator understand the relationship between the MST and the TSP 
 
 \section{Code and Data Availability} \label{app:code}
 
-Our implementation, trained model weights, and benchmark scripts are available at \url{https://github.com/sfeldmanMIG25/Area-and-Distribution-Free-Estimator-for-TSP}. Synthetic instances can be regenerated using the provided scripts with fixed random seeds. The per-class, per-dimension, per-size, rank-agreement, and paired-test grids are released as tidy tables alongside the per-instance predictions. The classical estimators and the calibrated constant-ratio baselines are released as separate modules, and the fitted constant-ratio table is frozen as a released artifact rather than refitted at inference. The benchmark results tables are generated from the scored outputs and written into the manuscript mechanically; a verification pass re-derives all 271 table cells and reports any that disagrees with the typeset value, and a second pass does the same for the 182 cells of the cost/accuracy ladders of Section~\ref{sec:frontier}. The remaining tables, and scalars quoted in the running prose such as the timing split and the quarantine and bound-check counts, are transcribed by hand from the same artifacts and are not covered by either check. The label validation of Appendix~\ref{app:labels}, the refits of Section~\ref{subsec:generalization}, the MDS diagnostics of Appendix~\ref{app:mds} and the figures of this paper are each released as a standalone reproduction script, and the versions of the Python analysis dependencies are pinned in the repository.
+Our implementation, trained model weights, and benchmark scripts are available at \url{https://github.com/sfeldmanMIG25/Area-and-Distribution-Free-Estimator-for-TSP}. Synthetic instances can be regenerated using the provided scripts with fixed random seeds. The per-class, per-dimension, per-size, rank-agreement, and paired-test grids are released as tidy tables alongside the per-instance predictions. The classical estimators and the calibrated constant-ratio baselines are released as separate modules, and the fitted constant-ratio table is frozen as a released artifact rather than refitted at inference. The benchmark results tables are generated from the scored outputs and written into the manuscript mechanically; a verification pass re-derives all 425 table cells and reports any that disagrees with the typeset value, and a second pass does the same for the 182 cells of the cost/accuracy ladders of Section~\ref{sec:frontier}. The remaining tables, and scalars quoted in the running prose such as the timing split and the quarantine and bound-check counts, are transcribed by hand from the same artifacts and are not covered by either check. The label validation of Appendix~\ref{app:labels}, the refits of Section~\ref{subsec:generalization}, the MDS diagnostics of Appendix~\ref{app:mds} and the figures of this paper are each released as a standalone reproduction script, and the versions of the Python analysis dependencies are pinned in the repository.
 For direct audit of target clipping, the two released out-of-interval rows are \path{N1000_D15_G100_pchergphhtgncoe_59} (training, raw $\alpha=0.974823$) and \path{N5_D2_G100_oc_33} (validation, raw $\alpha=2.059518$).
 
 The GART 2.0 pipeline uses SciPy \citep{scipy2020} for Delaunay triangulation \citep{delaunay1934} and MST construction, Numba \citep{numba2015} for centroid-distance computation, NumPy \citep{harris2020numpy} symmetric eigendecomposition for classical MDS, LightGBM \citep{ke2017lightgbm} for regression, and scikit-learn \citep{sklearn2011} for metric computation. Estimator timings were collected on one Intel i7 13th Gen machine with 64\,GB RAM and Windows 11. The cold protocol times one harness invocation per instance, interpreter and just-in-time warm-up included; the solo protocol runs one estimator per process and completes warm-up before the clock starts. Concorde 03.12.19 and LKH-3 3.0.13 generated the stored reference tour costs; the canonical table does not retain solver certificates.

@@ -54,10 +54,28 @@ FRAG = Path(__file__).resolve().parent / "tables"
 SIMPLE: dict[str, str] = {
     "tab:tsplib_by_size": "table_tsplib_by_size.tex",
     "tab:tsplib_nonEuc": "table_tsplib_nonEuc.tex",
-    # Compact Section 4 body tables, written by build_paper_tables.write_tex_compact.
-    "tab:results_nd": "table_results_nd.tex",
-    "tab:results_2d": "table_results_2d.tex",
 }
+
+# Compact Section 4 body tables (build_paper_tables.write_tex_compact). The
+# whole tabular is machine output, header included, because the estimator
+# roster fixes the column count; so the span from \begin{tabular} to
+# \end{tabular} is replaced, not just the body rows.
+TABULAR: dict[str, str] = {
+    "tab:results_nd": "table_results_nd_tabular.tex",
+    "tab:results_2d": "table_results_2d_tabular.tex",
+}
+
+
+def tabular_span(text: str, label: str) -> tuple[int, int]:
+    """Return the span of the ``\\begin{tabular}...\\end{tabular}`` after ``label``."""
+    m = re.search(re.escape("\\label{" + label + "}"), text)
+    if m is None:
+        raise KeyError(f"label {label!r} not found in {TEX.name}")
+    start = text.find(r"\begin{tabular}", m.end())
+    end = text.find(r"\end{tabular}", start)
+    if start == -1 or end == -1:
+        raise ValueError(f"no tabular after {label!r}")
+    return start, end + len(r"\end{tabular}")
 
 
 def body_span(text: str, label: str) -> tuple[int, int]:
@@ -94,7 +112,7 @@ def main() -> int:
                     help="comma-separated \\label values; default is every table")
     args = ap.parse_args()
     wanted = {s.strip() for s in args.only.split(",") if s.strip()}
-    unknown = wanted - set(SIMPLE)
+    unknown = wanted - set(SIMPLE) - set(TABULAR)
     if unknown:
         print("Unknown label(s): " + ", ".join(sorted(unknown)))
         return 2
@@ -115,6 +133,21 @@ def main() -> int:
         except KeyError as exc:
             print(f"  SKIP {label}: {exc}")
             continue
+        applied.append(label)
+
+    for label, fname in TABULAR.items():
+        if wanted and label not in wanted:
+            continue
+        path = FRAG / fname
+        if not path.exists():
+            print(f"  SKIP {label}: {fname} missing")
+            continue
+        try:
+            lo, hi = tabular_span(text, label)
+        except KeyError as exc:
+            print(f"  SKIP {label}: {exc}")
+            continue
+        text = text[:lo] + path.read_text(encoding="utf-8").strip("\n") + text[hi:]
         applied.append(label)
 
     if text == original:

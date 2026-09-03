@@ -153,8 +153,14 @@ TEX_MODELS: dict[str, list[str]] = {
 # roster per benchmark is the body roster in TEX_MODELS.
 COMPACT_TABLES: dict[str, str] = {"tab:results_nd": "nd_by_dim",
                                   "tab:results_2d": "2d_by_genclass"}
-COMPACT_MODELS: dict[str, list[str]] = {"nd_by_dim": TEX_MODELS["nd"],
-                                        "2d_by_genclass": TEX_MODELS["2d"]}
+COMPACT_MODELS: dict[str, list[str]] = {
+    "nd_by_dim": TEX_MODELS["nd"],
+    # Six estimator pairs overflow the text width by 31 pt even at
+    # \footnotesize; five fit at \small. Hilbert is the constructive heuristic,
+    # its 2D aggregate is quoted in the prose, and the full per-class table
+    # stays in the released artifacts.
+    "2d_by_genclass": [m for m in TEX_MODELS["2d"] if m != "Hilbert"],
+}
 
 # -- Classical-estimator table (the paper's central new result) --------------
 #
@@ -1274,10 +1280,21 @@ def main() -> None:
         tables[name] = tidy
     for label, name in COMPACT_TABLES.items():
         buckets = B_ND_DIM if name == "nd_by_dim" else B_GENCLASS
-        frag = OUT / f"table_{label.split(':', 1)[1]}.tex"
-        write_tex_compact(tables[name], buckets, COMPACT_MODELS[name], frag)
-        (OUT / f"table_{label.split(':', 1)[1]}_header.tex").write_text(
-            compact_header(COMPACT_MODELS[name]) + "\n", encoding="utf-8")
+        models = COMPACT_MODELS[name]
+        stem = label.split(":", 1)[1]
+        frag = OUT / f"table_{stem}.tex"
+        write_tex_compact(tables[name], buckets, models, frag)
+        (OUT / f"table_{stem}_header.tex").write_text(
+            compact_header(models) + "\n", encoding="utf-8")
+        # The whole tabular, header included, for splice_tables.TABULAR: a roster
+        # change moves the column count, which the body-only splice cannot follow.
+        note = ""
+        if any("dagger" in lbl for lbl, _, _ in buckets):
+            note = (rf"\multicolumn{{{2 + 2 * len(models)}}}{{l}}"
+                    r"{\footnotesize $^{\dagger}$ Not represented in training.} \\" "\n")
+        (OUT / f"table_{stem}_tabular.tex").write_text(
+            compact_header(models) + "\n" + frag.read_text(encoding="utf-8")
+            + "\\bottomrule\n" + note + "\\end{tabular}", encoding="utf-8")
     ne = compute_table(non, B_NONEUC, "total_time_s", "tsplib_nonEuc")
     ne.to_csv(OUT / "table_tsplib_nonEuc.csv", index=False)
     write_tex_noneuc(ne, B_NONEUC, TEX_MODELS["tsplib_nonEuc"], OUT / "table_tsplib_nonEuc.tex")

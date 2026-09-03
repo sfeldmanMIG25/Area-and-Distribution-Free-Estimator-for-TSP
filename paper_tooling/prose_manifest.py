@@ -660,25 +660,25 @@ CLAIMS: list[Claim] = [
     # reason names the exact row that settles each one.
     Claim(
         id="results.nd.mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall. The strongest",
+        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_nd}).",
         expect="bank:nd_by_dim_total_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.nd.sdpe",
-        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall. The strongest",
+        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_nd}).",
         expect="bank:nd_by_dim_total_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.2d.mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Figure~\ref{fig:boxplot_2d}), against",
+        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), against",
         expect="bank:2d_by_size_total_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.2d.sdpe",
-        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Figure~\ref{fig:boxplot_2d}), against",
+        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), against",
         expect="bank:2d_by_size_total_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),
