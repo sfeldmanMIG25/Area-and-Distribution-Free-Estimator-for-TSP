@@ -54,6 +54,9 @@ FRAG = Path(__file__).resolve().parent / "tables"
 SIMPLE: dict[str, str] = {
     "tab:tsplib_by_size": "table_tsplib_by_size.tex",
     "tab:tsplib_nonEuc": "table_tsplib_nonEuc.tex",
+    # Compact Section 4 body tables, written by build_paper_tables.write_tex_compact.
+    "tab:results_nd": "table_results_nd.tex",
+    "tab:results_2d": "table_results_2d.tex",
 }
 
 

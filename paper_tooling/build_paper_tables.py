@@ -87,6 +87,7 @@ from paper_tooling.constraint_transfer_bank import (  # noqa: E402
     carried_numbers as constraint_transfer_carried,
 )
 from paper_tooling.shap_production import shap_bank_numbers  # noqa: E402
+from paper_tooling.shap_by_dimension import shap_band_bank_numbers  # noqa: E402
 from paper_tooling.cavdar_correction_bank import (  # noqa: E402
     cavdar_correction_bank_numbers,
 )
@@ -144,6 +145,16 @@ TEX_MODELS: dict[str, list[str]] = {
     # see coverage.csv, and the paired tests, which intersect per instance.
     "tsplib_nonEuc": [GART, "Fixed_Alpha"],
 }
+
+# Compact body tables for Section 4: one row per bucket, MAPE and SDPE per
+# estimator, no CI / median / MSPE / R2 / time columns (those stay in the
+# released full tables). Keyed by the tidy table each one is a projection of, so
+# --check verifies the printed cells against the same regenerated frame. The
+# roster per benchmark is the body roster in TEX_MODELS.
+COMPACT_TABLES: dict[str, str] = {"tab:results_nd": "nd_by_dim",
+                                  "tab:results_2d": "2d_by_genclass"}
+COMPACT_MODELS: dict[str, list[str]] = {"nd_by_dim": TEX_MODELS["nd"],
+                                        "2d_by_genclass": TEX_MODELS["2d"]}
 
 # -- Classical-estimator table (the paper's central new result) --------------
 #
@@ -847,6 +858,56 @@ def write_tex_std(tidy: pd.DataFrame, buckets: list[Bucket], models: list[str],
     path.write_text("\n\\midrule\n".join(blocks) + "\n", encoding="utf-8")
 
 
+def write_tex_compact(tidy: pd.DataFrame, buckets: list[Bucket], models: list[str],
+                      path: Path) -> None:
+    """Body rows of a compact results table: bucket | Count | (MAPE, SDPE) per model.
+
+    One row per bucket in the order ``buckets`` gives; the estimator columns are
+    fixed in the order ``models`` gives so the manuscript header (written once
+    by hand, with the same order) stays aligned. GART 2.0's cells are bold, the
+    convention Section 4 states. A model absent from a bucket prints ``---``.
+    """
+    lines: list[str] = []
+    for label, slug, _ in buckets:
+        sel = tidy[tidy["bucket_slug"] == slug].set_index("model")
+        if sel.empty:
+            continue
+        cells = [label, _thou(int(sel.iloc[0]["bucket_count"]))]
+        for m in models:
+            if m in sel.index:
+                mape, sd = _f(sel.loc[m, "MAPE_pct"], 2), _f(sel.loc[m, "SDPE_pct"], 2)
+            else:
+                mape = sd = "---"
+            if m == GART:
+                mape, sd = rf"\textbf{{{mape}}}", rf"\textbf{{{sd}}}"
+            cells += [mape, sd]
+        lines.append(" & ".join(cells) + r" \\")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+# Column heads for the compact tables. The full display names of MODEL_LABELS
+# are too wide for six estimator pairs on one text width; --check keys the
+# parsed cells by column position and MODEL_LABELS, never by this header text.
+COMPACT_HEAD: dict[str, str] = {
+    GART: "GART 2.0", "GART": "GART 1.0",
+    "Calibrated_MST_dn": r"$\hat\rho(d,n)$", "Asymptotic_MST": "Asymptotic",
+    "MST_Only": r"$\alpha=1$", "BHH_region": "BHH", "Hilbert": "Hilbert",
+}
+
+
+def compact_header(models: list[str]) -> str:
+    """The two-row header matching write_tex_compact, for pasting once by hand."""
+    k = len(models)
+    spec = "@{}lr" + "rr" * k + "@{}"
+    names = " & ".join(rf"\multicolumn{{2}}{{c}}{{{COMPACT_HEAD.get(m, _texname(MODEL_LABELS[m]))}}}"
+                       for m in models)
+    rules = "".join(rf"\cmidrule(lr){{{3 + 2 * i}-{4 + 2 * i}}}" for i in range(k))
+    sub = " & ".join(["MAPE", "SDPE"] * k)
+    return (rf"\begin{{tabular}}{{{spec}}}" "\n" r"\toprule" "\n"
+            rf" & & {names} \\" "\n" f"{rules}\n"
+            rf"Bucket & Count & {sub} \\" "\n" r"\midrule")
+
+
 def write_tex_noneuc(tidy: pd.DataFrame, buckets: list[Bucket], models: list[str], path: Path) -> None:
     """8-column table: type | count | estimator | N | SDPE [CI] | MAPE | |Median| | MSPE.
 
@@ -936,7 +997,10 @@ TEX_TABLES = {"tab:nd_by_dim": "nd_by_dim", "tab:nd_by_size": "nd_by_size",
               # roster change could move a cell in the classical panel or the
               # per-generator panel and no gate would see it. They are the two
               # tables the withdrawal of Daganzo/Chien/Kwon rewrote most.
-              "tab:genclass": "2d_by_genclass", "tab:classical": "classical"}
+              "tab:genclass": "2d_by_genclass", "tab:classical": "classical",
+              # Compact Section 4 body tables (write_tex_compact); projections of
+              # the two tidy frames named, parsed by the compact branch below.
+              **COMPACT_TABLES}
 # Metrics offered to --check and to the number bank. A tidy frame contributes only
 # the ones it actually carries, so table-specific columns (the rank block) can sit
 # in the same list without every other table having to define them.
@@ -994,10 +1058,26 @@ def parse_tex(path: Path) -> dict[tuple[str, str, str, str], tuple[float, int] |
     text = path.read_text(encoding="utf-8")
     out: dict[tuple[str, str, str, str], tuple[float, int] | None] = {}
     table, bucket = None, None
+    compact: list[str] | None = None
     for raw in text.split("\n"):
         lab = re.search(r"\\label\{(tab:[\w:]+)\}", raw)
         if lab:
             table = TEX_TABLES.get(lab.group(1))
+            compact = (COMPACT_MODELS[COMPACT_TABLES[lab.group(1)]]
+                       if lab.group(1) in COMPACT_TABLES else None)
+            continue
+        if compact is not None:
+            # bucket | Count | (MAPE, SDPE) x models. Gated on the label, not the
+            # width: 2 + 2k cells collides with the appendix shape at k = 3.
+            cells = [_clean(c) for c in raw.split("&")]
+            if len(cells) != 2 + 2 * len(compact) or _num(cells[1]) is None:
+                continue  # header rows, rules, blank lines
+            bucket = cells[0]
+            out[(table, bucket, "", "bucket_count")] = _num(cells[1])
+            for i, m in enumerate(compact):
+                disp = MODEL_LABELS[m]
+                out[(table, bucket, disp, "MAPE_pct")] = _num(cells[2 + 2 * i])
+                out[(table, bucket, disp, "SDPE_pct")] = _num(cells[3 + 2 * i])
             continue
         if r"\begin{table}" in raw:
             continue
@@ -1192,6 +1272,12 @@ def main() -> None:
         write_tex_std(tidy, buckets, TEX_MODELS[roster], refs,
                       OUT / f"table_{name}.tex", nobreak=nobreak)
         tables[name] = tidy
+    for label, name in COMPACT_TABLES.items():
+        buckets = B_ND_DIM if name == "nd_by_dim" else B_GENCLASS
+        frag = OUT / f"table_{label.split(':', 1)[1]}.tex"
+        write_tex_compact(tables[name], buckets, COMPACT_MODELS[name], frag)
+        (OUT / f"table_{label.split(':', 1)[1]}_header.tex").write_text(
+            compact_header(COMPACT_MODELS[name]) + "\n", encoding="utf-8")
     ne = compute_table(non, B_NONEUC, "total_time_s", "tsplib_nonEuc")
     ne.to_csv(OUT / "table_tsplib_nonEuc.csv", index=False)
     write_tex_noneuc(ne, B_NONEUC, TEX_MODELS["tsplib_nonEuc"], OUT / "table_tsplib_nonEuc.tex")
@@ -1284,6 +1370,7 @@ def main() -> None:
     # unverifiable. Each returns {} when its exporter has not been run, so a
     # fresh clone rebuilds tables without them rather than failing.
     for owner, fn in (("shap_production", shap_bank_numbers),
+                      ("shap_by_dimension", shap_band_bank_numbers),
                       ("alphahat_range", alphahat_bank_numbers),
                       ("corpus_statistics", corpus_bank_numbers),
                       ("cavdar_correction_bank", cavdar_correction_bank_numbers),

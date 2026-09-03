@@ -490,74 +490,42 @@ CLAIMS: list[Claim] = [
         anchor=r"Of the {v} scored instances {~}, or 62.74",
         expect="sizestrat:corpus/scored_instances",
     ),
-    Claim(
-        id="sizestrat.summary.undominated_cells",
-        anchor=r"GART 2.0 is undominated in {v} of the 18 cells",
-        expect="sizestrat:summary/cells_gart_not_dominated",
-    ),
-    Claim(
-        id="sizestrat.summary.total_cells",
-        anchor=r"undominated in 10 of the {v} cells",
-        expect="sizestrat:summary/cells_total",
-    ),
-    Claim(
-        id="sizestrat.d2.large.mape",
-        anchor=r"GART 2.0 reaches {v}\% MAPE at {~}~ms at $d=2$",
-        expect="sizestrat:cell/d2/n600_1000/gart_mape_pct",
-    ),
-    Claim(
-        id="sizestrat.d2.large.ms",
-        anchor=r"GART 2.0 reaches {~}\% MAPE at {v}~ms at $d=2$",
-        expect="sizestrat:cell/d2/n600_1000/gart_ms",
-    ),
+    # withdrawn sizestrat.summary.undominated_cells: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn sizestrat.summary.total_cells: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn sizestrat.d2.large.mape: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn sizestrat.d2.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d2.large.k500_mape",
-        anchor=r"is both dearer and looser at {v}\% and {~}~ms",
+        anchor=r"$k=500$ costs {v}\% at {~}~ms at $d=2$",
         expect="sizestrat:cell/d2/n600_1000/bound_k500_mape_pct",
     ),
     Claim(
         id="sizestrat.d2.large.k500_ms",
-        anchor=r"is both dearer and looser at {~}\% and {v}~ms",
+        anchor=r"$k=500$ costs {~}\% at {v}~ms at $d=2$",
         expect="sizestrat:cell/d2/n600_1000/bound_k500_ms",
     ),
-    Claim(
-        id="sizestrat.d3.large.mape",
-        anchor=r"{v}\% at {~}~ms at $d=3$, against",
-        expect="sizestrat:cell/d3/n600_1000/gart_mape_pct",
-    ),
-    Claim(
-        id="sizestrat.d3.large.ms",
-        anchor=r"{~}\% at {v}~ms at $d=3$, against",
-        expect="sizestrat:cell/d3/n600_1000/gart_ms",
-    ),
+    # withdrawn sizestrat.d3.large.mape: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn sizestrat.d3.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d3.large.k200_mape",
-        anchor=r"at $d=3$, against {v}\% at {~}~ms for $k=200$",
+        anchor=r"$k=200$ costs {v}\% at {~}~ms at $d=3$",
         expect="sizestrat:cell/d3/n600_1000/bound_k200_mape_pct",
     ),
     Claim(
         id="sizestrat.d3.large.k200_ms",
-        anchor=r"at $d=3$, against {~}\% at {v}~ms for $k=200$",
+        anchor=r"$k=200$ costs {~}\% at {v}~ms at $d=3$",
         expect="sizestrat:cell/d3/n600_1000/bound_k200_ms",
     ),
-    Claim(
-        id="sizestrat.d4.large.mape",
-        anchor=r"and {v}\% at {~}~ms at $d=4$, against",
-        expect="sizestrat:cell/d4/n600_1000/gart_mape_pct",
-    ),
-    Claim(
-        id="sizestrat.d4.large.ms",
-        anchor=r"and {~}\% at {v}~ms at $d=4$, against",
-        expect="sizestrat:cell/d4/n600_1000/gart_ms",
-    ),
+    # withdrawn sizestrat.d4.large.mape: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn sizestrat.d4.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d4.large.k200_mape",
-        anchor=r"at $d=4$, against {v}\% at {~}~ms for the same budget",
+        anchor=r"the same budget costs {v}\% at {~}~ms at $d=4$",
         expect="sizestrat:cell/d4/n600_1000/bound_k200_mape_pct",
     ),
     Claim(
         id="sizestrat.d4.large.k200_ms",
-        anchor=r"at $d=4$, against {~}\% at {v}~ms for the same budget",
+        anchor=r"the same budget costs {~}\% at {v}~ms at $d=4$",
         expect="sizestrat:cell/d4/n600_1000/bound_k200_ms",
     ),
     Claim(
@@ -704,13 +672,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="results.2d.mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall, against",
+        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Figure~\ref{fig:boxplot_2d}), against",
         expect="bank:2d_by_size_total_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.2d.sdpe",
-        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall, against",
+        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Figure~\ref{fig:boxplot_2d}), against",
         expect="bank:2d_by_size_total_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),
@@ -844,19 +812,8 @@ CLAIMS: list[Claim] = [
     #    baselines and a printed row of tab:2d_by_size, and its aggregate SDPE
     #    is below GART 2.0's, so "lowest MAPE and SDPE of every baseline except
     #    the refitted network" was false on the 2D stratum.
-    Claim(
-        id="discussion.timing.classical_lo",
-        anchor=r"an order of magnitude over the {v}--{~}~ms of the two classical closed forms",
-        expect="bank:tsplib_by_size_total_bhh_time_ms",
-        tol=("dp", 3),
-        note="Was keyed on Daganzo; BHH is the cheapest surviving classical row.",
-    ),
-    Claim(
-        id="discussion.timing.classical_hi",
-        anchor=r"an order of magnitude over the {~}--{v}~ms of the two classical closed forms",
-        expect="bank:tsplib_by_size_total_cavdar_sokol_time_ms",
-        tol=("dp", 3),
-    ),
+    # withdrawn discussion.timing.classical_lo: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn discussion.timing.classical_hi: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
 
     # -- N4: SDPE is the primary precision metric (Section 4.3), and on the
     #    Kwon domain the V3-feature network's SDPE is below GART 2.0's, so
@@ -956,7 +913,7 @@ CLAIMS: list[Claim] = [
     # checkable numeral at both sites that name the row.
     Claim(
         id="methods.probe.twin_dim",
-        anchor=r"which holds monotonicity on {v}\% of the dimension sweeps and",
+        anchor=r"constraints removed holds monotonicity on {v}\% of the dimension sweeps and",
         expect="bank:cons_probe_gart2_logit_v3hp_dimension_pct_nonincr_deployed",
         tol=("dp", 1),
     ),
@@ -1056,7 +1013,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.cavdar.uniform_sdpe",
-        anchor=r"the least even: at {v}\% SDPE its dispersion",
+        anchor=r"At {v}\% SDPE its dispersion is the widest in the panel",
         expect="bank:classical_b_random_cavdar_sokol_sdpe_pct",
         tol=("dp", 2),
         note="Adverse result: the widest dispersion in the matched panel, "
@@ -1065,7 +1022,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.cavdar.uniform_medape",
-        anchor=r"its median absolute error of {v}\% sits at just over a third",
+        anchor=r"its median absolute error is {v}\%, so it is close",
         expect="bank:classical_b_random_cavdar_sokol_medape_pct",
         tol=("dp", 2),
         note="The anchor read 'under a third' until the final verification "
@@ -1075,7 +1032,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.n",
-        anchor=r"suggest (Appendix~\ref{app:classical}). On the {v} uniform instances it obtains",
+        anchor=r"on both metrics (Appendix~\ref{app:classical}). On the {v} uniform instances it obtains",
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),
@@ -1126,18 +1083,13 @@ CLAIMS: list[Claim] = [
     # withdrawn matched.cavdar_factor: cut in the verbosity sweep; the factor is arithmetic over the 1.31 and 8.16 MAPE figures in the same sentence
     Claim(
         id="discussion.rank.tsplib_close5_gart1",
-        anchor=r"GART 1.0 trails GART 2.0 on the TSPLIB close-pair statistic at the tighter threshold, at {v}\%. Cost accuracy",
+        anchor=r"GART 1.0 trails GART 2.0 on the TSPLIB close-pair statistic at the tighter threshold, at {v}\%.",
         expect="bank:rank_tsplib_euc2d_gart_1_0_close5_pct",
         tol=("dp", 1),
         note="Re-anchored after the editorial restructure: the close-pair sentence "
              "was rewritten and this is the one GART 1.0 figure it still prints.",
     ),
-    Claim(
-        id="discussion.rank.tsplib_close5_pairs",
-        anchor=r"distinct properties, and {v} pairs resolve none of these gaps",
-        expect="bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
-        tol="exact",
-    ),
+    # withdrawn discussion.rank.tsplib_close5_pairs: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     # withdrawn application.noneuc.gart_sdpe: Total-row readback cut per author; the values are printed and machine-checked in tab:tsplib_nonEuc
     # =======================================================================
     # Structural pass of 2026-08-11: S1 (LGBM_V3 admitted to the enumerated
@@ -1264,66 +1216,11 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- N-D: the probe protocol, published with the claim it bounds ---------
-    Claim(
-        id="methods.probe.grid_points",
-        anchor=r"on log-spaced grids of {v} points, $d$ from",
-        expect="bank:cons_probe_gart_2_0_n_customers_grid_points",
-        note=(
-            "paper_tooling/v4_study.py::PROBE_GRID_POINTS = 24, the requested grid "
-            "size for both axes; the n grid keeps all 24 and the d grid dedupes to 22 "
-            "distinct integers after rounding. Recorded in "
-            "paper_tooling/v4_study_gart2_probe.csv column grid_points. A design "
-            "constant of the probe, not a measurement. Settle by banking the probe "
-            "protocol constants under probe_* keys."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="methods.probe.d_lo",
-        anchor=r"points, $d$ from {v} to 200 and $n$ from 5 to 4{,}000",
-        no_generator=(
-            "paper_tooling/v4_study.py::PROBE_D_GRID = _log_int_grid(2, 200, 24); the "
-            "lower endpoint is 2. Protocol constant. Settle by banking the probe "
-            "protocol constants under probe_* keys."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="methods.probe.d_hi",
-        anchor=r"points, $d$ from {~} to {v} and $n$ from 5 to 4{,}000",
-        no_generator=(
-            "paper_tooling/v4_study.py::PROBE_D_GRID upper endpoint = 200, twice the "
-            "largest dimension evaluated anywhere in this paper (d=100). Protocol "
-            "constant. Settle by banking the probe protocol constants under probe_*."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="methods.probe.n_lo",
-        anchor=r"$d$ from 2 to 200 and $n$ from {v} to 4{,}000",
-        no_generator=(
-            "paper_tooling/v4_study.py::PROBE_N_GRID = _log_int_grid(5, 4000, 24); the "
-            "lower endpoint is 5. Protocol constant. Settle by banking the probe "
-            "protocol constants under probe_* keys."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="methods.probe.n_hi",
-        anchor=r"$n$ from {~} to {v}, deliberately overshooting",
-        no_generator=(
-            "paper_tooling/v4_study.py::PROBE_N_GRID upper endpoint = 4000, four times "
-            "the largest node count in the SYNTHETIC corpora (n=1000). It is NOT four "
-            "times the largest node count this paper evaluates: the TSPLIB EUC_2D "
-            "benchmark runs to n=18512 (d18512) and pla85900 is scored at n=85900, so "
-            "the grid reaches 4.7 percent of the largest evaluated n. Until 2026-08-11 "
-            "this reason carried the 'in the synthetic corpora' qualifier while the "
-            "manuscript sentence claimed four times the largest node count anything in "
-            "the paper is evaluated at; the sentence was narrowed to match. Protocol "
-            "constant. Settle by banking the probe protocol constants under probe_* keys."
-        ),
-        tol="exact",
-    ),
+    # withdrawn methods.probe.grid_points: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn methods.probe.d_lo: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn methods.probe.d_hi: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn methods.probe.n_lo: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn methods.probe.n_hi: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     # withdrawn methods.probe.tolerance_base: tolerance sentence cut in the condensation; PROBE_TOL remains a code constant and no prose asserts it
 
     # -- N-A: the rho(d) -> rho(d,n) gap is not the largest step -------------
@@ -1797,6 +1694,38 @@ CLAIMS: list[Claim] = [
         note="Bank stores milliseconds; the sentence prints seconds.",
     ),
     Claim(
+        id="costacct.d18512_bound_x_top",
+        anchor=r"at the crossing budget and {v} times as much, {~} seconds",
+        expect="frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
+        tol=("dp", 0),
+    ),
+    Claim(
+        id="frontier.nd.load_sensitivity_gart2_body",
+        anchor=r"{~} against {v} between a quiet and a noisy window, so every published repeat",
+        expect="frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="costacct.d18512_bound_x_crossing",
+        anchor=r"costs {v} times as much at the crossing budget and {~} times as much",
+        expect="frontier:tsplib/capped_tail/hk_over_gart2_by_k/50",
+        tol=("dp", 0),
+    ),
+    Claim(
+        id="costacct.d18512_bound_top_s",
+        anchor=r"times as much, {v} seconds, at the top of the ladder",
+        expect="frontier:tsplib/capped_tail/hk_ms_by_k/500",
+        tol=("dp", 0),
+        scale=0.001,
+        note="Bank stores milliseconds; the sentence prints seconds.",
+    ),
+    Claim(
+        id="frontier.nd.load_sensitivity_bound_body",
+        anchor=r"{v} against {~} between a quiet and a noisy window, so every published repeat",
+        expect="frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
+        tol=("dp", 2),
+    ),
+    Claim(
         id="frontier.tsplib.capped_gart2_ms",
         anchor=r"seconds against {v} milliseconds (the",
         expect="frontier:tsplib/capped_tail/gart2_ms",
@@ -1826,7 +1755,7 @@ CLAIMS: list[Claim] = [
     # -- 5.3 multidimensional ------------------------------------------------
     Claim(
         id="frontier.nd.best_budget",
-        anchor=r"At an ascent budget of {v} the bound reaches",
+        anchor=r"At an ascent budget of {v} (Table~\ref{tab:frontier_nd}) the bound reaches",
         expect="frontier:nd/best_budget_k",
         tol="exact",
     ),
@@ -1875,36 +1804,11 @@ CLAIMS: list[Claim] = [
         expect="frontier:nd/crossover_cost_x_by_group/all ND",
         tol=("dp", 2),
     ),
-    Claim(
-        id="frontier.nd.corpus_weighted_budget",
-        anchor=r"puts the cost ratio at a budget of {v} at {~}.",
-        expect="frontier:nd/best_budget_k",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.nd.corpus_weighted_cost_x",
-        anchor=r"puts the cost ratio at a budget of {~} at {v}.",
-        expect="frontier:nd/bound_x_gart2_corpus_weighted_by_k/200",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.nd.d100_budget",
-        anchor=r"a budget of {v} costs {~} times GART 2.0 and is {~} times more accurate",
-        expect="frontier:nd/pareto_by_group/d = 100/best/k",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.nd.d100_cost_x",
-        anchor=r"a budget of {~} costs {v} times GART 2.0 and is {~} times more accurate",
-        expect="frontier:nd/pareto_by_group/d = 100/best/cost_x",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.nd.d100_accuracy_factor",
-        anchor=r"a budget of {~} costs {~} times GART 2.0 and is {v} times more accurate",
-        expect="frontier:nd/pareto_by_group/d = 100/best/accuracy_factor",
-        tol=("dp", 1),
-    ),
+    # withdrawn frontier.nd.corpus_weighted_budget: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn frontier.nd.corpus_weighted_cost_x: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn frontier.nd.d100_budget: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn frontier.nd.d100_cost_x: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn frontier.nd.d100_accuracy_factor: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="frontier.nd.planar_group_cost_x",
         anchor=r"where matching its accuracy costs the bound {v} times as much",
@@ -2037,18 +1941,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.complexity.nd_gart2_planar",
-        anchor=r"is that exponent {v}. On that benchmark both families are quadratic",
+        anchor=r"that exponent is {v}. On that benchmark both families are quadratic",
         expect="frontier:complexity/nd_slopes/gart2_d_2_3",
         tol=("dp", 2),
     ),
 
     # -- 5.5 exact solver ----------------------------------------------------
-    Claim(
-        id="frontier.exact.gart2_ms",
-        anchor=r"On that protocol GART 2.0 costs {v}~ms over the full EUC\_2D set",
-        expect="frontier:exact_solver_anchor/gart2_median_ms",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.exact.gart2_ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
 
     # -- 5.6 labels ----------------------------------------------------------
     # withdrawn frontier.labels.total_evaluated: journey narrative removed per author directive (editorial restructure)
@@ -2118,7 +2017,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.verdict.dearer_below_n",
-        anchor=r"in the plane and dearer below roughly {v}. Its accuracy sits",
+        anchor=r"in the plane and dearer below roughly {v} (Appendix Table~\ref{tab:frontier_tsplib})",
         no_generator=(
             "Upper edge of the smallest TSPLIB size bucket, n=150, quoted as "
             "the size below which the certified bound wins on both axes. Same "
@@ -2220,20 +2119,38 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="rank.close10.gart_2d",
-        anchor=r"threshold GART 2.0 obtains {v}\%, {~}\%, and {~}\%. The percentages remain",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {v}\%, {~}\%, and {~}\%, against",
         expect="bank:rank_2d_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_nd",
-        anchor=r"threshold GART 2.0 obtains {~}\%, {v}\%, and {~}\%. The percentages remain",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {~}\%, {v}\%, and {~}\%, against",
         expect="bank:rank_nd_gart_2_0_close10_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="rank.close10.gart_tsplib",
-        anchor=r"threshold GART 2.0 obtains {~}\%, {~}\%, and {v}\%. The percentages remain",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {~}\%, {~}\%, and {v}\%, against",
         expect="bank:rank_tsplib_euc2d_gart_2_0_close10_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="rank.close10.floor_2d",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {~}\%, {~}\%, and {~}\%, against {v}\%, {~}\%, and {~}\% for the $\alpha=1$ control",
+        expect="bank:rank_2d_l_mathrm_mst_alpha_1_close10_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="rank.close10.floor_nd",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {~}\%, {~}\%, and {~}\%, against {~}\%, {v}\%, and {~}\% for the $\alpha=1$ control",
+        expect="bank:rank_nd_l_mathrm_mst_alpha_1_close10_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="rank.close10.floor_tsplib",
+        anchor=r"At a 10\% threshold GART 2.0 obtains {~}\%, {~}\%, and {~}\%, against {~}\%, {~}\%, and {v}\% for the $\alpha=1$ control",
+        expect="bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_close10_pct",
         tol=("dp", 1),
     ),
     # withdrawn appendix.rank.nd_universe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
@@ -3029,7 +2946,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="general.e2.msigned_factor",
-        anchor=r"\%, a factor of {v}. Neither held-out regime",
+        anchor=r"a factor of {v}. Off the grid it acquires",
         no_generator=_generalization(
             "E2: the ratio of the two mean signed errors, 0.51/0.28 = 1.8"),
         tol=("dp", 1),
@@ -3117,28 +3034,9 @@ CLAIMS: list[Claim] = [
             "total_time_s over the 78 EUC_2D instances, 5.03%"),
         tol=("dp", 2),
     ),
-    Claim(
-        id="costacct.mst_rows_lo",
-        anchor=r"roughly twice the {v}--{~}~ms of the rows that build an MST or a Hilbert sort",
-        expect="bank:tsplib_by_size_total_asymptotic_mst_ratio_time_ms",
-        tol=("dp", 2),
-        note="The cheapest of the MST-ratio and Hilbert rows on the one-protocol "
-             "Time column.",
-    ),
-    Claim(
-        id="costacct.mst_rows_hi",
-        anchor=r"roughly twice the {~}--{v}~ms of the rows that build an MST or a Hilbert sort",
-        expect="bank:tsplib_by_size_total_l_mathrm_mst_alpha_1_time_ms",
-        tol=("dp", 2),
-        note="The dearest of the MST-ratio and Hilbert rows on the one-protocol "
-             "Time column.",
-    ),
-    Claim(
-        id="costacct.gt400_gart_ms",
-        anchor=r"the most expensive row in the table at {v}~ms",
-        expect="bank:tsplib_by_size_gt400_gart_2_0_time_ms",
-        tol=("dp", 2),
-    ),
+    # withdrawn costacct.mst_rows_lo: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn costacct.mst_rows_hi: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
+    # withdrawn costacct.gt400_gart_ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="costacct.nd_median_gart_ms",
         anchor=r"cost the same, {v}~ms against {~}~ms, since most",
@@ -3193,12 +3091,7 @@ CLAIMS: list[Claim] = [
         no_generator=_BUDGET25_REASON,
         tol="exact",
     ),
-    Claim(
-        id="conclusion.frontier.budget25",
-        anchor=r"strictly better than the bound on both axes, from an ascent budget of {v} upward in the plane",
-        no_generator=_BUDGET25_REASON,
-        tol="exact",
-    ),
+    # withdrawn conclusion.frontier.budget25: the conclusion sentence carrying the budget was cut in the 2026-09-02 tightening pass; abstract and verdict copies remain registered
 
     # -- Section 6: the fixed multiplier and the oracle constants -----------
     Claim(
