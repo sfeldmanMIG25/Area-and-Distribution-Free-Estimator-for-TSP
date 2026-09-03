@@ -917,6 +917,43 @@ CLAIMS: list[Claim] = [
         expect="bank:cons_probe_gart2_logit_v3hp_dimension_pct_nonincr_deployed",
         tol=("dp", 1),
     ),
+    # -- Section 3.4, within-cell SHAP decomposition (shap_by_dimension.py) --
+    Claim(
+        id="shap.within.greedy_d2",
+        anchor=r"holds {v}\% of the within-cell SHAP variance at $d=2$",
+        expect="bank:shap_band_d2_within_share_greedy_nn_over_mst_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="shap.within.dominance_d2",
+        anchor=r"the MST dominance ratio holds {v}\% to {~}\%",
+        expect="bank:shap_band_d2_within_share_mst_dominance_ratio_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="shap.within.dominance_d100",
+        anchor=r"the MST dominance ratio holds {~}\% to {v}\%",
+        expect="bank:shap_band_d100_within_share_mst_dominance_ratio_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="shap.within.r2_alpha_d2",
+        anchor=r"from $R^2$ {v} at $d=2$ to {~} at the withheld $d=100$",
+        expect="bank:shap_band_d2_r2_within_alpha",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="shap.within.r2_alpha_d100",
+        anchor=r"from $R^2$ {~} at $d=2$ to {v} at the withheld $d=100$",
+        expect="bank:shap_band_d100_r2_within_alpha",
+        tol=("dp", 3),
+    ),
+    Claim(
+        id="shap.within.mix_d2",
+        anchor=r"The generator mix explains {v}\% of the within-cell target at $d=2$",
+        expect="bank:shap_band_d2_target_r2_on_mix_pct",
+        tol=("dp", 1),
+    ),
 
     # -- Section 4.4: the screen count at the two 2D sites -------------------
     # The GART 2.0 side of that same comparison IS bankable, so it is checked
@@ -1224,30 +1261,10 @@ CLAIMS: list[Claim] = [
     # withdrawn methods.probe.tolerance_base: tolerance sentence cut in the condensation; PROBE_TOL remains a code constant and no prose asserts it
 
     # -- N-A: the rho(d) -> rho(d,n) gap is not the largest step -------------
-    Claim(
-        id="results_2d.grid_n",
-        anchor=r"On the {v} \texttt{grid} instances GART 2.0 reads",
-        expect="bank:2d_by_genclass_geometric_grid_gart_2_0_n",
-        tol="exact",
-    ),
-    Claim(
-        id="results_2d.grid_mape",
-        anchor=r"\texttt{grid} instances GART 2.0 reads {v}\% MAPE against",
-        expect="bank:2d_by_genclass_geometric_grid_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="results_2d.geom_other_mape",
-        anchor=r"MAPE against {v}\% on the 420 Geometric Struct.\ instances that are represented",
-        expect="bank:2d_by_genclass_geometric_other_gart_2_0_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="results_2d.geom_other_n",
-        anchor=r"MAPE against {~}\% on the {v} Geometric Struct.\ instances that are represented",
-        expect="bank:2d_by_genclass_geometric_other_gart_2_0_n",
-        tol="exact",
-    ),
+    # withdrawn results_2d.grid_n: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_2d.grid_mape: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_2d.geom_other_mape: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_2d.geom_other_n: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="results_2d.grid_alpha_mean",
         anchor=r"Realized $\alpha$ averages {v} on \texttt{grid}",
@@ -1280,18 +1297,7 @@ CLAIMS: list[Claim] = [
     # withdrawn discussion.genclass.grid_mape: journey narrative removed per author directive (editorial restructure); the value is still checked at its Section 4.5 site by results_2d.grid_mape
     # withdrawn discussion.genclass.worst_represented: journey narrative removed per author directive (editorial restructure)
     # withdrawn discussion.genclass.grid_sdpe: journey narrative removed per author directive (editorial restructure)
-    Claim(
-        id="discussion.genclass.grid_floor_mape",
-        anchor=r"the $\alpha=1$ floor is more accurate than the released model, at {v}\%, the only row",
-        expect="bank:2d_by_genclass_geometric_grid_l_mathrm_mst_alpha_1_mape_pct",
-        tol=("dp", 2),
-        note="Re-anchored after the editorial restructure: the per-class ladder "
-             "paragraph is gone and the fact now lives in the Section 4.5 sentence "
-             "'on \\texttt{grid} the $\\alpha=1$ floor is more accurate than the "
-             "released model, at 4.54\\%'. grid is the only bucket anywhere in the "
-             "paper where the alpha=1 floor is more accurate than the released "
-             "model on MAPE.",
-    ),
+    # withdrawn discussion.genclass.grid_floor_mape: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     # withdrawn appendix.genclass.geom_class_n: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     # withdrawn appendix.genclass.geom_class_mspe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     # withdrawn appendix.genclass.geom_other_mspe: wave-7 cut: detail appendix removed, grids live in the released tidy tables
@@ -1366,15 +1372,7 @@ CLAIMS: list[Claim] = [
         expect="bank:nd_by_size_total_bhh_sampling_region_sdpe_pct",
         tol=("dp", 2),
     ),
-    Claim(
-        id="results_nd.sdpe_smallest_bucket",
-        anchor=r"size buckets, from {v}\% at $n\le10$",
-        expect="bank:nd_by_size_5_10_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-        note="Re-anchored 2026-08-11: the anchor used to carry the tail of the "
-             "preceding sentence, which now ends with the pointer to "
-             "Section~\\ref{subsec:frontier_nd} instead of 'most of it.'.",
-    ),
+    # withdrawn results_nd.sdpe_smallest_bucket: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="results_nd.rho_dn_mape",
         anchor=r"the calibrated ratio $\hat\rho(d,n)$ at {v}\%/{~}\%, so the learned",
@@ -1385,43 +1383,13 @@ CLAIMS: list[Claim] = [
              "Section~\\ref{sec:frontier} uses no learned model either and "
              "beats GART 2.0 on this benchmark.",
     ),
-    Claim(
-        id="results_nd.sdpe_201_500",
-        anchor=r"at $n\le10$ to {v}\% at $n\in[201,500]$",
-        expect="bank:nd_by_size_201_500_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="results_nd.bucket_201_lo",
-        anchor=r"to 0.46\% at $n\in[{v},500]$ and 0.45",
-        no_generator=_SIZE_BUCKET,
-        tol="exact",
-    ),
-    Claim(
-        id="results_nd.bucket_500_hi",
-        anchor=r"to 0.46\% at $n\in[{~},{v}]$ and 0.45",
-        no_generator=_SIZE_BUCKET,
-        tol="exact",
-    ),
-    Claim(
-        id="discussion.genclass.isotropic_mape",
-        anchor=r"GART 2.0 ranges from {v}\% MAPE on the isotropic class to {~}\% on Line Noise",
-        expect="bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
-        tol=("dp", 2),
-        note="Re-anchored after the editorial restructure: the per-class ladder "
-             "paragraph is gone and the class extremes now open the Section 4.5 "
-             "disaggregation paragraph.",
-    ),
+    # withdrawn results_nd.sdpe_201_500: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_nd.bucket_201_lo: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_nd.bucket_500_hi: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn discussion.genclass.isotropic_mape: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     # withdrawn discussion.genclass.biased_mape: journey narrative removed per author directive (editorial restructure)
     # withdrawn discussion.genclass.clustered_mape: journey narrative removed per author directive (editorial restructure)
-    Claim(
-        id="discussion.genclass.linenoise_mape",
-        anchor=r"ranges from {~}\% MAPE on the isotropic class to {v}\% on Line Noise",
-        expect="bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
-        tol=("dp", 2),
-        note="Re-anchored after the editorial restructure; see "
-             "discussion.genclass.isotropic_mape.",
-    ),
+    # withdrawn discussion.genclass.linenoise_mape: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="discussion.timing.feature_share_pct",
         anchor=r"GART 2.0 spends {v}\% of its wall time on feature extraction",
@@ -2254,39 +2222,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.labels.crossing_k_excluded: journey narrative removed per author directive (editorial restructure)
     # withdrawn frontier.labels.crossing_k_repaired: journey narrative removed per author directive (editorial restructure)
     # withdrawn frontier.labels.crossing_x_repaired: journey narrative removed per author directive (editorial restructure)
-    Claim(
-        id="results_nd.sdpe_501_1000",
-        anchor=r"and {v}\% at $n\in[501,1000]$. Across dimension groups",
-        expect="bank:nd_by_size_501_1000_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),    # =======================================================================
-    # Baseline-roster cut of 2026-08-12.  The model-class controls (linear /
-    # feed-forward, on the V3 block and on the production block) are out of the
-    # manuscript, and the two GART 2.0 variants are reported as ablations rather
-    # than as baselines.  Every number that survives that move under a new
-    # sentence is registered here rather than absorbed into the backlog.
-    # =======================================================================
-
-    # =======================================================================
-    # FIGURE CAPTIONS -- numbers that are a drawing decision rather than a
-    # measurement.  The ascent budget the three error-distribution figures draw
-    # the certified bound at is a constant in the plotting script, not a value
-    # any artifact emits, so there is nothing for it to disagree with.  It is
-    # registered anyway, in all three captions, because an unregistered numeral
-    # in a caption is exactly how a figure and its caption drift apart: change
-    # HK_BUDGET in the script and these three anchors are what fails.
-    # =======================================================================
-    Claim(
-        id="figure.boxplot_nd.hk_budget",
-        anchor=r"1-tree bound is drawn at ascent budget $k={v}$",
-        no_generator=(
-            "Drawing decision, not a measurement: "
-            "paper_reference/regenerate_boxplots.py::HK_BUDGET, the ascent "
-            "budget the bound's box is computed at. Settle by having the "
-            "figure script emit its constants to a small JSON the checker can "
-            "read, the way the table builder emits paper_numbers.json."
-        ),
-    ),
+    # withdrawn results_nd.sdpe_501_1000: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     # withdrawn figure.boxplot_2d.hk_budget: caption now inherits axes and bound budget from fig:boxplot_nd by reference; the budget is asserted once, in that caption
     # withdrawn figure.boxplot_tsplib.hk_budget: caption now inherits axes and bound budget from fig:boxplot_nd by reference; the budget is asserted once, in that caption
 
@@ -2811,18 +2747,8 @@ CLAIMS: list[Claim] = [
         expect="bank:tsplib_by_size_total_gart_2_0_n",
         tol="exact",
     ),
-    Claim(
-        id="results_nd.sdpe_d2",
-        anchor=r"Across dimension groups it falls from {v}\% at $d=2$ to {~}\% at $d\in[30,50]$",
-        expect="bank:nd_by_dim_d2_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="results_nd.sdpe_d30_50",
-        anchor=r"falls from {~}\% at $d=2$ to {v}\% at $d\in[30,50]$",
-        expect="bank:nd_by_dim_d30_50_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn results_nd.sdpe_d2: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
+    # withdrawn results_nd.sdpe_d30_50: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="results_nd.bhh_region_mape_restated",
         anchor=r"BHH's {v}\% error is not a defect",
@@ -3115,6 +3041,12 @@ CLAIMS: list[Claim] = [
     Claim(
         id="application.oracle_mape_23_restated",
         anchor=r"over these {~} instances is ${~}$ and reaches {v}\%, which is the floor",
+        no_generator=_ORACLE_REASON,
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="application.oracle_mape_23_floor_repeat",
+        anchor=r"clears the {v}\% constant-multiplier floor",
         no_generator=_ORACLE_REASON,
         tol=("dp", 2),
     ),
