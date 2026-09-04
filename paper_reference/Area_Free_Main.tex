@@ -404,9 +404,9 @@ Both classical estimators are far behind here. TSPLIB instances carry no uniform
 
 Estimators marketed across domains do better on these generalized benchmarks than others.
 
-BHH falls from 23.8\% MAPE on the full 2D benchmark to 8.91\% here. The region input and the instance set both change between its two panels, so that figure combines the two effects and does not isolate the region input. BHH's remaining error is a systematic underprediction, $-8.65$\% signed against 7.76\% SDPE, as an asymptotic constant evaluated at $n$ as low as 5 should. \c{C}avdar--Sokol falls from 18.2\% to 8.16\%; the estimator itself did not change between panels, so the drop is a domain effect. It has the lower MAPE of the two classical estimators on every panel of Appendix~\ref{app:classical}, and the lower median absolute error here, but not the lower dispersion. At 14.3\% SDPE its dispersion is the widest in the panel, and its median absolute error is 2.84\%, so it is close on most uniform instances and badly wrong on a few.
+BHH falls from 23.8\% MAPE on the full 2D benchmark to 8.91\% here. The region input and the instance set both change between its two panels, so that figure combines the two effects and does not isolate the region input. BHH's remaining error is a systematic underprediction, $-8.65$\% signed against 7.76\% SDPE, as an asymptotic constant evaluated at $n$ as low as 5 should. \c{C}avdar--Sokol falls from 18.2\% to 8.16\%; the estimator itself did not change between panels, so the drop is a domain effect. It has the lower MAPE of the two classical estimators on every corpus, and the lower median absolute error here, but not the lower dispersion. At 14.3\% SDPE its dispersion is the widest in the panel, and its median absolute error is 2.84\%, so it is close on most uniform instances and badly wrong on a few.
 
-GART 2.0 beats both classical estimators on the matched domain, on both metrics (Appendix~\ref{app:classical}). On the 210 uniform instances it obtains 1.31\% MAPE against \c{C}avdar--Sokol's 8.16\%, BHH's 8.91\% and the $\alpha=1$ floor's 15.6\%. 
+GART 2.0 beats both classical estimators on the matched domain, on both metrics. On the 210 uniform instances it obtains 1.31\% MAPE against \c{C}avdar--Sokol's 8.16\%, BHH's 8.91\% and the $\alpha=1$ floor's 15.6\%. 
 
 \subsection{Generalization Beyond the Training Grid} \label{subsec:generalization}
 
@@ -661,7 +661,7 @@ Synthetic TSP instances span four distribution classes, with the generator assig
 
 The uniform class draws coordinates from $\mathcal{U}(0, G)$ where $G$ is the grid size. The normal class draws from $\mathcal{N}(G/2, G/6)$ truncated to $[0, G]$. The clustered class places $k \in [3, 15]$ cluster centers uniformly and draws points from $\mathcal{N}(\mu_k, \sigma_k)$ around each center. The correlated class uses autoregressive structure across axes, $x_{j+1} = \rho \cdot x_j + \epsilon$ with $j$ indexing the axis, producing axis-aligned anisotropy.
 
-Node counts span $n \in [5, 1{,}000]$ with training-visible dimensions $d \in \{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\}$, plus a held-out bucket at $d=100$ (5{,}904 test instances). The pipeline ran Concorde and LKH-3 and retained the shorter tour cost.
+Node counts span $n \in [5, 1{,}000]$. Training-visible dimensions run from 2 to 10 in steps of one and from 15 to 50 in steps of five, plus a held-out bucket at $d=100$ (5{,}904 test instances). The pipeline ran Concorde and LKH-3 and retained the shorter tour cost.
 
 The $106{,}272$ solved instances are partitioned into training ($69{,}768$, $65.7\%$), validation ($19{,}584$, $18.4\%$), and test ($16{,}920$, $15.9\%$) using a stratified sample on $(d, n, \text{grid size})$. The stratification rule ranks instances within each stratum by a random uniform draw and assigns roughly the first tenth to test and the next fifth to validation, with the remainder to training. $d = 100$ instances bypass this rule and are locked to the test partition, which lifts the corpus-level test share to the $15.9\%$ above. The per-$(d, n)$ training-instance counts are released with the artifacts; grid size $G \in \{100, 1{,}000, 10{,}000\}$ is sampled uniformly within each cell.
 
@@ -671,7 +671,7 @@ Four classes (isotropic, biased, geometric, clustered) follow conventions from t
 
 \subsection{Multidimensional Benchmark Grid} \label{app:nd_grid_counts}
 
-The full $(d, n)$ count grid of the 16{,}920-instance multidimensional benchmark:
+Table~\ref{tab:nd_grid_counts} gives the instance count in every $(d, n)$ bucket of the 16{,}920-instance multidimensional benchmark.
 
 \begin{table}[tbp]
 \centering
@@ -698,7 +698,7 @@ $d=100$ & 1{,}476 & 984 & 1{,}230 & 246 & 738 & 1{,}230 & \textbf{5{,}904} \\
 
 \section{Feature Specifications} \label{app:features}
 
-Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Tables~\ref{tab:edge_features} and~\ref{tab:topo_features} the 19 MST-derived ones, and Table~\ref{tab:greedy_features} the single constructive ratio, 31 in all (Section~\ref{subsec:features}). Listed complexities assume the MST has already been built; MST construction itself dominates the asymptotic cost and is analyzed in Section~\ref{sec:methodology}.
+Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Tables~\ref{tab:edge_features} and~\ref{tab:topo_features} the 19 MST-derived ones, and Table~\ref{tab:greedy_features} the single constructive ratio, 31 in all (Section~\ref{subsec:features}). The MST edge moments are candidate predictors of the $\alpha$ ratio, not a tested causal mechanism. We introduce the Dominance, Gap, and Normalized Diameter ratios as $O(n)$ candidate proxies for cluster, filament, and hub structure, and the Leaf Ratio rests on the hypothesis that low-leaf trees are more common on linear manifolds than in isotropic clouds. This interpretation is not evaluated independently here. The Greedy-to-MST Ratio ranks second by SHAP magnitude (Appendix~\ref{app:shap}) and is the feature the non-Euclidean coverage gate of Section~\ref{sec:application} tests. Listed complexities assume the MST has already been built; MST construction itself dominates the asymptotic cost and is analyzed in Section~\ref{sec:methodology}.
 
 \begin{table}[tbp]
 \centering
@@ -722,9 +722,7 @@ Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Table
 }
 \end{table}
 
-\subsection{MST Edge Distribution Statistics} \label{app:features_edge}
 
-The moments are candidate predictors of the $\alpha$ ratio, not a tested causal mechanism.
 
 \begin{table}[tbp]
 \centering
@@ -744,9 +742,7 @@ The moments are candidate predictors of the $\alpha$ ratio, not a tested causal 
 }
 \end{table}
 
-\subsection{Topological Structure and Clustering Proxies} \label{app:features_topo}
 
-We introduce the Dominance, Gap, and Normalized Diameter ratios as $O(n)$ candidate proxies for cluster, filament, and hub structure. The Leaf Ratio rests on the hypothesis that low-leaf trees are more common on linear manifolds than in isotropic clouds. This interpretation is not evaluated independently here.
 
 \begin{table}[tbp]
 \centering
@@ -768,9 +764,7 @@ We introduce the Dominance, Gap, and Normalized Diameter ratios as $O(n)$ candid
 }
 \end{table}
 
-\subsection{Constructive Ratio} \label{app:features_greedy}
 
-It ranks second by SHAP magnitude (Appendix~\ref{app:shap}) and is the feature the non-Euclidean coverage gate of Section~\ref{sec:application} tests.
 
 \begin{table}[!htbp]
 \centering
@@ -877,7 +871,7 @@ $k=500$ & 7.88 & 2.11 & 0.971 & 0.742 & 25.7 & 5.64 & 1.93 & 1.42 & 1{,}120 & 61
 
 \subsection{Results on the 2D Diverse and Non-Euclidean Benchmarks} \label{subsec:frontier_other}
 
-The remaining two ladders are measured on the protocol of Section~\ref{subsec:frontier_tsplib}.
+We timed the remaining two ladders the same way as the TSPLIB ladder of Section~\ref{subsec:frontier_tsplib}, one estimator alone in its own process.
 
 The raw bound passes GART 2.0 on the 2D diverse ladder (Table~\ref{tab:frontier_2d}) under the Volgenant--Jonker step at a budget of 50, at 0.230 times the cost and a paired win rate of 54.8\%; the calibrated row passes a rung earlier. The reversal is monotone in $n$ and steeper than on TSPLIB (Section~\ref{subsec:frontier_tsplib}), because this corpus reaches down to five nodes. On the 360 instances with $n\le10$, the raw bound at a budget of 25 reads 0.439\% MAPE against GART 2.0's 3.21\% at 0.0699 times the cost, winning 95.0\% of the paired comparisons. On the 610 instances with $n>500$, nothing dominates: the raw bound is more accurate only at the top budget, and there it costs 26.1 times as much.
 
@@ -935,9 +929,7 @@ $k=500$ & 5.27 & 1.08 & 1.14 & 0.995 & 3.38 & 0.693 & \textbf{0.509} & \textbf{0
 \end{tabular}
 \end{table}
 
-\section{Classical Estimator Benchmarks by Domain} \label{app:classical}
 
-The upper panels apply the two classical estimators to the complete 2D and TSPLIB EUC\_2D benchmarks, with the convex hull of each instance standing in for BHH's region measure, which is the only option on TSPLIB and the fairer option on the degenerate 2D classes. The lower panel restricts to the 210 independently drawn uniform 2D instances, where the sampling region $[0,G]^2$ is exact and BHH receives it. \c{C}avdar--Sokol receives the same input in both, the rectangle covering the nodes, so only its instance set changes between the panels.
 
 
 

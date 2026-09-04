@@ -1039,7 +1039,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.n",
-        anchor=r"on both metrics (Appendix~\ref{app:classical}). On the {v} uniform instances it obtains",
+        anchor=r"on both metrics. On the {v} uniform instances it obtains",
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),
@@ -1081,12 +1081,7 @@ CLAIMS: list[Claim] = [
         expect="bank:cavdar_corr_ratio_at_n_max",
         tol=("dp", 3),
     ),
-    Claim(
-        id="appendix.classical.panel_b_n",
-        anchor=r"The lower panel restricts to the {v} independently drawn",
-        expect="bank:classical_b_random_gart_2_0_n",
-        tol="exact",
-    ),
+    # withdrawn appendix.classical.panel_b_n: Appendix H deleted (eyeball pass 2026-09-04); the 210 survives under matched.uniform_domain.n
     # withdrawn matched.cavdar_factor: cut in the verbosity sweep; the factor is arithmetic over the 1.31 and 8.16 MAPE figures in the same sentence
     Claim(
         id="discussion.rank.tsplib_close5_gart1",
