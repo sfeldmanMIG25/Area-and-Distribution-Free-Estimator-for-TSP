@@ -1014,7 +1014,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.cavdar.uniform_mape",
-        anchor=r"\c{C}avdar--Sokol falls from {~}\% to {v}\%, and here only",
+        anchor=r"\c{C}avdar--Sokol falls from {~}\% to {v}\%; the estimator itself",
         expect="bank:classical_b_random_cavdar_sokol_mape_pct",
         tol=("dp", 2),
     ),

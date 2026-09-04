@@ -2,71 +2,23 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T03:58:34+00:00",
+    "at": "2026-09-04T06:40:12+00:00",
     "kind": "update",
-    "reason": "3 s.f. pass on the unregistered backlog: 25 decimals shortened (no digit added); literature constants exempt",
+    "reason": "4.4 Cavdar-Sokol sentence rewritten (author 2026-09-03); claim re-anchored",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "5abc1c843a85447c86bc792c9aab06604f0dd5d88278f4588eb4722e1cd58d14",
+    "tex_sha256": "00a034d4873d9ff693a8cbdb774778bed2428566e7de02f170d178baae7f0ff9",
     "production_model": "GART_2.0",
     "n_entries": 246,
     "n_keys": 246,
-    "absorbed": [
-      "sec-evaluation/subsec-results-nd :: 39.1 :: tier1:unit :: ctx:b4f00562a46e",
-      "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:680ee89e524e",
-      "sec-evaluation/subsec-results-2d :: 30.9 :: tier1:unit :: ctx:af238253e624",
-      "sec-evaluation/subsec-results-2d :: 14.2 :: tier1:unit :: ctx:7079bfd60a98",
-      "sec-evaluation/subsec-results-tsplib :: 1.13 :: tier1:precision :: ctx:b1fcd2f98e5e",
-      "sec-evaluation/subsec-coverage :: 10.8 :: tier1:unit :: ctx:1c8c7cc33dde",
-      "sec-evaluation/subsec-coverage :: 10.8 :: tier2:unmarked :: ctx:dc2077fe9afd",
-      "sec-evaluation/subsec-coverage :: 1.54 :: tier1:precision :: ctx:1cee18c4b52c",
-      "sec-evaluation/subsec-coverage :: 10.8 :: tier1:unit :: ctx:cfe68fdc3094",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:28136ff91568",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b",
-      "appendix:app-code :: 0.975 :: tier1:precision :: ctx:197463484bb2",
-      "appendix:app-code :: 2.06 :: tier1:precision :: ctx:a3569aadb9ba",
-      "appendix:app-training/training-corpus :: 65.7 :: tier1:unit :: ctx:0080233dc16f",
-      "appendix:app-training/training-corpus :: 18.4 :: tier1:unit :: ctx:801ecf9462ed",
-      "appendix:app-training/training-corpus :: 15.9 :: tier1:unit :: ctx:e142192c35ec",
-      "appendix:app-bench-details :: 0.987 :: tier1:precision :: ctx:59fa42ab301c",
-      "appendix:app-hyperparams :: 138 :: tier1:range :: ctx:1714e39dfc47",
-      "appendix:app-hyperparams :: 146 :: tier1:unit :: ctx:70b09f324bce",
-      "appendix:app-hyperparams :: 103 :: tier1:range :: ctx:14bd7faebb26",
-      "appendix:app-hyperparams :: 148 :: tier1:unit :: ctx:8662049fdf7f",
-      "appendix:app-hyperparams :: 10.8 :: tier1:unit :: ctx:29b366d64b6c",
-      "appendix:app-mds :: 0.121 :: tier1:precision :: ctx:edc47c897355"
-    ],
-    "pruned": [
-      "appendix:app-bench-details :: 0.9867 :: tier1:precision :: ctx:59fa42ab301c",
-      "appendix:app-code :: 0.974823 :: tier1:precision :: ctx:197463484bb2",
-      "appendix:app-code :: 2.059518 :: tier1:precision :: ctx:a3569aadb9ba",
-      "appendix:app-hyperparams :: 10.82 :: tier1:unit :: ctx:29b366d64b6c",
-      "appendix:app-hyperparams :: 103.3 :: tier1:range :: ctx:14bd7faebb26",
-      "appendix:app-hyperparams :: 137.5 :: tier1:range :: ctx:1714e39dfc47",
-      "appendix:app-hyperparams :: 146.2 :: tier1:unit :: ctx:70b09f324bce",
-      "appendix:app-hyperparams :: 147.8 :: tier1:unit :: ctx:8662049fdf7f",
-      "appendix:app-mds :: 0.1208 :: tier1:precision :: ctx:edc47c897355",
-      "appendix:app-training/training-corpus :: 15.92 :: tier1:unit :: ctx:e142192c35ec",
-      "appendix:app-training/training-corpus :: 18.43 :: tier1:unit :: ctx:801ecf9462ed",
-      "appendix:app-training/training-corpus :: 65.65 :: tier1:unit :: ctx:0080233dc16f",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.006 :: tier1:range :: ctx:28136ff91568",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.511 :: tier1:precision :: ctx:34b0f80def1b",
-      "sec-evaluation/subsec-coverage :: 1.544 :: tier1:precision :: ctx:1cee18c4b52c",
-      "sec-evaluation/subsec-coverage :: 10.82 :: tier1:precision :: ctx:dc2077fe9afd",
-      "sec-evaluation/subsec-coverage :: 10.82 :: tier1:unit :: ctx:1c8c7cc33dde",
-      "sec-evaluation/subsec-coverage :: 10.82 :: tier1:unit :: ctx:cfe68fdc3094",
-      "sec-evaluation/subsec-results-2d :: 14.19 :: tier1:unit :: ctx:7079bfd60a98",
-      "sec-evaluation/subsec-results-2d :: 30.95 :: tier1:unit :: ctx:af238253e624",
-      "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:680ee89e524e",
-      "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:b4f00562a46e",
-      "sec-evaluation/subsec-results-tsplib :: 1.1306 :: tier1:precision :: ctx:b1fcd2f98e5e"
-    ],
+    "absorbed": [],
+    "pruned": [],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 59,
-    "absorbed": 1244,
-    "pruned": 1589,
+    "records": 61,
+    "absorbed": 1245,
+    "pruned": 1590,
     "claims_withdrawn": 564,
     "mismatched_claims_withdrawn": 0
   },
@@ -1011,10 +963,10 @@
       "example": "...overlap, on $[3.20,3.62]$. In the post hoc $n>10{,}000$ slice of five instances GART 2.0 is lower on...",
       "first_recorded": "2026-08-11T14:04:14+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 18 :: tier1:unit :: ctx:703d4d560f62": {
+    "sec-evaluation/subsec-results-tsplib :: 18 :: tier1:unit :: ctx:f1c0aa1eb958": {
       "count": 1,
-      "example": "...gest instance, \\texttt{d18512}, is more than $18\\times$ the training-size cap. For i.i.d.\\ poi...",
-      "first_recorded": "2026-08-12T14:41:17+00:00"
+      "example": "...gest instance, \\texttt{d18512}, is more than $18\\times$ the training-size cap. For points draw...",
+      "first_recorded": "2026-09-04T06:39:37+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 2.53 :: tier1:unit :: ctx:8bc92094fed8": {
       "count": 1,
@@ -1678,7 +1630,7 @@
       "state": "MATCHED",
       "expect": "bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
       "line": 434,
-      "printed": 0.00485,
+      "printed": 0.0049,
       "expected": 0.004853194
     },
     "discussion.r2alpha.tsplib_gt400": {
@@ -2693,14 +2645,14 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 2.21,
+      "printed": 2.209,
       "expected": null
     },
     "methods.greedy_gate.corpus_lo": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 1.03,
+      "printed": 1.035,
       "expected": null
     },
     "methods.greedy_gate.corpus_rows": {
@@ -2714,14 +2666,14 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 2.13,
+      "printed": 2.1295,
       "expected": null
     },
     "methods.greedy_gate.train_lo": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 1.05,
+      "printed": 1.0465,
       "expected": null
     },
     "methods.optuna.n_trials": {
@@ -12782,6 +12734,38 @@
         "sec-evaluation/subsec-results-nd :: 39.07 :: tier1:unit :: ctx:b4f00562a46e",
         "sec-evaluation/subsec-results-tsplib :: 1.1306 :: tier1:precision :: ctx:b1fcd2f98e5e"
       ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T06:39:37+00:00",
+      "kind": "update",
+      "reason": "i.i.d. reworded in ordinary words (author 2026-09-03); context hash moved",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "3c37fedc8eb68dea5d91d5c8b9b82e5831a336bd53aef4f85209eaf7383e8cb4",
+      "production_model": "GART_2.0",
+      "n_entries": 246,
+      "n_keys": 246,
+      "absorbed": [
+        "sec-evaluation/subsec-results-tsplib :: 18 :: tier1:unit :: ctx:f1c0aa1eb958"
+      ],
+      "pruned": [
+        "sec-evaluation/subsec-results-tsplib :: 18 :: tier1:unit :: ctx:703d4d560f62"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T06:40:12+00:00",
+      "kind": "update",
+      "reason": "4.4 Cavdar-Sokol sentence rewritten (author 2026-09-03); claim re-anchored",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "00a034d4873d9ff693a8cbdb774778bed2428566e7de02f170d178baae7f0ff9",
+      "production_model": "GART_2.0",
+      "n_entries": 246,
+      "n_keys": 246,
+      "absorbed": [],
+      "pruned": [],
       "claims_withdrawn": [],
       "mismatched_at_record": []
     }
