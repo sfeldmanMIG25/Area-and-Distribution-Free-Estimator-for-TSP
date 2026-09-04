@@ -133,12 +133,6 @@ def draw_accuracy_grid(mape: pd.DataFrame, counts: pd.DataFrame) -> None:
         ax.axhline(split, color="#c0392b", lw=1.8)
         ax.get_yticklabels()[-1].set_color("#c0392b")
 
-    ax.set_title("GART 2.0 mean absolute percentage error (%) by dimension and instance size",
-                 pad=26, loc="left", fontweight="bold")
-    ax.text(0, 1.035, "error falls toward the large-instance, high-dimension corner "
-                      "of the trained grid; the held-out row runs the other way",
-            transform=ax.transAxes, fontsize=8.2, color="#555555")
-
     ax.set_xticks(np.arange(-0.5, ncol, 1), minor=True)
     ax.set_yticks(np.arange(-0.5, nrow, 1), minor=True)
     ax.grid(which="minor", color="white", linewidth=1.1)
@@ -208,8 +202,6 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     ax.set_yscale("log")
     ax.set_xlabel("Instance size $n$")
     ax.set_ylabel("Wall time per instance (ms)")
-    ax.set_title("Cost of an estimate, a certified bound, and an exact solve",
-                 pad=10, loc="left", fontweight="bold")
     ax.grid(True, which="major", ls=":", lw=0.6, color="#bbbbbb")
 
     # Axis limits from the measured data alone, then freeze them so the exact
@@ -235,11 +227,13 @@ def draw_cost_scaling(series: dict[str, pd.DataFrame]) -> None:
     which = np.clip(np.digitize(obs.n, edges), 1, len(edges) - 1)
     binned = (obs.assign(b=which).groupby("b")
                  .agg(n=("n", "median"), ms=("ms", "median")).sort_values("n"))
-    ax.plot(binned.n, binned.ms, color=C_EXACT, lw=1.3, alpha=0.8, zorder=3)
+    ax.plot(binned.n, binned.ms, color=C_EXACT, lw=1.3, alpha=0.8, zorder=3,
+            label="Exact solve, log-binned medians")
     n0, y0 = binned.n.iloc[-1], binned.ms.iloc[-1]
     xs = np.geomspace(n0, ax.get_xlim()[1], 200)
     ax.plot(xs, y0 * (xs / n0) ** slope, color=C_EXACT, lw=1.3, alpha=0.8,
-            ls="--", zorder=3)
+            ls="--", zorder=3,
+            label=f"Exact solve, fitted trend past $n={int(n0)}$ (slope {slope:.2f})")
     print(f"  exact curve: {len(binned)} binned medians to n={int(n0)}, tail slope "
           f"{slope:.2f} from {len(big)} solved runs with n >= {FIT_MIN_N}; "
           f"{len(cen)} capped runs not drawn")

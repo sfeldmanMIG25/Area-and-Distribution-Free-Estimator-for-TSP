@@ -256,7 +256,7 @@ B_ND_DIM: list[Bucket] = [
     ("$d=6$--$10$", "d6_10", _rng("dimension", 6, 10)),
     ("$d=15$--$25$", "d15_25", _rng("dimension", 15, 25)),
     ("$d=30$--$50$", "d30_50", _rng("dimension", 30, 50)),
-    ("$d=100$", "d100", _rng("dimension", 100, 100)),
+    (r"$d=100$\textsuperscript{$\dagger$}", "d100", _rng("dimension", 100, 100)),
     (r"\textbf{Total}", "total", _all()),
 ]
 B_TSPLIB: list[Bucket] = [
@@ -816,7 +816,11 @@ def _thou(n: int) -> str:
 def _f(x: object, nd: int) -> str:
     if isinstance(x, str):
         return x
-    return f"{float(x):.{nd}f}" if np.isfinite(float(x)) else "---"
+    if not np.isfinite(float(x)):
+        return "---"
+    s = f"{float(x):.{nd}f}"
+    # A leading hyphen-minus typesets as a hyphen; ``$-$`` is the minus sign.
+    return "$-$" + s[1:] if s.startswith("-") else s
 
 
 def write_tex_std(tidy: pd.DataFrame, buckets: list[Bucket], models: list[str],
@@ -1031,7 +1035,7 @@ def _clean(cell: str) -> str:
     # ``\c{C}`` is folded back to ``C`` so a typeset name with a diacritic still
     # matches the ASCII display string that generated it (see TEX_NAME).
     return (c.replace(r"\scriptsize", "").replace("{,}", "").replace("~ms", "")
-             .replace(r"\c{C}", "C")
+             .replace(r"\c{C}", "C").replace("$-$", "-")
              .replace("\\\\*", "").replace(r"\\", "").strip())
 
 

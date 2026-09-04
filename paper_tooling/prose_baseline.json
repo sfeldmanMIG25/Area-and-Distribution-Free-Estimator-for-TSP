@@ -2,37 +2,29 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T02:06:51+00:00",
+    "at": "2026-09-04T02:16:14+00:00",
     "kind": "update",
-    "reason": "Boxplot captions cut to names and the bound's k=100 budget moved into the Section 4.3.1 body sentence (author, 2026-09-03); 6 context-hash rewords of backlog occurrences, no value changed",
+    "reason": "Appendix J folded into Appendix C (tab:geo_features moved under its introducing paragraph, J heading deleted) and ref repairs (author, 2026-09-03); 2 context-hash rewords of the backlog value 11, no value changed",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "096140a5a5b2dd8da0e155c4f73e12a938a9349fe3acdac64c462e1cd20eea43",
+    "tex_sha256": "453bb872bd2aad2caec505eed48f25b9e22b9ab13a9143bd23ed926c2074d85d",
     "production_model": "GART_2.0",
     "n_entries": 273,
     "n_keys": 273,
     "absorbed": [
-      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
-      "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:816bd3cd06c5",
-      "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:1dea3418c881",
-      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:81987596990d",
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
+      "appendix:app-features :: 11 :: tier2:unmarked :: ctx:006ed56c40d3",
+      "appendix:app-features :: 11 :: tier2:unmarked :: ctx:a5e2af506fb1"
     ],
     "pruned": [
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:c2afcd150de5",
-      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:fc59f9bb0fba",
-      "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:7e6e0fe04353",
-      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:730a1b023c71",
-      "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:b93190fc94f8",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:250d79cba79c"
+      "appendix:app-features :: 11 :: tier2:unmarked :: ctx:d5c0e9074200",
+      "appendix:app-features-geo :: 11 :: tier2:unmarked :: ctx:47a6cfe609ce"
     ],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 50,
-    "absorbed": 1191,
-    "pruned": 1509,
+    "records": 51,
+    "absorbed": 1193,
+    "pruned": 1511,
     "claims_withdrawn": 556,
     "mismatched_claims_withdrawn": 0
   },
@@ -162,10 +154,15 @@
       "example": "...llected on one Intel i7 13th Gen machine with 64\\,GB RAM and Windows 11. The cold protocol tim...",
       "first_recorded": "2026-08-28T23:30:36+00:00"
     },
-    "appendix:app-features :: 11 :: tier2:unmarked :: ctx:d5c0e9074200": {
+    "appendix:app-features :: 11 :: tier2:unmarked :: ctx:006ed56c40d3": {
       "count": 1,
-      "example": "...} (Appendix~\\ref{app:features_geo}) lists the 11 geometric and centroid features, Tables~\\ref{...",
-      "first_recorded": "2026-08-27T05:34:30+00:00"
+      "example": "...ures} Table~\\ref{tab:geo_features} lists the 11 geometric and centroid features, Tables~\\ref{...",
+      "first_recorded": "2026-09-04T02:16:14+00:00"
+    },
+    "appendix:app-features :: 11 :: tier2:unmarked :: ctx:a5e2af506fb1": {
+      "count": 1,
+      "example": "...eometric and centroid feature specifications (11 features).} \\label{tab:geo_features} \\resizeb...",
+      "first_recorded": "2026-09-04T02:16:14+00:00"
     },
     "appendix:app-features :: 19 :: tier1:label-count :: ctx:7b71013a66ca": {
       "count": 1,
@@ -175,11 +172,6 @@
     "appendix:app-features :: 31 :: tier2:unmarked :: ctx:d642c5de255a": {
       "count": 1,
       "example": "...eedy_features} the single constructive ratio, 31 in all (Section~\\ref{subsec:features}). Liste...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "appendix:app-features-geo :: 11 :: tier2:unmarked :: ctx:47a6cfe609ce": {
-      "count": 1,
-      "example": "...eometric and centroid feature specifications (11 features).} \\label{tab:geo_features} \\resizeb...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
     "appendix:app-features/app-features-edge :: 10 :: tier2:unmarked :: ctx:046274ea41dc": {
@@ -1421,287 +1413,287 @@
     "appendix.cavdar.benchmark_n": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_2d_n_total",
-      "line": 795,
+      "line": 818,
       "printed": 2580.0,
       "expected": 2580.0
     },
     "appendix.cavdar.boundary_ratio": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_ratio_at_n_max",
-      "line": 795,
+      "line": 818,
       "printed": 0.982,
       "expected": 0.981934
     },
     "appendix.cavdar.boundary_step": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_step_at_n_max_pct",
-      "line": 795,
+      "line": 818,
       "printed": 1.8,
       "expected": 1.839804
     },
     "appendix.cavdar.extrap_ratio_5000": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_ratio_extrap_5000",
-      "line": 795,
+      "line": 818,
       "printed": 1.22,
       "expected": 1.215328
     },
     "appendix.cavdar.n_below_fit": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_2d_n_below_min",
-      "line": 795,
+      "line": 818,
       "printed": 1320.0,
       "expected": 1320.0
     },
     "appendix.classical.panel_b_n": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_gart_2_0_n",
-      "line": 908,
+      "line": 931,
       "printed": 210.0,
       "expected": 210.0
     },
     "appendix.code.frontier_table_cells": {
       "state": "MATCHED",
       "expect": "bank:frontier_table_cells",
-      "line": 655,
+      "line": 656,
       "printed": 182.0,
       "expected": 182.0
     },
     "appendix.code.table_cells": {
       "state": "MATCHED",
       "expect": "bank:manuscript_table_cells",
-      "line": 655,
+      "line": 656,
       "printed": 425.0,
       "expected": 425.0
     },
     "appendix.controls.linear_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-      "line": 1037,
+      "line": 1038,
       "printed": 17.9,
       "expected": 17.871637
     },
     "appendix.controls.linear_clustered_r2alpha": {
       "state": "MATCHED",
       "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-      "line": 1037,
+      "line": 1038,
       "printed": 9.53,
       "expected": 9.526199
     },
     "appendix.controls.released_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-      "line": 1037,
+      "line": 1038,
       "printed": 2.2,
       "expected": 2.241039
     },
     "appendix.lit.chien_daganzo_cavdar": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 793,
+      "line": 816,
       "printed": 0.69,
       "expected": null
     },
     "appendix.lit.chien_daganzo_choi": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 793,
+      "line": 816,
       "printed": 0.88,
       "expected": null
     },
     "appendix.lit.chien_formula_coeff": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 793,
+      "line": 816,
       "printed": 0.67,
       "expected": null
     },
     "appendix.lit.chien_review_coeff": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 793,
+      "line": 816,
       "printed": 0.67,
       "expected": null
     },
     "appendix.mds.explicit_gart_mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-      "line": 1067,
+      "line": 1068,
       "printed": 3.01,
       "expected": 3.01277
     },
     "appendix.mds.geo_stress_max": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1067,
+      "line": 1068,
       "printed": 0.2363,
       "expected": null
     },
     "appendix.shap.group_geometric_share": {
       "state": "MATCHED",
       "expect": "bank:shap_group_geometric_share_pct",
-      "line": 777,
+      "line": 800,
       "printed": 25.5,
       "expected": 25.49018
     },
     "appendix.shap.group_greedy_share": {
       "state": "MATCHED",
       "expect": "bank:shap_group_greedy_share_pct",
-      "line": 777,
+      "line": 800,
       "printed": 23.9,
       "expected": 23.855249
     },
     "appendix.shap.group_mst_share": {
       "state": "MATCHED",
       "expect": "bank:shap_group_mst_share_pct",
-      "line": 777,
+      "line": 800,
       "printed": 50.7,
       "expected": 50.654571
     },
     "appendix.training.test_share_restated": {
       "state": "MATCHED",
       "expect": "= 100 * {sidecar:rows.test} / {sidecar:rows.total}",
-      "line": 670,
+      "line": 671,
       "printed": 15.92,
       "expected": 15.92140921409214
     },
     "application.bound.factor": {
       "state": "MATCHED",
       "expect": "= {allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct} / {allbench:cells/noneuc/like_for_like_vs_GART2/polyak_raw_MAPE_by_k/500}",
-      "line": 633,
+      "line": 634,
       "printed": 7.5,
       "expected": 7.495193038419498
     },
     "application.bound.gart_mape": {
       "state": "MATCHED",
       "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct",
-      "line": 633,
+      "line": 634,
       "printed": 3.81,
       "expected": 3.8144881123805074
     },
     "application.bound.like_for_like_n": {
       "state": "MATCHED",
       "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/N",
-      "line": 633,
+      "line": 634,
       "printed": 29.0,
       "expected": 29.0
     },
     "application.bound.polyak_k500": {
       "state": "MATCHED",
       "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/polyak_raw_MAPE_by_k/500",
-      "line": 633,
+      "line": 634,
       "printed": 0.51,
       "expected": 0.5089245991167779
     },
     "application.bound.vj_k100": {
       "state": "MATCHED",
       "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/vj_raw_MAPE_by_k/100",
-      "line": 633,
+      "line": 634,
       "printed": 1.27,
       "expected": 1.2693200985234567
     },
     "application.fixed_alpha.constant": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 592,
+      "line": 593,
       "printed": 1.136,
       "expected": null
     },
     "application.oracle_c_23_restated": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 592,
+      "line": 593,
       "printed": 1.1718,
       "expected": null
     },
     "application.oracle_constant_111": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 592,
+      "line": 593,
       "printed": 1.134,
       "expected": null
     },
     "application.oracle_mape_23_floor_repeat": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 600,
+      "line": 601,
       "printed": 7.55,
       "expected": null
     },
     "application.oracle_mape_23_restated": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 592,
+      "line": 593,
       "printed": 7.55,
       "expected": null
     },
     "conclusion.repair.quarantined": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_quarantined_total",
-      "line": 783,
+      "line": 806,
       "printed": 184.0,
       "expected": 184.0
     },
     "costacct.d18512_bound_top_s": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_ms_by_k/500",
-      "line": 446,
+      "line": 447,
       "printed": 493.0,
       "expected": 493.257843600004
     },
     "costacct.d18512_bound_x_crossing": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/50",
-      "line": 446,
+      "line": 447,
       "printed": 167.0,
       "expected": 166.81976859630277
     },
     "costacct.d18512_bound_x_top": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
-      "line": 446,
+      "line": 447,
       "printed": 2078.0,
       "expected": 2077.5723207986466
     },
     "costacct.d18512_scale": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 446,
+      "line": 447,
       "printed": 18.0,
       "expected": null
     },
     "costacct.lgbm_share_pct": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 444,
+      "line": 445,
       "printed": 5.03,
       "expected": null
     },
     "costacct.nd_large_ref_ms": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 446,
+      "line": 447,
       "printed": 3799.0,
       "expected": null
     },
     "costacct.nd_median_gart_ms": {
       "state": "MATCHED",
       "expect": "bank:nd_by_size_total_gart_2_0_time_ms",
-      "line": 446,
+      "line": 447,
       "printed": 121.0,
       "expected": 120.88825
     },
     "costacct.nd_median_ref_ms": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 446,
+      "line": 447,
       "printed": 122.0,
       "expected": null
     },
     "coverage.decontaminated_slope": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 432,
+      "line": 433,
       "printed": 0.735,
       "expected": null
     },
@@ -1715,952 +1707,952 @@
     "discussion.d18512_gart2_time": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 446,
+      "line": 447,
       "printed": 239.0,
       "expected": null
     },
     "discussion.disp.asym_sdpe": {
       "state": "MATCHED",
       "expect": "bank:tsplib_by_size_total_asymptotic_mst_ratio_sdpe_pct",
-      "line": 440,
+      "line": 441,
       "printed": 4.74,
       "expected": 4.740122
     },
     "discussion.disp.gart_sdpe": {
       "state": "MATCHED",
       "expect": "bank:tsplib_by_size_total_gart_2_0_sdpe_pct",
-      "line": 440,
+      "line": 441,
       "printed": 2.92,
       "expected": 2.919994
     },
     "discussion.gt400.mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_by_size_gt400_gart_2_0_mape_pct",
-      "line": 440,
+      "line": 441,
       "printed": 2.9,
       "expected": 2.902071
     },
     "discussion.nd_gart2_time_large_n": {
       "state": "MATCHED",
       "expect": "bank:nd_by_size_501_1000_gart_2_0_time_ms",
-      "line": 446,
+      "line": 447,
       "printed": 460.0,
       "expected": 460.3686
     },
     "discussion.paired.ci_level_pct": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 440,
+      "line": 441,
       "printed": 95.0,
       "expected": null
     },
     "discussion.paired.tsplib_asym.ci_hi": {
       "state": "MATCHED",
       "expect": "= -1 * {paired_tsplib_by_size_total_asymptotic_mst_ratio_ci_hi}",
-      "line": 440,
+      "line": 441,
       "printed": 0.22,
       "expected": 0.223817647
     },
     "discussion.paired.tsplib_asym.ci_lo": {
       "state": "MATCHED",
       "expect": "= -1 * {paired_tsplib_by_size_total_asymptotic_mst_ratio_ci_lo}",
-      "line": 440,
+      "line": 441,
       "printed": 1.77,
       "expected": 1.770657798
     },
     "discussion.paired.tsplib_asym.mean_diff": {
       "state": "MATCHED",
       "expect": "= -1 * {paired_tsplib_by_size_total_asymptotic_mst_ratio_mean_diff}",
-      "line": 440,
+      "line": 441,
       "printed": 1.0,
       "expected": 0.997358541
     },
     "discussion.paired.tsplib_asym.p": {
       "state": "MATCHED",
       "expect": "bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
-      "line": 440,
+      "line": 441,
       "printed": 0.0049,
       "expected": 0.004853194
     },
     "discussion.r2alpha.tsplib_gt400": {
       "state": "MATCHED",
       "expect": "= -1 * {tsplib_by_size_gt400_gart_2_0_r2_alpha}",
-      "line": 440,
+      "line": 441,
       "printed": 0.071,
       "expected": 0.071034
     },
     "discussion.rank.tsplib_close5_gart1": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_gart_1_0_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 70.4,
       "expected": 70.37037
     },
     "discussion.timing.feature_share_pct": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 444,
+      "line": 445,
       "printed": 92.9,
       "expected": null
     },
     "frontier.2d.caption_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/N",
-      "line": 860,
+      "line": 883,
       "printed": 2580.0,
       "expected": 2580.0
     },
     "frontier.2d.large_bucket_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [501,1000]/ascents/vj_ckpt/500/x_gart2_typical",
-      "line": 850,
+      "line": 873,
       "printed": 26.08,
       "expected": 26.083153455156815
     },
     "frontier.2d.large_bucket_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [501,1000]/N",
-      "line": 850,
+      "line": 873,
       "printed": 610.0,
       "expected": 610.0
     },
     "frontier.2d.raw_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/x_gart2_typical",
-      "line": 850,
+      "line": 873,
       "printed": 0.23,
       "expected": 0.2296353331897327
     },
     "frontier.2d.raw_crossing_k": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/crossover/vj_ckpt/raw/k",
-      "line": 850,
+      "line": 873,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.2d.raw_crossing_win": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/win_rate_vs_gart2_pct/raw",
-      "line": 850,
+      "line": 873,
       "printed": 54.8,
       "expected": 54.8062015503876
     },
     "frontier.2d.small_bucket_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/x_gart2_typical",
-      "line": 850,
+      "line": 873,
       "printed": 0.07,
       "expected": 0.06987313881431421
     },
     "frontier.2d.small_bucket_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/gart2_MAPE_pct",
-      "line": 850,
+      "line": 873,
       "printed": 3.212,
       "expected": 3.211611319278459
     },
     "frontier.2d.small_bucket_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 850,
+      "line": 873,
       "printed": 25.0,
       "expected": null
     },
     "frontier.2d.small_bucket_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 850,
+      "line": 873,
       "printed": 0.439,
       "expected": 0.4390634725776753
     },
     "frontier.2d.small_bucket_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/N",
-      "line": 850,
+      "line": 873,
       "printed": 360.0,
       "expected": 360.0
     },
     "frontier.2d.small_bucket_win": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/win_rate_vs_gart2_pct/raw",
-      "line": 850,
+      "line": 873,
       "printed": 95.0,
       "expected": 95.0
     },
     "frontier.amort.2d_hi": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 856,
+      "line": 879,
       "printed": 0.95,
       "expected": 0.9547131318103961
     },
     "frontier.amort.2d_lo": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 856,
+      "line": 879,
       "printed": 0.77,
       "expected": 0.7677804310172007
     },
     "frontier.amort.noneuc_hi": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 856,
+      "line": 879,
       "printed": 1.14,
       "expected": 1.1446414297273981
     },
     "frontier.amort.noneuc_lo": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 856,
+      "line": 879,
       "printed": 0.9,
       "expected": 0.8975749547378266
     },
     "frontier.complexity.bound_exponent_hi": {
       "state": "MATCHED",
       "expect": "frontier:complexity/onetree_slope_n_ge_1000_hi",
-      "line": 550,
+      "line": 551,
       "printed": 2.13,
       "expected": 2.13
     },
     "frontier.complexity.bound_exponent_lo": {
       "state": "MATCHED",
       "expect": "frontier:complexity/onetree_slope_n_ge_1000_lo",
-      "line": 550,
+      "line": 551,
       "printed": 2.08,
       "expected": 2.08
     },
     "frontier.complexity.delaunay_heavier": {
       "state": "MATCHED",
       "expect": "frontier:complexity/delaunay_heavier_count",
-      "line": 541,
+      "line": 542,
       "printed": 141.0,
       "expected": 141.0
     },
     "frontier.complexity.delaunay_vectors": {
       "state": "MATCHED",
       "expect": "frontier:complexity/delaunay_pi_vectors",
-      "line": 541,
+      "line": 542,
       "printed": 144.0,
       "expected": 144.0
     },
     "frontier.complexity.gart2_exponent": {
       "state": "MATCHED",
       "expect": "frontier:complexity/gart2_slope_n_ge_1000",
-      "line": 550,
+      "line": 551,
       "printed": 0.975,
       "expected": 0.975
     },
     "frontier.complexity.mst_band_hi": {
       "state": "MATCHED",
       "expect": "frontier:complexity/gart2_over_mst_band_hi",
-      "line": 550,
+      "line": 551,
       "printed": 2.3,
       "expected": 2.34
     },
     "frontier.complexity.mst_band_lo": {
       "state": "MATCHED",
       "expect": "frontier:complexity/gart2_over_mst_band_lo",
-      "line": 550,
+      "line": 551,
       "printed": 2.0,
       "expected": 1.99
     },
     "frontier.complexity.nd_bound_hi": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/onetree_nd_hi",
-      "line": 552,
+      "line": 553,
       "printed": 1.889,
       "expected": 1.889
     },
     "frontier.complexity.nd_bound_lo": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/onetree_nd_lo",
-      "line": 552,
+      "line": 553,
       "printed": 1.785,
       "expected": 1.785
     },
     "frontier.complexity.nd_gart2_highd": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/gart2_d_15_50",
-      "line": 552,
+      "line": 553,
       "printed": 1.82,
       "expected": 1.821
     },
     "frontier.complexity.nd_gart2_lowd": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/gart2_d_4_10",
-      "line": 552,
+      "line": 553,
       "printed": 2.02,
       "expected": 2.021
     },
     "frontier.complexity.nd_gart2_planar": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/gart2_d_2_3",
-      "line": 552,
+      "line": 553,
       "printed": 0.56,
       "expected": 0.556
     },
     "frontier.complexity.ratio_at_1000": {
       "state": "MATCHED",
       "expect": "frontier:complexity/ledger_d2/n_1000/onetree_k50_over_gart2",
-      "line": 550,
+      "line": 551,
       "printed": 7.7,
       "expected": 7.7
     },
     "frontier.complexity.ratio_at_16000": {
       "state": "MATCHED",
       "expect": "frontier:complexity/ledger_d2/n_16000/onetree_k50_over_gart2",
-      "line": 550,
+      "line": 551,
       "printed": 211.0,
       "expected": 211.0
     },
     "frontier.labels.corrupt_population": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 787,
+      "line": 810,
       "printed": 184.0,
       "expected": null
     },
     "frontier.labels.linhp318_label": {
       "state": "MATCHED",
       "expect": "frontier:labels/linhp318/stored_label",
-      "line": 785,
+      "line": 808,
       "printed": 41345.0,
       "expected": 41345.0
     },
     "frontier.labels.linhp318_tour_opt": {
       "state": "MATCHED",
       "expect": "frontier:labels/linhp318/tour_optimum_on_its_coordinates",
-      "line": 785,
+      "line": 808,
       "printed": 42029.0,
       "expected": 42029.0
     },
     "frontier.labels.tsplib_files_scanned": {
       "state": "MATCHED",
       "expect": "frontier:labels/linhp318/tsplib_files_scanned",
-      "line": 592,
+      "line": 593,
       "printed": 111.0,
       "expected": 111.0
     },
     "frontier.load.bias_hi": {
       "state": "MATCHED",
       "expect": "costfront:load_control/bias_in_a_cost_ratio/200",
-      "line": 856,
+      "line": 879,
       "printed": 0.77,
       "expected": 0.7683528907467704
     },
     "frontier.load.bias_lo": {
       "state": "MATCHED",
       "expect": "costfront:load_control/bias_in_a_cost_ratio/0",
-      "line": 856,
+      "line": 879,
       "printed": 0.74,
       "expected": 0.7402083132872181
     },
     "frontier.load.bound_inflation_hi": {
       "state": "MATCHED",
       "expect": "costfront:load_control/HK_1Tree_vj/200/median_today_over_published",
-      "line": 856,
+      "line": 879,
       "printed": 1.14,
       "expected": 1.1380561592228244
     },
     "frontier.load.bound_inflation_lo": {
       "state": "MATCHED",
       "expect": "costfront:load_control/HK_1Tree_vj/0/median_today_over_published",
-      "line": 856,
+      "line": 879,
       "printed": 1.1,
       "expected": 1.0963694419444696
     },
     "frontier.load.flip_after": {
       "state": "MATCHED",
       "expect": "= {costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/x_gart2_typical} / {costfront:load_control/bias_in_a_cost_ratio/200}",
-      "line": 856,
+      "line": 879,
       "printed": 1.03,
       "expected": 1.0279812932801828
     },
     "frontier.load.flip_before": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/x_gart2_typical",
-      "line": 856,
+      "line": 879,
       "printed": 0.79,
       "expected": 0.7898523983254321
     },
     "frontier.load.flip_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 856,
+      "line": 879,
       "printed": 200.0,
       "expected": null
     },
     "frontier.load.gart_inflation": {
       "state": "MATCHED",
       "expect": "costfront:load_control/GART_2.0/median_today_over_published",
-      "line": 856,
+      "line": 879,
       "printed": 1.48,
       "expected": 1.4811633728829152
     },
     "frontier.nd.accuracy_factor": {
       "state": "MATCHED",
       "expect": "frontier:nd/accuracy_factor_at_best_budget",
-      "line": 459,
+      "line": 460,
       "printed": 5.56,
       "expected": 5.562420732419555
     },
     "frontier.nd.best_budget": {
       "state": "MATCHED",
       "expect": "frontier:nd/best_budget_k",
-      "line": 459,
+      "line": 460,
       "printed": 200.0,
       "expected": 200.0
     },
     "frontier.nd.bound_mape": {
       "state": "MATCHED",
       "expect": "frontier:nd/bound_mape_pct_by_k/200",
-      "line": 459,
+      "line": 460,
       "printed": 0.111,
       "expected": 0.11105252639090783
     },
     "frontier.nd.closes_exactly_pct": {
       "state": "MATCHED",
       "expect": "frontier:nd/relaxation_closes_exactly_pct",
-      "line": 467,
+      "line": 468,
       "printed": 37.2,
       "expected": 37.249198622818476
     },
     "frontier.nd.concorde_bound_mape": {
       "state": "MATCHED",
       "expect": "frontier:nd/concorde_subset/bound_mape_pct_by_k/200",
-      "line": 467,
+      "line": 468,
       "printed": 0.046,
       "expected": 0.04582612470793809
     },
     "frontier.nd.concorde_budget": {
       "state": "MATCHED",
       "expect": "frontier:nd/best_budget_k",
-      "line": 467,
+      "line": 468,
       "printed": 200.0,
       "expected": 200.0
     },
     "frontier.nd.concorde_gart2_mape": {
       "state": "MATCHED",
       "expect": "frontier:nd/concorde_subset/gart2_mape_pct",
-      "line": 467,
+      "line": 468,
       "printed": 1.03,
       "expected": 1.0280444539735993
     },
     "frontier.nd.concorde_subset_n": {
       "state": "MATCHED",
       "expect": "frontier:nd/concorde_subset/N",
-      "line": 467,
+      "line": 468,
       "printed": 3069.0,
       "expected": 3069.0
     },
     "frontier.nd.cost_x": {
       "state": "MATCHED",
       "expect": "frontier:nd/bound_x_gart2_by_k/200",
-      "line": 459,
+      "line": 460,
       "printed": 0.71,
       "expected": 0.7085091768513759
     },
     "frontier.nd.crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:nd/crossover_cost_x_by_group/all ND",
-      "line": 459,
+      "line": 460,
       "printed": 0.4,
       "expected": 0.40030339876590293
     },
     "frontier.nd.crossing_k": {
       "state": "MATCHED",
       "expect": "frontier:nd/crossover_k_by_group/all ND",
-      "line": 459,
+      "line": 460,
       "printed": 100.0,
       "expected": 100.0
     },
     "frontier.nd.gart2_mape": {
       "state": "MATCHED",
       "expect": "frontier:nd/gart2_mape_pct",
-      "line": 459,
+      "line": 460,
       "printed": 0.618,
       "expected": 0.6177208751843555
     },
     "frontier.nd.load_sensitivity_bound_body": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
-      "line": 463,
+      "line": 464,
       "printed": 1.25,
       "expected": 1.2529009010640764
     },
     "frontier.nd.load_sensitivity_gart2_body": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
-      "line": 463,
+      "line": 464,
       "printed": 1.05,
       "expected": 1.0519323607699451
     },
     "frontier.nd.paired_win_rate": {
       "state": "MATCHED",
       "expect": "frontier:nd/paired_win_rate_pct_by_k/200",
-      "line": 459,
+      "line": 460,
       "printed": 82.9,
       "expected": 82.85052831532708
     },
     "frontier.nd.planar_group_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:nd/crossover_cost_x_by_group/d in {2,3}",
-      "line": 461,
+      "line": 462,
       "printed": 1.27,
       "expected": 1.268315035296703
     },
     "frontier.nd.table_caption_n": {
       "state": "MATCHED",
       "expect": "frontier:nd/N",
-      "line": 473,
+      "line": 474,
       "printed": 16846.0,
       "expected": 16846.0
     },
     "frontier.noneuc.caption_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 884,
+      "line": 907,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-      "line": 852,
+      "line": 875,
       "printed": 3.814,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.gart_ms": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_ms",
-      "line": 852,
+      "line": 875,
       "printed": 4.88,
       "expected": 4.8828999861143
     },
     "frontier.noneuc.matched_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 852,
+      "line": 875,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.mds_share": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_ms_mds_share_pct",
-      "line": 852,
+      "line": 875,
       "printed": 9.21,
       "expected": 9.211738762338229
     },
     "frontier.noneuc.pk200_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/x_gart2_typical",
-      "line": 852,
+      "line": 875,
       "printed": 0.34,
       "expected": 0.3392655978656414
     },
     "frontier.noneuc.pk200_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 852,
+      "line": 875,
       "printed": 200.0,
       "expected": null
     },
     "frontier.noneuc.pk200_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/raw_MAPE_pct",
-      "line": 852,
+      "line": 875,
       "printed": 0.762,
       "expected": 0.761982636630314
     },
     "frontier.noneuc.pk500_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/500/x_gart2_typical",
-      "line": 852,
+      "line": 875,
       "printed": 0.69,
       "expected": 0.6930922184276088
     },
     "frontier.noneuc.pk500_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 852,
+      "line": 875,
       "printed": 500.0,
       "expected": null
     },
     "frontier.noneuc.pk500_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/500/raw_MAPE_pct",
-      "line": 852,
+      "line": 875,
       "printed": 0.509,
       "expected": 0.5089245991167779
     },
     "frontier.noneuc.pk500_win_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 852,
+      "line": 875,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.vj_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/x_gart2_typical",
-      "line": 852,
+      "line": 875,
       "printed": 0.065,
       "expected": 0.06477708387424996
     },
     "frontier.noneuc.vj_crossing_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-      "line": 852,
+      "line": 875,
       "printed": 3.814,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.vj_crossing_k": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/crossover/vj_ckpt/raw/k",
-      "line": 852,
+      "line": 875,
       "printed": 25.0,
       "expected": 25.0
     },
     "frontier.noneuc.vj_crossing_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 852,
+      "line": 875,
       "printed": 2.953,
       "expected": 2.953371085687484
     },
     "frontier.steps.2d_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 854,
+      "line": 877,
       "printed": 25.0,
       "expected": null
     },
     "frontier.steps.noneuc_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 854,
+      "line": 877,
       "printed": 200.0,
       "expected": null
     },
     "frontier.steps.pk_2d_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/polyak_ckpt/25/raw_MAPE_pct",
-      "line": 854,
+      "line": 877,
       "printed": 7.515,
       "expected": 7.515000218256177
     },
     "frontier.steps.pk_noneuc_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/raw_MAPE_pct",
-      "line": 854,
+      "line": 877,
       "printed": 0.762,
       "expected": 0.761982636630314
     },
     "frontier.steps.vj_2d_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 854,
+      "line": 877,
       "printed": 3.606,
       "expected": 3.6059585620107852
     },
     "frontier.steps.vj_noneuc_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/200/raw_MAPE_pct",
-      "line": 854,
+      "line": 877,
       "printed": 1.228,
       "expected": 1.2282433430508388
     },
     "frontier.tsplib.cal_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/x_gart2_by_k/25",
-      "line": 813,
+      "line": 836,
       "printed": 0.9,
       "expected": 0.9024844728855346
     },
     "frontier.tsplib.cal_crossing_gart2": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/gart2_mape_pct",
-      "line": 813,
+      "line": 836,
       "printed": 2.56,
       "expected": 2.560240252638566
     },
     "frontier.tsplib.cal_crossing_k": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/crossing_ladder_k",
-      "line": 813,
+      "line": 836,
       "printed": 25.0,
       "expected": 25.0
     },
     "frontier.tsplib.cal_crossing_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/mape_pct_by_k/25",
-      "line": 813,
+      "line": 836,
       "printed": 2.0,
       "expected": 1.995790083948518
     },
     "frontier.tsplib.capped_gart2_ms": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/gart2_ms",
-      "line": 817,
+      "line": 840,
       "printed": 237.0,
       "expected": 237.4202999635599
     },
     "frontier.tsplib.capped_seconds": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_ms_by_k/500",
-      "line": 817,
+      "line": 840,
       "printed": 493.0,
       "expected": 493.257843600004
     },
     "frontier.tsplib.capped_x_at_crossing": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/50",
-      "line": 817,
+      "line": 840,
       "printed": 167.0,
       "expected": 166.81976859630277
     },
     "frontier.tsplib.capped_x_at_top": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
-      "line": 817,
+      "line": 840,
       "printed": 2078.0,
       "expected": 2077.5723207986466
     },
     "frontier.tsplib.euc2d_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_euc2d",
-      "line": 811,
+      "line": 834,
       "printed": 78.0,
       "expected": 78.0
     },
     "frontier.tsplib.harness_d18512_ms": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 817,
+      "line": 840,
       "printed": 239.0,
       "expected": null
     },
     "frontier.tsplib.large_raw_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n > 400/crossing_cost_x_gart2",
-      "line": 815,
+      "line": 838,
       "printed": 6.65,
       "expected": 6.649239892362413
     },
     "frontier.tsplib.load_sensitivity_bound": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
-      "line": 817,
+      "line": 840,
       "printed": 1.25,
       "expected": 1.2529009010640764
     },
     "frontier.tsplib.load_sensitivity_gart2": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
-      "line": 817,
+      "line": 840,
       "printed": 1.05,
       "expected": 1.0519323607699451
     },
     "frontier.tsplib.matched_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_matched",
-      "line": 811,
+      "line": 834,
       "printed": 77.0,
       "expected": 77.0
     },
     "frontier.tsplib.paired_win_rate": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/paired_win_rate_of_bound_at_crossing_pct",
-      "line": 813,
+      "line": 836,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.tsplib.raw_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/crossing_cost_x_gart2",
-      "line": 813,
+      "line": 836,
       "printed": 1.46,
       "expected": 1.461611455187286
     },
     "frontier.tsplib.raw_crossing_k": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/crossing_ladder_k",
-      "line": 813,
+      "line": 836,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.tsplib.raw_crossing_margin": {
       "state": "MATCHED",
       "expect": "= {frontier:tsplib/gart2_mape_pct} - {frontier:tsplib/crossing_bound_mape_pct}",
-      "line": 813,
+      "line": 836,
       "printed": 0.0041,
       "expected": 0.0040770524615756365
     },
     "frontier.tsplib.repeats": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/repeats",
-      "line": 444,
+      "line": 445,
       "printed": 11.0,
       "expected": 11.0
     },
     "frontier.tsplib.small_bucket_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/N",
-      "line": 815,
+      "line": 838,
       "printed": 23.0,
       "expected": 23.0
     },
     "frontier.tsplib.small_cal_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/n in [51,150]/x_gart2_by_k/25",
-      "line": 815,
+      "line": 838,
       "printed": 0.16,
       "expected": 0.15894394426207137
     },
     "frontier.tsplib.small_cal_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/n in [51,150]/mape_pct_by_k/25",
-      "line": 815,
+      "line": 838,
       "printed": 1.69,
       "expected": 1.6928193374122182
     },
     "frontier.tsplib.small_gart2_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/gart2_mape_pct",
-      "line": 815,
+      "line": 838,
       "printed": 2.01,
       "expected": 2.0091196086766354
     },
     "frontier.tsplib.small_raw_accuracy_gain": {
       "state": "MATCHED",
       "expect": "= 100 * (1 - {frontier:tsplib/n in [51,150]/crossing_bound_over_gart2_mape})",
-      "line": 815,
+      "line": 838,
       "printed": 22.2,
       "expected": 22.190635492012234
     },
     "frontier.tsplib.small_raw_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/crossing_cost_x_gart2",
-      "line": 815,
+      "line": 838,
       "printed": 0.46,
       "expected": 0.4626653552203945
     },
     "frontier.tsplib.table_caption_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_matched",
-      "line": 821,
+      "line": 844,
       "printed": 77.0,
       "expected": 77.0
     },
     "frontier.tsplib.throughput_x": {
       "state": "MATCHED",
       "expect": "costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
-      "line": 813,
+      "line": 836,
       "printed": 24.94,
       "expected": 24.93799467654241
     },
     "frontier.verdict.budget25": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 586,
+      "line": 587,
       "printed": 25.0,
       "expected": null
     },
     "frontier.verdict.cheaper_above_n": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 584,
+      "line": 585,
       "printed": 400.0,
       "expected": null
     },
     "frontier.verdict.dearer_below_n": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 584,
+      "line": 585,
       "printed": 150.0,
       "expected": null
     },
     "frontier.verdict.euc2d_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib78/N",
-      "line": 584,
+      "line": 585,
       "printed": 78.0,
       "expected": 78.0
     },
     "frontier.verdict.margin_over_mst_ratio": {
       "state": "MATCHED",
       "expect": "= {frontier:tsplib78/asymptotic_mst_mape_pct} - {frontier:tsplib78/gart2_mape_pct}",
-      "line": 584,
+      "line": 585,
       "printed": 1.0,
       "expected": 0.9973585405247296
     },
     "frontier.verdict.margin_to_converged_bound": {
       "state": "MATCHED",
       "expect": "= {frontier:tsplib78/gart2_mape_pct} - {frontier:tsplib78/bound_converged_mape_pct}",
-      "line": 584,
+      "line": 585,
       "printed": 1.35,
       "expected": 1.3476989516262794
     },
     "general.e0.mape": {
       "state": "MATCHED",
       "expect": "bank:nd_by_dim_total_gart_2_0_mape_pct",
-      "line": 418,
+      "line": 419,
       "printed": 0.6177,
       "expected": 0.617721
     },
     "general.e1.d15_after": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.58,
       "expected": null
     },
     "general.e1.d15_before": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.5,
       "expected": null
     },
     "general.e1.d25_after": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.38,
       "expected": null
     },
     "general.e1.d25_before": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.35,
       "expected": null
     },
     "general.e1.train_share": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 11.8,
       "expected": null
     },
     "general.e2.msigned_after": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.51,
       "expected": null
     },
     "general.e2.msigned_before": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 0.28,
       "expected": null
     },
     "general.e2.msigned_factor": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 420,
+      "line": 421,
       "printed": 1.8,
       "expected": null
     },
@@ -2674,119 +2666,119 @@
     "labels.repair.certified_by_bound": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_nd_tour_certified_optimal",
-      "line": 785,
+      "line": 808,
       "printed": 2182.0,
       "expected": 2182.0
     },
     "labels.repair.hk_max_n": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_hk_exact_max_n",
-      "line": 785,
+      "line": 808,
       "printed": 10.0,
       "expected": 10.0
     },
     "labels.verify.n": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_verify_instances_checked",
-      "line": 787,
+      "line": 810,
       "printed": 145013.0,
       "expected": 145013.0
     },
     "labels.verify.worst_excess": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 787,
+      "line": 810,
       "printed": 5.8,
       "expected": null
     },
     "matched.bhh.full_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_a_2d_bhh_mape_pct",
-      "line": 412,
+      "line": 413,
       "printed": 23.8,
       "expected": 23.796783
     },
     "matched.bhh.uniform_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_bhh_sampling_region_mape_pct",
-      "line": 412,
+      "line": 413,
       "printed": 8.91,
       "expected": 8.914791
     },
     "matched.bhh.uniform_mspe": {
       "state": "MATCHED",
       "expect": "= -1 * {classical_b_random_bhh_sampling_region_mspe_pct}",
-      "line": 412,
+      "line": 413,
       "printed": 8.65,
       "expected": 8.651108
     },
     "matched.bhh.uniform_sdpe": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_bhh_sampling_region_sdpe_pct",
-      "line": 412,
+      "line": 413,
       "printed": 7.76,
       "expected": 7.755817
     },
     "matched.cavdar.full_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_a_2d_cavdar_sokol_mape_pct",
-      "line": 412,
+      "line": 413,
       "printed": 18.24,
       "expected": 18.235582
     },
     "matched.cavdar.uniform_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_cavdar_sokol_mape_pct",
-      "line": 412,
+      "line": 413,
       "printed": 8.16,
       "expected": 8.162786
     },
     "matched.cavdar.uniform_medape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_cavdar_sokol_medape_pct",
-      "line": 412,
+      "line": 413,
       "printed": 2.84,
       "expected": 2.840189
     },
     "matched.cavdar.uniform_sdpe": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_cavdar_sokol_sdpe_pct",
-      "line": 412,
+      "line": 413,
       "printed": 14.28,
       "expected": 14.281854
     },
     "matched.uniform_domain.bhh_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_bhh_sampling_region_mape_pct",
-      "line": 414,
+      "line": 415,
       "printed": 8.91,
       "expected": 8.914791
     },
     "matched.uniform_domain.cavdar_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_cavdar_sokol_mape_pct",
-      "line": 414,
+      "line": 415,
       "printed": 8.16,
       "expected": 8.162786
     },
     "matched.uniform_domain.floor_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_l_mathrm_mst_alpha_1_mape_pct",
-      "line": 414,
+      "line": 415,
       "printed": 15.6,
       "expected": 15.601446
     },
     "matched.uniform_domain.gart_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_gart_2_0_mape_pct",
-      "line": 414,
+      "line": 415,
       "printed": 1.31,
       "expected": 1.313575
     },
     "matched.uniform_domain.n": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_gart_2_0_n",
-      "line": 414,
+      "line": 415,
       "printed": 210.0,
       "expected": 210.0
     },
@@ -2842,7 +2834,7 @@
     "methods.optuna.n_trials": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 200.0,
       "expected": null
     },
@@ -2856,14 +2848,14 @@
     "methods.optuna.trials_complete": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 60.0,
       "expected": null
     },
     "methods.optuna.trials_pruned": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 140.0,
       "expected": null
     },
@@ -2877,28 +2869,28 @@
     "methods.optuna.tuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 0.6112,
       "expected": null
     },
     "methods.optuna.tuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 2.6364,
       "expected": null
     },
     "methods.optuna.untuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 0.6226,
       "expected": null
     },
     "methods.optuna.untuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 994,
+      "line": 995,
       "printed": 2.4725,
       "expected": null
     },
@@ -2968,182 +2960,182 @@
     "provenance.quarantine.nd_test": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_quarantined_nd_test",
-      "line": 783,
+      "line": 806,
       "printed": 74.0,
       "expected": 74.0
     },
     "provenance.quarantine.pct": {
       "state": "MATCHED",
       "expect": "= 100 * {frontier:labels/repair_quarantined_total} / {frontier:labels/repair_corpus_nd_instances}",
-      "line": 783,
+      "line": 806,
       "printed": 0.173,
       "expected": 0.17314062029509183
     },
     "provenance.quarantine.scored_nd": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_nd_test_scored",
-      "line": 783,
+      "line": 806,
       "printed": 16846.0,
       "expected": 16846.0
     },
     "provenance.verify.n": {
       "state": "MATCHED",
       "expect": "frontier:labels/repair_verify_instances_checked",
-      "line": 787,
+      "line": 810,
       "printed": 145013.0,
       "expected": 145013.0
     },
     "provenance.verify.worst_excess": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 787,
+      "line": 810,
       "printed": 5.8,
       "expected": null
     },
     "rank.close10.floor_2d": {
       "state": "MATCHED",
       "expect": "bank:rank_2d_l_mathrm_mst_alpha_1_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 77.8,
       "expected": 77.759904
     },
     "rank.close10.floor_nd": {
       "state": "MATCHED",
       "expect": "bank:rank_nd_l_mathrm_mst_alpha_1_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 75.9,
       "expected": 75.863058
     },
     "rank.close10.floor_tsplib": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 73.3,
       "expected": 73.333333
     },
     "rank.close10.gart_2d": {
       "state": "MATCHED",
       "expect": "bank:rank_2d_gart_2_0_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 83.6,
       "expected": 83.563353
     },
     "rank.close10.gart_nd": {
       "state": "MATCHED",
       "expect": "bank:rank_nd_gart_2_0_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 96.1,
       "expected": 96.105696
     },
     "rank.close10.gart_tsplib": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_gart_2_0_close10_pct",
-      "line": 438,
+      "line": 439,
       "printed": 81.0,
       "expected": 80.952381
     },
     "rank.close10.threshold": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 438,
+      "line": 439,
       "printed": 10.0,
       "expected": null
     },
     "rank.close5.floor_2d": {
       "state": "MATCHED",
       "expect": "bank:rank_2d_l_mathrm_mst_alpha_1_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 71.0,
       "expected": 71.043488
     },
     "rank.close5.floor_nd": {
       "state": "MATCHED",
       "expect": "bank:rank_nd_l_mathrm_mst_alpha_1_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 69.1,
       "expected": 69.05073
     },
     "rank.close5.floor_tsplib": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_l_mathrm_mst_alpha_1_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 61.1,
       "expected": 61.111111
     },
     "rank.close5.gain_2d_pp": {
       "state": "MATCHED",
       "expect": "= {rank_2d_gart_2_0_close5_pct} - {rank_2d_l_mathrm_mst_alpha_1_close5_pct}",
-      "line": 438,
+      "line": 439,
       "printed": 3.4,
       "expected": 3.435971000000009
     },
     "rank.close5.gain_nd_pp": {
       "state": "MATCHED",
       "expect": "= {rank_nd_gart_2_0_close5_pct} - {rank_nd_l_mathrm_mst_alpha_1_close5_pct}",
-      "line": 438,
+      "line": 439,
       "printed": 23.4,
       "expected": 23.360719000000003
     },
     "rank.close5.gain_tsplib_pp": {
       "state": "MATCHED",
       "expect": "= {rank_tsplib_euc2d_gart_2_0_close5_pct} - {rank_tsplib_euc2d_l_mathrm_mst_alpha_1_close5_pct}",
-      "line": 438,
+      "line": 439,
       "printed": 11.0,
       "expected": 11.111111000000001
     },
     "rank.close5.gart_2d": {
       "state": "MATCHED",
       "expect": "bank:rank_2d_gart_2_0_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 74.5,
       "expected": 74.479459
     },
     "rank.close5.gart_nd": {
       "state": "MATCHED",
       "expect": "bank:rank_nd_gart_2_0_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 92.4,
       "expected": 92.411449
     },
     "rank.close5.gart_tsplib_pct": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pct",
-      "line": 438,
+      "line": 439,
       "printed": 72.2,
       "expected": 72.222222
     },
     "rank.close5.pairs_2d": {
       "state": "MATCHED",
       "expect": "bank:rank_2d_gart_2_0_close5_pairs",
-      "line": 438,
+      "line": 439,
       "printed": 74826.0,
       "expected": 74826.0
     },
     "rank.close5.pairs_nd": {
       "state": "MATCHED",
       "expect": "bank:rank_nd_gart_2_0_close5_pairs",
-      "line": 438,
+      "line": 439,
       "printed": 1647719.0,
       "expected": 1647719.0
     },
     "rank.close5.pairs_tsplib": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
-      "line": 438,
+      "line": 439,
       "printed": 54.0,
       "expected": 54.0
     },
     "rank.close5.pairs_tsplib_restated": {
       "state": "MATCHED",
       "expect": "bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
-      "line": 438,
+      "line": 439,
       "printed": 54.0,
       "expected": 54.0
     },
     "rank.close5.threshold": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 438,
+      "line": 439,
       "printed": 5.0,
       "expected": null
     },
@@ -3157,14 +3149,14 @@
     "results.2d.mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_size_total_gart_2_0_mape_pct",
-      "line": 361,
+      "line": 362,
       "printed": 2.89,
       "expected": 2.889167
     },
     "results.2d.sdpe": {
       "state": "MATCHED",
       "expect": "bank:2d_by_size_total_gart_2_0_sdpe_pct",
-      "line": 361,
+      "line": 362,
       "printed": 4.68,
       "expected": 4.683987
     },
@@ -3185,77 +3177,77 @@
     "results.tsplib.alpha_sd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 402,
+      "line": 403,
       "printed": 0.0558,
       "expected": null
     },
     "results.tsplib.bhh_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_bhh_mape_pct",
-      "line": 406,
+      "line": 407,
       "printed": 25.14,
       "expected": 25.135716
     },
     "results.tsplib.bhh_mspe": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_bhh_mspe_pct",
-      "line": 406,
+      "line": 407,
       "printed": 13.66,
       "expected": 13.658288
     },
     "results.tsplib.cavdar_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_cavdar_sokol_mape_pct",
-      "line": 406,
+      "line": 407,
       "printed": 23.87,
       "expected": 23.870464
     },
     "results.tsplib.cavdar_mspe": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_cavdar_sokol_mspe_pct",
-      "line": 406,
+      "line": 407,
       "printed": 20.07,
       "expected": 20.06505
     },
     "results.tsplib.mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_by_size_total_gart_2_0_mape_pct",
-      "line": 402,
+      "line": 403,
       "printed": 2.53,
       "expected": 2.531954
     },
     "results.tsplib.oracle_c": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 402,
+      "line": 403,
       "printed": 1.1275,
       "expected": null
     },
     "results.tsplib.oracle_mape": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 402,
+      "line": 403,
       "printed": 3.52,
       "expected": null
     },
     "results.tsplib.sdpe": {
       "state": "MATCHED",
       "expect": "bank:tsplib_by_size_total_gart_2_0_sdpe_pct",
-      "line": 402,
+      "line": 403,
       "printed": 2.92,
       "expected": 2.919994
     },
     "results.tsplib.sdpe_overlap_hi": {
       "state": "MATCHED",
       "expect": "= min({tsplib_by_size_gt400_gart_2_0_sdpe_hi}, {tsplib_by_size_gt400_asymptotic_mst_ratio_sdpe_hi})",
-      "line": 404,
+      "line": 405,
       "printed": 3.62,
       "expected": 3.615319
     },
     "results.tsplib.sdpe_overlap_lo": {
       "state": "MATCHED",
       "expect": "= max({tsplib_by_size_gt400_gart_2_0_sdpe_lo}, {tsplib_by_size_gt400_asymptotic_mst_ratio_sdpe_lo})",
-      "line": 404,
+      "line": 405,
       "printed": 3.2,
       "expected": 3.201267
     },
@@ -3269,42 +3261,42 @@
     "results_2d.grid_alpha_mean": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 389,
+      "line": 390,
       "printed": 1.05,
       "expected": null
     },
     "results_2d.linenoise.on_face_median": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 674,
+      "line": 675,
       "printed": 59.9,
       "expected": null
     },
     "results_2d.linenoise.q1_alpha": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 674,
+      "line": 675,
       "printed": 1.18,
       "expected": null
     },
     "results_2d.linenoise.q4_alpha": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 674,
+      "line": 675,
       "printed": 1.431,
       "expected": null
     },
     "results_2d.linenoise.rank_corr": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 674,
+      "line": 675,
       "printed": 0.86,
       "expected": null
     },
     "results_2d.linenoise_alpha_mean": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 389,
+      "line": 390,
       "printed": 1.56,
       "expected": null
     },
@@ -3318,7 +3310,7 @@
     "results_nd.bhh_region_mape_restated": {
       "state": "MATCHED",
       "expect": "bank:nd_by_size_total_bhh_sampling_region_mape_pct",
-      "line": 348,
+      "line": 349,
       "printed": 28.01,
       "expected": 28.013791
     },
@@ -3339,7 +3331,7 @@
     "results_nd.uniform_axes_share": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 348,
+      "line": 349,
       "printed": 68.7,
       "expected": null
     },
@@ -3388,77 +3380,77 @@
     "sizestrat.corpus.frac_small_pct": {
       "state": "MATCHED",
       "expect": "sizestrat:corpus/frac_n_le_100_pct",
-      "line": 463,
+      "line": 464,
       "printed": 62.74,
       "expected": 62.74
     },
     "sizestrat.corpus.scored": {
       "state": "MATCHED",
       "expect": "sizestrat:corpus/scored_instances",
-      "line": 463,
+      "line": 464,
       "printed": 16846.0,
       "expected": 16846.0
     },
     "sizestrat.corpus.small_instances": {
       "state": "MATCHED",
       "expect": "sizestrat:corpus/n_le_100_instances",
-      "line": 463,
+      "line": 464,
       "printed": 10569.0,
       "expected": 10569.0
     },
     "sizestrat.d100.large.mape": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d100/n600_1000/gart_mape_pct",
-      "line": 463,
+      "line": 464,
       "printed": 0.824,
       "expected": 0.8239
     },
     "sizestrat.d2.large.k500_mape": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d2/n600_1000/bound_k500_mape_pct",
-      "line": 465,
+      "line": 466,
       "printed": 0.784,
       "expected": 0.7838
     },
     "sizestrat.d2.large.k500_ms": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d2/n600_1000/bound_k500_ms",
-      "line": 465,
+      "line": 466,
       "printed": 246.1,
       "expected": 246.085
     },
     "sizestrat.d3.large.k200_mape": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d3/n600_1000/bound_k200_mape_pct",
-      "line": 465,
+      "line": 466,
       "printed": 0.45,
       "expected": 0.4497
     },
     "sizestrat.d3.large.k200_ms": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d3/n600_1000/bound_k200_ms",
-      "line": 465,
+      "line": 466,
       "printed": 143.9,
       "expected": 143.911
     },
     "sizestrat.d4.large.k200_mape": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d4/n600_1000/bound_k200_mape_pct",
-      "line": 465,
+      "line": 466,
       "printed": 0.291,
       "expected": 0.2913
     },
     "sizestrat.d4.large.k200_ms": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d4/n600_1000/bound_k200_ms",
-      "line": 465,
+      "line": 466,
       "printed": 86.2,
       "expected": 86.158
     },
     "sizestrat.d50.large.mape": {
       "state": "MATCHED",
       "expect": "sizestrat:cell/d50/n600_1000/gart_mape_pct",
-      "line": 463,
+      "line": 464,
       "printed": 0.062,
       "expected": 0.0622
     },
@@ -12597,6 +12589,26 @@
         "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:730a1b023c71",
         "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:b93190fc94f8",
         "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:250d79cba79c"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T02:16:14+00:00",
+      "kind": "update",
+      "reason": "Appendix J folded into Appendix C (tab:geo_features moved under its introducing paragraph, J heading deleted) and ref repairs (author, 2026-09-03); 2 context-hash rewords of the backlog value 11, no value changed",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "453bb872bd2aad2caec505eed48f25b9e22b9ab13a9143bd23ed926c2074d85d",
+      "production_model": "GART_2.0",
+      "n_entries": 273,
+      "n_keys": 273,
+      "absorbed": [
+        "appendix:app-features :: 11 :: tier2:unmarked :: ctx:006ed56c40d3",
+        "appendix:app-features :: 11 :: tier2:unmarked :: ctx:a5e2af506fb1"
+      ],
+      "pruned": [
+        "appendix:app-features :: 11 :: tier2:unmarked :: ctx:d5c0e9074200",
+        "appendix:app-features-geo :: 11 :: tier2:unmarked :: ctx:47a6cfe609ce"
       ],
       "claims_withdrawn": [],
       "mismatched_at_record": []

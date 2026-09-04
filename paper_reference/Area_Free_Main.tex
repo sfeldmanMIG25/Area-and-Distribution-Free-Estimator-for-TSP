@@ -155,7 +155,7 @@ GART 2.0 extends the estimator of \citet{gart2025}. It predicts $\alpha$ with a 
 
 \subsubsection{Geometric and Centroid Descriptors}
 
-The MST statistics factor out scale and spread. The geometric group supplies them. MST edge weights and the degree sequence are invariant to rotation, translation and coordinate-system choice. The geometric descriptors, such as bounding hypervolume and centroid distance, generalize to arbitrary $d$ without a convex hull. They encode the scale information of the BHH volume term \citep{bhh1959} and adapt centroid statistics from \citet{cavdar2015distribution}. The dimension $d$ is an explicit input. Before any geometric descriptor is evaluated we rotate the coordinates into their principal-axis frame \citep{jolliffe2002}, which costs $O(nd^2+d^3)$ and is dominated by dense MST construction whenever $n$ is large relative to $d$; the rotation leaves the rotation-invariant features untouched and makes the axis-aligned bounding-box descriptors independent of the input orientation. Appendix~\ref{app:features_geo} lists the geometric group.
+The MST statistics factor out scale and spread. The geometric group supplies them. MST edge weights and the degree sequence are invariant to rotation, translation and coordinate-system choice. The geometric descriptors, such as bounding hypervolume and centroid distance, generalize to arbitrary $d$ without a convex hull. They encode the scale information of the BHH volume term \citep{bhh1959} and adapt centroid statistics from \citet{cavdar2015distribution}. The dimension $d$ is an explicit input. Before any geometric descriptor is evaluated we rotate the coordinates into their principal-axis frame \citep{jolliffe2002}, which costs $O(nd^2+d^3)$ and is dominated by dense MST construction whenever $n$ is large relative to $d$; the rotation leaves the rotation-invariant features untouched and makes the axis-aligned bounding-box descriptors independent of the input orientation. Appendix~\ref{app:features} lists the geometric group.
 
 \subsubsection{MST Edge and Topological Features}
 
@@ -218,10 +218,10 @@ We compare GART 2.0 against seven baselines (Table~\ref{tab:benchmark_models}). 
 \setlength{\LTcapwidth}{\textwidth}
 \begin{longtable}{@{}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.165\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.360\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.060\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.315\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.075\textwidth-8pt\relax}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.100\textwidth-8pt\relax}
-  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.105\textwidth-8pt\relax}
+  >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.135\textwidth-8pt\relax}
   >{\footnotesize\raggedright\arraybackslash}p{\dimexpr0.210\textwidth-8pt\relax}@{}}
 \caption{Benchmark roster. D and N are the dimension and instance-size range each source fits or derives; a dash means the method reads only a distance matrix, so no dimension applies.}\label{tab:benchmark_models}\\
 \toprule
@@ -329,9 +329,10 @@ $d=3$--$5$ & 1{,}944 & \textbf{1.07} & \textbf{1.71} & 2.53 & 4.05 & 14.96 & 7.6
 $d=6$--$10$ & 3{,}238 & \textbf{0.64} & \textbf{1.01} & 1.79 & 2.98 & 11.92 & 6.46 & 27.58 & 10.28 & 32.52 & 13.82 \\
 $d=15$--$25$ & 1{,}942 & \textbf{0.42} & \textbf{0.68} & 1.40 & 2.46 & 9.40 & 5.98 & 26.98 & 6.17 & 24.58 & 11.71 \\
 $d=30$--$50$ & 3{,}228 & \textbf{0.29} & \textbf{0.48} & 1.29 & 2.31 & 8.02 & 5.94 & 28.17 & 4.34 & 17.07 & 7.99 \\
-$d=100$ & 5{,}847 & \textbf{0.59} & \textbf{0.44} & 1.78 & 2.21 & 6.73 & 5.93 & 29.92 & 2.76 & 10.35 & 4.60 \\
+$d=100$\textsuperscript{$\dagger$} & 5{,}847 & \textbf{0.59} & \textbf{0.44} & 1.78 & 2.21 & 6.73 & 5.93 & 29.92 & 2.76 & 10.35 & 4.60 \\
 \textbf{Total} & 16{,}846 & \textbf{0.62} & \textbf{0.99} & 1.82 & 2.94 & 9.71 & 7.26 & 28.01 & 13.57 & 21.21 & 14.40 \\
 \bottomrule
+\multicolumn{12}{l}{\footnotesize $^{\dagger}$ Not represented in training.} \\
 \end{tabular}%
 }
 \end{table}
@@ -547,7 +548,7 @@ The 1-tree cannot use the Delaunay shortcut the MST family relies on in the plan
 \label{fig:costscale}
 \end{figure}
 
-In the plane GART 2.0 is $\Theta(n\log n)$ and the bound is $\Theta(n^{2}d+k n^{2})$, and the measured log--log cost exponents in $n$ agree: 0.975 for GART 2.0 above a thousand nodes against 2.08--2.13 for the bound over the same window. GART 2.0 costs a flat 2.0 to 2.3 times the MST-ratio family across four orders of magnitude in $n$ (Figure~\ref{fig:costscale}); against the 1-tree at a fixed budget the ratio moves from 7.7 at a thousand nodes to 211 at sixteen thousand.
+In the plane GART 2.0 is $\Theta(n\log n)$ and the bound is $\Theta(n^{2}d+k n^{2})$, and the measured log--log cost exponents in $n$ agree: 0.975 for GART 2.0 above a thousand nodes against 2.08--2.13 for the bound over the same window. GART 2.0 costs a flat 2.0 to 2.3 times the MST-ratio family across four orders of magnitude in $n$; against the 1-tree at a fixed budget the ratio moves from 7.7 at a thousand nodes to 211 at sixteen thousand (Figure~\ref{fig:costscale}).
 
 The separation is planar. On the multidimensional benchmark GART 2.0's own measured cost exponent in $n$ is 2.02 at $d\in[4,10]$ and 1.82 at $d\in[15,50]$, against 1.785--1.889 for the bound, because the MST construction falls back to a dense all-pairs kernel from $d=4$ upward. At $d\in\{2,3\}$ that exponent is 0.56. On that benchmark both families are quadratic, and the separating constant runs against the estimator.
 
@@ -609,20 +610,20 @@ On the instances it accepts, the hybrid pipeline clears the 7.55\% constant-mult
 \toprule
 Distance type & Count & Estimator & $N$ & SDPE (\%) [95\% CI] & MAPE (\%) & $|$Median$|$ (\%) & MSPE (\%) \\
 \midrule
-\multirow{2}{*}{ATT} & \multirow{2}{*}{2} & GART 2.0 & 2 & 1.42 [---, ---] & 3.66 & 3.66 & -3.66 \\
- & & Fixed $\alpha=1.136$ & 2 & 4.12 [---, ---] & 3.38 & 3.38 & -3.38 \\
+\multirow{2}{*}{ATT} & \multirow{2}{*}{2} & GART 2.0 & 2 & 1.42 [---, ---] & 3.66 & 3.66 & $-$3.66 \\
+ & & Fixed $\alpha=1.136$ & 2 & 4.12 [---, ---] & 3.38 & 3.38 & $-$3.38 \\
 \midrule
 \multirow{2}{*}{CEIL\_2D} & \multirow{2}{*}{4} & GART 2.0 & 4 & 5.16 [0.11, 6.35] & 5.77 & 6.05 & 4.04 \\
  & & Fixed $\alpha=1.136$ & 4 & 6.44 [1.08, 7.86] & 7.54 & 7.77 & 5.95 \\
 \midrule
-\multirow{2}{*}{GEO} & \multirow{2}{*}{10} & GART 2.0 & 10 & 2.60 [1.48, 3.23] & 2.51 & 2.90 & -1.63 \\
- & & Fixed $\alpha=1.136$ & 10 & 9.49 [2.13, 10.93] & 9.62 & 4.10 & -9.62 \\
+\multirow{2}{*}{GEO} & \multirow{2}{*}{10} & GART 2.0 & 10 & 2.60 [1.48, 3.23] & 2.51 & 2.90 & $-$1.63 \\
+ & & Fixed $\alpha=1.136$ & 10 & 9.49 [2.13, 10.93] & 9.62 & 4.10 & $-$9.62 \\
 \midrule
-\multirow{2}{*}{EXPLICIT screened} & \multirow{2}{*}{7} & GART 2.0 & 6 & 3.11 [1.44, 3.87] & 3.01 & 2.35 & -2.15 \\
+\multirow{2}{*}{EXPLICIT screened} & \multirow{2}{*}{7} & GART 2.0 & 6 & 3.11 [1.44, 3.87] & 3.01 & 2.35 & $-$2.15 \\
  & & Fixed $\alpha=1.136$ & 7 & 9.55 [5.04, 10.88] & 8.12 & 10.16 & 1.75 \\
 \midrule
-\multirow{2}{*}{\textbf{Total}} & \multirow{2}{*}{\textbf{23}} & \textbf{GART 2.0} & \textbf{22} & \textbf{3.89 [2.52, 4.79]} & \textbf{3.34} & \textbf{3.21} & \textbf{-0.93} \\
- & & Fixed $\alpha=1.136$ & 23 & 10.48 [6.94, 12.93] & 8.26 & 6.29 & -2.91 \\
+\multirow{2}{*}{\textbf{Total}} & \multirow{2}{*}{\textbf{23}} & \textbf{GART 2.0} & \textbf{22} & \textbf{3.89 [2.52, 4.79]} & \textbf{3.34} & \textbf{3.21} & \textbf{$-$0.93} \\
+ & & Fixed $\alpha=1.136$ & 23 & 10.48 [6.94, 12.93] & 8.26 & 6.29 & $-$2.91 \\
 \bottomrule
 \end{tabular}%
 }
@@ -683,7 +684,7 @@ The full $(d, n)$ count grid of the 16{,}920-instance multidimensional benchmark
 \label{tab:nd_grid_counts}
 {%
 \footnotesize
-\begin{tabular}{@{}l rrrrrr|r@{}}
+\begin{tabular}{@{}l rrrrrr r@{}}
 \toprule
 $d$ \textbackslash\ $n$ & $[5,10]$ & $[11,50]$ & $[51,100]$ & $[101,200]$ & $[201,500]$ & $[501,1000]$ & Total \\
 \midrule
@@ -702,7 +703,29 @@ $d=100$ & 1{,}476 & 984 & 1{,}230 & 246 & 738 & 1{,}230 & \textbf{5{,}904} \\
 
 \section{Detailed Feature Specifications} \label{app:features}
 
-Table~\ref{tab:geo_features} (Appendix~\ref{app:features_geo}) lists the 11 geometric and centroid features, Tables~\ref{tab:edge_features} and~\ref{tab:topo_features} the 19 MST-derived ones, and Table~\ref{tab:greedy_features} the single constructive ratio, 31 in all (Section~\ref{subsec:features}). Listed complexities assume the MST has already been built; MST construction itself dominates the asymptotic cost and is analyzed in Section~\ref{sec:methodology}.
+Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Tables~\ref{tab:edge_features} and~\ref{tab:topo_features} the 19 MST-derived ones, and Table~\ref{tab:greedy_features} the single constructive ratio, 31 in all (Section~\ref{subsec:features}). Listed complexities assume the MST has already been built; MST construction itself dominates the asymptotic cost and is analyzed in Section~\ref{sec:methodology}.
+
+\begin{table}[H]
+\centering
+\caption{Geometric and centroid feature specifications (11 features).}
+\label{tab:geo_features}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{6.5cm}ll@{}}
+\toprule
+\textbf{Feature Name} & \textbf{Description \& Rationale} & \textbf{Complexity} & \textbf{Origin / Citation} \\ \midrule
+\textbf{Dimension ($d$)} & The number of spatial coordinates defining each point. & $O(1)$ & Standard \\
+\textbf{Number of Nodes ($n$)} & The total count of nodes in the instance; released feature name \texttt{n\_customers}. & $O(1)$ & Standard \\
+\textbf{Aspect Ratio} & Ratio of the largest dimension range to the smallest. Detects subspace distortion. & $O(n \cdot d)$ & \textbf{Proposed} \\
+\textbf{Bounding Hypervolume} & Product of coordinate ranges: $\prod_{j=1}^{d} (\max_j - \min_j)$. Approximates the sampling-region measure $\mathcal{V}$ for BHH bounds; stored capped at $e^{690}$, beyond which the log twin carries the scale. & $O(n \cdot d)$ & Adapted from \citet{bhh1959} \\
+\textbf{Log Bounding Hypervolume} & Logarithm of hypervolume: $\sum_{j=1}^{d} \ln(\max_j - \min_j)$. Log-space stable for $d \ge 100$. & $O(n \cdot d)$ & \textbf{Proposed} \\
+\textbf{Node Density} & Ratio of $n$ to Bounding Hypervolume. Proxy for point intensity $\delta = n/\mathcal{V}$. & $O(1)$ & \textbf{Proposed}; cf.\ \citet{bhh1959} \\
+\textbf{Log Node Density} & Logarithm of node density: $\ln(n) - \sum \ln(\max_d - \min_d)$. Log-space stable. & $O(1)$ & \textbf{Proposed} \\
+\textbf{Centroid Dist (Mean, Std)} & Average and deviation of distances to the centroid. Measures central tendency. & $O(n \cdot d)$ & Adapted from \citet{cavdar2015distribution} \\
+\textbf{Centroid Dist Max} & Radius of the enclosing sphere. & $O(n \cdot d)$ & Adapted from \citet{cavdar2015distribution} \\
+\textbf{Centroid Dist IQR} & Interquartile range of centroid distances. Robust dispersion metric. & $O(n \cdot d)$ & \textbf{Proposed}; extends \citet{cavdar2015distribution} \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
 
 \subsection{MST Edge Distribution Statistics} \label{app:features_edge}
 
@@ -912,7 +935,7 @@ The four panels are released as tidy tables with the benchmark artifacts.
 \section{Per-Size Detail for the TSPLIB95 EUC\_2D Benchmark} \label{app:detail_tsplib}
 
 \begingroup
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{2.5pt}
 \renewcommand{\arraystretch}{1.05}
 \setlength{\LTcapwidth}{\textwidth}
 \setlength{\abovecaptionskip}{0pt}
@@ -932,62 +955,40 @@ $n$ range & Estimator & SDPE (\%) [95\% CI] & MAPE (\%) & $|$Median$|$ (\%) & MS
 \endhead
 \multirow{6}{*}{\makecell[l]{$n\in[51,150]$\\ Count=23}}
   & \textbf{GART 2.0} & \textbf{2.63} \scriptsize[1.34,\,3.58] & 2.01 & 1.22 & 1.47 & 0.580 & 3.64 \\*
-  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 3.77 \scriptsize[2.51,\,4.50] & 13.43 & 12.67 & -13.43 & -9.539 & 1.68 \\*
-  & Asymptotic MST ratio & 4.24 \scriptsize[2.82,\,5.07] & 3.55 & 2.13 & -2.58 & -0.395 & 1.16 \\*
-  & Calibrated MST ratio $\hat\rho(d,n)$ & 4.68 \scriptsize[3.07,\,5.68] & 4.09 & 3.93 & 1.04 & -0.176 & 1.14 \\*
-  & GART 1.0 & 5.64 \scriptsize[3.58,\,7.19] & 5.44 & 3.92 & 4.07 & -1.307 & 4.05 \\*
+  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 3.77 \scriptsize[2.51,\,4.50] & 13.43 & 12.67 & $-$13.43 & $-$9.539 & 1.68 \\*
+  & Asymptotic MST ratio & 4.24 \scriptsize[2.82,\,5.07] & 3.55 & 2.13 & $-$2.58 & $-$0.395 & 1.16 \\*
+  & Calibrated MST ratio $\hat\rho(d,n)$ & 4.68 \scriptsize[3.07,\,5.68] & 4.09 & 3.93 & 1.04 & $-$0.176 & 1.14 \\*
+  & GART 1.0 & 5.64 \scriptsize[3.58,\,7.19] & 5.44 & 3.92 & 4.07 & $-$1.307 & 4.05 \\*
   & Custom Hilbert sort & 11.46 \scriptsize[8.20,\,13.91] & 39.91 & 38.92 & 39.91 & --- & 0.656 \\
 \midrule
 \multirow{6}{*}{\makecell[l]{$n\in[151,400]$\\ Count=16}}
   & \textbf{GART 2.0} & \textbf{2.86} \scriptsize[1.95,\,3.51] & 2.38 & 2.50 & 1.51 & 0.706 & 4.51 \\*
-  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 4.82 \scriptsize[2.13,\,6.65] & 12.38 & 11.56 & -12.38 & -4.801 & 2.33 \\*
+  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 4.82 \scriptsize[2.13,\,6.65] & 12.38 & 11.56 & $-$12.38 & $-$4.801 & 2.33 \\*
   & Calibrated MST ratio $\hat\rho(d,n)$ & 5.37 \scriptsize[2.49,\,7.39] & 3.73 & 2.43 & 0.01 & 0.049 & 1.91 \\*
-  & Asymptotic MST ratio & 5.42 \scriptsize[2.39,\,7.48] & 3.39 & 1.27 & -1.41 & -0.088 & 1.84 \\*
-  & GART 1.0 & 5.53 \scriptsize[3.93,\,6.54] & 5.92 & 4.46 & 4.93 & -0.497 & 5.03 \\*
+  & Asymptotic MST ratio & 5.42 \scriptsize[2.39,\,7.48] & 3.39 & 1.27 & $-$1.41 & $-$0.088 & 1.84 \\*
+  & GART 1.0 & 5.53 \scriptsize[3.93,\,6.54] & 5.92 & 4.46 & 4.93 & $-$0.497 & 5.03 \\*
   & Custom Hilbert sort & 7.35 \scriptsize[3.56,\,10.39] & 44.24 & 42.42 & 44.24 & --- & 1.44 \\
 \midrule
 \multirow{6}{*}{\makecell[l]{$n>400$\\ Count=39}}
-  & \textbf{GART 2.0} & \textbf{3.05} \scriptsize[2.32,\,3.62] & 2.90 & 1.98 & 2.68 & -0.071 & 20.5 \\*
-  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 3.58 \scriptsize[2.84,\,4.17] & 9.74 & 9.39 & -9.74 & -6.448 & 9.55 \\*
-  & Calibrated MST ratio $\hat\rho(d,n)$ & 3.95 \scriptsize[3.13,\,4.60] & 3.54 & 3.24 & 1.75 & -0.122 & 9.52 \\*
-  & Asymptotic MST ratio & 4.03 \scriptsize[3.20,\,4.70] & 3.57 & 3.15 & 1.57 & -0.132 & 9.27 \\*
-  & GART 1.0 & 7.64 \scriptsize[6.07,\,8.92] & 11.23 & 9.66 & 11.18 & -10.726 & 18.4 \\*
+  & \textbf{GART 2.0} & \textbf{3.05} \scriptsize[2.32,\,3.62] & 2.90 & 1.98 & 2.68 & $-$0.071 & 20.5 \\*
+  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 3.58 \scriptsize[2.84,\,4.17] & 9.74 & 9.39 & $-$9.74 & $-$6.448 & 9.55 \\*
+  & Calibrated MST ratio $\hat\rho(d,n)$ & 3.95 \scriptsize[3.13,\,4.60] & 3.54 & 3.24 & 1.75 & $-$0.122 & 9.52 \\*
+  & Asymptotic MST ratio & 4.03 \scriptsize[3.20,\,4.70] & 3.57 & 3.15 & 1.57 & $-$0.132 & 9.27 \\*
+  & GART 1.0 & 7.64 \scriptsize[6.07,\,8.92] & 11.23 & 9.66 & 11.18 & $-$10.726 & 18.4 \\*
   & Custom Hilbert sort & 12.55 \scriptsize[9.60,\,15.71] & 48.66 & 47.03 & 48.66 & --- & 9.14 \\
 \midrule
 \multirow{6}{*}{\makecell[l]{\textbf{Total}\\ Count=78}}
   & \textbf{GART 2.0} & \textbf{2.92} \scriptsize[2.40,\,3.38] & 2.53 & 1.87 & 2.08 & 0.484 & 6.12 \\*
-  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 4.21 \scriptsize[3.30,\,4.99] & 11.37 & 11.56 & -11.37 & -5.591 & 3.08 \\*
+  & $L_{\mathrm{MST}}$ ($\alpha=1$) & 4.21 \scriptsize[3.30,\,4.99] & 11.37 & 11.56 & $-$11.37 & $-$5.591 & 3.08 \\*
   & Calibrated MST ratio $\hat\rho(d,n)$ & 4.48 \scriptsize[3.59,\,5.32] & 3.74 & 3.18 & 1.18 & 0.087 & 2.62 \\*
-  & Asymptotic MST ratio & 4.74 \scriptsize[3.72,\,5.62] & 3.53 & 2.67 & -0.27 & -0.010 & 2.57 \\*
-  & GART 1.0 & 7.45 \scriptsize[6.24,\,8.46] & 8.43 & 6.51 & 7.80 & -3.579 & 6.12 \\*
+  & Asymptotic MST ratio & 4.74 \scriptsize[3.72,\,5.62] & 3.53 & 2.67 & $-$0.27 & $-$0.010 & 2.57 \\*
+  & GART 1.0 & 7.45 \scriptsize[6.24,\,8.46] & 8.43 & 6.51 & 7.80 & $-$3.579 & 6.12 \\*
   & Custom Hilbert sort & 11.85 \scriptsize[9.86,\,13.59] & 45.17 & 44.60 & 45.17 & --- & 2.64 \\
 \bottomrule
 \end{longtable}
 \endgroup
 
-\section{Geometric and Centroid Feature Specifications} \label{app:features_geo}
 
-\begin{table}[!htbp]
-\centering
-\caption{Geometric and centroid feature specifications (11 features).}
-\label{tab:geo_features}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{6.5cm}ll@{}}
-\toprule
-\textbf{Feature Name} & \textbf{Description \& Rationale} & \textbf{Complexity} & \textbf{Origin / Citation} \\ \midrule
-\textbf{Dimension ($d$)} & The number of spatial coordinates defining each point. & $O(1)$ & Standard \\
-\textbf{Number of Nodes ($n$)} & The total count of nodes in the instance; released feature name \texttt{n\_customers}. & $O(1)$ & Standard \\
-\textbf{Aspect Ratio} & Ratio of the largest dimension range to the smallest. Detects subspace distortion. & $O(n \cdot d)$ & \textbf{Proposed} \\
-\textbf{Bounding Hypervolume} & Product of coordinate ranges: $\prod_{j=1}^{d} (\max_j - \min_j)$. Approximates the sampling-region measure $\mathcal{V}$ for BHH bounds; stored capped at $e^{690}$, beyond which the log twin carries the scale. & $O(n \cdot d)$ & Adapted from \citet{bhh1959} \\
-\textbf{Log Bounding Hypervolume} & Logarithm of hypervolume: $\sum_{j=1}^{d} \ln(\max_j - \min_j)$. Log-space stable for $d \ge 100$. & $O(n \cdot d)$ & \textbf{Proposed} \\
-\textbf{Node Density} & Ratio of $n$ to Bounding Hypervolume. Proxy for point intensity $\delta = n/\mathcal{V}$. & $O(1)$ & \textbf{Proposed}; cf.\ \citet{bhh1959} \\
-\textbf{Log Node Density} & Logarithm of node density: $\ln(n) - \sum \ln(\max_d - \min_d)$. Log-space stable. & $O(1)$ & \textbf{Proposed} \\
-\textbf{Centroid Dist (Mean, Std)} & Average and deviation of distances to the centroid. Measures central tendency. & $O(n \cdot d)$ & Adapted from \citet{cavdar2015distribution} \\
-\textbf{Centroid Dist Max} & Radius of the enclosing sphere. & $O(n \cdot d)$ & Adapted from \citet{cavdar2015distribution} \\
-\textbf{Centroid Dist IQR} & Interquartile range of centroid distances. Robust dispersion metric. & $O(n \cdot d)$ & \textbf{Proposed}; extends \citet{cavdar2015distribution} \\ \bottomrule
-\end{tabular}%
-}
-\end{table}
 
 \section{Trained Hyperparameters and Booster Statistics} \label{app:hyperparams}
 
