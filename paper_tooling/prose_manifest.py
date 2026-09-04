@@ -660,25 +660,25 @@ CLAIMS: list[Claim] = [
     # reason names the exact row that settles each one.
     Claim(
         id="results.nd.mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_nd}).",
+        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_nd}), a factor",
         expect="bank:nd_by_dim_total_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.nd.sdpe",
-        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_nd}).",
+        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_nd}), a factor",
         expect="bank:nd_by_dim_total_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.2d.mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), against",
+        anchor=r"GART 2.0 obtains {v}\% MAPE and {~}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), roughly half",
         expect="bank:2d_by_size_total_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="results.2d.sdpe",
-        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), against",
+        anchor=r"GART 2.0 obtains {~}\% MAPE and {v}\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), roughly half",
         expect="bank:2d_by_size_total_gart_2_0_sdpe_pct",
         tol=("dp", 2),
     ),
@@ -1360,22 +1360,12 @@ CLAIMS: list[Claim] = [
              "so either key backs the sentence; the dimension one is named because it "
              "is the axis the comparators fail worst on.",
     ),
-    Claim(
-        id="results_nd.bhh_region_mape",
-        anchor=r"BHH given the exact sampling region {v}\%/{~}\%.",
-        expect="bank:nd_by_size_total_bhh_sampling_region_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="results_nd.bhh_region_sdpe",
-        anchor=r"BHH given the exact sampling region {~}\%/{v}\%.",
-        expect="bank:nd_by_size_total_bhh_sampling_region_sdpe_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn results_nd.bhh_region_mape: Total-row readback sentence cut 2026-09-03 (simple-stupid pass, author rule); the numeral survives at the head of the BHH paragraph, where results_nd.bhh_region_mape_restated checks it
+    # withdrawn results_nd.bhh_region_sdpe: Total-row readback sentence cut 2026-09-03 (simple-stupid pass, author rule); the SDPE cell is machine-checked in tab:results_nd and appears in no surviving body sentence
     # withdrawn results_nd.sdpe_smallest_bucket: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="results_nd.rho_dn_mape",
-        anchor=r"the calibrated ratio $\hat\rho(d,n)$ at {v}\%/{~}\%, so the learned",
+        anchor=r"the calibrated ratio $\hat\rho(d,n)$ at {v}\%/{~}\%. That baseline",
         expect="bank:nd_by_dim_total_calibrated_mst_ratio_hat_rho_d_n_mape_pct",
         tol=("dp", 2),
         note="The strongest non-learned baseline IN THE ROSTER. The sentence "
