@@ -2703,7 +2703,7 @@ CLAIMS: list[Claim] = [
     # withdrawn results_nd.sdpe_d30_50: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
     Claim(
         id="results_nd.bhh_region_mape_restated",
-        anchor=r"BHH's {v}\% error is not a defect",
+        anchor=r"The constant dominates BHH's {v}\% error",
         expect="bank:nd_by_size_total_bhh_sampling_region_mape_pct",
         tol="printed",
         note="Restatement of results_nd.bhh_region_mape at the head of the "
@@ -2711,7 +2711,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="results_nd.uniform_axes_share",
-        anchor=r"only {v}\% of axes are uniform, so the region measure",
+        anchor=r"Only {v}\% of axes are uniform, so the region measure",
         no_generator=(
             "Share of corpus axes with a uniform marginal: 68.7% of the "
             "2,444,256 axes, the census Section 3.2 prints from the corpus "
@@ -3157,5 +3157,28 @@ CLAIMS: list[Claim] = [
         anchor=r"dimension, $n$, and MST diameter are {v}\% outside",
         expect="shap2d:line_noise_out_of_training_support/frac_linenoise_outside_train_p1_p99/dimension",
         scale=100.0, tol="exact",
+    ),
+    # -----------------------------------------------------------------------
+    # Pass 1, Section 4.3 (2026-09-04): three prose-only figures the critic asked
+    # to see registered (BHH convex-hull form on the multidimensional split;
+    # Hilbert sort MAPE and SDPE on the 2D diverse benchmark).
+    # -----------------------------------------------------------------------
+    Claim(
+        id="results_nd.bhh_hull_mape",
+        anchor=r"cuts its MAPE from {v}\% to 28.0\%",
+        expect="bank:nd_by_size_total_bhh_mape_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="results_2d.hilbert_mape",
+        anchor=r"The custom Hilbert sort has {v}\% MAPE against",
+        expect="bank:2d_by_genclass_total_custom_hilbert_sort_mape_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="results_2d.hilbert_sdpe",
+        anchor=r"MAPE against {v}\% SDPE, so its error is",
+        expect="bank:2d_by_genclass_total_custom_hilbert_sort_sdpe_pct",
+        tol=("dp", 1),
     ),
 ]

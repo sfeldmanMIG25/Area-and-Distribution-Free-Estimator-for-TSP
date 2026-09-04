@@ -2,41 +2,52 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:36:30+00:00",
+    "at": "2026-09-04T07:45:09+00:00",
     "kind": "update",
-    "reason": "pass 1 Section 4.1-4.2 (writer/critic, two cycles): five pairs applied; TSPLIB size-range backlog contexts moved, no new values",
+    "reason": "pass 1 Section 4.3 (writer/critic, two cycles): five pairs applied; backlog contexts moved in 4.3.1-4.3.3, no new values; 39.1 and Hilbert 30.9/14.2 now registered",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "50e561744d162ab1cbf292724d13a1c41c9da92dd0b75663d4e0721c53591cd9",
+    "tex_sha256": "c79739a53b3db1c559be5b2a61c4f3590ca069abbaaa4f50de979ce1c33286bd",
     "production_model": "GART_2.0",
-    "n_entries": 216,
-    "n_keys": 216,
+    "n_entries": 213,
+    "n_keys": 213,
     "absorbed": [
-      "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:e6a57de92d46",
-      "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:295e20eefa9d",
-      "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:6207d27613d0"
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15",
+      "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:2aee3f9d1469",
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:f58fa40b255c",
+      "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:4a1a38beb058",
+      "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8fb2f613c7db",
+      "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8fb2f613c7db",
+      "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:6d4a318ef3e0",
+      "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:3a1438202fd9",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:9c06231b009f",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:cad50b433599",
+      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:ff995ac48729",
+      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:86548e2dab88"
     ],
     "pruned": [
-      "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:ba9853e8ac15",
-      "sec-evaluation/tsplib95-euc-2d :: 23 :: tier2:unmarked :: ctx:521ae5cb8f39",
-      "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:bdf76738267b",
-      "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:124c418a8f2f"
+      "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8c136f51f50d",
+      "sec-evaluation/subsec-results-2d :: 14.2 :: tier1:unit :: ctx:7079bfd60a98",
+      "sec-evaluation/subsec-results-2d :: 30.9 :: tier1:unit :: ctx:af238253e624",
+      "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8c136f51f50d",
+      "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:7a3cbc11f9ac",
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:6268de3a7f97",
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7fea5bbd85af",
+      "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:680ee89e524e",
+      "sec-evaluation/subsec-results-nd :: 39.1 :: tier1:unit :: ctx:b4f00562a46e",
+      "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:7570c34ad337",
+      "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:b6fc752dc141",
+      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:36cbd2b13998",
+      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:540f78970671",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:a4783cace207",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:acab79a414be"
     ],
-    "claims_withdrawn": [
-      {
-        "id": "metrics.sdpe.pct_factor",
-        "state": "NO_GENERATOR",
-        "expect": "(no generator)",
-        "line": 190,
-        "printed": 100.0,
-        "expected": null
-      }
-    ],
+    "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 68,
-    "absorbed": 1311,
-    "pruned": 1686,
+    "records": 69,
+    "absorbed": 1323,
+    "pruned": 1701,
     "claims_withdrawn": 571,
     "mismatched_claims_withdrawn": 0
   },
@@ -726,15 +737,10 @@
       "example": "...e neighboring trained dimensions $d\\in\\{10,20,30\\}$ do not degrade at all, moving from 0.43\\% ...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
-    "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8c136f51f50d": {
+    "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8fb2f613c7db": {
       "count": 1,
       "example": "... size bucket and falls to 2.75\\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30.9\\% ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
-    },
-    "sec-evaluation/subsec-results-2d :: 14.2 :: tier1:unit :: ctx:7079bfd60a98": {
-      "count": 1,
-      "example": "...e custom Hilbert sort has 30.9\\% MAPE against 14.2\\% SDPE, a gap that identifies its error as a ...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 2.75 :: tier1:unit :: ctx:99e1999f0368": {
       "count": 1,
@@ -746,11 +752,6 @@
       "example": "...Percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator).} \\label{fig:boxplot_2d} \\end...",
       "first_recorded": "2026-09-04T03:43:19+00:00"
     },
-    "sec-evaluation/subsec-results-2d :: 30.9 :: tier1:unit :: ctx:af238253e624": {
-      "count": 1,
-      "example": "...01,1000]$ bucket. The custom Hilbert sort has 30.9\\% MAPE against 14.2\\% SDPE, a gap that identi...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
-    },
     "sec-evaluation/subsec-results-2d :: 5.76 :: tier1:unit :: ctx:15bf24a91cc9": {
       "count": 1,
       "example": "...line, the calibrated ratio $\\hat\\rho(d,n)$ at 5.76\\%/9.38\\%. Its SDPE stays below 5.9\\% in every...",
@@ -761,10 +762,10 @@
       "example": "...(d,n)$ at 5.76\\%/9.38\\%. Its SDPE stays below 5.9\\% in every size bucket and falls to 2.75\\% in...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
-    "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8c136f51f50d": {
+    "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8fb2f613c7db": {
       "count": 1,
       "example": "...very size bucket and falls to 2.75\\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 9.38 :: tier1:unit :: ctx:1450fe04d2f1": {
       "count": 1,
@@ -776,20 +777,20 @@
       "example": "...e Held--Karp 1-tree bound at ascent budget $k=100$. Several estimator boxes also fall on one si...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:7a3cbc11f9ac": {
+    "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:2aee3f9d1469": {
       "count": 1,
       "example": "...\\%/2.94\\%. That baseline is a lookup table of 102 constants, one per trained cell, fitted on th...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:6268de3a7f97": {
-      "count": 1,
-      "example": "... is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored ...",
-      "first_recorded": "2026-09-04T03:56:11+00:00"
-    },
-    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7fea5bbd85af": {
+    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15": {
       "count": 1,
       "example": "...t error on the multidimensional benchmark ($N=16{,}846$ per estimator).} \\label{fig:boxplot_nd} \\end...",
-      "first_recorded": "2026-09-04T03:56:11+00:00"
+      "first_recorded": "2026-09-04T07:45:09+00:00"
+    },
+    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:f58fa40b255c": {
+      "count": 1,
+      "example": "... is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored ...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 2.9 :: tier1:comparison :: ctx:ec75af288d06": {
       "count": 1,
@@ -801,20 +802,15 @@
       "example": "...he calibrated ratio $\\hat\\rho(d,n)$ at 1.82\\%/2.94\\%. That baseline is a lookup table of 102 con...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:680ee89e524e": {
+    "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:4a1a38beb058": {
       "count": 1,
-      "example": "...hull nonetheless cuts its MAPE from 39.1\\% to 28.0\\%, which isolates how much of the convex-hull...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
+      "example": "...hull nonetheless cuts its MAPE from 39.1\\% to 28.0\\%, the share of the convex-hull form's error ...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 3.0 :: tier2:unmarked :: ctx:d99994201b15": {
       "count": 1,
       "example": "...tab:results_nd}), a factor of 2.9 on MAPE and 3.0 on SDPE over the strongest baseline that uses...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
-    },
-    "sec-evaluation/subsec-results-nd :: 39.1 :: tier1:unit :: ctx:b4f00562a46e": {
-      "count": 1,
-      "example": "...he convex hull nonetheless cuts its MAPE from 39.1\\% to 28.0\\%, which isolates how much of the c...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 0.57 :: tier1:unit :: ctx:024717b449ca": {
       "count": 1,
@@ -866,50 +862,50 @@
       "example": "...points. The dispersion gap is the larger one, 2.92\\% SDPE against 4.74\\%, but SDPE alone cannot ...",
       "first_recorded": "2026-08-12T06:46:08+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:7570c34ad337": {
+    "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:6d4a318ef3e0": {
       "count": 1,
-      "example": "... obtains 2.53\\% MAPE and 2.92\\% SDPE, against 3.53\\%/4.74\\% for the asymptotic ratio. Table~\\ref...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
+      "example": "... obtains 2.53\\% MAPE and 2.92\\% SDPE, against 3.53\\%/4.74\\% for the asymptotic ratio. This is th...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
+    },
+    "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:3a1438202fd9": {
+      "count": 1,
+      "example": "...s 2.53\\% MAPE and 2.92\\% SDPE, against 3.53\\%/4.74\\% for the asymptotic ratio. This is the narro...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:97091362200b": {
       "count": 1,
       "example": "...on gap is the larger one, 2.92\\% SDPE against 4.74\\%, but SDPE alone cannot carry that compariso...",
       "first_recorded": "2026-08-12T06:46:08+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:b6fc752dc141": {
+    "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:86548e2dab88": {
       "count": 1,
-      "example": "...s 2.53\\% MAPE and 2.92\\% SDPE, against 3.53\\%/4.74\\% for the asymptotic ratio. Table~\\ref{tab:ts...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
-    },
-    "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:36cbd2b13998": {
-      "count": 1,
-      "example": "...wer SDPE at the lower MAPE. In the coarse $n>400$ bucket the GART 2.0 and asymptotic-ratio SDP...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
-    },
-    "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:540f78970671": {
-      "count": 1,
-      "example": "...tances into three size buckets; the coarse $n>400$ bucket should not be read as a homogeneous a...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
+      "example": "...ogeneous asymptotic regime. In the coarse $n>400$ bucket the GART 2.0 and asymptotic-ratio SDP...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:f06fe5181018": {
       "count": 1,
       "example": "... does not establish that the heterogeneous $n>400$ bucket is asymptotic; the advantage at extre...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
+    "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:ff995ac48729": {
+      "count": 1,
+      "example": "...tances into three size buckets; the coarse $n>400$ bucket should not be read as a homogeneous a...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
+    },
     "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:294de8fab74b": {
       "count": 1,
       "example": "...t error on the TSPLIB95 EUC\\_2D benchmark ($N=78$ per estimator).} \\label{fig:boxplot_tsplib} ...",
       "first_recorded": "2026-09-04T03:43:19+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:a4783cace207": {
+    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:9c06231b009f": {
       "count": 1,
       "example": "...rowest margin in the paper. $\\alpha$ on these 78 instances has mean 1.13 and standard deviatio...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:acab79a414be": {
+    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:cad50b433599": {
       "count": 1,
-      "example": "...io. Table~\\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse...",
-      "first_recorded": "2026-09-04T03:30:04+00:00"
+      "example": "...PE. Table~\\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse...",
+      "first_recorded": "2026-09-04T07:45:09+00:00"
     },
     "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:295e20eefa9d": {
       "count": 1,
@@ -2908,6 +2904,20 @@
       "printed": 1.05,
       "expected": null
     },
+    "results_2d.hilbert_mape": {
+      "state": "MATCHED",
+      "expect": "bank:2d_by_genclass_total_custom_hilbert_sort_mape_pct",
+      "line": 355,
+      "printed": 30.9,
+      "expected": 30.946165
+    },
+    "results_2d.hilbert_sdpe": {
+      "state": "MATCHED",
+      "expect": "bank:2d_by_genclass_total_custom_hilbert_sort_sdpe_pct",
+      "line": 355,
+      "printed": 14.2,
+      "expected": 14.186525
+    },
     "results_2d.linenoise.on_face_median": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
@@ -2942,6 +2952,13 @@
       "line": 383,
       "printed": 1.56,
       "expected": null
+    },
+    "results_nd.bhh_hull_mape": {
+      "state": "MATCHED",
+      "expect": "bank:nd_by_size_total_bhh_mape_pct",
+      "line": 342,
+      "printed": 39.1,
+      "expected": 39.109093
     },
     "results_nd.bhh_region_mape_restated": {
       "state": "MATCHED",
@@ -13093,6 +13110,49 @@
           "expected": null
         }
       ],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T07:45:09+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 4.3 (writer/critic, two cycles): five pairs applied; backlog contexts moved in 4.3.1-4.3.3, no new values; 39.1 and Hilbert 30.9/14.2 now registered",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "c79739a53b3db1c559be5b2a61c4f3590ca069abbaaa4f50de979ce1c33286bd",
+      "production_model": "GART_2.0",
+      "n_entries": 213,
+      "n_keys": 213,
+      "absorbed": [
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15",
+        "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:2aee3f9d1469",
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:f58fa40b255c",
+        "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:4a1a38beb058",
+        "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8fb2f613c7db",
+        "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8fb2f613c7db",
+        "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:6d4a318ef3e0",
+        "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:3a1438202fd9",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:9c06231b009f",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:cad50b433599",
+        "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:ff995ac48729",
+        "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:86548e2dab88"
+      ],
+      "pruned": [
+        "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8c136f51f50d",
+        "sec-evaluation/subsec-results-2d :: 14.2 :: tier1:unit :: ctx:7079bfd60a98",
+        "sec-evaluation/subsec-results-2d :: 30.9 :: tier1:unit :: ctx:af238253e624",
+        "sec-evaluation/subsec-results-2d :: 501 :: tier2:unmarked :: ctx:8c136f51f50d",
+        "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:7a3cbc11f9ac",
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:6268de3a7f97",
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7fea5bbd85af",
+        "sec-evaluation/subsec-results-nd :: 28.0 :: tier1:unit :: ctx:680ee89e524e",
+        "sec-evaluation/subsec-results-nd :: 39.1 :: tier1:unit :: ctx:b4f00562a46e",
+        "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:7570c34ad337",
+        "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:b6fc752dc141",
+        "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:36cbd2b13998",
+        "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:540f78970671",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:a4783cace207",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:acab79a414be"
+      ],
+      "claims_withdrawn": [],
       "mismatched_at_record": []
     }
   ]

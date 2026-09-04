@@ -302,7 +302,7 @@ The benchmark contains 78 EUC\_2D instances with $n$ from 51 (\texttt{eil51}) to
 \label{fig:boxplot_nd}
 \end{figure}
 
-The multidimensional benchmark is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored (Appendix~\ref{app:labels}). GART 2.0 obtains 0.618\% MAPE and 0.986\% SDPE overall (Table~\ref{tab:results_nd}), a factor of 2.9 on MAPE and 3.0 on SDPE over the strongest baseline that uses no learned model, the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%. That baseline is a lookup table of 102 constants, one per trained cell, fitted on the same training split. Figures~\ref{fig:boxplot_nd}, \ref{fig:boxplot_2d}, and \ref{fig:boxplot_tsplib} draw the Held--Karp 1-tree bound at ascent budget $k=100$. Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
+GART 2.0 obtains 0.618\% MAPE and 0.986\% SDPE overall (Table~\ref{tab:results_nd}), a factor of 2.9 on MAPE and 3.0 on SDPE over the strongest baseline that uses no learned model, the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%. That baseline is a lookup table of 102 constants, one per trained cell, fitted on the same training split. The multidimensional benchmark is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored (Appendix~\ref{app:labels}). Figures~\ref{fig:boxplot_nd}, \ref{fig:boxplot_2d}, and \ref{fig:boxplot_tsplib} draw the Held--Karp 1-tree bound at ascent budget $k=100$. Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
 
 \begin{table}[!htbp]
 \centering
@@ -330,7 +330,7 @@ $d=100$\textsuperscript{$\dagger$} & 5{,}847 & \textbf{0.593} & \textbf{0.441} &
 }
 \end{table}
 
-SDPE falls monotonically with instance size and with dimension (Figure~\ref{fig:accgrid}). At the unseen $d=100$ SDPE falls further while MAPE rises. The $d=100$ result is favorable-direction extrapolation.
+SDPE falls monotonically with instance size and with dimension (Figure~\ref{fig:accgrid}). The unseen $d=100$ row extrapolates off the training grid: SDPE falls further there while MAPE rises.
 
 \begin{figure}[!htbp]
 \centering
@@ -339,7 +339,7 @@ SDPE falls monotonically with instance size and with dimension (Figure~\ref{fig:
 \label{fig:accgrid}
 \end{figure}
 
-BHH's 28.0\% error is not a defect of the reimplementation. The dominant term is the constant: for $d\ge4$ the scored form substitutes a conjectured large-$d$ asymptotic for $\beta_d$ (Appendix~\ref{app:bench_details}), and the row's signed error is negative at every $d\ge3$, the direction an understated constant produces. Two premises of the theorem fail here as well: only 68.7\% of axes are uniform, so the region measure $G^d$ exceeds the effective support of the rest --- visible as the positive signed error at $d=2$ --- and $n\le1000$ with $d\ge4$ is far from the asymptotic regime the theorem describes, where the sample must fill the region. Supplying the exact region rather than the convex hull nonetheless cuts its MAPE from 39.1\% to 28.0\%, which isolates how much of the convex-hull form's error is an input substitution. At $d>3$ that hull is replaced by the coordinate bounding box (Appendix~\ref{app:bench_details}), so the row would mix two region definitions across dimensions.
+The constant dominates BHH's 28.0\% error: for $d\ge4$ the scored form substitutes a conjectured large-$d$ asymptotic for $\beta_d$ (Appendix~\ref{app:bench_details}), and the row's signed error is negative at every $d\ge3$, the direction an understated constant produces. The theorem's uniformity and large-$n$ premises also fail here. Only 68.7\% of axes are uniform, so the region measure $G^d$ exceeds the effective support of the rest, visible as the positive signed error at $d=2$. Instances at $n\le1000$ with $d\ge4$ are far from the asymptotic regime the theorem describes, where the sample must fill the region. Supplying the exact region in place of the convex hull nonetheless cuts its MAPE from 39.1\% to 28.0\%, the share of the convex-hull form's error that is an input substitution. At $d>3$ that hull is replaced by the coordinate bounding box (Appendix~\ref{app:bench_details}), so the row would mix two region definitions across dimensions.
 
 \subsubsection{2D Diverse Benchmark} \label{subsec:results_2d}
 
@@ -352,7 +352,7 @@ BHH's 28.0\% error is not a defect of the reimplementation. The dominant term is
 \label{fig:boxplot_2d}
 \end{figure}
 
-GART 2.0 obtains 2.89\% MAPE and 4.68\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), roughly half the error of the strongest baseline, the calibrated ratio $\hat\rho(d,n)$ at 5.76\%/9.38\%. Its SDPE stays below 5.9\% in every size bucket and falls to 2.75\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30.9\% MAPE against 14.2\% SDPE, a gap that identifies its error as a near-constant positive offset and not scatter, the signature a space-filling-curve tour should produce.
+GART 2.0 obtains 2.89\% MAPE and 4.68\% SDPE overall (Table~\ref{tab:results_2d}, Figure~\ref{fig:boxplot_2d}), roughly half the error of the strongest baseline, the calibrated ratio $\hat\rho(d,n)$ at 5.76\%/9.38\%. Its SDPE stays below 5.9\% in every size bucket and falls to 2.75\% in the $[501,1000]$ bucket. The custom Hilbert sort has 30.9\% MAPE against 14.2\% SDPE, so its error is a near-constant positive offset, the signature a space-filling-curve tour should produce.
 
 \begin{table}[!htbp]
 \centering
@@ -392,7 +392,7 @@ Every estimator degrades from the isotropic class to Line Noise. Near-collinear 
 \label{fig:boxplot_tsplib}
 \end{figure}
 
-On the full EUC\_2D benchmark GART 2.0 obtains 2.53\% MAPE and 2.92\% SDPE, against 3.53\%/4.74\% for the asymptotic ratio. Table~\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse $n>400$ bucket should not be read as a homogeneous asymptotic regime. This is the narrowest margin in the paper. $\alpha$ on these 78 instances has mean 1.13 and standard deviation 0.0558, so a single well-chosen constant is already close. The MAPE-minimizing constant on these instances is $1.13$ and reaches 3.52\%, so no constant multiplier does better on MAPE, and GART 2.0's 2.53\% improves on that bound by 0.99 percentage points. The dispersion gap is the larger one, 2.92\% SDPE against 4.74\%, but SDPE alone cannot carry that comparison: for $\hat L=cL_{\mathrm{MST}}$ the signed error is $c/\alpha-1$, so SDPE is proportional to $c$ and shrinking $c$ drives it to zero at ruinous MAPE. The comparison holds because GART 2.0 attains the lower SDPE at the lower MAPE.
+On the full EUC\_2D benchmark GART 2.0 obtains 2.53\% MAPE and 2.92\% SDPE, against 3.53\%/4.74\% for the asymptotic ratio. This is the narrowest margin in the paper. $\alpha$ on these 78 instances has mean 1.13 and standard deviation 0.0558, so a single well-chosen constant is already close. The MAPE-minimizing constant on these instances is $1.13$ and reaches 3.52\%, so no constant multiplier does better on MAPE, and GART 2.0's 2.53\% improves on that bound by 0.99 percentage points. The dispersion gap is the larger one, 2.92\% SDPE against 4.74\%, but SDPE alone cannot carry that comparison: for $\hat L=cL_{\mathrm{MST}}$ the signed error is $c/\alpha-1$, so SDPE is proportional to $c$ and shrinking $c$ drives it to zero at ruinous MAPE. GART 2.0 attains the lower SDPE at the lower MAPE. Table~\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse $n>400$ bucket should not be read as a homogeneous asymptotic regime.
 
 In the coarse $n>400$ bucket the GART 2.0 and asymptotic-ratio SDPE intervals overlap, on $[3.20,3.62]$. In the post hoc $n>10{,}000$ slice of five instances GART 2.0 is lower on both metrics, 0.57\% MAPE and 0.72\% SDPE against the asymptotic ratio's 2.74\% and 1.46\%. The largest instance, \texttt{d18512}, is more than $18\times$ the training-size cap. For points drawn independently from a bounded density, normalized TSP and MST lengths each converge to dimension-dependent constants \citep{bhh1959,steele1988growth}, which motivates a fixed-ratio baseline but does not establish that the heterogeneous $n>400$ bucket is asymptotic; the advantage at extreme sizes is an observation on five instances and not proof of a convergence mechanism.
 
