@@ -2772,7 +2772,7 @@ CLAIMS: list[Claim] = [
     # -- Section 4.5, the generalization refits -----------------------------
     Claim(
         id="general.e0.mape",
-        anchor=r"reading {v}\% MAPE over the {~} scored rows",
+        anchor=r"bit-for-bit at {v}\% MAPE over the {~} scored rows",
         expect="bank:nd_by_dim_total_gart_2_0_mape_pct",
         tol="printed",
         note="The baseline refit reproduces the released model bit-for-bit, so "
@@ -2832,7 +2832,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="general.e2.msigned_factor",
-        anchor=r"a factor of {v}. Off the grid it acquires",
+        anchor=r"a factor of {v}. Three refits vary only the training data",
         no_generator=_generalization(
             "E2: the ratio of the two mean signed errors, 0.51/0.28 = 1.8"),
         tol=("dp", 1),
