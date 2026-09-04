@@ -62,6 +62,17 @@ def expected_nd(bank: dict) -> list[tuple[str, float, int]]:
     return out
 
 
+def _sig3(x: float) -> str:
+    """Three significant figures, trailing zeros kept (author, 2026-09-03).
+
+    Every ladder cell prints at this precision; the ``decimals`` field of the
+    expected tuples is retained for provenance but no longer drives the check.
+    """
+    if abs(x) >= 1000:
+        return f"{int(round(x)):,}".replace(",", "{,}")
+    return f"{x:#.3g}".rstrip(".")
+
+
 def _cells(body: str, first_col: str) -> list[str]:
     """Numeric cells of the row whose first column is ``first_col``."""
     for line in body.splitlines():
@@ -115,10 +126,10 @@ def main() -> int:
             printed[f"{name}|k{k}|x"] = row[3 * i + 1]
             printed[f"{name}|k{k}|mape"] = row[3 * i + 2]
 
-    for cell, value, dp in expected_tsplib(bank) + expected_nd(bank):
+    for cell, value, _dp in expected_tsplib(bank) + expected_nd(bank):
         checked += 1
         got = printed.get(cell)
-        want = f"{value:.{dp}f}"
+        want = _sig3(value)
         if got is None:
             bad.append(f"{cell}: not found in the typeset table")
         elif got != want:

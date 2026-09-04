@@ -65,7 +65,7 @@ C_BOUND = "#a3216f"
 C_EXACT = "#4d4d4d"
 
 SIZE_EDGES = [(5, 10), (11, 50), (51, 100), (101, 200), (201, 500), (501, 1000)]
-SIZE_LABELS = [f"{lo}–{hi}" for lo, hi in SIZE_EDGES]
+SIZE_LABELS = [f"[{lo}, {hi}]" for lo, hi in SIZE_EDGES]
 INSTANCE_RE = re.compile(r"^N(\d+)_D(\d+)_", re.I)
 
 

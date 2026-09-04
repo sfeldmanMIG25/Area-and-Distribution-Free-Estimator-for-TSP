@@ -252,10 +252,10 @@ B_2D_SIZE = _size_buckets([(5, 10), (11, 50), (51, 100), (101, 500), (501, 1000)
 B_ND_SIZE = _size_buckets([(5, 10), (11, 50), (51, 100), (101, 200), (201, 500), (501, 1000)])
 B_ND_DIM: list[Bucket] = [
     ("$d=2$", "d2", _rng("dimension", 2, 2)),
-    ("$d=3$--$5$", "d3_5", _rng("dimension", 3, 5)),
-    ("$d=6$--$10$", "d6_10", _rng("dimension", 6, 10)),
-    ("$d=15$--$25$", "d15_25", _rng("dimension", 15, 25)),
-    ("$d=30$--$50$", "d30_50", _rng("dimension", 30, 50)),
+    (r"$d\in[3,5]$", "d3_5", _rng("dimension", 3, 5)),
+    (r"$d\in[6,10]$", "d6_10", _rng("dimension", 6, 10)),
+    (r"$d\in[15,25]$", "d15_25", _rng("dimension", 15, 25)),
+    (r"$d\in[30,50]$", "d30_50", _rng("dimension", 30, 50)),
     (r"$d=100$\textsuperscript{$\dagger$}", "d100", _rng("dimension", 100, 100)),
     (r"\textbf{Total}", "total", _all()),
 ]

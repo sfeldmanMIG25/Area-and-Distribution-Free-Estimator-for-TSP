@@ -29,27 +29,32 @@ BUDGETS = ("0", "10", "25", "50", "100", "200", "500")
 ARMS = (("vj_ckpt", "Volgenant--Jonker"), ("polyak_ckpt", "Polyak"))
 
 
-# Two decimals for time and for the cost multiple, three for MAPE: the same
-# precisions Tables 3 and 4 already print, so the four ladders read alike.
+# Three significant figures in every numeric cell (author, 2026-09-03), so the
+# ladders read alike whether a cell is 0.007 or 222.  Trailing zeros are kept:
+# 0.390 and 0.39 are different claims.
+def sig3(x: float) -> str:
+    if abs(x) >= 1000:
+        return f"{int(round(x)):,}".replace(",", "{,}")
+    return f"{x:#.3g}".rstrip(".")
+
+
 def ms(x: float) -> str:
-    return f"{x:.2f}"
+    return sig3(x)
 
 
 def mult(x: float) -> str:
-    # Three decimals below 0.1: the cheapest rungs on the non-Euclidean corpus
-    # differ by a factor of five inside the first two decimals.
-    return f"{x:.3f}" if x < 0.1 else f"{x:.2f}"
+    return sig3(x)
 
 
 def acc(x: float, better: bool) -> str:
-    s = f"{x:.3f}"
+    s = sig3(x)
     return rf"\textbf{{{s}}}" if better else s
 
 
 def ladder(group: dict, caption: str, label: str, colsep: str) -> str:
     gart_ms, gart_mape = group["gart2_ms"], group["gart2_MAPE_pct"]
     rows = [rf"GART 2.0 & \multicolumn{{8}}{{c}}{{{ms(gart_ms)}~ms at "
-            rf"$1.00\times$; {gart_mape:.3f}\% MAPE}} \\"]
+            rf"$1.00\times$; {sig3(gart_mape)}\% MAPE}} \\"]
     for k in BUDGETS:
         cells = []
         for arm, _ in ARMS:
