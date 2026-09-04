@@ -3180,4 +3180,32 @@ CLAIMS: list[Claim] = [
         expect="bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
         tol=("abs", 0.0001),  # p-values print at two figures; exempt from 3 s.f. (author, 2026-09-03)
     ),
+    # -----------------------------------------------------------------------
+    # Pass 1, Section 7 (2026-09-04): the conclusion restates four body figures
+    # (Section 6 non-Euclidean bound vs GART 2.0; Section 4.6 class MAPEs).
+    # -----------------------------------------------------------------------
+    Claim(
+        id="conclusion.bound.vj_k100",
+        anchor=r"the bound obtains {v}\% MAPE at an ascent budget of {~} against GART 2.0's",
+        expect="allbench:cells/noneuc/like_for_like_vs_GART2/vj_raw_MAPE_by_k/100",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="conclusion.bound.gart_mape",
+        anchor=r"against GART 2.0's {v}\%. Above a few hundred nodes",
+        expect="allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="conclusion.coverage.linenoise_mape",
+        anchor=r"Error on the near-collinear class is {v}\% MAPE against",
+        expect="bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="conclusion.coverage.isotropic_mape",
+        anchor=r"MAPE against {v}\% on the isotropic class",
+        expect="bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
+        tol=("dp", 2),
+    ),
 ]

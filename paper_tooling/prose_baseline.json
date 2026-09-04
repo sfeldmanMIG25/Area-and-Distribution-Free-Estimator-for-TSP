@@ -2,44 +2,24 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:57:20+00:00",
+    "at": "2026-09-04T08:02:18+00:00",
     "kind": "update",
-    "reason": "pass 1 Section 5 (writer/critic, two cycles): eight pairs applied; backlog contexts moved in 5.1 and 5.3, no new values",
+    "reason": "pass 1 Section 7 (writer/critic, two cycles): two pairs applied; four restated body figures registered; the ascent budget 100 recorded as unmarked",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "60a9595eadd03835003a7887c0de34c00cb2bbd5f0cdfd7373c26785eb89ffdc",
+    "tex_sha256": "3e4d903a9c1a197546379fdfb0588c1224b32a391b28aff0c86638ad737819d1",
     "production_model": "GART_2.0",
-    "n_entries": 212,
-    "n_keys": 212,
+    "n_entries": 213,
+    "n_keys": 213,
     "absorbed": [
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:836cf68a28b4",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:3c3a761b6868",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b67c9bf04d06",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:19f52100c331",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:19f52100c331",
-      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:bf578971a6b1",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:28eb2c706900",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f8b39089cdf5",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:6b257be4c96e",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c"
+      "sec-conclusion :: 100 :: tier2:unmarked :: ctx:2cda306ea6fa"
     ],
-    "pruned": [
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:a6edea1bf89c",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:e3445e6cceda",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:b04df709bc39",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:958a25a7e288",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:2c2551542e0d",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:4b61a05e377d",
-      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f317ded2b4b9",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d"
-    ],
+    "pruned": [],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 72,
-    "absorbed": 1361,
+    "records": 73,
+    "absorbed": 1362,
     "pruned": 1740,
     "claims_withdrawn": 573,
     "mismatched_claims_withdrawn": 0
@@ -544,6 +524,11 @@
       "count": 1,
       "example": "...er the Volgenant--Jonker step. At a budget of 500 the Polyak step reaches 0.509\\%, a factor of ...",
       "first_recorded": "2026-09-04T07:54:33+00:00"
+    },
+    "sec-conclusion :: 100 :: tier2:unmarked :: ctx:2cda306ea6fa": {
+      "count": 1,
+      "example": "...nd obtains 1.27\\% MAPE at an ascent budget of 100 against GART 2.0's 3.81\\%. Above a few hundre...",
+      "first_recorded": "2026-09-04T08:02:18+00:00"
     },
     "sec-evaluation :: 1{,}000 :: tier2:unmarked :: ctx:308f82bdd1b7": {
       "count": 1,
@@ -1302,6 +1287,34 @@
       "line": 586,
       "printed": 7.55,
       "expected": null
+    },
+    "conclusion.bound.gart_mape": {
+      "state": "MATCHED",
+      "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct",
+      "line": 633,
+      "printed": 3.81,
+      "expected": 3.8144881123805074
+    },
+    "conclusion.bound.vj_k100": {
+      "state": "MATCHED",
+      "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/vj_raw_MAPE_by_k/100",
+      "line": 633,
+      "printed": 1.27,
+      "expected": 1.2693200985234567
+    },
+    "conclusion.coverage.isotropic_mape": {
+      "state": "MATCHED",
+      "expect": "bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
+      "line": 635,
+      "printed": 1.47,
+      "expected": 1.471214
+    },
+    "conclusion.coverage.linenoise_mape": {
+      "state": "MATCHED",
+      "expect": "bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
+      "line": 635,
+      "printed": 10.8,
+      "expected": 10.824201
     },
     "conclusion.repair.quarantined": {
       "state": "MATCHED",
@@ -13275,6 +13288,22 @@
         "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c",
         "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d"
       ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T08:02:18+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 7 (writer/critic, two cycles): two pairs applied; four restated body figures registered; the ascent budget 100 recorded as unmarked",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "3e4d903a9c1a197546379fdfb0588c1224b32a391b28aff0c86638ad737819d1",
+      "production_model": "GART_2.0",
+      "n_entries": 213,
+      "n_keys": 213,
+      "absorbed": [
+        "sec-conclusion :: 100 :: tier2:unmarked :: ctx:2cda306ea6fa"
+      ],
+      "pruned": [],
       "claims_withdrawn": [],
       "mismatched_at_record": []
     }
