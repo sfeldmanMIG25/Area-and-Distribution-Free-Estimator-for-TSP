@@ -1484,13 +1484,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.matched_n",
-        anchor=r"We compare the two on {v} of the {~} EUC\_2D instances",
+        anchor=r"The comparison runs on the {v} of {~} EUC\_2D instances",
         expect="frontier:tsplib/N_matched",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.euc2d_n",
-        anchor=r"We compare the two on {~} of the {v} EUC\_2D instances",
+        anchor=r"The comparison runs on the {~} of {v} EUC\_2D instances",
         expect="frontier:tsplib/N_euc2d",
         tol="exact",
     ),
@@ -1518,7 +1518,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.paired_win_rate",
-        anchor=r"with a paired win rate of exactly {v}\%",
+        anchor=r"with a paired win rate of {v}\%",
         expect="frontier:tsplib/paired_win_rate_of_bound_at_crossing_pct",
         tol=("dp", 1),
     ),
@@ -1536,13 +1536,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_mape",
-        anchor=r"times the cost at {v}\% MAPE against {~}\%, on the same instances",
+        anchor=r"times the cost at {v}\% MAPE against {~}\%. The raw bound",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/mape_pct_by_k/25",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_gart2",
-        anchor=r"times the cost at {~}\% MAPE against {v}\%, on the same instances",
+        anchor=r"times the cost at {~}\% MAPE against {v}\%. The raw bound",
         expect="frontier:tsplib/gart2_mape_pct",
         tol=("dp", 2),
     ),
@@ -1590,38 +1590,11 @@ CLAIMS: list[Claim] = [
         expect="frontier:tsplib/n > 400/crossing_cost_x_gart2",
         tol=("dp", 2),
     ),
-    Claim(
-        id="frontier.tsplib.load_sensitivity_bound",
-        anchor=r"its median rises by a factor of {v} between a quiet and a noisy window",
-        expect="frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.tsplib.load_sensitivity_gart2",
-        anchor=r"against {v} for GART 2.0. Every published repeat",
-        expect="frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.tsplib.capped_x_at_crossing",
-        anchor=r"the bound costs {v} times GART 2.0 at the crossing budget",
-        expect="frontier:tsplib/capped_tail/hk_over_gart2_by_k/50",
-        tol=("dp", 0),
-    ),
-    Claim(
-        id="frontier.tsplib.capped_x_at_top",
-        anchor=r"and {v} times at the top of the ladder",
-        expect="frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
-        tol=("dp", 0),
-    ),
-    Claim(
-        id="frontier.tsplib.capped_seconds",
-        anchor=r"at the top of the ladder, {v} seconds against",
-        expect="frontier:tsplib/capped_tail/hk_ms_by_k/500",
-        tol=("dp", 0),
-        scale=0.001,
-        note="Bank stores milliseconds; the sentence prints seconds.",
-    ),
+    # withdrawn frontier.tsplib.load_sensitivity_bound: the 1.25/1.05 load-sensitivity pair left Appendix I in pass 1 (2026-09-04); the body copy at 5.1 lives
+    # withdrawn frontier.tsplib.load_sensitivity_gart2: the 1.25/1.05 load-sensitivity pair left Appendix I in pass 1 (2026-09-04); the body copy at 5.1 lives
+    # withdrawn frontier.tsplib.capped_x_at_crossing: the 167/2,078/493 s comparators left Appendix I in pass 1 (2026-09-04); the body copy at 4.8 lives
+    # withdrawn frontier.tsplib.capped_x_at_top: the 167/2,078/493 s comparators left Appendix I in pass 1 (2026-09-04); the body copy at 4.8 lives
+    # withdrawn frontier.tsplib.capped_seconds: the 167/2,078/493 s comparators left Appendix I in pass 1 (2026-09-04); the body copy at 4.8 lives
     Claim(
         id="costacct.d18512_bound_x_top",
         anchor=r"at the crossing budget and {v} times as much, {~} seconds",
@@ -1656,13 +1629,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.capped_gart2_ms",
-        anchor=r"seconds against {v} milliseconds (the",
+        anchor=r"GART 2.0 predicts it in {v}~ms, the median of 11 repeats in this ladder's session",
         expect="frontier:tsplib/capped_tail/gart2_ms",
         tol=("dp", 0),
     ),
     Claim(
         id="frontier.tsplib.harness_d18512_ms",
-        anchor=r"(the {v}~ms of Section~\ref{subsec:cost_accounting} is the same work",
+        anchor=r"prints {v}~ms for the same instance, the median of 11 repeats",
         no_generator=(
             "Same 239 ms as discussion.d18512_gart2_time, cross-referenced here "
             "so that two figures for one instance -- 237.42 ms solo, 239 ms "
@@ -1886,18 +1859,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.labels.worst_excess: journey narrative removed per author directive (editorial restructure)
     # withdrawn frontier.labels.overlap_count: journey narrative removed per author directive (editorial restructure)
     # withdrawn frontier.labels.overlap_total: journey narrative removed per author directive (editorial restructure)
-    Claim(
-        id="frontier.labels.corrupt_population",
-        anchor=r"The {v} quarantined instances above carry no recoverable label",
-        no_generator=(
-            "Size of the reference-tour audit's corrupt bucket, 184, restated "
-            "from Section 3.3. Same artifact and same settle-by as "
-            "provenance.corrupt_tour_count_in_new_sentence: "
-            "paper_tooling/reference_tour_audit.csv, rows with "
-            "bucket=='corrupt'."
-        ),
-        tol="exact",
-    ),
+    # withdrawn frontier.labels.corrupt_population: the 184-instance restatement in Appendix E's bound-check paragraph was cut in pass 1 (2026-09-04); the first statement carries conclusion.repair.quarantined
     Claim(
         id="frontier.labels.linhp318_label",
         anchor=r"so its published {v} is a path optimum no tour on those coordinates can attain",
@@ -2159,7 +2121,7 @@ CLAIMS: list[Claim] = [
     # withdrawn labels.repair.d2_improvable: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="labels.verify.n",
-        anchor=r"Across the {v} bound checks the released artifacts supply there are zero violations of $B\le L$",
+        anchor=r"Across the {v} bound checks in the released artifacts there are zero violations",
         expect="frontier:labels/repair_verify_instances_checked",
         tol="exact",
         note="Re-anchored after the editorial restructure: the Label Certification "
@@ -2170,7 +2132,7 @@ CLAIMS: list[Claim] = [
     # withdrawn labels.effect.nd_label_mape: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="conclusion.repair.quarantined",
-        anchor=r"The {v} instances ({~}\%) that fail are \emph{quarantined}, not scored",
+        anchor=r"The {v} instances ({~}\%) whose stored cost their own tour does not reproduce",
         expect="frontier:labels/repair_quarantined_total",
         tol="exact",
         note="Re-anchored after the editorial restructure: the conclusion sentence "
@@ -2529,13 +2491,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.load.bias_lo",
-        anchor=r"cost multiple above is between {v} and {~} of its quiet-box value",
+        anchor=r"cost multiple above is between {v} and {~} of its quiet-machine value",
         expect="costfront:load_control/bias_in_a_cost_ratio/0",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.load.bias_hi",
-        anchor=r"cost multiple above is between {~} and {v} of its quiet-box value",
+        anchor=r"cost multiple above is between {~} and {v} of its quiet-machine value",
         expect="costfront:load_control/bias_in_a_cost_ratio/200",
         tol=("dp", 2),
     ),
@@ -2565,13 +2527,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.amort.2d_lo",
-        anchor=r"sharing nothing between rungs, costs {v} to {~} times the checkpointed",
+        anchor=r"with no ascent state carried between rows, costs {v} to {~} times the ladder on the 2D corpus",
         expect="costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.amort.2d_hi",
-        anchor=r"costs {~} to {v} times the checkpointed ladder on the 2D corpus",
+        anchor=r"with no ascent state carried between rows, costs {~} to {v} times the ladder on the 2D corpus",
         expect="costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
         tol=("dp", 2),
     ),
@@ -2649,7 +2611,7 @@ CLAIMS: list[Claim] = [
     # -- Section 3.3, Label Validation: the two screens ---------------------
     Claim(
         id="provenance.quarantine.pct",
-        anchor=r"The {~} instances ({v}\%) that fail are \emph{quarantined}",
+        anchor=r"The {~} instances ({v}\%) whose stored cost their own tour does not reproduce",
         expect="= 100 * {frontier:labels/repair_quarantined_total}"
                " / {frontier:labels/repair_corpus_nd_instances}",
         tol=("dp", 3),
@@ -2658,7 +2620,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="provenance.verify.n",
-        anchor=r"Across the {v} bound checks the released artifacts supply",
+        anchor=r"Across the {v} bound checks in the released artifacts",
         expect="frontier:labels/repair_verify_instances_checked",
         tol="exact",
         note="The Label Validation copy of the verification count; the Label "
@@ -2998,7 +2960,7 @@ CLAIMS: list[Claim] = [
     # withdrawn appendix.lit.chien_formula_coeff: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
     Claim(
         id="appendix.controls.linear_clustered_mape",
-        anchor=r"reaching {v}\% MAPE on the clustered class against {~}\%, eight times",
+        anchor=r"reaches {v}\% MAPE on the clustered class against {~}\%, eight times",
         expect="bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
         tol=("dp", 1),
     ),
@@ -3207,5 +3169,39 @@ CLAIMS: list[Claim] = [
         anchor=r"MAPE against {v}\% on the isotropic class",
         expect="bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
         tol=("dp", 2),
+    ),
+    # -----------------------------------------------------------------------
+    # Pass 1, appendix (2026-09-04): code constants the rewritten generator and
+    # ladder paragraphs now print, and the repeat count restated in Appendix I.
+    # -----------------------------------------------------------------------
+    Claim(
+        id="frontier.dense_cap_n",
+        anchor=r"the released code's cap of {v} nodes on the dense distance matrix",
+        no_generator=("DENSE_MAX_N = 16384 in held_karp_1tree.py (line 120): the bound precomputes the full distance matrix below this node count. Code constant, exempt from 3 s.f."),
+        tol="exact",
+    ),
+    Claim(
+        id="training.cluster_stdev",
+        anchor=r"a normal of standard deviation ${v}\,G$ about that center",
+        no_generator=("data_pipeline/instance_io.py generate_1d_clustered: stdev = grid_size * 0.05. Code constant."),
+        tol="exact",
+    ),
+    Claim(
+        id="training.correlated_noise_div",
+        anchor=r"adds $\mathcal{N}(0, G/{v})$ noise to the first non-correlated axis",
+        no_generator=("data_pipeline/instance_io.py generate_1d_correlated: noise scale = grid_size / 10. Code constant."),
+        tol="exact",
+    ),
+    Claim(
+        id="frontier.tsplib.repeats_ladder_restated",
+        anchor=r"the median of {v} repeats in this ladder's session",
+        expect="frontier:tsplib/repeats",
+        tol="exact",
+    ),
+    Claim(
+        id="frontier.tsplib.repeats_body_restated",
+        anchor=r"the median of {v} repeats in the session behind Table",
+        expect="frontier:tsplib/repeats",
+        tol="exact",
     ),
 ]
