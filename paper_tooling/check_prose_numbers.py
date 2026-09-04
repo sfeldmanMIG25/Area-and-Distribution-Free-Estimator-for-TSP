@@ -351,7 +351,7 @@ def evaluate(expect: str, src: Sources) -> tuple[float, str]:
 # Calibration is unchanged where it was already right: against the generated
 # 9.818014 the band is +/-0.05, so "9.8" (err 0.018) passes and "9.9" (err
 # 0.082) -- the smallest error the tool has ever called wrong -- still fails.
-SIG_FIGS = 2
+SIG_FIGS = 3  # author, 2026-09-03: three significant figures everywhere
 
 # Slack for binary-float representation only: a few double-precision ULPs at the
 # magnitude in play.  It has to scale with the value -- 16{,}920 cannot be

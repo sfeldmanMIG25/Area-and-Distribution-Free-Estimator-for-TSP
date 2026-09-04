@@ -287,7 +287,7 @@ def _draw_boxplot(
     _clip_marks(ax, data, window)
 
     ax.axhline(0, color="#555555", linewidth=0.8, linestyle="--", zorder=0)
-    ax.set_ylabel("Signed percent error (%)")
+    ax.set_ylabel("Percent error (%)")
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.6, linestyle=":")
     ax.tick_params(axis="x", rotation=34)
     for label in ax.get_xticklabels():

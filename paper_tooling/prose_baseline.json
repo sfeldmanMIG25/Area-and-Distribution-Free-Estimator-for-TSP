@@ -2,84 +2,33 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T03:30:04+00:00",
+    "at": "2026-09-04T03:43:19+00:00",
     "kind": "update",
-    "reason": "Simple-stupid pass 1 (author rule 2026-09-03): Section 4.1 roster block collapsed, six run-in headers deleted; Sections 4.3.1-4.3.3 and 4.4 Total-row readback cut to claim plus deduction (tab:results_nd, tab:results_2d, tab:tsplib_by_size print the values). 5 claims re-anchored on the new wording, 2 BHH claims withdrawn (numeral survives under results_nd.bhh_region_mape_restated); context-hash rewords only, no printed value changed",
+    "reason": "voice batch: caption noun Percent error, label proven-optimal wording; context hashes moved",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "3e71bcdc522cc08ff53d03f85904eb702c6eae81e9eac9b29329387c1ecfa5ed",
+    "tex_sha256": "af9fa686f1eb02051f36c9cb519a9151d58f485e5e1dbe885f75f9040858d76e",
     "production_model": "GART_2.0",
     "n_entries": 259,
     "n_keys": 259,
     "absorbed": [
-      "sec-evaluation/subsec-results-nd :: 2.9 :: tier1:comparison :: ctx:ec75af288d06",
-      "sec-evaluation/subsec-results-nd :: 3.0 :: tier2:unmarked :: ctx:d99994201b15",
-      "sec-evaluation/subsec-results-nd :: 2.94 :: tier1:unit :: ctx:aacc461ad7ff",
-      "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:7a3cbc11f9ac",
-      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:1ffb075a3ba9",
-      "sec-evaluation/subsec-results-2d :: 5.76 :: tier1:unit :: ctx:15bf24a91cc9",
-      "sec-evaluation/subsec-results-2d :: 9.38 :: tier1:unit :: ctx:1450fe04d2f1",
-      "sec-evaluation/subsec-results-2d :: 5.9 :: tier1:unit :: ctx:6ff1767b4d21",
-      "sec-evaluation/subsec-results-2d :: 2.75 :: tier1:unit :: ctx:99e1999f0368",
-      "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:7570c34ad337",
-      "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:b6fc752dc141",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:acab79a414be",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:540f78970671",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:36cbd2b13998"
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15",
+      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:ac093578607c",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:294de8fab74b",
+      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32"
     ],
     "pruned": [
-      "sec-evaluation/subsec-results-2d :: 10.27 :: tier1:unit :: ctx:b74d97e6e72d",
-      "sec-evaluation/subsec-results-2d :: 11.55 :: tier1:unit :: ctx:936e3e63766d",
-      "sec-evaluation/subsec-results-2d :: 17.95 :: tier1:unit :: ctx:3f2b142c1a03",
-      "sec-evaluation/subsec-results-2d :: 2.75 :: tier1:unit :: ctx:988a30d93bc5",
-      "sec-evaluation/subsec-results-2d :: 5.76 :: tier1:unit :: ctx:e1c9d0dcce29",
-      "sec-evaluation/subsec-results-2d :: 5.9 :: tier1:unit :: ctx:f23ec9ec0b96",
-      "sec-evaluation/subsec-results-2d :: 7.30 :: tier1:unit :: ctx:9f2483134add",
-      "sec-evaluation/subsec-results-2d :: 7.90 :: tier1:unit :: ctx:8c4a68a1498e",
-      "sec-evaluation/subsec-results-2d :: 9.20 :: tier1:unit :: ctx:86277c306a63",
-      "sec-evaluation/subsec-results-2d :: 9.38 :: tier1:unit :: ctx:984754e19627",
-      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:81987596990d",
-      "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:ab23f0d28fbd",
-      "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:1dea3418c881",
-      "sec-evaluation/subsec-results-nd :: 2.9 :: tier1:comparison :: ctx:ef1c42a150a3",
-      "sec-evaluation/subsec-results-nd :: 2.94 :: tier1:unit :: ctx:45be04c48443",
-      "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:816bd3cd06c5",
-      "sec-evaluation/subsec-results-nd :: 3.0 :: tier2:unmarked :: ctx:517bb6b2e61d",
-      "sec-evaluation/subsec-results-nd :: 7.26 :: tier1:unit :: ctx:bcef660afee8",
-      "sec-evaluation/subsec-results-nd :: 9.71 :: tier1:unit :: ctx:622f0d1add5d",
-      "sec-evaluation/subsec-results-tsplib :: 3.53 :: tier1:unit :: ctx:0d555f66715b",
-      "sec-evaluation/subsec-results-tsplib :: 3.74 :: tier1:unit :: ctx:f2c0f391a357",
-      "sec-evaluation/subsec-results-tsplib :: 4.48 :: tier1:unit :: ctx:f9e945389621",
-      "sec-evaluation/subsec-results-tsplib :: 4.74 :: tier1:unit :: ctx:2378cc07e889",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:7e97a721ba71",
-      "sec-evaluation/subsec-results-tsplib :: 400 :: tier2:unmarked :: ctx:d4ff021c9de8",
-      "sec-evaluation/subsec-results-tsplib :: 7.45 :: tier1:unit :: ctx:ddd750fffeb2",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:61f63fc45f94",
-      "sec-evaluation/subsec-results-tsplib :: 8.43 :: tier1:unit :: ctx:c36a664f6389"
+      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:912eeec2a099",
+      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
     ],
-    "claims_withdrawn": [
-      {
-        "id": "results_nd.bhh_region_mape",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_size_total_bhh_sampling_region_mape_pct",
-        "line": 312,
-        "printed": 28.01,
-        "expected": 28.013791
-      },
-      {
-        "id": "results_nd.bhh_region_sdpe",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_size_total_bhh_sampling_region_sdpe_pct",
-        "line": 312,
-        "printed": 13.57,
-        "expected": 13.570913
-      }
-    ],
+    "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 52,
-    "absorbed": 1207,
-    "pruned": 1539,
+    "records": 54,
+    "absorbed": 1211,
+    "pruned": 1543,
     "claims_withdrawn": 558,
     "mismatched_claims_withdrawn": 0
   },
@@ -144,10 +93,10 @@
       "example": "...e uncorrected estimator underestimates for $n<1000$, which is the direction the correction moves...",
       "first_recorded": "2026-08-14T23:45:05+00:00"
     },
-    "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:912eeec2a099": {
+    "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32": {
       "count": 1,
       "example": "...estimators on hull geometry; at $d=8$ with $n=1000$ a single hull dominates the entire benchmark...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "first_recorded": "2026-09-04T03:43:19+00:00"
     },
     "appendix:app-bench-details :: 16 :: tier2:unmarked :: ctx:32a57de2cdaf": {
       "count": 1,
@@ -346,7 +295,7 @@
     },
     "appendix:app-mds :: 0.1208 :: tier1:precision :: ctx:edc47c897355": {
       "count": 1,
-      "example": "...ithin type (maximum stress 0.2363 for GEO and 0.1208 for screened EXPLICIT), so we do not attribut...",
+      "example": "...within type (maximum stress 0.236 for GEO and 0.1208 for screened EXPLICIT), so we do not attribut...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
     "appendix:app-mds :: 10 :: tier1:range :: ctx:eabef6fad97c": {
@@ -581,7 +530,7 @@
     },
     "sec-application :: 23 :: tier2:unmarked :: ctx:f74e0f7bc59f": {
       "count": 1,
-      "example": "... set. The MAPE-minimizing constant over these 23 instances is $1.1718$ and reaches 7.55\\%, whi...",
+      "example": "... set. The MAPE-minimizing constant over these 23 instances is $1.17$ and reaches 7.55\\%, which...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
     "sec-application :: 33 :: tier2:unmarked :: ctx:d289dc6e8085": {
@@ -621,7 +570,7 @@
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:78812ba702d6": {
       "count": 1,
-      "example": "...he raw certified bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.51\\% a...",
+      "example": "...he raw certified bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.509\\% ...",
       "first_recorded": "2026-08-12T21:37:55+00:00"
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:6206a1506bc8": {
@@ -636,7 +585,7 @@
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d": {
       "count": 1,
-      "example": "...genant--Jonker step and 0.51\\% at a budget of 500 under the Polyak step, a factor of 7.5. The ...",
+      "example": "...enant--Jonker step and 0.509\\% at a budget of 500 under the Polyak step, a factor of 7.50. The...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-evaluation/2d-diverse-synthetic :: 1000 :: tier2:unmarked :: ctx:a5738426aa0c": {
@@ -886,7 +835,7 @@
     },
     "sec-evaluation/subsec-discussion :: 400 :: tier2:unmarked :: ctx:e9fde896224b": {
       "count": 1,
-      "example": "... at the tighter threshold, at 70.4\\%. The $n>400$ TSPLIB bucket has $R^2_\\alpha=-0.071$: the m...",
+      "example": "... at the tighter threshold, at 70.4\\%. The $n>400$ TSPLIB bucket has $R^2_\\alpha=-0.0710$: the ...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-evaluation/subsec-generalization :: 0.008 :: tier1:precision :: ctx:d38d3a847854": {
@@ -941,12 +890,12 @@
     },
     "sec-evaluation/subsec-generalization :: 16{,}846 :: tier2:unmarked :: ctx:7e492267d2a2": {
       "count": 1,
-      "example": "...1{,}118 trees, reading 0.6177\\% MAPE over the 16{,}846 scored rows. Withholding both $d=15$ and $d...",
+      "example": "... 1{,}118 trees, reading 0.618\\% MAPE over the 16{,}846 scored rows. Withholding both $d=15$ and $d...",
       "first_recorded": "2026-08-28T02:48:09+00:00"
     },
     "sec-evaluation/subsec-generalization :: 1{,}118 :: tier2:unmarked :: ctx:95e0df141a72": {
       "count": 1,
-      "example": "... reproduces the released model bit-for-bit at 1{,}118 trees, reading 0.6177\\% MAPE over the 16{,}84...",
+      "example": "... reproduces the released model bit-for-bit at 1{,}118 trees, reading 0.618\\% MAPE over the 16{,}846...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-evaluation/subsec-generalization :: 20 :: tier2:unmarked :: ctx:f0337b90c7a6": {
@@ -984,10 +933,10 @@
       "example": "...below 5.9\\% in every size bucket and falls to 2.75\\% in the $[501,1000]$ bucket. The custom Hilb...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
-    "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33": {
+    "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:ac093578607c": {
       "count": 1,
-      "example": "...percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator).} \\label{fig:boxplot_2d} \\end...",
-      "first_recorded": "2026-09-04T02:06:51+00:00"
+      "example": "...Percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator).} \\label{fig:boxplot_2d} \\end...",
+      "first_recorded": "2026-09-04T03:43:19+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 30.95 :: tier1:unit :: ctx:af238253e624": {
       "count": 1,
@@ -1024,15 +973,15 @@
       "example": "...\\%/2.94\\%. That baseline is a lookup table of 102 constants, one per trained cell, fitted on th...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
+    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15": {
+      "count": 1,
+      "example": "...t error on the multidimensional benchmark ($N=16{,}846$ per estimator).} \\label{fig:boxplot_nd} \\end...",
+      "first_recorded": "2026-09-04T03:43:19+00:00"
+    },
     "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:50f997dc8bfa": {
       "count": 1,
       "example": "... is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored ...",
       "first_recorded": "2026-08-27T06:33:43+00:00"
-    },
-    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063": {
-      "count": 1,
-      "example": "...t error on the multidimensional benchmark ($N=16{,}846$ per estimator).} \\label{fig:boxplot_nd} \\end...",
-      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 2.9 :: tier1:comparison :: ctx:ec75af288d06": {
       "count": 1,
@@ -1139,10 +1088,10 @@
       "example": "... does not establish that the heterogeneous $n>400$ bucket is asymptotic; the advantage at extre...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143": {
+    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:294de8fab74b": {
       "count": 1,
       "example": "...t error on the TSPLIB95 EUC\\_2D benchmark ($N=78$ per estimator).} \\label{fig:boxplot_tsplib} ...",
-      "first_recorded": "2026-09-04T02:06:51+00:00"
+      "first_recorded": "2026-09-04T03:43:19+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:a4783cace207": {
       "count": 1,
@@ -1176,12 +1125,12 @@
     },
     "sec-frontier/subsec-frontier-nd :: 100 :: tier2:unmarked :: ctx:54aa55db5190": {
       "count": 1,
-      "example": "...instances 10{,}569, or 62.74\\%, carry at most 100 nodes, a regime in which the relaxation is ne...",
+      "example": "... instances 10{,}569, or 62.7\\%, carry at most 100 nodes, a regime in which the relaxation is ne...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:a6edea1bf89c": {
       "count": 1,
-      "example": "... against 0.062\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row, we ...",
+      "example": "...against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row, we ...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:e3445e6cceda": {
@@ -1201,7 +1150,7 @@
     },
     "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:2c2551542e0d": {
       "count": 1,
-      "example": "...k=500$ costs 0.784\\% at 246.1~ms at $d=2$, $k=200$ costs 0.450\\% at 143.9~ms at $d=3$, and the ...",
+      "example": "... $k=500$ costs 0.784\\% at 246~ms at $d=2$, $k=200$ costs 0.450\\% at 144~ms at $d=3$, and the sa...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419": {
@@ -1216,12 +1165,12 @@
     },
     "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f317ded2b4b9": {
       "count": 1,
-      "example": "...d looser than GART 2.0's printed accuracy: $k=500$ costs 0.784\\% at 246.1~ms at $d=2$, $k=200$ ...",
+      "example": "...d looser than GART 2.0's printed accuracy: $k=500$ costs 0.784\\% at 246~ms at $d=2$, $k=200$ co...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c": {
       "count": 1,
-      "example": "...24\\% against 0.062\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row...",
+      "example": "...4\\% against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d": {
@@ -1361,7 +1310,7 @@
     },
     "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:0bb43e70bfe5": {
       "count": 1,
-      "example": "...tonicity on 8.4\\% of the dimension sweeps and 19.0\\% of the size sweeps. \\subsection{Feature ...",
+      "example": "...onicity on 8.40\\% of the dimension sweeps and 19.0\\% of the size sweeps. \\subsection{Feature ...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
     "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b": {
@@ -1376,7 +1325,7 @@
     },
     "sec-theory :: 0.0762 :: tier1:precision :: ctx:641b0710b234": {
       "count": 1,
-      "example": "...t falls monotonically from 0.1837 at $d=2$ to 0.0762 at $d=50$. That spread shrinks as $d$ grows, ...",
+      "example": "...it falls monotonically from 0.184 at $d=2$ to 0.0762 at $d=50$. That spread shrinks as $d$ grows, ...",
       "first_recorded": "2026-09-03T07:00:59+00:00"
     }
   },
@@ -1413,7 +1362,7 @@
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_step_at_n_max_pct",
       "line": 818,
-      "printed": 1.8,
+      "printed": 1.84,
       "expected": 1.839804
     },
     "appendix.cavdar.extrap_ratio_5000": {
@@ -1469,7 +1418,7 @@
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
       "line": 1038,
-      "printed": 2.2,
+      "printed": 2.24,
       "expected": 2.241039
     },
     "appendix.lit.chien_daganzo_cavdar": {
@@ -1511,7 +1460,7 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 1068,
-      "printed": 0.2363,
+      "printed": 0.236,
       "expected": null
     },
     "appendix.shap.group_geometric_share": {
@@ -1539,7 +1488,7 @@
       "state": "MATCHED",
       "expect": "= 100 * {sidecar:rows.test} / {sidecar:rows.total}",
       "line": 671,
-      "printed": 15.92,
+      "printed": 15.9,
       "expected": 15.92140921409214
     },
     "application.bound.factor": {
@@ -1567,7 +1516,7 @@
       "state": "MATCHED",
       "expect": "allbench:cells/noneuc/like_for_like_vs_GART2/polyak_raw_MAPE_by_k/500",
       "line": 634,
-      "printed": 0.51,
+      "printed": 0.509,
       "expected": 0.5089245991167779
     },
     "application.bound.vj_k100": {
@@ -1581,21 +1530,21 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 593,
-      "printed": 1.136,
+      "printed": 1.14,
       "expected": null
     },
     "application.oracle_c_23_restated": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 593,
-      "printed": 1.1718,
+      "printed": 1.17,
       "expected": null
     },
     "application.oracle_constant_111": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 593,
-      "printed": 1.134,
+      "printed": 1.13,
       "expected": null
     },
     "application.oracle_mape_23_floor_repeat": {
@@ -1735,7 +1684,7 @@
       "state": "MATCHED",
       "expect": "= -1 * {paired_tsplib_by_size_total_asymptotic_mst_ratio_ci_hi}",
       "line": 441,
-      "printed": 0.22,
+      "printed": 0.224,
       "expected": 0.223817647
     },
     "discussion.paired.tsplib_asym.ci_lo": {
@@ -1749,14 +1698,14 @@
       "state": "MATCHED",
       "expect": "= -1 * {paired_tsplib_by_size_total_asymptotic_mst_ratio_mean_diff}",
       "line": 441,
-      "printed": 1.0,
+      "printed": 0.997,
       "expected": 0.997358541
     },
     "discussion.paired.tsplib_asym.p": {
       "state": "MATCHED",
       "expect": "bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
       "line": 441,
-      "printed": 0.0049,
+      "printed": 0.00485,
       "expected": 0.004853194
     },
     "discussion.r2alpha.tsplib_gt400": {
@@ -1791,7 +1740,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [501,1000]/ascents/vj_ckpt/500/x_gart2_typical",
       "line": 873,
-      "printed": 26.08,
+      "printed": 26.1,
       "expected": 26.083153455156815
     },
     "frontier.2d.large_bucket_n": {
@@ -1826,14 +1775,14 @@
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/x_gart2_typical",
       "line": 873,
-      "printed": 0.07,
+      "printed": 0.0699,
       "expected": 0.06987313881431421
     },
     "frontier.2d.small_bucket_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/gart2_MAPE_pct",
       "line": 873,
-      "printed": 3.212,
+      "printed": 3.21,
       "expected": 3.211611319278459
     },
     "frontier.2d.small_bucket_k": {
@@ -1868,14 +1817,14 @@
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
       "line": 879,
-      "printed": 0.95,
+      "printed": 0.955,
       "expected": 0.9547131318103961
     },
     "frontier.amort.2d_lo": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
       "line": 879,
-      "printed": 0.77,
+      "printed": 0.768,
       "expected": 0.7677804310172007
     },
     "frontier.amort.noneuc_hi": {
@@ -1889,7 +1838,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
       "line": 879,
-      "printed": 0.9,
+      "printed": 0.898,
       "expected": 0.8975749547378266
     },
     "frontier.complexity.bound_exponent_hi": {
@@ -1931,28 +1880,28 @@
       "state": "MATCHED",
       "expect": "frontier:complexity/gart2_over_mst_band_hi",
       "line": 551,
-      "printed": 2.3,
+      "printed": 2.34,
       "expected": 2.34
     },
     "frontier.complexity.mst_band_lo": {
       "state": "MATCHED",
       "expect": "frontier:complexity/gart2_over_mst_band_lo",
       "line": 551,
-      "printed": 2.0,
+      "printed": 1.99,
       "expected": 1.99
     },
     "frontier.complexity.nd_bound_hi": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/onetree_nd_hi",
       "line": 553,
-      "printed": 1.889,
+      "printed": 1.89,
       "expected": 1.889
     },
     "frontier.complexity.nd_bound_lo": {
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/onetree_nd_lo",
       "line": 553,
-      "printed": 1.785,
+      "printed": 1.78,
       "expected": 1.785
     },
     "frontier.complexity.nd_gart2_highd": {
@@ -1973,7 +1922,7 @@
       "state": "MATCHED",
       "expect": "frontier:complexity/nd_slopes/gart2_d_2_3",
       "line": 553,
-      "printed": 0.56,
+      "printed": 0.556,
       "expected": 0.556
     },
     "frontier.complexity.ratio_at_1000": {
@@ -2022,7 +1971,7 @@
       "state": "MATCHED",
       "expect": "costfront:load_control/bias_in_a_cost_ratio/200",
       "line": 879,
-      "printed": 0.77,
+      "printed": 0.768,
       "expected": 0.7683528907467704
     },
     "frontier.load.bias_lo": {
@@ -2106,7 +2055,7 @@
       "state": "MATCHED",
       "expect": "frontier:nd/concorde_subset/bound_mape_pct_by_k/200",
       "line": 468,
-      "printed": 0.046,
+      "printed": 0.0458,
       "expected": 0.04582612470793809
     },
     "frontier.nd.concorde_budget": {
@@ -2134,7 +2083,7 @@
       "state": "MATCHED",
       "expect": "frontier:nd/bound_x_gart2_by_k/200",
       "line": 460,
-      "printed": 0.71,
+      "printed": 0.709,
       "expected": 0.7085091768513759
     },
     "frontier.nd.crossing_cost_x": {
@@ -2204,7 +2153,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
       "line": 875,
-      "printed": 3.814,
+      "printed": 3.81,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.gart_ms": {
@@ -2232,7 +2181,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/x_gart2_typical",
       "line": 875,
-      "printed": 0.34,
+      "printed": 0.339,
       "expected": 0.3392655978656414
     },
     "frontier.noneuc.pk200_k": {
@@ -2253,7 +2202,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/500/x_gart2_typical",
       "line": 875,
-      "printed": 0.69,
+      "printed": 0.693,
       "expected": 0.6930922184276088
     },
     "frontier.noneuc.pk500_k": {
@@ -2281,14 +2230,14 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/x_gart2_typical",
       "line": 875,
-      "printed": 0.065,
+      "printed": 0.0648,
       "expected": 0.06477708387424996
     },
     "frontier.noneuc.vj_crossing_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
       "line": 875,
-      "printed": 3.814,
+      "printed": 3.81,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.vj_crossing_k": {
@@ -2302,7 +2251,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
       "line": 875,
-      "printed": 2.953,
+      "printed": 2.95,
       "expected": 2.953371085687484
     },
     "frontier.steps.2d_k": {
@@ -2323,7 +2272,7 @@
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/polyak_ckpt/25/raw_MAPE_pct",
       "line": 877,
-      "printed": 7.515,
+      "printed": 7.52,
       "expected": 7.515000218256177
     },
     "frontier.steps.pk_noneuc_mape": {
@@ -2337,21 +2286,21 @@
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
       "line": 877,
-      "printed": 3.606,
+      "printed": 3.61,
       "expected": 3.6059585620107852
     },
     "frontier.steps.vj_noneuc_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/200/raw_MAPE_pct",
       "line": 877,
-      "printed": 1.228,
+      "printed": 1.23,
       "expected": 1.2282433430508388
     },
     "frontier.tsplib.cal_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/x_gart2_by_k/25",
       "line": 836,
-      "printed": 0.9,
+      "printed": 0.902,
       "expected": 0.9024844728855346
     },
     "frontier.tsplib.cal_crossing_gart2": {
@@ -2470,7 +2419,7 @@
       "state": "MATCHED",
       "expect": "= {frontier:tsplib/gart2_mape_pct} - {frontier:tsplib/crossing_bound_mape_pct}",
       "line": 836,
-      "printed": 0.0041,
+      "printed": 0.00408,
       "expected": 0.0040770524615756365
     },
     "frontier.tsplib.repeats": {
@@ -2491,7 +2440,7 @@
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/n in [51,150]/x_gart2_by_k/25",
       "line": 838,
-      "printed": 0.16,
+      "printed": 0.159,
       "expected": 0.15894394426207137
     },
     "frontier.tsplib.small_cal_mape": {
@@ -2519,7 +2468,7 @@
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/crossing_cost_x_gart2",
       "line": 838,
-      "printed": 0.46,
+      "printed": 0.463,
       "expected": 0.4626653552203945
     },
     "frontier.tsplib.table_caption_n": {
@@ -2533,7 +2482,7 @@
       "state": "MATCHED",
       "expect": "costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
       "line": 836,
-      "printed": 24.94,
+      "printed": 24.9,
       "expected": 24.93799467654241
     },
     "frontier.verdict.budget25": {
@@ -2568,7 +2517,7 @@
       "state": "MATCHED",
       "expect": "= {frontier:tsplib78/asymptotic_mst_mape_pct} - {frontier:tsplib78/gart2_mape_pct}",
       "line": 585,
-      "printed": 1.0,
+      "printed": 0.997,
       "expected": 0.9973585405247296
     },
     "frontier.verdict.margin_to_converged_bound": {
@@ -2582,7 +2531,7 @@
       "state": "MATCHED",
       "expect": "bank:nd_by_dim_total_gart_2_0_mape_pct",
       "line": 419,
-      "printed": 0.6177,
+      "printed": 0.618,
       "expected": 0.617721
     },
     "general.e1.d15_after": {
@@ -2708,7 +2657,7 @@
       "state": "MATCHED",
       "expect": "bank:classical_a_2d_cavdar_sokol_mape_pct",
       "line": 413,
-      "printed": 18.24,
+      "printed": 18.2,
       "expected": 18.235582
     },
     "matched.cavdar.uniform_mape": {
@@ -2729,7 +2678,7 @@
       "state": "MATCHED",
       "expect": "bank:classical_b_random_cavdar_sokol_sdpe_pct",
       "line": 413,
-      "printed": 14.28,
+      "printed": 14.3,
       "expected": 14.281854
     },
     "matched.uniform_domain.bhh_mape": {
@@ -2771,14 +2720,14 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 2.209,
+      "printed": 2.21,
       "expected": null
     },
     "methods.greedy_gate.corpus_lo": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 1.035,
+      "printed": 1.03,
       "expected": null
     },
     "methods.greedy_gate.corpus_rows": {
@@ -2792,14 +2741,14 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 2.1295,
+      "printed": 2.13,
       "expected": null
     },
     "methods.greedy_gate.train_lo": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 162,
-      "printed": 1.0465,
+      "printed": 1.05,
       "expected": null
     },
     "methods.model.leaves_per_tree": {
@@ -2855,28 +2804,28 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 995,
-      "printed": 0.6112,
+      "printed": 0.611,
       "expected": null
     },
     "methods.optuna.tuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 995,
-      "printed": 2.6364,
+      "printed": 2.64,
       "expected": null
     },
     "methods.optuna.untuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 995,
-      "printed": 0.6226,
+      "printed": 0.623,
       "expected": null
     },
     "methods.optuna.untuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 995,
-      "printed": 2.4725,
+      "printed": 2.47,
       "expected": null
     },
     "methods.probe.gart_both_axes": {
@@ -2918,14 +2867,14 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 176,
-      "printed": 1.922,
+      "printed": 1.92,
       "expected": null
     },
     "methods.transform.pred_lo": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 176,
-      "printed": 1.029,
+      "printed": 1.03,
       "expected": null
     },
     "metrics.ci.level_pct": {
@@ -3051,7 +3000,7 @@
       "state": "MATCHED",
       "expect": "= {rank_2d_gart_2_0_close5_pct} - {rank_2d_l_mathrm_mst_alpha_1_close5_pct}",
       "line": 439,
-      "printed": 3.4,
+      "printed": 3.44,
       "expected": 3.435971000000009
     },
     "rank.close5.gain_nd_pp": {
@@ -3065,7 +3014,7 @@
       "state": "MATCHED",
       "expect": "= {rank_tsplib_euc2d_gart_2_0_close5_pct} - {rank_tsplib_euc2d_l_mathrm_mst_alpha_1_close5_pct}",
       "line": 439,
-      "printed": 11.0,
+      "printed": 11.1,
       "expected": 11.111111000000001
     },
     "rank.close5.gart_2d": {
@@ -3149,14 +3098,14 @@
       "state": "MATCHED",
       "expect": "bank:nd_by_dim_total_gart_2_0_mape_pct",
       "line": 312,
-      "printed": 0.62,
+      "printed": 0.618,
       "expected": 0.617721
     },
     "results.nd.sdpe": {
       "state": "MATCHED",
       "expect": "bank:nd_by_dim_total_gart_2_0_sdpe_pct",
       "line": 312,
-      "printed": 0.99,
+      "printed": 0.986,
       "expected": 0.985922
     },
     "results.tsplib.alpha_sd": {
@@ -3170,28 +3119,28 @@
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_bhh_mape_pct",
       "line": 407,
-      "printed": 25.14,
+      "printed": 25.1,
       "expected": 25.135716
     },
     "results.tsplib.bhh_mspe": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_bhh_mspe_pct",
       "line": 407,
-      "printed": 13.66,
+      "printed": 13.7,
       "expected": 13.658288
     },
     "results.tsplib.cavdar_mape": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_cavdar_sokol_mape_pct",
       "line": 407,
-      "printed": 23.87,
+      "printed": 23.9,
       "expected": 23.870464
     },
     "results.tsplib.cavdar_mspe": {
       "state": "MATCHED",
       "expect": "bank:classical_a_tsplib_cavdar_sokol_mspe_pct",
       "line": 407,
-      "printed": 20.07,
+      "printed": 20.1,
       "expected": 20.06505
     },
     "results.tsplib.mape": {
@@ -3205,7 +3154,7 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 403,
-      "printed": 1.1275,
+      "printed": 1.13,
       "expected": null
     },
     "results.tsplib.oracle_mape": {
@@ -3268,7 +3217,7 @@
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 675,
-      "printed": 1.431,
+      "printed": 1.43,
       "expected": null
     },
     "results_2d.linenoise.rank_corr": {
@@ -3289,7 +3238,7 @@
       "state": "MATCHED",
       "expect": "bank:nd_by_size_total_bhh_sampling_region_mape_pct",
       "line": 349,
-      "printed": 28.01,
+      "printed": 28.0,
       "expected": 28.013791
     },
     "results_nd.rho_dn_mape": {
@@ -3352,7 +3301,7 @@
       "state": "MATCHED",
       "expect": "sizestrat:corpus/frac_n_le_100_pct",
       "line": 464,
-      "printed": 62.74,
+      "printed": 62.7,
       "expected": 62.74
     },
     "sizestrat.corpus.scored": {
@@ -3387,7 +3336,7 @@
       "state": "MATCHED",
       "expect": "sizestrat:cell/d2/n600_1000/bound_k500_ms",
       "line": 466,
-      "printed": 246.1,
+      "printed": 246.0,
       "expected": 246.085
     },
     "sizestrat.d3.large.k200_mape": {
@@ -3401,7 +3350,7 @@
       "state": "MATCHED",
       "expect": "sizestrat:cell/d3/n600_1000/bound_k200_ms",
       "line": 466,
-      "printed": 143.9,
+      "printed": 144.0,
       "expected": 143.911
     },
     "sizestrat.d4.large.k200_mape": {
@@ -3422,14 +3371,14 @@
       "state": "MATCHED",
       "expect": "sizestrat:cell/d50/n600_1000/gart_mape_pct",
       "line": 464,
-      "printed": 0.062,
+      "printed": 0.0622,
       "expected": 0.0622
     },
     "theory.alpha_sd_at_d2": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
       "line": 146,
-      "printed": 0.1837,
+      "printed": 0.184,
       "expected": null
     }
   },
@@ -12657,6 +12606,44 @@
           "expected": 13.570913
         }
       ],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T03:42:20+00:00",
+      "kind": "update",
+      "reason": "3 s.f. pass: prose numerals re-rendered from the bank, table cells rebuilt; context hashes moved",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "15b67276cab6c4a9344d35c68074e771824612e72c7851c149b467181a31f667",
+      "production_model": "GART_2.0",
+      "n_entries": 259,
+      "n_keys": 259,
+      "absorbed": [],
+      "pruned": [],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T03:43:19+00:00",
+      "kind": "update",
+      "reason": "voice batch: caption noun Percent error, label proven-optimal wording; context hashes moved",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "af9fa686f1eb02051f36c9cb519a9151d58f485e5e1dbe885f75f9040858d76e",
+      "production_model": "GART_2.0",
+      "n_entries": 259,
+      "n_keys": 259,
+      "absorbed": [
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15",
+        "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:ac093578607c",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:294de8fab74b",
+        "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32"
+      ],
+      "pruned": [
+        "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:912eeec2a099",
+        "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
+      ],
+      "claims_withdrawn": [],
       "mismatched_at_record": []
     }
   ]

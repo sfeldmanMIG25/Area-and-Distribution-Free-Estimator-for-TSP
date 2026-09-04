@@ -801,12 +801,17 @@ def write_tex_classical(tidy: pd.DataFrame, path: Path, nobreak: bool = False) -
 
 
 def _sig3(x: float) -> str:
+    """Three significant figures, trailing zeros kept (author, 2026-09-03).
+
+    Every numeric cell the builders emit prints at this precision; the ``nd``
+    argument of :func:`_f` is retained by the callers for provenance only.
+    """
     if not np.isfinite(x):
         return "---"
     if abs(x) >= 1000:
         return _thou(int(round(x)))
-    s = f"{x:#.3g}"
-    return s.rstrip("0").rstrip(".") if "." in s else s
+    s = f"{x:#.3g}".rstrip(".")
+    return "$-$" + s[1:] if s.startswith("-") else s
 
 
 def _thou(n: int) -> str:
@@ -816,11 +821,7 @@ def _thou(n: int) -> str:
 def _f(x: object, nd: int) -> str:
     if isinstance(x, str):
         return x
-    if not np.isfinite(float(x)):
-        return "---"
-    s = f"{float(x):.{nd}f}"
-    # A leading hyphen-minus typesets as a hyphen; ``$-$`` is the minus sign.
-    return "$-$" + s[1:] if s.startswith("-") else s
+    return _sig3(float(x))
 
 
 def write_tex_std(tidy: pd.DataFrame, buckets: list[Bucket], models: list[str],

@@ -482,12 +482,12 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="sizestrat.corpus.small_instances",
-        anchor=r"Of the {~} scored instances {v}, or 62.74",
+        anchor=r"Of the {~} scored instances {v}, or 62.7",
         expect="sizestrat:corpus/n_le_100_instances",
     ),
     Claim(
         id="sizestrat.corpus.scored",
-        anchor=r"Of the {v} scored instances {~}, or 62.74",
+        anchor=r"Of the {v} scored instances {~}, or 62.7",
         expect="sizestrat:corpus/scored_instances",
     ),
     # withdrawn sizestrat.summary.undominated_cells: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
@@ -721,7 +721,7 @@ CLAIMS: list[Claim] = [
         id="matched.uniform_domain.floor_mape",
         anchor=r"and the $\alpha=1$ floor's {v}\%.",
         expect="bank:classical_b_random_l_mathrm_mst_alpha_1_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="discussion.r2alpha.tsplib_gt400",
@@ -988,31 +988,31 @@ CLAIMS: list[Claim] = [
         id="results.tsplib.cavdar_mape",
         anchor=r"\c{C}avdar--Sokol obtains {v}\% MAPE and BHH",
         expect="bank:classical_a_tsplib_cavdar_sokol_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="results.tsplib.bhh_mape",
         anchor=r"MAPE and BHH {v}\%. TSPLIB instances",
         expect="bank:classical_a_tsplib_bhh_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="results.tsplib.bhh_mspe",
         anchor=r"Both overpredict, by $+{v}$\% and",
         expect="bank:classical_a_tsplib_bhh_mspe_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="results.tsplib.cavdar_mspe",
         anchor=r"by $+{~}$\% and $+{v}$\% respectively",
         expect="bank:classical_a_tsplib_cavdar_sokol_mspe_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="matched.bhh.full_mape",
         anchor=r"BHH falls from {v}\% MAPE on the full 2D benchmark",
         expect="bank:classical_a_2d_bhh_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="matched.bhh.uniform_mape",
@@ -1040,7 +1040,7 @@ CLAIMS: list[Claim] = [
         id="matched.cavdar.full_mape",
         anchor=r"\c{C}avdar--Sokol falls from {v}\% to",
         expect="bank:classical_a_2d_cavdar_sokol_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
     ),
     Claim(
         id="matched.cavdar.uniform_mape",
@@ -1052,7 +1052,7 @@ CLAIMS: list[Claim] = [
         id="matched.cavdar.uniform_sdpe",
         anchor=r"At {v}\% SDPE its dispersion is the widest in the panel",
         expect="bank:classical_b_random_cavdar_sokol_sdpe_pct",
-        tol=("dp", 2),
+        tol="printed",
         note="Adverse result: the widest dispersion in the matched panel, "
              "wider than the alpha=1 floor's. Registered so a later run cannot "
              "quietly drop the qualification.",
@@ -1157,7 +1157,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.greedy_gate.train_lo",
-        anchor=r"the training split alone spans the narrower $[{v},2.1295]$",
+        anchor=r"the training split alone spans the narrower $[{v},2.13]$",
         no_generator=(
             "Minimum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv "
             "(69,768 rows): 1.046482. The released constant "
@@ -1232,7 +1232,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.optuna.tuned_tsplib",
-        anchor=r"the frozen hyperparameters, and {v}\% against 2.4725\% on TSPLIB EUC\_2D",
+        anchor=r"the frozen hyperparameters, and {v}\% against 2.47\% on TSPLIB EUC\_2D",
         no_generator=(
             "paper_tooling/v4_study_allmodels_strata.csv, row model=GART2_logit_tuned, "
             "stratum=tsplib_euc2d: mape 2.636384. Settle by banking "
@@ -1306,7 +1306,7 @@ CLAIMS: list[Claim] = [
     # -- N-H: the network beats the extended-block variant on five of eight --
     Claim(
         id="methods.greedy_gate.corpus_lo",
-        anchor=r"whose ratio falls outside $[{v},2.209]$",
+        anchor=r"whose ratio falls outside $[{v},2.21]$",
         no_generator=_GATE_CONST("lower endpoint 1.035; the observed minimum is 1.035414"),
         tol=("dp", 3),
     ),
@@ -1355,7 +1355,7 @@ CLAIMS: list[Claim] = [
         id="methods.probe.gart_both_axes",
         anchor=r"held-out instances accordingly returns {v}\% non-increasing sweeps on both axes",
         expect="bank:cons_probe_gart_2_0_dimension_pct_nonincr_deployed",
-        tol=("dp", 1),
+        tol="printed",
         note="The dimension and node-count axes both read 100.0 with zero violations, "
              "so either key backs the sentence; the dimension one is named because it "
              "is the axis the comparators fail worst on.",
@@ -1888,14 +1888,14 @@ CLAIMS: list[Claim] = [
         # and now describes what it does. Same number, same sentence, same claim.
         anchor=r"against {v}--{~} for the bound, because the MST construction",
         expect="frontier:complexity/nd_slopes/onetree_nd_lo",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.complexity.nd_bound_hi",
         # Re-anchored 2026-08-12: see nd_bound_lo above.
         anchor=r"against {~}--{v} for the bound, because the MST construction",
         expect="frontier:complexity/nd_slopes/onetree_nd_hi",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.complexity.nd_gart2_planar",
@@ -2175,7 +2175,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="labels.repair.certified_by_bound",
-        anchor=r"the label is certified after the fact, {v} instances",
+        anchor=r"the label is proven optimal after the fact, {v} instances",
         expect="frontier:labels/repair_nd_tour_certified_optimal",
         tol="exact",
         note="Re-anchored after the editorial restructure into the Label "
@@ -2266,7 +2266,7 @@ CLAIMS: list[Claim] = [
         id="frontier.tsplib.throughput_x",
         anchor=r"the same pair reads {v}, because the bound is cheap",
         expect="costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
-        tol=("dp", 2),
+        tol="printed",
         note="The second aggregation of the same pair at the same budget: the sum "
              "of the per-instance medians rather than their median. Printed beside "
              "the 0.90 so the phrase 'corpus median' cannot be read as the cost of "
@@ -2330,7 +2330,7 @@ CLAIMS: list[Claim] = [
         note="The trailing ', and wins' keeps this anchor off the abstract's "
              "sentence about the multidimensional benchmark, which is otherwise "
              "word-for-word the same shape.",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.2d.small_bucket_cost_x",
@@ -2355,7 +2355,7 @@ CLAIMS: list[Claim] = [
         id="frontier.2d.large_bucket_cost_x",
         anchor=r"only at the top budget, and there it costs {v} times as much",
         expect="costfront:cells/2d/groups/n in [501,1000]/ascents/vj_ckpt/500/x_gart2_typical",
-        tol=("dp", 2),
+        tol="printed",
         note="The largest bucket is where the reversal of Section 5.2 runs the other "
              "way: more accurate only at the top rung, and only at 26 times the cost.",
     ),
@@ -2392,7 +2392,7 @@ CLAIMS: list[Claim] = [
         id="frontier.noneuc.gart_mape",
         anchor=r"the embedding is {~}\%, at {v}\% MAPE. The Polyak step",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.noneuc.pk500_k",
@@ -2468,13 +2468,13 @@ CLAIMS: list[Claim] = [
         anchor=r"times GART 2.0 and reads {v}\% against {~}\%. The two step rules",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "vj_ckpt/25/raw_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.noneuc.vj_crossing_gart_mape",
         anchor=r"and reads {~}\% against {v}\%. The two step rules",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.noneuc.caption_n",
@@ -2489,13 +2489,13 @@ CLAIMS: list[Claim] = [
         id="frontier.steps.vj_2d_mape",
         anchor=r"widest at a budget of {~}, {v}\% against {~}\%.",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.steps.pk_2d_mape",
         anchor=r"widest at a budget of {~}, {~}\% against {v}\%.",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/polyak_ckpt/25/raw_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
     Claim(
         id="frontier.steps.2d_k",
@@ -2526,7 +2526,7 @@ CLAIMS: list[Claim] = [
         anchor=r"corpus, {~}\% against {v}\%. The timing sessions behind",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "vj_ckpt/200/raw_MAPE_pct",
-        tol=("dp", 3),
+        tol="printed",
     ),
 
     # -- Section 5.4: the validity gates over both cost tables ----------------
@@ -2743,7 +2743,7 @@ CLAIMS: list[Claim] = [
         id="results_nd.bhh_region_mape_restated",
         anchor=r"BHH's {v}\% error is not a defect",
         expect="bank:nd_by_size_total_bhh_sampling_region_mape_pct",
-        tol=("dp", 2),
+        tol="printed",
         note="Restatement of results_nd.bhh_region_mape at the head of the "
              "paragraph that explains the figure.",
     ),
@@ -2804,7 +2804,7 @@ CLAIMS: list[Claim] = [
         id="general.e0.mape",
         anchor=r"reading {v}\% MAPE over the {~} scored rows",
         expect="bank:nd_by_dim_total_gart_2_0_mape_pct",
-        tol=("dp", 4),
+        tol="printed",
         note="The baseline refit reproduces the released model bit-for-bit, so "
              "its MAPE is the released model's banked figure at four decimals.",
     ),
@@ -3048,7 +3048,7 @@ CLAIMS: list[Claim] = [
         id="appendix.training.test_share_restated",
         anchor=r"lifts the corpus-level test share to the ${v}\%$ above",
         expect="= 100 * {sidecar:rows.test} / {sidecar:rows.total}",
-        tol=("dp", 2),
+        tol="printed",
         note="Checked as the derivation 16,920/106,272 over the frozen sidecar "
              "so the share follows whatever model ships.",
     ),
