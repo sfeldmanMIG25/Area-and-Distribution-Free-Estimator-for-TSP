@@ -806,7 +806,7 @@ Across the 145{,}013 bound checks the released artifacts supply there are zero v
 
 \section{Benchmark-Model Implementation} \label{app:bench_details}
 
-We attribute the tour-length estimators of Daganzo \citep{daganzo1984a}, Chien \citep{chien1992operational}, and Kwon--Golden--Wasil \citep{kwon1995tsp}, surveyed in \citet{figliozzi2009planning}, and score none of them: BHH and \c{C}avdar--Sokol are exemplary of the same class of estimator, and the later variants improve on them only marginally.
+We attribute the tour-length estimators of Daganzo \citep{daganzo1984a}, Chien \citep{chien1992operational}, and Kwon--Golden--Wasil \citep{kwon1995tsp}, surveyed in \citet{figliozzi2009planning}. They belong to the same class of estimator, and we score BHH and \c{C}avdar--Sokol as its representatives.
 
 \subsection{BHH}
 
@@ -1003,7 +1003,7 @@ $n$ range & Estimator & SDPE (\%) [95\% CI] & MAPE (\%) & $|$Median$|$ (\%) & MS
 
 A hyperparameter search does not improve on the frozen block enough to justify replacing it. Optuna's tree-structured Parzen estimator (TPE) ran 200 trials against in-distribution validation, 60 completed and 140 pruned; the tuned booster reaches 0.611\% on the multidimensional test split against 0.623\% for the frozen hyperparameters, and 2.64\% against 2.47\% on TSPLIB EUC\_2D. Both boosters are unconstrained and trained on the logit target, so the monotone constraint of the released model does not enter the difference; scoring the tuned booster against the released model instead would confound the search with that constraint.
 
-\begin{table}[tbp]
+\begin{table}[!htb]
 \centering
 \caption{GART 2.0 hyperparameters and trained-model statistics; the hyperparameter block is inherited and frozen.}
 \label{tab:hyperparams}
