@@ -558,18 +558,8 @@ CLAIMS: list[Claim] = [
 
     # -- model-artifact facts: sidecar source, follows the production model ---
     # withdrawn methods.model.n_features: section roadmap sentence deleted; the 31-feature count is asserted at the start of subsec:features and in subsec:shap
-    Claim(
-        id="methods.model.n_trees",
-        anchor=r"The resulting ensemble contains {v} trees with {~} leaves per tree",
-        expect="sidecar:num_trees",
-        tol="exact",
-    ),
-    Claim(
-        id="methods.model.leaves_per_tree",
-        anchor=r"ensemble contains {~} trees with {v} leaves per tree",
-        expect="sidecar:hyperparameters.num_leaves",
-        tol="exact",
-    ),
+    # withdrawn methods.model.n_trees: cut in the 2026-09-03 audit pass (p09, author-approved small cut); the tree count now lives in the hyperparameter table only
+    # withdrawn methods.model.leaves_per_tree: cut in the 2026-09-03 audit pass (p09); the leaf cap now lives in the hyperparameter table only
 
     # -- a genuinely unbackable number, registered with what would settle it --
     Claim(
@@ -984,30 +974,10 @@ CLAIMS: list[Claim] = [
     # Every numeral in those two paragraphs is registered here. They were
     # rewritten wholesale when Daganzo, Chien and Kwon--Golden--Wasil were
     # withdrawn, so none of them can ride on the recorded backlog.
-    Claim(
-        id="results.tsplib.cavdar_mape",
-        anchor=r"\c{C}avdar--Sokol obtains {v}\% MAPE and BHH",
-        expect="bank:classical_a_tsplib_cavdar_sokol_mape_pct",
-        tol="printed",
-    ),
-    Claim(
-        id="results.tsplib.bhh_mape",
-        anchor=r"MAPE and BHH {v}\%. TSPLIB instances",
-        expect="bank:classical_a_tsplib_bhh_mape_pct",
-        tol="printed",
-    ),
-    Claim(
-        id="results.tsplib.bhh_mspe",
-        anchor=r"Both overpredict, by $+{v}$\% and",
-        expect="bank:classical_a_tsplib_bhh_mspe_pct",
-        tol="printed",
-    ),
-    Claim(
-        id="results.tsplib.cavdar_mspe",
-        anchor=r"by $+{~}$\% and $+{v}$\% respectively",
-        expect="bank:classical_a_tsplib_cavdar_sokol_mspe_pct",
-        tol="printed",
-    ),
+    # withdrawn results.tsplib.cavdar_mape: cut in the 2026-09-03 audit pass (p16, table readback); the value is Table tab:results_tsplib's
+    # withdrawn results.tsplib.bhh_mape: cut in the 2026-09-03 audit pass (p16, table readback); the value is Table tab:results_tsplib's
+    # withdrawn results.tsplib.bhh_mspe: cut in the 2026-09-03 audit pass (p16, table readback); the value is Table tab:results_tsplib's
+    # withdrawn results.tsplib.cavdar_mspe: cut in the 2026-09-03 audit pass (p16, table readback); the value is Table tab:results_tsplib's
     Claim(
         id="matched.bhh.full_mape",
         anchor=r"BHH falls from {v}\% MAPE on the full 2D benchmark",
@@ -1769,7 +1739,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.nd.d100_accuracy_factor: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="frontier.nd.planar_group_cost_x",
-        anchor=r"where matching its accuracy costs the bound {v} times as much",
+        anchor=r"matching GART 2.0's accuracy there costs {v} times as much",
         expect="frontier:nd/crossover_cost_x_by_group/d in {2,3}",
         tol=("dp", 2),
         note="The one dimension group on which GART 2.0 stays on the front.",
