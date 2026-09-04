@@ -2,81 +2,43 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:51:40+00:00",
+    "at": "2026-09-04T07:54:33+00:00",
     "kind": "update",
-    "reason": "pass 1 Sections 4.4-4.8 (writer/critic, two cycles): eight pairs applied plus the 0.0048->0.0049 p-value correction; backlog contexts moved in 4.5-4.7, no new values",
+    "reason": "pass 1 Section 6 (writer/critic, two cycles): three pairs applied; backlog contexts moved in the lead and 6.2, no new values",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "f9ece0560c0959f49961f7825a2f73df6ce7d6595154418bd27cbaf82f67904e",
+    "tex_sha256": "82e96684665adda120810048f72256633e100c37e8c01d442201ba5408398402",
     "production_model": "GART_2.0",
     "n_entries": 212,
     "n_keys": 212,
     "absorbed": [
-      "sec-evaluation/subsec-generalization :: 10 :: tier2:unmarked :: ctx:133613c0515b",
-      "sec-evaluation/subsec-generalization :: 20 :: tier2:unmarked :: ctx:0ddfd34d5e63",
-      "sec-evaluation/subsec-generalization :: 30 :: tier2:unmarked :: ctx:6d454b90463c",
-      "sec-evaluation/subsec-generalization :: 0.43 :: tier1:unit :: ctx:577994635e29",
-      "sec-evaluation/subsec-generalization :: 0.42 :: tier1:unit :: ctx:7a155275db34",
-      "sec-evaluation/subsec-generalization :: 0.008 :: tier1:precision :: ctx:c6bc344825c8",
-      "sec-evaluation/subsec-generalization :: 0.134 :: tier1:precision :: ctx:6e2032170c94",
-      "sec-evaluation/subsec-generalization :: 0.41 :: tier1:unit :: ctx:9092617b2892",
-      "sec-evaluation/subsec-generalization :: 0.59 :: tier1:unit :: ctx:36a4da124e5b",
-      "sec-evaluation/subsec-generalization :: 0.47 :: tier1:unit :: ctx:1a6d704166ba",
-      "sec-evaluation/subsec-generalization :: 0.56 :: tier1:unit :: ctx:42baecfd7add",
-      "sec-evaluation/subsec-generalization :: 16{,}846 :: tier2:unmarked :: ctx:7a5796237183",
-      "sec-evaluation/subsec-coverage :: 0.294 :: tier1:range :: ctx:860998c7752e",
-      "sec-evaluation/subsec-coverage :: 0.569 :: tier1:precision :: ctx:2b07aab51602",
-      "sec-evaluation/subsec-coverage :: 0.332 :: tier1:precision :: ctx:b60dc3bb9a08",
-      "sec-evaluation/subsec-coverage :: 0.798 :: tier1:precision :: ctx:d26f02c178bc",
-      "sec-evaluation/subsec-coverage :: 0.362 :: tier1:precision :: ctx:28a64328a949",
-      "sec-evaluation/subsec-discussion :: 0.5 :: tier2:unmarked :: ctx:506e95d5e25f",
-      "sec-evaluation/subsec-discussion :: 400 :: tier2:unmarked :: ctx:563c3e0477f9"
+      "sec-application :: 33 :: tier2:unmarked :: ctx:ae2626295355",
+      "sec-application :: 4 :: tier1:label-count :: ctx:1bafd09067c2",
+      "sec-application :: 2 :: tier1:label-count :: ctx:17f54d80526e",
+      "sec-application :: 10 :: tier1:label-count :: ctx:c739d00e0835",
+      "sec-application :: 23 :: tier2:unmarked :: ctx:3d6edabd4433",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:247b278f6f0f",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:cc0076fe5bd5",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:9e35a5c3e8fa",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:228591857151"
     ],
     "pruned": [
-      "sec-evaluation/subsec-coverage :: 0.0048 :: tier1:precision :: ctx:60754aa2f8b8",
-      "sec-evaluation/subsec-coverage :: 0.294 :: tier1:range :: ctx:ad260e31b41f",
-      "sec-evaluation/subsec-coverage :: 0.332 :: tier1:precision :: ctx:7fed0f3e87bf",
-      "sec-evaluation/subsec-coverage :: 0.362 :: tier1:precision :: ctx:771119a4376e",
-      "sec-evaluation/subsec-coverage :: 0.569 :: tier1:precision :: ctx:88b089cb2e70",
-      "sec-evaluation/subsec-coverage :: 0.798 :: tier1:precision :: ctx:dd0029578e8e",
-      "sec-evaluation/subsec-discussion :: 0.5 :: tier2:unmarked :: ctx:73ac476c00fb",
-      "sec-evaluation/subsec-discussion :: 400 :: tier2:unmarked :: ctx:e9fde896224b",
-      "sec-evaluation/subsec-generalization :: 0.008 :: tier1:precision :: ctx:d38d3a847854",
-      "sec-evaluation/subsec-generalization :: 0.134 :: tier1:precision :: ctx:7f4f9bbd60d9",
-      "sec-evaluation/subsec-generalization :: 0.41 :: tier1:unit :: ctx:aae6e5c7e45e",
-      "sec-evaluation/subsec-generalization :: 0.42 :: tier1:unit :: ctx:3d3572c4c543",
-      "sec-evaluation/subsec-generalization :: 0.43 :: tier1:unit :: ctx:5518bfdf2001",
-      "sec-evaluation/subsec-generalization :: 0.47 :: tier1:unit :: ctx:36c4c5e26ec6",
-      "sec-evaluation/subsec-generalization :: 0.56 :: tier1:unit :: ctx:9014e93d34f0",
-      "sec-evaluation/subsec-generalization :: 0.59 :: tier1:unit :: ctx:03e573daa3f7",
-      "sec-evaluation/subsec-generalization :: 10 :: tier2:unmarked :: ctx:a84ca7c7df3f",
-      "sec-evaluation/subsec-generalization :: 16{,}846 :: tier2:unmarked :: ctx:d7d87315610e",
-      "sec-evaluation/subsec-generalization :: 20 :: tier2:unmarked :: ctx:f0337b90c7a6",
-      "sec-evaluation/subsec-generalization :: 30 :: tier2:unmarked :: ctx:4b247f44ba60"
+      "sec-application :: 10 :: tier1:label-count :: ctx:a7eb1b8b8b6a",
+      "sec-application :: 2 :: tier1:label-count :: ctx:31953fb3ab33",
+      "sec-application :: 23 :: tier2:unmarked :: ctx:f74e0f7bc59f",
+      "sec-application :: 33 :: tier2:unmarked :: ctx:d289dc6e8085",
+      "sec-application :: 4 :: tier1:label-count :: ctx:758c4c6710bf",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:28136ff91568",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d"
     ],
-    "claims_withdrawn": [
-      {
-        "id": "discussion.disp.asym_sdpe",
-        "state": "MATCHED",
-        "expect": "bank:tsplib_by_size_total_asymptotic_mst_ratio_sdpe_pct",
-        "line": 434,
-        "printed": 4.74,
-        "expected": 4.740122
-      },
-      {
-        "id": "discussion.disp.gart_sdpe",
-        "state": "MATCHED",
-        "expect": "bank:tsplib_by_size_total_gart_2_0_sdpe_pct",
-        "line": 434,
-        "printed": 2.92,
-        "expected": 2.919994
-      }
-    ],
+    "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 70,
-    "absorbed": 1342,
-    "pruned": 1721,
+    "records": 71,
+    "absorbed": 1351,
+    "pruned": 1730,
     "claims_withdrawn": 573,
     "mismatched_claims_withdrawn": 0
   },
@@ -501,40 +463,40 @@
       "example": "... violations (worst direct-edge ratio at least 1.2), which are outside every metric-dependent ag...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-application :: 10 :: tier1:label-count :: ctx:a7eb1b8b8b6a": {
+    "sec-application :: 10 :: tier1:label-count :: ctx:c739d00e0835": {
       "count": 1,
       "example": "... 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 GEO, and 17 EXPLICIT. An exhaustive triangle-...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
     "sec-application :: 17 :: tier1:label-count :: ctx:6b5f30cc6c66": {
       "count": 1,
       "example": "..._2D instances: 4 CEIL\\_2D, 2 ATT, 10 GEO, and 17 EXPLICIT. An exhaustive triangle-inequality s...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-application :: 2 :: tier1:label-count :: ctx:31953fb3ab33": {
+    "sec-application :: 2 :: tier1:label-count :: ctx:17f54d80526e": {
       "count": 1,
       "example": "...ontains 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 GEO, and 17 EXPLICIT. An exhaustive t...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
     "sec-application :: 23 :: tier2:unmarked :: ctx:3ba0becdd59e": {
       "count": 1,
       "example": "...tt{dantzig42}, and \\texttt{gr17}. That leaves 23 instances, seven of them EXPLICIT, and three ...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-application :: 23 :: tier2:unmarked :: ctx:f74e0f7bc59f": {
+    "sec-application :: 23 :: tier2:unmarked :: ctx:3d6edabd4433": {
       "count": 1,
-      "example": "... set. The MAPE-minimizing constant over these 23 instances is $1.17$ and reaches 7.55\\%, which...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "example": "... set. The MAPE-minimizing constant over these 23 instances is $1.17$ and reaches 7.55\\%, the f...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
-    "sec-application :: 33 :: tier2:unmarked :: ctx:d289dc6e8085": {
+    "sec-application :: 33 :: tier2:unmarked :: ctx:ae2626295355": {
       "count": 1,
-      "example": "...g} \\label{sec:application} TSPLIB95 contains 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...al-scaling (MDS) embedding. TSPLIB95 contains 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 ...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
-    "sec-application :: 4 :: tier1:label-count :: ctx:758c4c6710bf": {
+    "sec-application :: 4 :: tier1:label-count :: ctx:1bafd09067c2": {
       "count": 1,
-      "example": "... TSPLIB95 contains 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 GEO, and 17 EXPLICIT. An ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": ".... TSPLIB95 contains 33 non-EUC\\_2D instances: 4 CEIL\\_2D, 2 ATT, 10 GEO, and 17 EXPLICIT. An ...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
     "sec-application/mds-preprocessing :: 19 :: tier1:label-count :: ctx:3c8f1c1deb5a": {
       "count": 1,
@@ -551,20 +513,20 @@
       "example": "...bedding dimension $\\kappa$ retaining at least 99.9\\% of positive eigenvalue mass, subject to $\\k...",
       "first_recorded": "2026-08-14T23:50:20+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:28136ff91568": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:247b278f6f0f": {
       "count": 1,
-      "example": "...ratio it was trained on. $\\alpha$ ranges from 1.01 to 1.51 across the set, and a single multipli...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
+      "example": "...tabular}% } \\end{table} $\\alpha$ ranges from 1.01 to 1.51 across the set, and a single multipli...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:cc0076fe5bd5": {
       "count": 1,
-      "example": "... was trained on. $\\alpha$ ranges from 1.01 to 1.51 across the set, and a single multiplier canno...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
+      "example": "...% } \\end{table} $\\alpha$ ranges from 1.01 to 1.51 across the set, and a single multiplier canno...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:9e35a5c3e8fa": {
       "count": 1,
-      "example": "...27\\% for the raw bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.509\\% ...",
-      "first_recorded": "2026-09-04T03:45:35+00:00"
+      "example": "...27\\% for the raw bound at an ascent budget of 100 under the Volgenant--Jonker step. At a budget...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:6206a1506bc8": {
       "count": 1,
@@ -576,10 +538,10 @@
       "example": "... the 29 instances both methods score over all 33 non-EUC\\_2D files --- a set wider than the me...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:228591857151": {
       "count": 1,
-      "example": "...enant--Jonker step and 0.509\\% at a budget of 500 under the Polyak step, a factor of 7.50. The...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...er the Volgenant--Jonker step. At a budget of 500 the Polyak step reaches 0.509\\%, a factor of ...",
+      "first_recorded": "2026-09-04T07:54:33+00:00"
     },
     "sec-evaluation :: 1{,}000 :: tier2:unmarked :: ctx:308f82bdd1b7": {
       "count": 1,
@@ -13242,6 +13204,40 @@
           "expected": 2.919994
         }
       ],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T07:54:33+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 6 (writer/critic, two cycles): three pairs applied; backlog contexts moved in the lead and 6.2, no new values",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "82e96684665adda120810048f72256633e100c37e8c01d442201ba5408398402",
+      "production_model": "GART_2.0",
+      "n_entries": 212,
+      "n_keys": 212,
+      "absorbed": [
+        "sec-application :: 33 :: tier2:unmarked :: ctx:ae2626295355",
+        "sec-application :: 4 :: tier1:label-count :: ctx:1bafd09067c2",
+        "sec-application :: 2 :: tier1:label-count :: ctx:17f54d80526e",
+        "sec-application :: 10 :: tier1:label-count :: ctx:c739d00e0835",
+        "sec-application :: 23 :: tier2:unmarked :: ctx:3d6edabd4433",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:247b278f6f0f",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:cc0076fe5bd5",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:9e35a5c3e8fa",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:228591857151"
+      ],
+      "pruned": [
+        "sec-application :: 10 :: tier1:label-count :: ctx:a7eb1b8b8b6a",
+        "sec-application :: 2 :: tier1:label-count :: ctx:31953fb3ab33",
+        "sec-application :: 23 :: tier2:unmarked :: ctx:f74e0f7bc59f",
+        "sec-application :: 33 :: tier2:unmarked :: ctx:d289dc6e8085",
+        "sec-application :: 4 :: tier1:label-count :: ctx:758c4c6710bf",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:28136ff91568",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d"
+      ],
+      "claims_withdrawn": [],
       "mismatched_at_record": []
     }
   ]

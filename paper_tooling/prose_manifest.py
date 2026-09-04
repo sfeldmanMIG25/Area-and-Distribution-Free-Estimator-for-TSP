@@ -2213,8 +2213,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="application.bound.polyak_k500",
-        anchor=r"under the Volgenant--Jonker step and {v}\% at a budget of {~} under "
-               r"the Polyak step",
+        anchor=r"At a budget of {~} the Polyak step reaches {v}\%, a factor of",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/polyak_raw_MAPE_by_k/500",
         note="The sentence used to read as one ascent at two budgets. 1.27 is the "
              "Volgenant--Jonker bound and 0.51 the Polyak one; Volgenant--Jonker at "
@@ -2223,7 +2222,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="application.bound.factor",
-        anchor=r"at a budget of {~} under the Polyak step, a factor of {v}",
+        anchor=r"the Polyak step reaches {~}\%, a factor of {v} against GART 2.0",
         expect="= {allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct}"
                " / {allbench:cells/noneuc/like_for_like_vs_GART2/polyak_raw_MAPE_by_k/500}",
         tol=("dp", 1),
@@ -2971,7 +2970,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="application.oracle_mape_23_restated",
-        anchor=r"over these {~} instances is ${~}$ and reaches {v}\%, which is the floor",
+        anchor=r"over these {~} instances is ${~}$ and reaches {v}\%, the floor any constant",
         no_generator=_ORACLE_REASON,
         tol=("dp", 2),
     ),
