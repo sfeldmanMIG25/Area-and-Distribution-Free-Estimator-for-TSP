@@ -629,7 +629,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="discussion.paired.tsplib_asym.p",
-        anchor=r"$ and $p={v}$: on that benchmark",
+        anchor=r"and $p={v}$, so the MAPE advantage is small",
         expect="bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
         tol=("abs", 0.0001),  # p-values print at two figures; exempt from 3 s.f. (author, 2026-09-03)
     ),
@@ -715,7 +715,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="discussion.r2alpha.tsplib_gt400",
-        anchor=r"TSPLIB bucket has $R^2_\alpha=-{v}$:",
+        anchor=r"TSPLIB bucket has $R^2_\alpha=-{v}$. The model predicts",
         expect="= -1 * {tsplib_by_size_gt400_gart_2_0_r2_alpha}",
         tol=("dp", 3),
         note="Adverse result: negative R^2_alpha means the model predicts alpha "
@@ -1008,25 +1008,25 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.bhh.uniform_sdpe",
-        anchor=r"\% signed against {v}\% SDPE, as an asymptotic",
+        anchor=r"$-8.65$\% signed against {v}\% SDPE, the direction",
         expect="bank:classical_b_random_bhh_sampling_region_sdpe_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="matched.cavdar.full_mape",
-        anchor=r"\c{C}avdar--Sokol falls from {v}\% to",
+        anchor=r"\c{C}avdar--Sokol from {v}\% to {~}\%. \c{C}avdar--Sokol itself",
         expect="bank:classical_a_2d_cavdar_sokol_mape_pct",
         tol="printed",
     ),
     Claim(
         id="matched.cavdar.uniform_mape",
-        anchor=r"\c{C}avdar--Sokol falls from {~}\% to {v}\%; the estimator itself",
+        anchor=r"\c{C}avdar--Sokol from {~}\% to {v}\%. \c{C}avdar--Sokol itself",
         expect="bank:classical_b_random_cavdar_sokol_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="matched.cavdar.uniform_sdpe",
-        anchor=r"At {v}\% SDPE its dispersion is the widest in the panel",
+        anchor=r"at the widest dispersion in the panel, {v}\% SDPE",
         expect="bank:classical_b_random_cavdar_sokol_sdpe_pct",
         tol="printed",
         note="Adverse result: the widest dispersion in the matched panel, "
@@ -1035,7 +1035,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.cavdar.uniform_medape",
-        anchor=r"its median absolute error is {v}\%, so it is close",
+        anchor=r"the lower median absolute error here, {v}\%, at the widest",
         expect="bank:classical_b_random_cavdar_sokol_medape_pct",
         tol=("dp", 2),
         note="The anchor read 'under a third' until the final verification "
@@ -1478,7 +1478,7 @@ CLAIMS: list[Claim] = [
     # -- 5.2 TSPLIB ----------------------------------------------------------
     Claim(
         id="frontier.tsplib.repeats",
-        anchor=r"a single thread, the median of {v} repeats",
+        anchor=r"We time each instance as the median of {v} repeats",
         expect="frontier:tsplib/repeats",
         tol="exact",
     ),
@@ -2035,7 +2035,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="rank.close5.gain_2d_pp",
-        anchor=r"the 2D gain of {v} points is not",
+        anchor=r"The 2D gain of {v} points is not",
         expect=("= {rank_2d_gart_2_0_close5_pct} - {rank_2d_l_mathrm_mst_alpha_1_close5_pct}"),
         tol=("dp", 1),
     ),
@@ -2094,7 +2094,7 @@ CLAIMS: list[Claim] = [
     # withdrawn appendix.rank.direct_scan_pairs: wave-7 cut: detail appendix removed, grids live in the released tidy tables
     Claim(
         id="rank.close5.pairs_tsplib_restated",
-        anchor=r"and on TSPLIB {v} pairs cannot support",
+        anchor=r"is not, and {v} TSPLIB pairs cannot support",
         expect="bank:rank_tsplib_euc2d_gart_2_0_close5_pairs",
         tol="exact",
     ),
@@ -2794,14 +2794,14 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="general.e1.d25_before",
-        anchor=r"and at $d=25$ from {v}\% to {~}\%, while the neighboring",
+        anchor=r"and at $d=25$ from {v}\% to {~}\%. The neighboring",
         no_generator=_generalization(
             "E1: test MAPE at d=25 under the full training set, 0.35%"),
         tol=("dp", 2),
     ),
     Claim(
         id="general.e1.d25_after",
-        anchor=r"and at $d=25$ from {~}\% to {v}\%, while the neighboring",
+        anchor=r"and at $d=25$ from {~}\% to {v}\%. The neighboring",
         no_generator=_generalization(
             "E1: test MAPE at d=25 with d=15 and d=25 withheld, 0.38%"),
         tol=("dp", 2),
@@ -2824,7 +2824,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="general.e2.msigned_factor",
-        anchor=r"a factor of {v}. Three refits vary only the training data",
+        anchor=r"a factor of {v}. The refits vary only the training data",
         no_generator=_generalization(
             "E2: the ratio of the two mean signed errors, 0.51/0.28 = 1.8"),
         tol=("dp", 1),
@@ -2879,18 +2879,8 @@ CLAIMS: list[Claim] = [
         ),
         tol="exact",
     ),
-    Claim(
-        id="discussion.disp.gart_sdpe",
-        anchor=r"its larger gain is dispersion, {v}\% SDPE against {~}\%",
-        expect="bank:tsplib_by_size_total_gart_2_0_sdpe_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="discussion.disp.asym_sdpe",
-        anchor=r"is dispersion, {~}\% SDPE against {v}\%",
-        expect="bank:tsplib_by_size_total_asymptotic_mst_ratio_sdpe_pct",
-        tol=("dp", 2),
-    ),
+    # withdrawn discussion.disp.gart_sdpe: the 2.92/4.74 SDPE restatement was cut from 4.7 in pass 1 (2026-09-04); the figures stay in 4.3.3 under results.tsplib.sdpe
+    # withdrawn discussion.disp.asym_sdpe: the 2.92/4.74 SDPE restatement was cut from 4.7 in pass 1 (2026-09-04); the figures stay in 4.3.3 under results.tsplib.sdpe
 
     # -- Section 4.7, cost accounting ---------------------------------------
     Claim(
@@ -3180,5 +3170,15 @@ CLAIMS: list[Claim] = [
         anchor=r"MAPE against {v}\% SDPE, so its error is",
         expect="bank:2d_by_genclass_total_custom_hilbert_sort_sdpe_pct",
         tol=("dp", 1),
+    ),
+    # -----------------------------------------------------------------------
+    # Pass 1, Section 4.6 (2026-09-04): the released model's TSPLIB paired p was
+    # printed as 0.0048 (truncated) against 0.0049 in 4.7; corrected and registered.
+    # -----------------------------------------------------------------------
+    Claim(
+        id="coverage.paired.tsplib_asym.p_restated",
+        anchor=r"against {v} for the released model",
+        expect="bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
+        tol=("abs", 0.0001),  # p-values print at two figures; exempt from 3 s.f. (author, 2026-09-03)
     ),
 ]
