@@ -631,7 +631,7 @@ CLAIMS: list[Claim] = [
         id="discussion.paired.tsplib_asym.p",
         anchor=r"$ and $p={v}$: on that benchmark",
         expect="bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
-        tol=("dp", 2),
+        tol=("abs", 0.0001),  # p-values print at two figures; exempt from 3 s.f. (author, 2026-09-03)
     ),
     # The three entries below were repointed on 2026-08-11 from NN_V3 to the
     # retrained 31-feature control NN_31F.  The old control was defective, not
@@ -1127,7 +1127,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.greedy_gate.train_lo",
-        anchor=r"the training split alone spans the narrower $[{v},2.13]$",
+        anchor=r"the training split alone spans the narrower $[{v},2.1295]$",
         no_generator=(
             "Minimum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv "
             "(69,768 rows): 1.046482. The released constant "
@@ -1276,7 +1276,7 @@ CLAIMS: list[Claim] = [
     # -- N-H: the network beats the extended-block variant on five of eight --
     Claim(
         id="methods.greedy_gate.corpus_lo",
-        anchor=r"whose ratio falls outside $[{v},2.21]$",
+        anchor=r"whose ratio falls outside $[{v},2.209]$",
         no_generator=_GATE_CONST("lower endpoint 1.035; the observed minimum is 1.035414"),
         tol=("dp", 3),
     ),
