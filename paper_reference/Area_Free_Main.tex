@@ -305,11 +305,11 @@ The multidimensional benchmark is 16{,}920 held-out instances, of which the 16{,
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.88\textwidth]{boxplot_nd_errors.pdf}
-\caption{Signed percent error on the multidimensional benchmark ($N=16{,}846$ per estimator); the certified 1-tree bound is drawn at ascent budget $k=100$.}
+\caption{Signed percent error on the multidimensional benchmark ($N=16{,}846$ per estimator).}
 \label{fig:boxplot_nd}
 \end{figure}
 
-GART 2.0 obtains 0.62\% MAPE and 0.99\% SDPE overall (Table~\ref{tab:results_nd}). The strongest baseline in the roster of Section~\ref{subsec:bench_models} that uses no learned model is the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%, so the learned $\alpha$ improves on a lookup table of 102 constants fitted on the same training split by a factor of 2.9 on MAPE and 3.0 on SDPE. The $\alpha=1$ floor reaches 9.71\%/7.26\%, the custom Hilbert sort 21.21\%/14.40\%, and BHH given the exact sampling region 28.01\%/13.57\%. Figure~\ref{fig:boxplot_nd} draws the certified Held--Karp 1-tree bound beside them.  Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
+GART 2.0 obtains 0.62\% MAPE and 0.99\% SDPE overall (Table~\ref{tab:results_nd}). The strongest baseline in the roster of Section~\ref{subsec:bench_models} that uses no learned model is the calibrated ratio $\hat\rho(d,n)$ at 1.82\%/2.94\%, so the learned $\alpha$ improves on a lookup table of 102 constants fitted on the same training split by a factor of 2.9 on MAPE and 3.0 on SDPE. The $\alpha=1$ floor reaches 9.71\%/7.26\%, the custom Hilbert sort 21.21\%/14.40\%, and BHH given the exact sampling region 28.01\%/13.57\%. Figures~\ref{fig:boxplot_nd}, \ref{fig:boxplot_2d}, and \ref{fig:boxplot_tsplib} draw the certified Held--Karp 1-tree bound at ascent budget $k=100$.  Several estimator boxes also fall on one side of the line, but only as a fitted tendency observed after the fact.
 
 \begin{table}[!htbp]
 \centering
@@ -354,7 +354,7 @@ BHH's 28.01\% error is not a defect of the reimplementation. The dominant term i
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.88\textwidth]{boxplot_2d_errors.pdf}
-\caption{Signed percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator); axes and bound budget as in Figure~\ref{fig:boxplot_nd}.}
+\caption{Signed percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator).}
 \label{fig:boxplot_2d}
 \end{figure}
 
@@ -395,7 +395,7 @@ Its instances come from real geography and circuit layouts and have no sampling 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.88\textwidth]{boxplot_tsplib_errors.pdf}
-\caption{Signed percent error on the TSPLIB95 EUC\_2D benchmark ($N=78$ per estimator); axes and bound budget as in Figure~\ref{fig:boxplot_nd}.}
+\caption{Signed percent error on the TSPLIB95 EUC\_2D benchmark ($N=78$ per estimator).}
 \label{fig:boxplot_tsplib}
 \end{figure}
 

@@ -2,162 +2,37 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-03T07:00:59+00:00",
+    "at": "2026-09-04T02:06:51+00:00",
     "kind": "update",
-    "reason": "Author decisions 2026-09-02 evening: Section 4.3 readback cut to the trend (14 claims withdrawn, values now machine-checked in tab:results_nd and tab:results_2d); Section 6 repeats the 7.55 percent floor (1 claim added); Section 1 claim scoped, Section 2 sentence rewritten; Section 3.4 within-cell SHAP decomposition paragraph added (6 claims registered against shap_band_* keys); 0 mismatched",
+    "reason": "Boxplot captions cut to names and the bound's k=100 budget moved into the Section 4.3.1 body sentence (author, 2026-09-03); 6 context-hash rewords of backlog occurrences, no value changed",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "6271d07965cf6f6a6c65c9b8feb39089ff6cf251257cc19d1e1c8cc1e5ecb09e",
+    "tex_sha256": "096140a5a5b2dd8da0e155c4f73e12a938a9349fe3acdac64c462e1cd20eea43",
     "production_model": "GART_2.0",
     "n_entries": 273,
     "n_keys": 273,
     "absorbed": [
-      "sec-theory :: 0.0762 :: tier1:precision :: ctx:641b0710b234",
-      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:fc59f9bb0fba"
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
+      "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:816bd3cd06c5",
+      "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:1dea3418c881",
+      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:81987596990d",
+      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
     ],
     "pruned": [
-      "sec-evaluation/subsec-results-2d :: 17.15 :: tier1:unit :: ctx:9562b5bfe899",
-      "sec-evaluation/subsec-results-2d :: 20.45 :: tier1:unit :: ctx:8d790917c8bb",
-      "sec-evaluation/subsec-results-2d :: 25.88 :: tier1:unit :: ctx:973b5e63c82a",
-      "sec-evaluation/subsec-results-2d :: 3.31 :: tier1:unit :: ctx:95971f379f47",
-      "sec-evaluation/subsec-results-2d :: 34.13 :: tier1:unit :: ctx:f520dded75ea",
-      "sec-evaluation/subsec-results-2d :: 7.12 :: tier1:unit :: ctx:2049fcf1b70f",
-      "sec-evaluation/subsec-results-nd :: 0.29 :: tier1:unit :: ctx:1188479e961a",
-      "sec-evaluation/subsec-results-nd :: 0.44 :: tier1:unit :: ctx:27f0393eac85",
-      "sec-evaluation/subsec-results-nd :: 0.59 :: tier1:unit :: ctx:4cd87f51aac3",
-      "sec-evaluation/subsec-results-nd :: 1000 :: tier2:unmarked :: ctx:21e0030b8bdc",
-      "sec-evaluation/subsec-results-nd :: 501 :: tier2:unmarked :: ctx:21e0030b8bdc",
-      "sec-methodology/subsec-shap :: 16{,}920 :: tier2:unmarked :: ctx:9f505dc43124",
-      "sec-methodology/subsec-shap :: 5{,}000 :: tier2:unmarked :: ctx:1273ab719b49",
-      "sec-theory :: 0.0762 :: tier1:precision :: ctx:9b38e7583b4b"
+      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:c2afcd150de5",
+      "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:fc59f9bb0fba",
+      "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:7e6e0fe04353",
+      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:730a1b023c71",
+      "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:b93190fc94f8",
+      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:250d79cba79c"
     ],
-    "claims_withdrawn": [
-      {
-        "id": "discussion.genclass.grid_floor_mape",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_geometric_grid_l_mathrm_mst_alpha_1_mape_pct",
-        "line": 387,
-        "printed": 4.54,
-        "expected": 4.544685
-      },
-      {
-        "id": "discussion.genclass.isotropic_mape",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
-        "line": 387,
-        "printed": 1.47,
-        "expected": 1.471214
-      },
-      {
-        "id": "discussion.genclass.linenoise_mape",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
-        "line": 387,
-        "printed": 10.82,
-        "expected": 10.824201
-      },
-      {
-        "id": "figure.boxplot_nd.hk_budget",
-        "state": "NO_GENERATOR",
-        "expect": "(no generator)",
-        "line": 306,
-        "printed": 100.0,
-        "expected": null
-      },
-      {
-        "id": "results_2d.geom_other_mape",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_geometric_other_gart_2_0_mape_pct",
-        "line": 387,
-        "printed": 1.96,
-        "expected": 1.95875
-      },
-      {
-        "id": "results_2d.geom_other_n",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_geometric_other_gart_2_0_n",
-        "line": 387,
-        "printed": 420.0,
-        "expected": 420.0
-      },
-      {
-        "id": "results_2d.grid_mape",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_geometric_grid_gart_2_0_mape_pct",
-        "line": 387,
-        "printed": 7.07,
-        "expected": 7.068099
-      },
-      {
-        "id": "results_2d.grid_n",
-        "state": "MATCHED",
-        "expect": "bank:2d_by_genclass_geometric_grid_gart_2_0_n",
-        "line": 387,
-        "printed": 210.0,
-        "expected": 210.0
-      },
-      {
-        "id": "results_nd.bucket_201_lo",
-        "state": "NO_GENERATOR",
-        "expect": "(no generator)",
-        "line": 337,
-        "printed": 201.0,
-        "expected": null
-      },
-      {
-        "id": "results_nd.bucket_500_hi",
-        "state": "NO_GENERATOR",
-        "expect": "(no generator)",
-        "line": 337,
-        "printed": 500.0,
-        "expected": null
-      },
-      {
-        "id": "results_nd.sdpe_201_500",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_size_201_500_gart_2_0_sdpe_pct",
-        "line": 337,
-        "printed": 0.46,
-        "expected": 0.459303
-      },
-      {
-        "id": "results_nd.sdpe_501_1000",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_size_501_1000_gart_2_0_sdpe_pct",
-        "line": 337,
-        "printed": 0.45,
-        "expected": 0.446395
-      },
-      {
-        "id": "results_nd.sdpe_d2",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_dim_d2_gart_2_0_sdpe_pct",
-        "line": 337,
-        "printed": 2.37,
-        "expected": 2.371482
-      },
-      {
-        "id": "results_nd.sdpe_d30_50",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_dim_d30_50_gart_2_0_sdpe_pct",
-        "line": 337,
-        "printed": 0.48,
-        "expected": 0.476525
-      },
-      {
-        "id": "results_nd.sdpe_smallest_bucket",
-        "state": "MATCHED",
-        "expect": "bank:nd_by_size_5_10_gart_2_0_sdpe_pct",
-        "line": 337,
-        "printed": 1.56,
-        "expected": 1.558871
-      }
-    ],
+    "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 49,
-    "absorbed": 1185,
-    "pruned": 1503,
+    "records": 50,
+    "absorbed": 1191,
+    "pruned": 1509,
     "claims_withdrawn": 556,
     "mismatched_claims_withdrawn": 0
   },
@@ -1077,10 +952,10 @@
       "example": "...below 5.9\\% in every size bucket and falls to 2.75\\% in the $[501,1000]$ bucket. The custom Hilb...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:c2afcd150de5": {
+    "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33": {
       "count": 1,
-      "example": "...percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator); axes and bound budget as in ...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "example": "...percent error on the diverse 2D benchmark ($N=2{,}580$ per estimator).} \\label{fig:boxplot_2d} \\end...",
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 30.95 :: tier1:unit :: ctx:af238253e624": {
       "count": 1,
@@ -1122,30 +997,30 @@
       "example": "... Figure~\\ref{fig:boxplot_2d}), against 5.76\\%/9.38\\% for the calibrated ratio $\\hat\\rho(d,n)$, 7...",
       "first_recorded": "2026-09-03T06:27:38+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:fc59f9bb0fba": {
+    "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:81987596990d": {
       "count": 1,
-      "example": "...ied 1-tree bound is drawn at ascent budget $k=100$.} \\label{fig:boxplot_nd} \\end{figure} GART ...",
-      "first_recorded": "2026-09-03T07:00:59+00:00"
+      "example": "...d Held--Karp 1-tree bound at ascent budget $k=100$. Several estimator boxes also fall on one s...",
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 102 :: tier2:unmarked :: ctx:ab23f0d28fbd": {
       "count": 1,
       "example": "...earned $\\alpha$ improves on a lookup table of 102 constants fitted on the same training split b...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:7e6e0fe04353": {
+    "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:1dea3418c881": {
       "count": 1,
       "example": "....71\\%/7.26\\%, the custom Hilbert sort 21.21\\%/14.40\\%, and BHH given the exact sampling region 28...",
-      "first_recorded": "2026-08-12T21:37:55+00:00"
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:50f997dc8bfa": {
       "count": 1,
       "example": "... is 16{,}920 held-out instances, of which the 16{,}846 with a recoverable reference cost are scored ...",
       "first_recorded": "2026-08-27T06:33:43+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:730a1b023c71": {
+    "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063": {
       "count": 1,
-      "example": "...t error on the multidimensional benchmark ($N=16{,}846$ per estimator); the certified 1-tree bound i...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "example": "...t error on the multidimensional benchmark ($N=16{,}846$ per estimator).} \\label{fig:boxplot_nd} \\end...",
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 2.9 :: tier1:comparison :: ctx:ef1c42a150a3": {
       "count": 1,
@@ -1157,10 +1032,10 @@
       "example": "...he calibrated ratio $\\hat\\rho(d,n)$ at 1.82\\%/2.94\\%, so the learned $\\alpha$ improves on a look...",
       "first_recorded": "2026-08-12T14:41:17+00:00"
     },
-    "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:b93190fc94f8": {
+    "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:816bd3cd06c5": {
       "count": 1,
       "example": "...eaches 9.71\\%/7.26\\%, the custom Hilbert sort 21.21\\%/14.40\\%, and BHH given the exact sampling r...",
-      "first_recorded": "2026-08-12T21:37:55+00:00"
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-nd :: 28.01 :: tier1:unit :: ctx:680ee89e524e": {
       "count": 1,
@@ -1282,15 +1157,15 @@
       "example": "...%/4.74\\% for the asymptotic ratio, and 8.43\\%/7.45\\% for GART 1.0. Table~\\ref{tab:tsplib_by_size...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:250d79cba79c": {
-      "count": 1,
-      "example": "...t error on the TSPLIB95 EUC\\_2D benchmark ($N=78$ per estimator); axes and bound budget as in ...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
-    },
     "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:61f63fc45f94": {
       "count": 1,
       "example": "...0. Table~\\ref{tab:tsplib_by_size} reports all 78 instances in three prespecified size buckets ...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
+    },
+    "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143": {
+      "count": 1,
+      "example": "...t error on the TSPLIB95 EUC\\_2D benchmark ($N=78$ per estimator).} \\label{fig:boxplot_tsplib} ...",
+      "first_recorded": "2026-09-04T02:06:51+00:00"
     },
     "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:a4783cace207": {
       "count": 1,
@@ -12696,6 +12571,34 @@
           "expected": 1.558871
         }
       ],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T02:06:51+00:00",
+      "kind": "update",
+      "reason": "Boxplot captions cut to names and the bound's k=100 budget moved into the Section 4.3.1 body sentence (author, 2026-09-03); 6 context-hash rewords of backlog occurrences, no value changed",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "096140a5a5b2dd8da0e155c4f73e12a938a9349fe3acdac64c462e1cd20eea43",
+      "production_model": "GART_2.0",
+      "n_entries": 273,
+      "n_keys": 273,
+      "absorbed": [
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
+        "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:816bd3cd06c5",
+        "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:1dea3418c881",
+        "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:81987596990d",
+        "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
+      ],
+      "pruned": [
+        "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:c2afcd150de5",
+        "sec-evaluation/subsec-results-nd :: 100 :: tier2:unmarked :: ctx:fc59f9bb0fba",
+        "sec-evaluation/subsec-results-nd :: 14.40 :: tier1:unit :: ctx:7e6e0fe04353",
+        "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:730a1b023c71",
+        "sec-evaluation/subsec-results-nd :: 21.21 :: tier1:unit :: ctx:b93190fc94f8",
+        "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:250d79cba79c"
+      ],
+      "claims_withdrawn": [],
       "mismatched_at_record": []
     }
   ]

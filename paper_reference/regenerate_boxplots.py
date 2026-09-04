@@ -91,8 +91,8 @@ FULL_TSPLIB = [
     GART_2_0,
     HK_BOUND,
     ("GART_1.0", "GART 1.0"),
-    ("Asymptotic_MST", "Asymptotic MST ratio"),
     ("Calibrated_MST_dn", r"Calibrated MST ratio $\hat\rho(d,n)$"),
+    ("Asymptotic_MST", "Asymptotic MST ratio"),
     ("MST_Only", r"$L_{\mathrm{MST}}$ ($\alpha=1$)"),
     ("Hilbert", "Custom Hilbert sort"),
 ]
@@ -108,69 +108,31 @@ DEFAULT_COLOR = "#BBBBBB"
 HATCHES = ("", "//", "\\\\", "..", "xx", "++", "oo", "--")
 
 # ---------------------------------------------------------------------------
-# Y-axis: one signed square-root ruler, identical on all three panels.
+# Y-axis: linear, standard Tukey boxes (1.5 IQR whiskers, fliers drawn), one
+# window per panel.  Author decision 2026-09-03.
 #
-# These rosters span too wide a dynamic range for a linear axis and sit too
-# close to zero for a logarithmic one.  Measured interquartile ranges, in
-# percentage points, over the paired samples the panels actually draw:
+# The earlier signed-square-root ruler shared by all three panels needed three
+# conventions (5/95 whiskers, hidden fliers, the root transform) that no
+# caption or body sentence stated.  A Tukey box on a linear axis needs none.
+# The price is dynamic range: the rosters' 1.5 IQR whiskers span -42 .. +71
+# while the boxes the paper exists to show are 0.8 to 6 pp tall, so a window
+# wide enough for every whisker turns GART 2.0 into a hairline.  Each panel is
+# therefore windowed to its own contenders and the weak rows run off the
+# frame.  Clipping is never silent: every clipped side carries a marker at the
+# frame edge with the value the tail reaches, and a box that lies wholly
+# outside the window prints its quartiles, so the figure certifies its own
+# clipping and the captions carry no caveat.
 #
-#     2D      0.87 (Held-Karp) .. 16.62 (Hilbert)      19.1 : 1
-#     ND      0.54 (Held-Karp) .. 22.09 (Hilbert)      41.1 : 1
-#     TSPLIB  1.08 (Held-Karp) .. 14.01 (Hilbert)      12.9 : 1
-#
-# with a pooled whisker envelope of -41.35 .. +64.87.
-#
-# A linear axis over that envelope turns the tightest boxes into hairlines:
-# GART 2.0's 2.81 pp box on the 2D panel is 3% of the axis and its 0.81 pp box
-# on the multidimensional panel is 1%.  Those are the boxes the paper exists to
-# show, and in the superseded linear panels the median could not be told from
-# the quartile edges on either GART 2.0 or the bound.
-#
-# A logarithmic or symmetric-log axis fails the other way.  Height on a log arm
-# is a *ratio*, not a dispersion, so a box straddling zero stretches without
-# bound while a box far from zero is crushed.  Under the superseded symlog
-# treatment the multidimensional BHH box (6.96 pp, from -31.72 to -24.76, a
-# ratio of only 1.28) renders shorter than the GART 2.0 box (0.81 pp), which
-# inverts the ranking a boxplot is read for.  Lowering the threshold below the
-# smallest interquartile range does not repair this: a box that straddles zero
-# always contains the linear core, so it cannot be moved onto the log arm at
-# any threshold, and shrinking the core only stretches it further.
-#
-# sign(x) * sqrt(|x|) is the middle term.  It is smooth and strictly increasing
-# through zero, so it is a single ruler for the whole panel with no linear/log
-# seam for a box to straddle; it preserves sign and order exactly; and it
-# compresses gently enough that box height still tracks dispersion.  It takes
-# the multidimensional panel's 41:1 spread to 3.8:1 on the page and the 2D
-# panel's 19:1 to 5.8:1, leaving every box legible without reordering any of
-# them.  Two percent and twenty percent land a fixed 18% of the axis apart on
-# every panel, so the same visual gap means the same thing in all three
-# figures.
-#
-# Ticks are labelled at real percentages, not at roots, and the tick set and
-# the limits are shared by all three panels so the reader learns the axis once.
-# YLIM clears the largest whisker in any panel (64.87), so nothing is clipped
-# on any figure and no caption has to carry a clipping caveat.
-#
-# Unlike a log axis, a root axis *compresses* towards zero, so the ticks have to
-# thin out there rather than bunch up: 1 and 2 are only 0.41 root-units apart
-# out of the 16.73 the axis spans, which is 2.5% of its height, or under 5 pt at
-# the printed size against a 7.5 pt label.  Adding 0.5 and 2 collides the labels
-# outright.  The set below keeps every neighbouring pair at least 5.5% of the
-# axis apart (the tightest is 5 to 10), which is about 10 pt in print.
-YLIM = 70.0
-ROOT_TICKS = [-60, -40, -20, -10, -5, -1, 0, 1, 5, 10, 20, 40, 60]
-
-
-def _signed_root(x):
-    """Forward transform of the y-axis: sign-preserving square root."""
-    x = np.asarray(x, dtype=float)
-    return np.sign(x) * np.sqrt(np.abs(x))
-
-
-def _signed_square(u):
-    """Inverse of :func:`_signed_root`."""
-    u = np.asarray(u, dtype=float)
-    return np.sign(u) * np.square(u)
+# Windows are (low, high) in percent.  1.5 IQR whisker reach of the contenders,
+# measured 2026-09-03 over the paired samples the panels draw:
+#     ND      GART 2.0 -1.4..+1.9   bound -1.4..0   rho(d,n) -2.5..+3.4
+#     2D      GART 2.0 -5.3..+5.9   bound -2.4..0   rho(d,n) -9.5..+8.6
+#             asymptotic -27.8..+11.3   GART 1.0 -14.1..+23.4
+#     TSPLIB  GART 2.0 -3.4..+7.2   bound -3.0..+0.7  rho(d,n) -9.9..+11.6
+#             asymptotic -9.9..+9.0     GART 1.0 -7.4..+22.3
+WINDOW_2D = (-30.0, 40.0)
+WINDOW_ND = (-8.0, 8.0)
+WINDOW_TSPLIB = (-22.0, 30.0)
 
 # Authored at the printed size.  These used to be 10.2 inches wide and were
 # then set at 0.86--0.96\textwidth, so pdflatex shrank them by about 1.7 and an
@@ -253,55 +215,79 @@ def _paired_subset(
     return work, len(instances)
 
 
+def _clip_marks(ax: plt.Axes, data: list[np.ndarray], window: tuple[float, float]) -> None:
+    """Mark every side of every box the window cuts off.
+
+    A whisker that meets the frame edge would read as ending there.  Each
+    clipped side gets a triangle on the edge and the value the tail reaches;
+    a box lying wholly outside the window also prints its quartiles, since the
+    reader would otherwise see an empty column.
+    """
+    low, high = window
+    span = high - low
+    inset = 0.012 * span
+    style = {
+        "fontsize": 6.3,
+        "ha": "center",
+        "color": "#222222",
+        "zorder": 7,
+        "bbox": {"boxstyle": "round,pad=0.15", "facecolor": "white", "edgecolor": "none", "alpha": 0.9},
+    }
+
+    def num(x: float) -> str:
+        return f"{x:.0f}".replace("-", "−")
+
+    for index, sample in enumerate(data, start=1):
+        q1, q3 = np.percentile(sample, [25, 75])
+        lo, hi = float(sample.min()), float(sample.max())
+        box_text = f"box {num(q1)} to {num(q3)}"
+        if hi > high:
+            text = num(hi) if q1 <= high else f"{box_text}\nmax {num(hi)}"
+            ax.plot(index, high, marker="^", color="#222222", markersize=4, clip_on=False, zorder=6)
+            ax.text(index, high - inset, text, va="top", **style)
+        if lo < low:
+            text = num(lo) if q3 >= low else f"{box_text}\nmin {num(lo)}"
+            ax.plot(index, low, marker="v", color="#222222", markersize=4, clip_on=False, zorder=6)
+            ax.text(index, low + inset, text, va="bottom", **style)
+
+
 def _draw_boxplot(
     ax: plt.Axes,
     df: pd.DataFrame,
     models: list[tuple[str, str]],
-    title: str,
+    window: tuple[float, float],
 ) -> None:
     labels = [label for _, label in models]
     data = [df.loc[df["model"] == key, "gap_pct"].to_numpy(dtype=float) for key, _ in models]
     bp = ax.boxplot(
         data,
         tick_labels=labels,
-        whis=(5, 95),
-        showfliers=False,
+        whis=1.5,
+        showfliers=True,
         widths=0.62,
         patch_artist=True,
         medianprops={"color": "black", "linewidth": 1.4},
         whiskerprops={"color": "#444444", "linewidth": 0.9},
         capprops={"color": "#444444", "linewidth": 0.9},
         boxprops={"edgecolor": "#333333", "linewidth": 0.8},
+        flierprops={
+            "marker": ".",
+            "markersize": 2.2,
+            "markerfacecolor": "#666666",
+            "markeredgecolor": "none",
+            "alpha": 0.35,
+        },
     )
     for index, (box, label) in enumerate(zip(bp["boxes"], labels)):
         box.set_facecolor(COLORS.get(label, DEFAULT_COLOR))
         box.set_alpha(0.82)
         box.set_hatch(HATCHES[index % len(HATCHES)])
 
-    # One ruler, the same on every panel.  See the YLIM / ROOT_TICKS block above
-    # for why it is neither linear nor logarithmic.  Nothing may fall outside
-    # YLIM: silent clipping of a whisker would misstate a model's tail, and the
-    # captions state no clipping caveat, so assert rather than trusting that the
-    # envelope stays where it was measured.
-    reach = max(
-        max(abs(float(np.percentile(s, 5))), abs(float(np.percentile(s, 95))))
-        for s in data
-    )
-    if reach > YLIM:
-        raise ValueError(
-            f"whisker reach {reach:.2f} exceeds YLIM={YLIM:g} on '{title}'; "
-            "raise YLIM (and revisit the captions) rather than clipping"
-        )
-    ax.set_yscale("function", functions=(_signed_root, _signed_square))
-    ax.set_ylim(-YLIM, YLIM)
-    ax.set_yticks(ROOT_TICKS)
-    ax.set_yticklabels([f"{t:g}" for t in ROOT_TICKS])
-    ax.minorticks_off()
-    ylabel = "Signed percent error (%)\nsigned square-root scale"
+    ax.set_ylim(*window)
+    _clip_marks(ax, data, window)
 
     ax.axhline(0, color="#555555", linewidth=0.8, linestyle="--", zorder=0)
-    ax.set_title(title, loc="center", fontweight="bold", pad=8)
-    ax.set_ylabel(ylabel)
+    ax.set_ylabel("Signed percent error (%)")
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.6, linestyle=":")
     ax.tick_params(axis="x", rotation=34)
     for label in ax.get_xticklabels():
@@ -342,17 +328,18 @@ def _save(fig: plt.Figure, stem: str) -> None:
 def plot_2d(df: pd.DataFrame) -> None:
     df = pd.concat([df, _hk_rows(PATH_HK_2D)], ignore_index=True)
     paired, n = _paired_subset(df, FULL_2D)
+    print(f"2D panel: N = {n:,} per estimator")
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
-    _draw_boxplot(ax, paired, FULL_2D, f"2D diverse synthetic benchmark (N = {n:,} per estimator)")
+    _draw_boxplot(ax, paired, FULL_2D, WINDOW_2D)
     _save(fig, "boxplot_2d_errors")
 
 
 def plot_nd(df: pd.DataFrame) -> None:
     df = pd.concat([df, _hk_rows(PATH_HK_ND)], ignore_index=True)
     paired, n = _paired_subset(df, FULL_ND)
+    print(f"ND panel: N = {n:,} per estimator")
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
-    _draw_boxplot(ax, paired, FULL_ND,
-                  f"Multidimensional benchmark (N = {n:,} per estimator)")
+    _draw_boxplot(ax, paired, FULL_ND, WINDOW_ND)
     _save(fig, "boxplot_nd_errors")
 
 
@@ -366,8 +353,9 @@ def plot_tsplib(df: pd.DataFrame) -> None:
     df = pd.concat([df, _hk_rows(PATH_HK_TSPLIB)], ignore_index=True)
 
     paired, n = _paired_subset(df, FULL_TSPLIB)
+    print(f"TSPLIB panel: N = {n} per estimator")
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H))
-    _draw_boxplot(ax, paired, FULL_TSPLIB, f"TSPLIB95 EUC_2D benchmark (N = {n} per estimator)")
+    _draw_boxplot(ax, paired, FULL_TSPLIB, WINDOW_TSPLIB)
     _save(fig, "boxplot_tsplib_errors")
 
 
