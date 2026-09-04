@@ -2,33 +2,28 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T03:43:19+00:00",
+    "at": "2026-09-04T03:45:35+00:00",
     "kind": "update",
-    "reason": "voice batch: caption noun Percent error, label proven-optimal wording; context hashes moved",
+    "reason": "voice batch 2: raw bound wording; 4.4 lead paragraph cut (210 context vacated)",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "af9fa686f1eb02051f36c9cb519a9151d58f485e5e1dbe885f75f9040858d76e",
+    "tex_sha256": "1b403fc90f72af381e6d27bad0cb6e2d6562ca488efa6415c7d3d8e924ce776b",
     "production_model": "GART_2.0",
-    "n_entries": 259,
-    "n_keys": 259,
+    "n_entries": 258,
+    "n_keys": 258,
     "absorbed": [
-      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:1cbb691d2b15",
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:ac093578607c",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:294de8fab74b",
-      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32"
+      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4"
     ],
     "pruned": [
-      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:912eeec2a099",
-      "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
-      "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
-      "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
+      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:78812ba702d6",
+      "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:8525c8fa9908"
     ],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 54,
-    "absorbed": 1211,
-    "pruned": 1543,
+    "records": 55,
+    "absorbed": 1212,
+    "pruned": 1545,
     "claims_withdrawn": 558,
     "mismatched_claims_withdrawn": 0
   },
@@ -568,10 +563,10 @@
       "example": "...was trained on. $\\alpha$ ranges from 1.006 to 1.511 across the set, and a single multiplier canno...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:78812ba702d6": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4": {
       "count": 1,
-      "example": "...he raw certified bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.509\\% ...",
-      "first_recorded": "2026-08-12T21:37:55+00:00"
+      "example": "...27\\% for the raw bound at an ascent budget of 100 under the Volgenant--Jonker step and 0.509\\% ...",
+      "first_recorded": "2026-09-04T03:45:35+00:00"
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 23 :: tier2:unmarked :: ctx:6206a1506bc8": {
       "count": 1,
@@ -912,11 +907,6 @@
       "count": 1,
       "example": "...e neighboring trained dimensions $d\\in\\{10,20,30\\}$ do not degrade at all, moving from 0.43\\% ...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:8525c8fa9908": {
-      "count": 1,
-      "example": "...omain its published assumptions describe. The 210 instances of the \\texttt{random} generator, t...",
-      "first_recorded": "2026-08-28T03:52:49+00:00"
     },
     "sec-evaluation/subsec-results-2d :: 1000 :: tier2:unmarked :: ctx:8c136f51f50d": {
       "count": 1,
@@ -12642,6 +12632,25 @@
         "sec-evaluation/subsec-results-2d :: 2{,}580 :: tier2:unmarked :: ctx:368182c06c33",
         "sec-evaluation/subsec-results-nd :: 16{,}846 :: tier2:unmarked :: ctx:7594e3ae6063",
         "sec-evaluation/subsec-results-tsplib :: 78 :: tier2:unmarked :: ctx:835d5aed6143"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T03:45:35+00:00",
+      "kind": "update",
+      "reason": "voice batch 2: raw bound wording; 4.4 lead paragraph cut (210 context vacated)",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "1b403fc90f72af381e6d27bad0cb6e2d6562ca488efa6415c7d3d8e924ce776b",
+      "production_model": "GART_2.0",
+      "n_entries": 258,
+      "n_keys": 258,
+      "absorbed": [
+        "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4"
+      ],
+      "pruned": [
+        "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:78812ba702d6",
+        "sec-evaluation/subsec-matched-domain :: 210 :: tier2:unmarked :: ctx:8525c8fa9908"
       ],
       "claims_withdrawn": [],
       "mismatched_at_record": []

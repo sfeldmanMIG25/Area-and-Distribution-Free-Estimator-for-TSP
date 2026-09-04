@@ -2232,12 +2232,12 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="application.bound.gart_mape",
-        anchor=r"GART 2.0 obtains {v}\% MAPE against {~}\% for the raw certified bound",
+        anchor=r"GART 2.0 obtains {v}\% MAPE against {~}\% for the raw bound",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/GART_2.0_MAPE_pct",
     ),
     Claim(
         id="application.bound.vj_k100",
-        anchor=r"MAPE against {v}\% for the raw certified bound at an ascent budget",
+        anchor=r"MAPE against {v}\% for the raw bound at an ascent budget",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/vj_raw_MAPE_by_k/100",
     ),
     Claim(
