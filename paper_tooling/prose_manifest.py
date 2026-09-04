@@ -496,36 +496,36 @@ CLAIMS: list[Claim] = [
     # withdrawn sizestrat.d2.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d2.large.k500_mape",
-        anchor=r"$k=500$ costs {v}\% at {~}~ms at $d=2$",
+        anchor=r"The bound reads {v}\% MAPE at {~}~ms for $k=500$ at $d=2$",
         expect="sizestrat:cell/d2/n600_1000/bound_k500_mape_pct",
     ),
     Claim(
         id="sizestrat.d2.large.k500_ms",
-        anchor=r"$k=500$ costs {~}\% at {v}~ms at $d=2$",
+        anchor=r"The bound reads {~}\% MAPE at {v}~ms for $k=500$ at $d=2$",
         expect="sizestrat:cell/d2/n600_1000/bound_k500_ms",
     ),
     # withdrawn sizestrat.d3.large.mape: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     # withdrawn sizestrat.d3.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d3.large.k200_mape",
-        anchor=r"$k=200$ costs {v}\% at {~}~ms at $d=3$",
+        anchor=r"{v}\% at {~}~ms for $k=200$ at $d=3$",
         expect="sizestrat:cell/d3/n600_1000/bound_k200_mape_pct",
     ),
     Claim(
         id="sizestrat.d3.large.k200_ms",
-        anchor=r"$k=200$ costs {~}\% at {v}~ms at $d=3$",
+        anchor=r"{~}\% at {v}~ms for $k=200$ at $d=3$",
         expect="sizestrat:cell/d3/n600_1000/bound_k200_ms",
     ),
     # withdrawn sizestrat.d4.large.mape: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     # withdrawn sizestrat.d4.large.ms: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="sizestrat.d4.large.k200_mape",
-        anchor=r"the same budget costs {v}\% at {~}~ms at $d=4$",
+        anchor=r"and {v}\% at {~}~ms for the same budget at $d=4$",
         expect="sizestrat:cell/d4/n600_1000/bound_k200_mape_pct",
     ),
     Claim(
         id="sizestrat.d4.large.k200_ms",
-        anchor=r"the same budget costs {~}\% at {v}~ms at $d=4$",
+        anchor=r"and {~}\% at {v}~ms for the same budget at $d=4$",
         expect="sizestrat:cell/d4/n600_1000/bound_k200_ms",
     ),
     Claim(
@@ -1740,7 +1740,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.nd.d100_accuracy_factor: cut in the 2026-09-02 tightening pass (author-approved pairs); the sentence carrying the value is gone
     Claim(
         id="frontier.nd.planar_group_cost_x",
-        anchor=r"matching GART 2.0's accuracy there costs {v} times as much",
+        anchor=r"matching GART 2.0's accuracy costs the bound {v} times as much",
         expect="frontier:nd/crossover_cost_x_by_group/d in {2,3}",
         tol=("dp", 2),
         note="The one dimension group on which GART 2.0 stays on the front.",
@@ -1765,13 +1765,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.concorde_budget",
-        anchor=r"against the bound's {~}\% at a budget of {v}. And the relaxation",
+        anchor=r"against the bound's {~}\% at a budget of {v}. That status",
         expect="frontier:nd/best_budget_k",
         tol="exact",
     ),
     Claim(
         id="frontier.nd.closes_exactly_pct",
-        anchor=r"rather than a bound, on {v}\% of the scored multidimensional split",
+        anchor=r"The relaxation closes exactly on {v}\% of the scored multidimensional split",
         expect="frontier:nd/relaxation_closes_exactly_pct",
         tol=("dp", 1),
     ),

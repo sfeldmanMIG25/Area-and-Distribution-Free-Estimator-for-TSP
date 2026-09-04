@@ -2,43 +2,45 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:54:33+00:00",
+    "at": "2026-09-04T07:57:20+00:00",
     "kind": "update",
-    "reason": "pass 1 Section 6 (writer/critic, two cycles): three pairs applied; backlog contexts moved in the lead and 6.2, no new values",
+    "reason": "pass 1 Section 5 (writer/critic, two cycles): eight pairs applied; backlog contexts moved in 5.1 and 5.3, no new values",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "82e96684665adda120810048f72256633e100c37e8c01d442201ba5408398402",
+    "tex_sha256": "60a9595eadd03835003a7887c0de34c00cb2bbd5f0cdfd7373c26785eb89ffdc",
     "production_model": "GART_2.0",
     "n_entries": 212,
     "n_keys": 212,
     "absorbed": [
-      "sec-application :: 33 :: tier2:unmarked :: ctx:ae2626295355",
-      "sec-application :: 4 :: tier1:label-count :: ctx:1bafd09067c2",
-      "sec-application :: 2 :: tier1:label-count :: ctx:17f54d80526e",
-      "sec-application :: 10 :: tier1:label-count :: ctx:c739d00e0835",
-      "sec-application :: 23 :: tier2:unmarked :: ctx:3d6edabd4433",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:247b278f6f0f",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:cc0076fe5bd5",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:9e35a5c3e8fa",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:228591857151"
+      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:836cf68a28b4",
+      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:3c3a761b6868",
+      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b67c9bf04d06",
+      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:19f52100c331",
+      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:19f52100c331",
+      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:bf578971a6b1",
+      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:28eb2c706900",
+      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f8b39089cdf5",
+      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:6b257be4c96e",
+      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c"
     ],
     "pruned": [
-      "sec-application :: 10 :: tier1:label-count :: ctx:a7eb1b8b8b6a",
-      "sec-application :: 2 :: tier1:label-count :: ctx:31953fb3ab33",
-      "sec-application :: 23 :: tier2:unmarked :: ctx:f74e0f7bc59f",
-      "sec-application :: 33 :: tier2:unmarked :: ctx:d289dc6e8085",
-      "sec-application :: 4 :: tier1:label-count :: ctx:758c4c6710bf",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.01 :: tier1:range :: ctx:28136ff91568",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4",
-      "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d"
+      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:a6edea1bf89c",
+      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:e3445e6cceda",
+      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:b04df709bc39",
+      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:958a25a7e288",
+      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:2c2551542e0d",
+      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419",
+      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:4b61a05e377d",
+      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f317ded2b4b9",
+      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c",
+      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d"
     ],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 71,
-    "absorbed": 1351,
-    "pruned": 1730,
+    "records": 72,
+    "absorbed": 1361,
+    "pruned": 1740,
     "claims_withdrawn": 573,
     "mismatched_claims_withdrawn": 0
   },
@@ -913,55 +915,55 @@
       "example": "... instances 10{,}569, or 62.7\\%, carry at most 100 nodes, a regime in which the relaxation is ne...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:a6edea1bf89c": {
+    "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:19f52100c331": {
       "count": 1,
-      "example": "...against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row, we ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest budget row we priced is b...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:e3445e6cceda": {
+    "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:6b257be4c96e": {
       "count": 1,
-      "example": "...argument and we do not extrapolate it past $n=1000$, the largest size this corpus carries. \\beg...",
-      "first_recorded": "2026-08-14T22:24:08+00:00"
+      "example": "...rgument, and we do not extrapolate it past $n=1000$, the largest size this corpus carries. \\beg...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:b04df709bc39": {
+    "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:3c3a761b6868": {
       "count": 1,
-      "example": "...on every instance both methods score, between 108 and 2{,}209 of them. GART 2.0 is undominated ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...on every instance both methods score, between 108 and 2{,}209 of them. At $n\\ge200$ the estimat...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:958a25a7e288": {
+    "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:836cf68a28b4": {
       "count": 1,
-      "example": "...nces rather than about the estimator. We draw 20 instances per (dimension, size band) cell, ma...",
-      "first_recorded": "2026-08-28T05:09:52+00:00"
+      "example": "...scribes the estimator. We price the ladder on 20 instances per (dimension, size band) cell, ma...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:2c2551542e0d": {
+    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:28eb2c706900": {
       "count": 1,
-      "example": "... $k=500$ costs 0.784\\% at 246~ms at $d=2$, $k=200$ costs 0.450\\% at 144~ms at $d=3$, and the sa...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...or $k=500$ at $d=2$, 0.450\\% at 144~ms for $k=200$ at $d=3$, and 0.291\\% at 86.2~ms for the sam...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419": {
+    "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f8b39089cdf5": {
       "count": 1,
       "example": "... only in the plane and at $d=3$, from roughly 200 nodes upward. The ascent never reads the sto...",
-      "first_recorded": "2026-08-28T05:09:52+00:00"
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:4b61a05e377d": {
+    "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b67c9bf04d06": {
       "count": 1,
-      "example": "... instance both methods score, between 108 and 2{,}209 of them. GART 2.0 is undominated except at sm...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "... instance both methods score, between 108 and 2{,}209 of them. At $n\\ge200$ the estimator is on the...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f317ded2b4b9": {
+    "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:bf578971a6b1": {
       "count": 1,
-      "example": "...d looser than GART 2.0's printed accuracy: $k=500$ costs 0.784\\% at 246~ms at $d=2$, $k=200$ co...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...The bound reads 0.784\\% MAPE at 246~ms for $k=500$ at $d=2$, 0.450\\% at 144~ms for $k=200$ at $...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c": {
+    "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:19f52100c331": {
       "count": 1,
-      "example": "...4\\% against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest rung, one budget row...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...4\\% against 0.0622\\% at $d=50$. In the $n\\in[600,1000]$ band the tightest budget row we priced...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
-    "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d": {
+    "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c": {
       "count": 1,
-      "example": "...e mid-ladder budgets at $d=3$. Below roughly 200 nodes, prefer the certified bound at any dime...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...e mid-ladder budgets at $d=3$. Below roughly 200 nodes, prefer the known lower bound at any di...",
+      "first_recorded": "2026-09-04T07:57:20+00:00"
     },
     "sec-intro/background-and-motivation :: 100 :: tier2:unmarked :: ctx:9551e7120dce": {
       "count": 1,
@@ -13236,6 +13238,42 @@
         "sec-application/results-on-non-euclidean-tsplib95 :: 1.51 :: tier1:precision :: ctx:34b0f80def1b",
         "sec-application/results-on-non-euclidean-tsplib95 :: 100 :: tier2:unmarked :: ctx:7e059928c7b4",
         "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:d1137b4aa92d"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T07:57:20+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 5 (writer/critic, two cycles): eight pairs applied; backlog contexts moved in 5.1 and 5.3, no new values",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "60a9595eadd03835003a7887c0de34c00cb2bbd5f0cdfd7373c26785eb89ffdc",
+      "production_model": "GART_2.0",
+      "n_entries": 212,
+      "n_keys": 212,
+      "absorbed": [
+        "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:836cf68a28b4",
+        "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:3c3a761b6868",
+        "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b67c9bf04d06",
+        "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:19f52100c331",
+        "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:19f52100c331",
+        "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:bf578971a6b1",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:28eb2c706900",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:f8b39089cdf5",
+        "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:6b257be4c96e",
+        "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c"
+      ],
+      "pruned": [
+        "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:a6edea1bf89c",
+        "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:e3445e6cceda",
+        "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:b04df709bc39",
+        "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:958a25a7e288",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:2c2551542e0d",
+        "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:4460346d3419",
+        "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:4b61a05e377d",
+        "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f317ded2b4b9",
+        "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:a6edea1bf89c",
+        "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:df0a3773009d"
       ],
       "claims_withdrawn": [],
       "mismatched_at_record": []
