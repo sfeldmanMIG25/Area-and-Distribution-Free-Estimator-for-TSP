@@ -186,6 +186,9 @@ P_COSTFRONT = REPO_ROOT / "paper_tooling" / "hk1tree_cost_frontier_bank.json"
 # ordinary characters ("cell/d3/n600_1000/gart_ms"), so this resolves like
 # ``bank:`` rather than walking a nested path.
 P_SIZESTRAT = REPO_ROOT / "paper_tooling" / "size_stratified_bank.json"
+# SHAP attribution of the released booster by 2D generator class, written by
+# paper_tooling/shap_2d_by_class.py; backs the near-collinear "why" paragraph.
+P_SHAP2D = REPO_ROOT / "paper_tooling" / "shap_2d_summary.json"
 
 
 # -- Sources ----------------------------------------------------------------
@@ -214,6 +217,9 @@ class Sources:
         self.sizestrat: dict[str, object] = (
             json.loads(P_SIZESTRAT.read_text(encoding="utf-8"))
             if P_SIZESTRAT.exists() else {})
+        self.shap2d: dict[str, object] = (
+            json.loads(P_SHAP2D.read_text(encoding="utf-8"))
+            if P_SHAP2D.exists() else {})
 
     def resolve(self, spec: str) -> float:
         """Look up one ``bank:``/``sidecar:``/``frontier:``/``allbench:``/
@@ -233,11 +239,15 @@ class Sources:
             if key not in self.sizestrat:
                 raise KeyError(f"no such size_stratified_bank.json key: {key!r}")
             val = self.sizestrat[key]
-        elif kind in ("sidecar", "frontier", "allbench", "costfront"):
+        elif kind in ("sidecar", "frontier", "allbench", "costfront", "shap2d"):
             val = {"sidecar": self.sidecar, "frontier": self.frontier,
-                   "allbench": self.allbench, "costfront": self.costfront}[kind]
+                   "allbench": self.allbench, "costfront": self.costfront,
+                   "shap2d": self.shap2d}[kind]
             sep = "." if kind == "sidecar" else "/"
             for part in key.split(sep):
+                if isinstance(val, list) and part.isdigit() and int(part) < len(val):
+                    val = val[int(part)]
+                    continue
                 if not isinstance(val, dict) or part not in val:
                     raise KeyError(f"no such {kind} path: {key!r} (at {part!r})")
                 val = val[part]

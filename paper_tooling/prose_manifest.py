@@ -830,7 +830,7 @@ CLAIMS: list[Claim] = [
     # -- appendices ----------------------------------------------------------
     Claim(
         id="appendix.code.table_cells",
-        anchor=r"re-derives all {v} table cells",
+        anchor=r"re-derives all {v} benchmark table cells",
         expect="bank:manuscript_table_cells",
         tol="exact",
         note="Settled. build_paper_tables.py --check now writes its own banner "
@@ -1071,7 +1071,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="appendix.cavdar.boundary_step",
-        anchor=r"That leaves a {v}\% step at the upper boundary",
+        anchor=r"leaving a {v}\% step at the upper boundary",
         expect="bank:cavdar_corr_step_at_n_max_pct",
         tol=("dp", 1),
     ),
@@ -1483,13 +1483,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.matched_n",
-        anchor=r"both methods are compared on the {v} of the {~} EUC\_2D instances",
+        anchor=r"We compare the two on {v} of the {~} EUC\_2D instances",
         expect="frontier:tsplib/N_matched",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.euc2d_n",
-        anchor=r"both methods are compared on the {~} of the {v} EUC\_2D instances",
+        anchor=r"We compare the two on {~} of the {v} EUC\_2D instances",
         expect="frontier:tsplib/N_euc2d",
         tol="exact",
     ),
@@ -1905,7 +1905,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.labels.linhp318_tour_opt",
-        anchor=r"scored there against the tour optimum on those coordinates, {v}, which is",
+        anchor=r"scored there against the tour optimum on those coordinates, ${v}$, \texttt{lin318}",
         expect="frontier:labels/linhp318/tour_optimum_on_its_coordinates",
         tol="exact",
     ),
@@ -2136,7 +2136,7 @@ CLAIMS: list[Claim] = [
     # withdrawn labels.repair.exact_n: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="labels.repair.hk_max_n",
-        anchor=r"at $n\le{v}$ the label is the exact Held--Karp dynamic-programming optimum",
+        anchor=r"At $n\le{v}$ the label is the exact Held--Karp dynamic-programming optimum",
         expect="frontier:labels/repair_hk_exact_max_n",
         tol="exact",
         note="Re-anchored after the editorial restructure: the repair-mechanics "
@@ -2145,7 +2145,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="labels.repair.certified_by_bound",
-        anchor=r"the label is proven optimal after the fact, {v} instances",
+        anchor=r"proves it optimal after the fact for ${v}$ instances",
         expect="frontier:labels/repair_nd_tour_certified_optimal",
         tol="exact",
         note="Re-anchored after the editorial restructure into the Label "
@@ -2169,7 +2169,7 @@ CLAIMS: list[Claim] = [
     # withdrawn labels.effect.nd_label_mape: journey narrative removed per author directive (editorial restructure)
     Claim(
         id="conclusion.repair.quarantined",
-        anchor=r"The {v} instances ({~}\%) that fail are \emph{quarantined} rather than scored",
+        anchor=r"The {v} instances ({~}\%) that fail are \emph{quarantined}, not scored",
         expect="frontier:labels/repair_quarantined_total",
         tol="exact",
         note="Re-anchored after the editorial restructure: the conclusion sentence "
@@ -3022,46 +3022,10 @@ CLAIMS: list[Claim] = [
         note="Checked as the derivation 16,920/106,272 over the frozen sidecar "
              "so the share follows whatever model ships.",
     ),
-    Claim(
-        id="appendix.lit.chien_daganzo_cavdar",
-        anchor=r"give a Daganzo-form coefficient of ${v}$ and",
-        no_generator=(
-            "Coefficient transcribed from the cited secondary record "
-            "(cavdar2015distribution) for Chien's Daganzo-form equation; a "
-            "literature quotation, not a generated quantity. Settle only "
-            "against the source itself."
-        ),
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="appendix.lit.chien_daganzo_choi",
-        anchor=r"and \citet{choi2021adjustment} give ${v}$, against the",
-        no_generator=(
-            "Coefficient transcribed from the cited secondary record "
-            "(choi2021adjustment) for the same Chien equation; a literature "
-            "quotation. Settle only against the source itself."
-        ),
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="appendix.lit.chien_review_coeff",
-        anchor=r"against the ${v}$ of the ${~}\bar r+{~}\sqrt{nR}$ form",
-        no_generator=(
-            "Coefficient of the sqrt(nR) term in the Chien form carried by the "
-            "figliozzi2009planning review; a literature quotation. Settle only "
-            "against the source itself."
-        ),
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="appendix.lit.chien_formula_coeff",
-        anchor=r"of the ${~}\bar r+{v}\sqrt{nR}$ form that review carries",
-        no_generator=(
-            "The same 0.67 restated inside the displayed form; same literature "
-            "status as appendix.lit.chien_review_coeff."
-        ),
-        tol=("dp", 2),
-    ),
+    # withdrawn appendix.lit.chien_daganzo_cavdar: Appendix F rewritten wholesale (author 2026-09-03): the unscored estimators get one attribution sentence; the secondary-record coefficient discussion is gone
+    # withdrawn appendix.lit.chien_daganzo_choi: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
+    # withdrawn appendix.lit.chien_review_coeff: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
+    # withdrawn appendix.lit.chien_formula_coeff: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
     Claim(
         id="appendix.controls.linear_clustered_mape",
         anchor=r"reaching {v}\% MAPE on the clustered class against {~}\%, eight times",

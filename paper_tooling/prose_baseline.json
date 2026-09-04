@@ -2,131 +2,209 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T06:40:12+00:00",
+    "at": "2026-09-04T06:45:31+00:00",
     "kind": "update",
-    "reason": "4.4 Cavdar-Sokol sentence rewritten (author 2026-09-03); claim re-anchored",
+    "reason": "Appendix F wholesale and Appendices A-E rewritten (author 2026-09-03); 4 Chien literature-coefficient claims withdrawn with the cut paragraph; rewords only, no printed value changed",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "00a034d4873d9ff693a8cbdb774778bed2428566e7de02f170d178baae7f0ff9",
+    "tex_sha256": "69019dd631a7147449340bef1beb53590a75c7bcb3fce5dfd0179d0ecdcdc9d0",
     "production_model": "GART_2.0",
-    "n_entries": 246,
-    "n_keys": 246,
-    "absorbed": [],
-    "pruned": [],
-    "claims_withdrawn": [],
+    "n_entries": 244,
+    "n_keys": 244,
+    "absorbed": [
+      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:e0d18427ae62",
+      "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:c3bb2482d97c",
+      "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:6c6b0731c538",
+      "appendix:app-bench-details/bhh :: 0.7124 :: tier1:precision :: ctx:56143c54dea7",
+      "appendix:app-bench-details/bhh :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8",
+      "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:e32847e2219f",
+      "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111",
+      "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f",
+      "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a32039128b0b",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:fb4f37e6779b",
+      "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:bbe8d0b25e4a",
+      "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:8ee0512ea334",
+      "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:1d5f1eca87a9",
+      "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:6704657e0ad1",
+      "appendix:app-bench-details/constant-ratio-references :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae",
+      "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:839a6909da37",
+      "appendix:app-bench-details/constant-ratio-references :: 1.1253 :: tier1:precision :: ctx:a3c656dced99",
+      "appendix:app-bench-details/hilbert-sort :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4",
+      "appendix:app-bench-details/gart-2-0 :: 690 :: tier2:unmarked :: ctx:6f2c3f1d2f32",
+      "appendix:app-bench-details/convex-hull-cap :: 1000 :: tier2:unmarked :: ctx:25c130795a32"
+    ],
+    "pruned": [
+      "appendix:app-bench-details :: 0.4 :: tier2:unmarked :: ctx:c3240e3cfd79",
+      "appendix:app-bench-details :: 0.6331 :: tier1:precision :: ctx:3f5d0c0ac327",
+      "appendix:app-bench-details :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8",
+      "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:084f6bc878c6",
+      "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae",
+      "appendix:app-bench-details :: 0.987 :: tier1:precision :: ctx:59fa42ab301c",
+      "appendix:app-bench-details :: 1.1253 :: tier1:precision :: ctx:baec0fe023ed",
+      "appendix:app-bench-details :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199",
+      "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:27ef2c870749",
+      "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:e24764bb3c7b",
+      "appendix:app-bench-details :: 100,125 :: tier2:unmarked :: ctx:6094b93aab00",
+      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:18697bd64a0f",
+      "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32",
+      "appendix:app-bench-details :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4",
+      "appendix:app-bench-details :: 2.1 :: tier2:unmarked :: ctx:a62e2c296288",
+      "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:00699a42ae83",
+      "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:7be9895557fb",
+      "appendix:app-bench-details :: 5000 :: tier2:unmarked :: ctx:feb859dab0ed",
+      "appendix:app-bench-details :: 690 :: tier2:unmarked :: ctx:979dddd39f01",
+      "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:048f8ceb9a3e",
+      "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:768f9c597f5a",
+      "appendix:app-features/app-features-greedy :: 30 :: tier2:unmarked :: ctx:19ba3ba0c2aa",
+      "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:ab5fa2602c46",
+      "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:0ab65a083226",
+      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:ff50ba2141e9"
+    ],
+    "claims_withdrawn": [
+      {
+        "id": "appendix.lit.chien_daganzo_cavdar",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 809,
+        "printed": 0.69,
+        "expected": null
+      },
+      {
+        "id": "appendix.lit.chien_daganzo_choi",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 809,
+        "printed": 0.88,
+        "expected": null
+      },
+      {
+        "id": "appendix.lit.chien_formula_coeff",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 809,
+        "printed": 0.67,
+        "expected": null
+      },
+      {
+        "id": "appendix.lit.chien_review_coeff",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 809,
+        "printed": 0.67,
+        "expected": null
+      }
+    ],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 61,
-    "absorbed": 1245,
-    "pruned": 1590,
-    "claims_withdrawn": 564,
+    "records": 62,
+    "absorbed": 1268,
+    "pruned": 1615,
+    "claims_withdrawn": 568,
     "mismatched_claims_withdrawn": 0
   },
   "entries": {
-    "appendix:app-bench-details :: 0.4 :: tier2:unmarked :: ctx:c3240e3cfd79": {
-      "count": 1,
-      "example": "...res show the ratio continuing to fall toward $0.4$ as $n$ approaches 10, but publish no fitted ...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
-    },
-    "appendix:app-bench-details :: 0.6331 :: tier1:precision :: ctx:3f5d0c0ac327": {
-      "count": 1,
-      "example": "...t $0.7124$; the denominator is not. We quote $0.6331$ following \\citet{cortinaborja2000mst}. That ...",
-      "first_recorded": "2026-08-12T14:41:17+00:00"
-    },
-    "appendix:app-bench-details :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8": {
+    "appendix:app-bench-details/bhh :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8": {
       "count": 1,
       "example": "...2$ \\citep{johnson1996asymptotic} and $\\beta_3=0.6979\\pm0.0002$ \\citep{percus1996finite}. For $d\\ge...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:084f6bc878c6": {
+    "appendix:app-bench-details/bhh :: 0.7124 :: tier1:precision :: ctx:56143c54dea7": {
       "count": 1,
-      "example": "...ported on the matched domain. We use $\\beta_2=0.7124\\pm0.0002$ \\citep{johnson1996asymptotic} and $...",
-      "first_recorded": "2026-08-28T05:09:52+00:00"
+      "example": "...t form on the matched domain. We use $\\beta_2=0.7124\\pm0.0002$ \\citep{johnson1996asymptotic} and $...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae": {
+    "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:bbe8d0b25e4a": {
       "count": 1,
-      "example": "...points. The numerator is well established at $0.7124$; the denominator is not. We quote $0.6331$ f...",
-      "first_recorded": "2026-08-11T11:26:20+00:00"
+      "example": "...res show the ratio continuing to fall toward $0.4$ as $n$ approaches 10, but publish no fitted ...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 0.987 :: tier1:precision :: ctx:59fa42ab301c": {
+    "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f": {
       "count": 1,
-      "example": "...tted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$; the raw estimate is divided by it. \\citet{c...",
-      "first_recorded": "2026-09-04T03:58:34+00:00"
+      "example": "...tted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021adjustment} records that the...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 1.1253 :: tier1:precision :: ctx:baec0fe023ed": {
-      "count": 1,
-      "example": "...der than its printed precision, so the ratio $1.1253$ should be read as approximate. The calibrate...",
-      "first_recorded": "2026-08-12T14:41:17+00:00"
-    },
-    "appendix:app-bench-details :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199": {
+    "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199": {
       "count": 1,
       "example": "...inuing to fall toward $0.4$ as $n$ approaches 10, but publish no fitted form there, so extrapo...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:27ef2c870749": {
+    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a32039128b0b": {
       "count": 1,
-      "example": "...: 1{,}320 of the 2{,}580 2D instances have $n<100$, so for slightly over half the benchmark the...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "example": "...: 1{,}320 of the 2{,}580 2D instances have $n<100$, so for slightly over half the benchmark we ...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:e24764bb3c7b": {
+    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:fb4f37e6779b": {
       "count": 1,
-      "example": "...he benchmark the ratio is evaluated at the $n=100$ endpoint rather than extrapolated below it. ...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "example": "...the benchmark we evaluate the ratio at the $n=100$ endpoint instead of extrapolating below it. ...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 100,125 :: tier2:unmarked :: ctx:6094b93aab00": {
+    "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d": {
       "count": 1,
-      "example": "...~(21) of the dissertation, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$; the raw estimate...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "example": "...t{cavdar2014dissertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021a...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:18697bd64a0f": {
+    "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b": {
       "count": 1,
-      "example": "...e uncorrected estimator underestimates for $n<1000$, which is the direction the correction moves...",
-      "first_recorded": "2026-08-14T23:45:05+00:00"
+      "example": "...e uncorrected estimator underestimates for $n<1000$, the direction this correction moves it. The...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32": {
+    "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:1d5f1eca87a9": {
       "count": 1,
-      "example": "...estimators on hull geometry; at $d=8$ with $n=1000$ a single hull dominates the entire benchmark...",
-      "first_recorded": "2026-09-04T03:43:19+00:00"
+      "example": "... $n=975$ we apply no correction, because Eq.~(21) grows without bound ($E/T=1.22$ at $n=5000$)...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4": {
+    "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:e32847e2219f": {
       "count": 1,
-      "example": "...pendently min--max normalizes every axis to a 16-bit grid, sorts by a $d$-dimensional Hilbert ...",
-      "first_recorded": "2026-09-04T03:58:01+00:00"
+      "example": "...325e^{0.00005298n}-0.2972e^{-0.01452n}$, Eq.~(21) of \\citet{cavdar2014dissertation}, fitted ov...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 2.1 :: tier2:unmarked :: ctx:a62e2c296288": {
-      "count": 1,
-      "example": "...ment} give $0.88$, against the $0.67$ of the $2.1\\bar r+0.67\\sqrt{nR}$ form that review carries...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:00699a42ae83": {
-      "count": 1,
-      "example": "...325e^{0.00005298n}-0.2972e^{-0.01452n}$, Eq.~(21) of the dissertation, fitted over $n\\in\\{100,...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
-    },
-    "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:7be9895557fb": {
-      "count": 1,
-      "example": "...n=975$ no correction is applied, because Eq.~(21) grows without bound ($E/T=1.22$ at $n=5000$)...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
-    },
-    "appendix:app-bench-details :: 5000 :: tier2:unmarked :: ctx:feb859dab0ed": {
+    "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:6704657e0ad1": {
       "count": 1,
       "example": "...q.~(21) grows without bound ($E/T=1.22$ at $n=5000$) and would contradict the training fit it ex...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 690 :: tier2:unmarked :: ctx:979dddd39f01": {
+    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111": {
       "count": 1,
-      "example": "...me is stored as $\\exp(\\min(\\log \\mathrm{hv},\\,690))$, so the raw feature stays finite at high e...",
-      "first_recorded": "2026-08-29T01:40:30+00:00"
+      "example": "...ssertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021adjustment}...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:048f8ceb9a3e": {
+    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:8ee0512ea334": {
       "count": 1,
-      "example": "...upper end fixed for the same reason: above $n=975$ no correction is applied, because Eq.~(21) g...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "example": "...upper end fixed for the same reason: above $n=975$ we apply no correction, because Eq.~(21) gro...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:768f9c597f5a": {
+    "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:839a6909da37": {
       "count": 1,
-      "example": "...issertation, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$; the raw estimate is divide...",
-      "first_recorded": "2026-08-13T01:25:34+00:00"
+      "example": "...t $0.7124$; the denominator is not. We quote $0.6331$ following \\citet{cortinaborja2000mst}, a sim...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
+    },
+    "appendix:app-bench-details/constant-ratio-references :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae": {
+      "count": 1,
+      "example": "...points. The numerator is well established at $0.7124$; the denominator is not. We quote $0.6331$ f...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
+    },
+    "appendix:app-bench-details/constant-ratio-references :: 1.1253 :: tier1:precision :: ctx:a3c656dced99": {
+      "count": 1,
+      "example": "...der than its printed precision, so the ratio $1.1253$ is approximate. The calibrated rows take the...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
+    },
+    "appendix:app-bench-details/convex-hull-cap :: 1000 :: tier2:unmarked :: ctx:25c130795a32": {
+      "count": 1,
+      "example": "...estimators on hull geometry; at $d=8$ with $n=1000$ a single hull dominates the entire benchmark...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
+    },
+    "appendix:app-bench-details/gart-2-0 :: 690 :: tier2:unmarked :: ctx:6f2c3f1d2f32": {
+      "count": 1,
+      "example": "... hypervolume as $\\exp(\\min(\\log \\mathrm{hv},\\,690))$, so the raw feature stays finite at high e...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
+    },
+    "appendix:app-bench-details/hilbert-sort :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4": {
+      "count": 1,
+      "example": "...pendently min--max normalizes every axis to a 16-bit grid, sorts by a $d$-dimensional Hilbert ...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
     "appendix:app-code :: 0.975 :: tier1:precision :: ctx:197463484bb2": {
       "count": 1,
@@ -167,11 +245,6 @@
       "count": 1,
       "example": "...ng \\caption{MST edge distribution statistics (10 features).} \\label{tab:edge_features} \\resize...",
       "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "appendix:app-features/app-features-greedy :: 30 :: tier2:unmarked :: ctx:19ba3ba0c2aa": {
-      "count": 1,
-      "example": "...y} It is the only input GART 2.0 adds to the 30-feature block it inherits, it ranks second by...",
-      "first_recorded": "2026-08-29T01:40:30+00:00"
     },
     "appendix:app-hyperparams :: 10.8 :: tier1:unit :: ctx:29b366d64b6c": {
       "count": 1,
@@ -248,20 +321,20 @@
       "example": "...s fit is the cheapest of the three at 61.9 to 92.1~ms and pays for it in the tail, reaching 17.9...",
       "first_recorded": "2026-08-13T04:33:29+00:00"
     },
-    "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:ab5fa2602c46": {
+    "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:c3bb2482d97c": {
       "count": 1,
-      "example": "...ur on its own released coordinates, over all $106{,}272$ instances; a stored cost that its own tour c...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "example": "...ur on its own released coordinates, over all $106{,}272$ instances. A stored cost that its own tour c...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
     "appendix:app-labels :: 15 :: tier2:unmarked :: ctx:ede8b741078b": {
       "count": 1,
       "example": "...he worst relative excess being $5.8\\times10^{-15}$. The 184 quarantined instances above carry ...",
       "first_recorded": "2026-08-28T05:09:52+00:00"
     },
-    "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:0ab65a083226": {
+    "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:6c6b0731c538": {
       "count": 1,
-      "example": "...raises on any attempt to score one. 74 of the 184 fall in the multidimensional test partition, ...",
-      "first_recorded": "2026-08-27T06:33:43+00:00"
+      "example": "...elds NaN, never a plausible number. 74 of the 184 fall in the multidimensional test partition, ...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
     "appendix:app-ladders/subsec-frontier-other :: 200 :: tier2:unmarked :: ctx:cca5c427b97c": {
       "count": 1,
@@ -353,10 +426,10 @@
       "example": "...6{,}920-row held-out test split. The complete 31-feature ranking is released with the artifact...",
       "first_recorded": "2026-08-29T01:49:17+00:00"
     },
-    "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:ff50ba2141e9": {
+    "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:e0d18427ae62": {
       "count": 1,
-      "example": "...nostic during feature reduction, yielding the 31-feature set described in Section~\\ref{subsec:...",
-      "first_recorded": "2026-08-28T05:09:52+00:00"
+      "example": "...stic during feature reduction and yielded the 31-feature set described in Section~\\ref{subsec:...",
+      "first_recorded": "2026-09-04T06:45:31+00:00"
     },
     "appendix:app-shap :: 5{,}000 :: tier2:unmarked :: ctx:2719698c93aa": {
       "count": 1,
@@ -1272,42 +1345,42 @@
     "appendix.cavdar.benchmark_n": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_2d_n_total",
-      "line": 811,
+      "line": 815,
       "printed": 2580.0,
       "expected": 2580.0
     },
     "appendix.cavdar.boundary_ratio": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_ratio_at_n_max",
-      "line": 811,
+      "line": 815,
       "printed": 0.982,
       "expected": 0.981934
     },
     "appendix.cavdar.boundary_step": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_step_at_n_max_pct",
-      "line": 811,
+      "line": 815,
       "printed": 1.84,
       "expected": 1.839804
     },
     "appendix.cavdar.extrap_ratio_5000": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_ratio_extrap_5000",
-      "line": 811,
+      "line": 815,
       "printed": 1.22,
       "expected": 1.215328
     },
     "appendix.cavdar.n_below_fit": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_2d_n_below_min",
-      "line": 811,
+      "line": 815,
       "printed": 1320.0,
       "expected": 1320.0
     },
     "appendix.classical.panel_b_n": {
       "state": "MATCHED",
       "expect": "bank:classical_b_random_gart_2_0_n",
-      "line": 924,
+      "line": 938,
       "printed": 210.0,
       "expected": 210.0
     },
@@ -1328,63 +1401,35 @@
     "appendix.controls.linear_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-      "line": 1031,
+      "line": 1045,
       "printed": 17.9,
       "expected": 17.871637
     },
     "appendix.controls.linear_clustered_r2alpha": {
       "state": "MATCHED",
       "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-      "line": 1031,
+      "line": 1045,
       "printed": 9.53,
       "expected": 9.526199
     },
     "appendix.controls.released_clustered_mape": {
       "state": "MATCHED",
       "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-      "line": 1031,
+      "line": 1045,
       "printed": 2.24,
       "expected": 2.241039
-    },
-    "appendix.lit.chien_daganzo_cavdar": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 809,
-      "printed": 0.69,
-      "expected": null
-    },
-    "appendix.lit.chien_daganzo_choi": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 809,
-      "printed": 0.88,
-      "expected": null
-    },
-    "appendix.lit.chien_formula_coeff": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 809,
-      "printed": 0.67,
-      "expected": null
-    },
-    "appendix.lit.chien_review_coeff": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 809,
-      "printed": 0.67,
-      "expected": null
     },
     "appendix.mds.explicit_gart_mape": {
       "state": "MATCHED",
       "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-      "line": 1061,
+      "line": 1075,
       "printed": 3.01,
       "expected": 3.01277
     },
     "appendix.mds.geo_stress_max": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 1061,
+      "line": 1075,
       "printed": 0.236,
       "expected": null
     },
@@ -1657,112 +1702,112 @@
     "frontier.2d.caption_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/N",
-      "line": 876,
+      "line": 890,
       "printed": 2580.0,
       "expected": 2580.0
     },
     "frontier.2d.large_bucket_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [501,1000]/ascents/vj_ckpt/500/x_gart2_typical",
-      "line": 866,
+      "line": 880,
       "printed": 26.1,
       "expected": 26.083153455156815
     },
     "frontier.2d.large_bucket_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [501,1000]/N",
-      "line": 866,
+      "line": 880,
       "printed": 610.0,
       "expected": 610.0
     },
     "frontier.2d.raw_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/x_gart2_typical",
-      "line": 866,
+      "line": 880,
       "printed": 0.23,
       "expected": 0.2296353331897327
     },
     "frontier.2d.raw_crossing_k": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/crossover/vj_ckpt/raw/k",
-      "line": 866,
+      "line": 880,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.2d.raw_crossing_win": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/win_rate_vs_gart2_pct/raw",
-      "line": 866,
+      "line": 880,
       "printed": 54.8,
       "expected": 54.8062015503876
     },
     "frontier.2d.small_bucket_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/x_gart2_typical",
-      "line": 866,
+      "line": 880,
       "printed": 0.0699,
       "expected": 0.06987313881431421
     },
     "frontier.2d.small_bucket_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/gart2_MAPE_pct",
-      "line": 866,
+      "line": 880,
       "printed": 3.21,
       "expected": 3.211611319278459
     },
     "frontier.2d.small_bucket_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 866,
+      "line": 880,
       "printed": 25.0,
       "expected": null
     },
     "frontier.2d.small_bucket_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 866,
+      "line": 880,
       "printed": 0.439,
       "expected": 0.4390634725776753
     },
     "frontier.2d.small_bucket_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/N",
-      "line": 866,
+      "line": 880,
       "printed": 360.0,
       "expected": 360.0
     },
     "frontier.2d.small_bucket_win": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/win_rate_vs_gart2_pct/raw",
-      "line": 866,
+      "line": 880,
       "printed": 95.0,
       "expected": 95.0
     },
     "frontier.amort.2d_hi": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 872,
+      "line": 886,
       "printed": 0.955,
       "expected": 0.9547131318103961
     },
     "frontier.amort.2d_lo": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 872,
+      "line": 886,
       "printed": 0.768,
       "expected": 0.7677804310172007
     },
     "frontier.amort.noneuc_hi": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 872,
+      "line": 886,
       "printed": 1.14,
       "expected": 1.1446414297273981
     },
     "frontier.amort.noneuc_lo": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 872,
+      "line": 886,
       "printed": 0.898,
       "expected": 0.8975749547378266
     },
@@ -1895,56 +1940,56 @@
     "frontier.load.bias_hi": {
       "state": "MATCHED",
       "expect": "costfront:load_control/bias_in_a_cost_ratio/200",
-      "line": 872,
+      "line": 886,
       "printed": 0.768,
       "expected": 0.7683528907467704
     },
     "frontier.load.bias_lo": {
       "state": "MATCHED",
       "expect": "costfront:load_control/bias_in_a_cost_ratio/0",
-      "line": 872,
+      "line": 886,
       "printed": 0.74,
       "expected": 0.7402083132872181
     },
     "frontier.load.bound_inflation_hi": {
       "state": "MATCHED",
       "expect": "costfront:load_control/HK_1Tree_vj/200/median_today_over_published",
-      "line": 872,
+      "line": 886,
       "printed": 1.14,
       "expected": 1.1380561592228244
     },
     "frontier.load.bound_inflation_lo": {
       "state": "MATCHED",
       "expect": "costfront:load_control/HK_1Tree_vj/0/median_today_over_published",
-      "line": 872,
+      "line": 886,
       "printed": 1.1,
       "expected": 1.0963694419444696
     },
     "frontier.load.flip_after": {
       "state": "MATCHED",
       "expect": "= {costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/x_gart2_typical} / {costfront:load_control/bias_in_a_cost_ratio/200}",
-      "line": 872,
+      "line": 886,
       "printed": 1.03,
       "expected": 1.0279812932801828
     },
     "frontier.load.flip_before": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/x_gart2_typical",
-      "line": 872,
+      "line": 886,
       "printed": 0.79,
       "expected": 0.7898523983254321
     },
     "frontier.load.flip_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 872,
+      "line": 886,
       "printed": 200.0,
       "expected": null
     },
     "frontier.load.gart_inflation": {
       "state": "MATCHED",
       "expect": "costfront:load_control/GART_2.0/median_today_over_published",
-      "line": 872,
+      "line": 886,
       "printed": 1.48,
       "expected": 1.4811633728829152
     },
@@ -2070,280 +2115,280 @@
     "frontier.noneuc.caption_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 900,
+      "line": 914,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-      "line": 868,
+      "line": 882,
       "printed": 3.81,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.gart_ms": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_ms",
-      "line": 868,
+      "line": 882,
       "printed": 4.88,
       "expected": 4.8828999861143
     },
     "frontier.noneuc.matched_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 868,
+      "line": 882,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.mds_share": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_ms_mds_share_pct",
-      "line": 868,
+      "line": 882,
       "printed": 9.21,
       "expected": 9.211738762338229
     },
     "frontier.noneuc.pk200_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/x_gart2_typical",
-      "line": 868,
+      "line": 882,
       "printed": 0.339,
       "expected": 0.3392655978656414
     },
     "frontier.noneuc.pk200_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 868,
+      "line": 882,
       "printed": 200.0,
       "expected": null
     },
     "frontier.noneuc.pk200_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/raw_MAPE_pct",
-      "line": 868,
+      "line": 882,
       "printed": 0.762,
       "expected": 0.761982636630314
     },
     "frontier.noneuc.pk500_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/500/x_gart2_typical",
-      "line": 868,
+      "line": 882,
       "printed": 0.693,
       "expected": 0.6930922184276088
     },
     "frontier.noneuc.pk500_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 868,
+      "line": 882,
       "printed": 500.0,
       "expected": null
     },
     "frontier.noneuc.pk500_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/500/raw_MAPE_pct",
-      "line": 868,
+      "line": 882,
       "printed": 0.509,
       "expected": 0.5089245991167779
     },
     "frontier.noneuc.pk500_win_n": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/instance_accounting/matched",
-      "line": 868,
+      "line": 882,
       "printed": 29.0,
       "expected": 29.0
     },
     "frontier.noneuc.vj_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/x_gart2_typical",
-      "line": 868,
+      "line": 882,
       "printed": 0.0648,
       "expected": 0.06477708387424996
     },
     "frontier.noneuc.vj_crossing_gart_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/gart2_MAPE_pct",
-      "line": 868,
+      "line": 882,
       "printed": 3.81,
       "expected": 3.8144881123805074
     },
     "frontier.noneuc.vj_crossing_k": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/crossover/vj_ckpt/raw/k",
-      "line": 868,
+      "line": 882,
       "printed": 25.0,
       "expected": 25.0
     },
     "frontier.noneuc.vj_crossing_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 868,
+      "line": 882,
       "printed": 2.95,
       "expected": 2.953371085687484
     },
     "frontier.steps.2d_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 870,
+      "line": 884,
       "printed": 25.0,
       "expected": null
     },
     "frontier.steps.noneuc_k": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 870,
+      "line": 884,
       "printed": 200.0,
       "expected": null
     },
     "frontier.steps.pk_2d_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/polyak_ckpt/25/raw_MAPE_pct",
-      "line": 870,
+      "line": 884,
       "printed": 7.52,
       "expected": 7.515000218256177
     },
     "frontier.steps.pk_noneuc_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/polyak_ckpt/200/raw_MAPE_pct",
-      "line": 870,
+      "line": 884,
       "printed": 0.762,
       "expected": 0.761982636630314
     },
     "frontier.steps.vj_2d_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/25/raw_MAPE_pct",
-      "line": 870,
+      "line": 884,
       "printed": 3.61,
       "expected": 3.6059585620107852
     },
     "frontier.steps.vj_noneuc_mape": {
       "state": "MATCHED",
       "expect": "costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/vj_ckpt/200/raw_MAPE_pct",
-      "line": 870,
+      "line": 884,
       "printed": 1.23,
       "expected": 1.2282433430508388
     },
     "frontier.tsplib.cal_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/x_gart2_by_k/25",
-      "line": 829,
+      "line": 843,
       "printed": 0.902,
       "expected": 0.9024844728855346
     },
     "frontier.tsplib.cal_crossing_gart2": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/gart2_mape_pct",
-      "line": 829,
+      "line": 843,
       "printed": 2.56,
       "expected": 2.560240252638566
     },
     "frontier.tsplib.cal_crossing_k": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/crossing_ladder_k",
-      "line": 829,
+      "line": 843,
       "printed": 25.0,
       "expected": 25.0
     },
     "frontier.tsplib.cal_crossing_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/Total (all EUC_2D)/mape_pct_by_k/25",
-      "line": 829,
+      "line": 843,
       "printed": 2.0,
       "expected": 1.995790083948518
     },
     "frontier.tsplib.capped_gart2_ms": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/gart2_ms",
-      "line": 833,
+      "line": 847,
       "printed": 237.0,
       "expected": 237.4202999635599
     },
     "frontier.tsplib.capped_seconds": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_ms_by_k/500",
-      "line": 833,
+      "line": 847,
       "printed": 493.0,
       "expected": 493.257843600004
     },
     "frontier.tsplib.capped_x_at_crossing": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/50",
-      "line": 833,
+      "line": 847,
       "printed": 167.0,
       "expected": 166.81976859630277
     },
     "frontier.tsplib.capped_x_at_top": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
-      "line": 833,
+      "line": 847,
       "printed": 2078.0,
       "expected": 2077.5723207986466
     },
     "frontier.tsplib.euc2d_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_euc2d",
-      "line": 827,
+      "line": 841,
       "printed": 78.0,
       "expected": 78.0
     },
     "frontier.tsplib.harness_d18512_ms": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 833,
+      "line": 847,
       "printed": 239.0,
       "expected": null
     },
     "frontier.tsplib.large_raw_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n > 400/crossing_cost_x_gart2",
-      "line": 831,
+      "line": 845,
       "printed": 6.65,
       "expected": 6.649239892362413
     },
     "frontier.tsplib.load_sensitivity_bound": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
-      "line": 833,
+      "line": 847,
       "printed": 1.25,
       "expected": 1.2529009010640764
     },
     "frontier.tsplib.load_sensitivity_gart2": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
-      "line": 833,
+      "line": 847,
       "printed": 1.05,
       "expected": 1.0519323607699451
     },
     "frontier.tsplib.matched_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_matched",
-      "line": 827,
+      "line": 841,
       "printed": 77.0,
       "expected": 77.0
     },
     "frontier.tsplib.paired_win_rate": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/paired_win_rate_of_bound_at_crossing_pct",
-      "line": 829,
+      "line": 843,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.tsplib.raw_crossing_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/crossing_cost_x_gart2",
-      "line": 829,
+      "line": 843,
       "printed": 1.46,
       "expected": 1.461611455187286
     },
     "frontier.tsplib.raw_crossing_k": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/crossing_ladder_k",
-      "line": 829,
+      "line": 843,
       "printed": 50.0,
       "expected": 50.0
     },
     "frontier.tsplib.raw_crossing_margin": {
       "state": "MATCHED",
       "expect": "= {frontier:tsplib/gart2_mape_pct} - {frontier:tsplib/crossing_bound_mape_pct}",
-      "line": 829,
+      "line": 843,
       "printed": 0.00408,
       "expected": 0.0040770524615756365
     },
@@ -2357,56 +2402,56 @@
     "frontier.tsplib.small_bucket_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/N",
-      "line": 831,
+      "line": 845,
       "printed": 23.0,
       "expected": 23.0
     },
     "frontier.tsplib.small_cal_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/n in [51,150]/x_gart2_by_k/25",
-      "line": 831,
+      "line": 845,
       "printed": 0.159,
       "expected": 0.15894394426207137
     },
     "frontier.tsplib.small_cal_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib_calibrated_bound/n in [51,150]/mape_pct_by_k/25",
-      "line": 831,
+      "line": 845,
       "printed": 1.69,
       "expected": 1.6928193374122182
     },
     "frontier.tsplib.small_gart2_mape": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/gart2_mape_pct",
-      "line": 831,
+      "line": 845,
       "printed": 2.01,
       "expected": 2.0091196086766354
     },
     "frontier.tsplib.small_raw_accuracy_gain": {
       "state": "MATCHED",
       "expect": "= 100 * (1 - {frontier:tsplib/n in [51,150]/crossing_bound_over_gart2_mape})",
-      "line": 831,
+      "line": 845,
       "printed": 22.2,
       "expected": 22.190635492012234
     },
     "frontier.tsplib.small_raw_cost_x": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/n in [51,150]/crossing_cost_x_gart2",
-      "line": 831,
+      "line": 845,
       "printed": 0.463,
       "expected": 0.4626653552203945
     },
     "frontier.tsplib.table_caption_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_matched",
-      "line": 837,
+      "line": 851,
       "printed": 77.0,
       "expected": 77.0
     },
     "frontier.tsplib.throughput_x": {
       "state": "MATCHED",
       "expect": "costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
-      "line": 829,
+      "line": 843,
       "printed": 24.9,
       "expected": 24.93799467654241
     },
@@ -2679,7 +2724,7 @@
     "methods.optuna.n_trials": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 200.0,
       "expected": null
     },
@@ -2693,14 +2738,14 @@
     "methods.optuna.trials_complete": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 60.0,
       "expected": null
     },
     "methods.optuna.trials_pruned": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 140.0,
       "expected": null
     },
@@ -2714,28 +2759,28 @@
     "methods.optuna.tuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 0.611,
       "expected": null
     },
     "methods.optuna.tuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 2.64,
       "expected": null
     },
     "methods.optuna.untuned_nd": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 0.623,
       "expected": null
     },
     "methods.optuna.untuned_tsplib": {
       "state": "NO_GENERATOR",
       "expect": "(no generator)",
-      "line": 988,
+      "line": 1002,
       "printed": 2.47,
       "expected": null
     },
@@ -12767,6 +12812,103 @@
       "absorbed": [],
       "pruned": [],
       "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T06:45:31+00:00",
+      "kind": "update",
+      "reason": "Appendix F wholesale and Appendices A-E rewritten (author 2026-09-03); 4 Chien literature-coefficient claims withdrawn with the cut paragraph; rewords only, no printed value changed",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "69019dd631a7147449340bef1beb53590a75c7bcb3fce5dfd0179d0ecdcdc9d0",
+      "production_model": "GART_2.0",
+      "n_entries": 244,
+      "n_keys": 244,
+      "absorbed": [
+        "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:e0d18427ae62",
+        "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:c3bb2482d97c",
+        "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:6c6b0731c538",
+        "appendix:app-bench-details/bhh :: 0.7124 :: tier1:precision :: ctx:56143c54dea7",
+        "appendix:app-bench-details/bhh :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8",
+        "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:e32847e2219f",
+        "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111",
+        "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f",
+        "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a32039128b0b",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:fb4f37e6779b",
+        "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:bbe8d0b25e4a",
+        "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:8ee0512ea334",
+        "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:1d5f1eca87a9",
+        "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:6704657e0ad1",
+        "appendix:app-bench-details/constant-ratio-references :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae",
+        "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:839a6909da37",
+        "appendix:app-bench-details/constant-ratio-references :: 1.1253 :: tier1:precision :: ctx:a3c656dced99",
+        "appendix:app-bench-details/hilbert-sort :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4",
+        "appendix:app-bench-details/gart-2-0 :: 690 :: tier2:unmarked :: ctx:6f2c3f1d2f32",
+        "appendix:app-bench-details/convex-hull-cap :: 1000 :: tier2:unmarked :: ctx:25c130795a32"
+      ],
+      "pruned": [
+        "appendix:app-bench-details :: 0.4 :: tier2:unmarked :: ctx:c3240e3cfd79",
+        "appendix:app-bench-details :: 0.6331 :: tier1:precision :: ctx:3f5d0c0ac327",
+        "appendix:app-bench-details :: 0.6979 :: tier1:precision :: ctx:12819c6d1ce8",
+        "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:084f6bc878c6",
+        "appendix:app-bench-details :: 0.7124 :: tier1:precision :: ctx:7c494ea21eae",
+        "appendix:app-bench-details :: 0.987 :: tier1:precision :: ctx:59fa42ab301c",
+        "appendix:app-bench-details :: 1.1253 :: tier1:precision :: ctx:baec0fe023ed",
+        "appendix:app-bench-details :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199",
+        "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:27ef2c870749",
+        "appendix:app-bench-details :: 100 :: tier2:unmarked :: ctx:e24764bb3c7b",
+        "appendix:app-bench-details :: 100,125 :: tier2:unmarked :: ctx:6094b93aab00",
+        "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:18697bd64a0f",
+        "appendix:app-bench-details :: 1000 :: tier2:unmarked :: ctx:25c130795a32",
+        "appendix:app-bench-details :: 16 :: tier2:unmarked :: ctx:b4d3b1ed3bb4",
+        "appendix:app-bench-details :: 2.1 :: tier2:unmarked :: ctx:a62e2c296288",
+        "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:00699a42ae83",
+        "appendix:app-bench-details :: 21 :: tier2:unmarked :: ctx:7be9895557fb",
+        "appendix:app-bench-details :: 5000 :: tier2:unmarked :: ctx:feb859dab0ed",
+        "appendix:app-bench-details :: 690 :: tier2:unmarked :: ctx:979dddd39f01",
+        "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:048f8ceb9a3e",
+        "appendix:app-bench-details :: 975 :: tier2:unmarked :: ctx:768f9c597f5a",
+        "appendix:app-features/app-features-greedy :: 30 :: tier2:unmarked :: ctx:19ba3ba0c2aa",
+        "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:ab5fa2602c46",
+        "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:0ab65a083226",
+        "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:ff50ba2141e9"
+      ],
+      "claims_withdrawn": [
+        {
+          "id": "appendix.lit.chien_daganzo_cavdar",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 809,
+          "printed": 0.69,
+          "expected": null
+        },
+        {
+          "id": "appendix.lit.chien_daganzo_choi",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 809,
+          "printed": 0.88,
+          "expected": null
+        },
+        {
+          "id": "appendix.lit.chien_formula_coeff",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 809,
+          "printed": 0.67,
+          "expected": null
+        },
+        {
+          "id": "appendix.lit.chien_review_coeff",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 809,
+          "printed": 0.67,
+          "expected": null
+        }
+      ],
       "mismatched_at_record": []
     }
   ]
