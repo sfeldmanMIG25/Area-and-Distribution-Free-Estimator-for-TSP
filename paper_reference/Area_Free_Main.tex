@@ -187,8 +187,8 @@ Each results table reports the standard deviation of percent error (SDPE), the m
 \[
 \text{SDPE} = 100 \cdot \sqrt{\frac{1}{N-1}\sum_{i=1}^{N}\left(e_i - \bar e\right)^2}, \qquad \bar e = \frac{1}{N}\sum_{i=1}^{N} e_i.
 \]
-Here $e_i=(\hat L_i-L_i)/L_i$ is the signed relative error and $N$ is the number of scored instances; the leading factor of 100 expresses SDPE in percentage points.
-In the results tables, bold marks GART 2.0; it does not mark the best value in a column, and several baselines beat it in individual cells. Each SDPE carries a 95\% bootstrap confidence interval, suppressed where a group holds fewer than three instances. The intervals are computed per estimator and ignore the pairing, so overlapping intervals establish nothing on their own. We test each comparison on the instances where both estimators produce a finite prediction, using the paired difference in absolute percent error with a 1{,}000-resample paired bootstrap and a Wilcoxon signed-rank test.
+Here $e_i=(\hat L_i-L_i)/L_i$ is the signed relative error and $N$ is the number of scored instances.
+Bold marks GART 2.0, not the best value in a column. Several baselines beat it in individual cells. Each SDPE carries a 95\% bootstrap confidence interval, suppressed where a group holds fewer than three instances. The intervals are computed per estimator and ignore the pairing, so overlapping intervals establish nothing on their own. We test each comparison on the instances where both estimators produce a finite prediction, using the paired difference in absolute percent error with a 1{,}000-resample paired bootstrap and a Wilcoxon signed-rank test.
 
 \subsection{Benchmark Roster} \label{subsec:bench_models}
 
@@ -253,13 +253,13 @@ Custom Hilbert sort & Bare $d$-dimensional Hilbert ordering, per-axis normalized
 
 \subsection{Datasets} \label{subsec:datasets}
 
-TSPLIB95's screened non-EUC\_2D instances form the fourth benchmark (Section~\ref{sec:application}); the synthetic sets are held-out splits from our generation pipeline (Appendix~\ref{app:training}), and non-metric instances stay out of every metric-dependent aggregate here.
+TSPLIB95's screened non-EUC\_2D instances form the fourth benchmark (Section~\ref{sec:application}), and our generation pipeline produces the held-out synthetic sets (Appendix~\ref{app:training}). Non-metric instances stay out of every metric-dependent aggregate here.
 
 \subsubsection{Multidimensional Synthetic}
-The split shares the training generators, so it tests held-out sampling, not held-out geometry; the full $(d, n)$ count grid is in Appendix~\ref{app:nd_grid_counts} (Table~\ref{tab:nd_grid_counts}).
+The split shares the training generators, so it tests held-out sampling, not held-out geometry. Appendix~\ref{app:nd_grid_counts} gives the full $(d, n)$ count grid (Table~\ref{tab:nd_grid_counts}).
 
 \subsubsection{2D Diverse Synthetic}
-Five distribution classes (Table~\ref{tab:dataset_counts}) each probe a different assumption made by classical 2D estimators. Two of the thirteen sub-generators test geometry the training corpus does not contain: Line Noise, which is near-collinear, and \texttt{grid}, a jittered square lattice. Appendix~\ref{app:gen2d} gives the construction of both classes.
+Each class in Table~\ref{tab:dataset_counts} probes a different assumption the classical 2D estimators make. Two of the thirteen sub-generators, Line Noise and \texttt{grid}, test geometry the training corpus does not contain (Appendix~\ref{app:gen2d}).
 
 \begin{table}[!ht]
 \centering
@@ -286,7 +286,7 @@ Line Noise\textsuperscript{$\dagger$} & Boundary-clipped $y=mx+b+\epsilon$; real
 \end{table}
 
 \subsubsection{TSPLIB95 EUC\_2D}
-The benchmark contains 78 EUC\_2D instances with $n$ from 51 (\texttt{eil51}) to 18{,}512 (\texttt{d18512}) \citep{reinelt1991tsplib}. Every numerically evaluated 2D baseline is defined on all 78, the paper's common instance set. The 23 retained non-EUC\_2D instances are evaluated separately in Section~\ref{sec:application}. 
+The benchmark contains 78 EUC\_2D instances with $n$ from 51 (\texttt{eil51}) to 18{,}512 (\texttt{d18512}) \citep{reinelt1991tsplib}. Every 2D baseline scored here returns a value on all 78, the paper's common instance set. 
 
 \subsection{Results} \label{subsec:results}
 

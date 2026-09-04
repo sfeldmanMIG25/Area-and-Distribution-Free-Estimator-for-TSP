@@ -2,42 +2,42 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:33:12+00:00",
+    "at": "2026-09-04T07:36:30+00:00",
     "kind": "update",
-    "reason": "pass 1 Section 3 (writer/critic, two cycles): nine pairs applied; backlog contexts moved (30-feature block, axis census, probe size), no new values",
+    "reason": "pass 1 Section 4.1-4.2 (writer/critic, two cycles): five pairs applied; TSPLIB size-range backlog contexts moved, no new values",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "25d82d8fdb1c185c7ba671bf0bdf5fd7d00a5910feff509093b3e564c8f88a86",
+    "tex_sha256": "50e561744d162ab1cbf292724d13a1c41c9da92dd0b75663d4e0721c53591cd9",
     "production_model": "GART_2.0",
-    "n_entries": 217,
-    "n_keys": 217,
+    "n_entries": 216,
+    "n_keys": 216,
     "absorbed": [
-      "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:5ab449a23f4b",
-      "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:0bf2d934c94c",
-      "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:0ef78c9ca15d",
-      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1781c2bfb114",
-      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:3dc68b851a8a",
-      "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:c4cff12281f8",
-      "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:a62f93c9bca6"
+      "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:e6a57de92d46",
+      "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:295e20eefa9d",
+      "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:6207d27613d0"
     ],
     "pruned": [
-      "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:4081c1b020e5",
-      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1356f53be115",
-      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:55472f8f862f",
-      "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:5218471d0afd",
-      "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:5072e1d094c5",
-      "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:9348646e1482",
-      "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:0bb43e70bfe5",
-      "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b",
-      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:3e816a28efe1"
+      "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:ba9853e8ac15",
+      "sec-evaluation/tsplib95-euc-2d :: 23 :: tier2:unmarked :: ctx:521ae5cb8f39",
+      "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:bdf76738267b",
+      "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:124c418a8f2f"
     ],
-    "claims_withdrawn": [],
+    "claims_withdrawn": [
+      {
+        "id": "metrics.sdpe.pct_factor",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 190,
+        "printed": 100.0,
+        "expected": null
+      }
+    ],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 67,
-    "absorbed": 1308,
-    "pruned": 1682,
-    "claims_withdrawn": 570,
+    "records": 68,
+    "absorbed": 1311,
+    "pruned": 1686,
+    "claims_withdrawn": 571,
     "mismatched_claims_withdrawn": 0
   },
   "entries": {
@@ -911,25 +911,20 @@
       "example": "...io. Table~\\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse...",
       "first_recorded": "2026-09-04T03:30:04+00:00"
     },
-    "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:ba9853e8ac15": {
+    "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:295e20eefa9d": {
       "count": 1,
       "example": "...nstances with $n$ from 51 (\\texttt{eil51}) to 18{,}512 (\\texttt{d18512}) \\citep{reinelt1991tsplib}. ...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "first_recorded": "2026-09-04T07:36:30+00:00"
     },
-    "sec-evaluation/tsplib95-euc-2d :: 23 :: tier2:unmarked :: ctx:521ae5cb8f39": {
-      "count": 1,
-      "example": "... all 78, the paper's common instance set. The 23 retained non-EUC\\_2D instances are evaluated ...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
-    },
-    "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:bdf76738267b": {
+    "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:e6a57de92d46": {
       "count": 1,
       "example": "...k contains 78 EUC\\_2D instances with $n$ from 51 (\\texttt{eil51}) to 18{,}512 (\\texttt{d18512}...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "first_recorded": "2026-09-04T07:36:30+00:00"
     },
-    "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:124c418a8f2f": {
+    "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:6207d27613d0": {
       "count": 1,
-      "example": "...cally evaluated 2D baseline is defined on all 78, the paper's common instance set. The 23 reta...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "example": "...D baseline scored here returns a value on all 78, the paper's common instance set. \\subsecti...",
+      "first_recorded": "2026-09-04T07:36:30+00:00"
     },
     "sec-frontier/subsec-frontier-nd :: 100 :: tier2:unmarked :: ctx:54aa55db5190": {
       "count": 1,
@@ -2631,13 +2626,6 @@
       "expect": "(no generator)",
       "line": 191,
       "printed": 95.0,
-      "expected": null
-    },
-    "metrics.sdpe.pct_factor": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 190,
-      "printed": 100.0,
       "expected": null
     },
     "provenance.quarantine.nd_test": {
@@ -13073,6 +13061,38 @@
         "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:3e816a28efe1"
       ],
       "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T07:36:30+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 4.1-4.2 (writer/critic, two cycles): five pairs applied; TSPLIB size-range backlog contexts moved, no new values",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "50e561744d162ab1cbf292724d13a1c41c9da92dd0b75663d4e0721c53591cd9",
+      "production_model": "GART_2.0",
+      "n_entries": 216,
+      "n_keys": 216,
+      "absorbed": [
+        "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:e6a57de92d46",
+        "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:295e20eefa9d",
+        "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:6207d27613d0"
+      ],
+      "pruned": [
+        "sec-evaluation/tsplib95-euc-2d :: 18{,}512 :: tier2:unmarked :: ctx:ba9853e8ac15",
+        "sec-evaluation/tsplib95-euc-2d :: 23 :: tier2:unmarked :: ctx:521ae5cb8f39",
+        "sec-evaluation/tsplib95-euc-2d :: 51 :: tier2:unmarked :: ctx:bdf76738267b",
+        "sec-evaluation/tsplib95-euc-2d :: 78 :: tier2:unmarked :: ctx:124c418a8f2f"
+      ],
+      "claims_withdrawn": [
+        {
+          "id": "metrics.sdpe.pct_factor",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 190,
+          "printed": 100.0,
+          "expected": null
+        }
+      ],
       "mismatched_at_record": []
     }
   ]

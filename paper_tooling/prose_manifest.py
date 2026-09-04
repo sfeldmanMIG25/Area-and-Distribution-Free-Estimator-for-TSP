@@ -2680,16 +2680,7 @@ CLAIMS: list[Claim] = [
 
     # -- Section 4.3, the metric definitions --------------------------------
     # withdrawn metrics.sdpe.bias_example_pct: cut in the verbosity sweep; illustrative hypothetical, not a measurement
-    Claim(
-        id="metrics.sdpe.pct_factor",
-        anchor=r"the leading factor of {v} expresses SDPE in percentage points",
-        no_generator=(
-            "Unit-conversion constant in the displayed SDPE definition; a "
-            "design constant of the metric, not a measurement. Nothing to "
-            "settle."
-        ),
-        tol="exact",
-    ),
+    # withdrawn metrics.sdpe.pct_factor: the prose gloss on the leading factor of 100 was cut in pass 1 (Section 4 lead, 2026-09-04); the 100 remains in the displayed SDPE formula
     Claim(
         id="metrics.ci.level_pct",
         anchor=r"Each SDPE carries a {v}\% bootstrap confidence interval, suppressed",
