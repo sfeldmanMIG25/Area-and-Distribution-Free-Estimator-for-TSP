@@ -734,20 +734,20 @@ CLAIMS: list[Claim] = [
     # -----------------------------------------------------------------------
     Claim(
         id="methods.shap.dominance_share",
-        anchor=r"contributes {v}\% of the total magnitude and",
+        anchor=r"the MST dominance ratio contributes {v}\% of the total and",
         expect="bank:shap_feature_mst_dominance_ratio_share_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="methods.shap.greedy_share",
-        anchor=r"total magnitude and \texttt{greedy\_nn\_over\_mst} {v}\%",
+        anchor=r"of the total and \texttt{greedy\_nn\_over\_mst} {v}\%",
         expect="bank:shap_feature_greedy_nn_over_mst_share_pct",
         tol=("dp", 1),
     ),
     # withdrawn methods.shap.top2_share: cut in the verbosity sweep; the two component shares remain in prose and tab:shap_top carries the full ranking
     Claim(
         id="methods.shap.size_dimension_share",
-        anchor=r"node count and dimension jointly contribute {v}\%. Appendix",
+        anchor=r"Node count and dimension jointly contribute {v}\%. Appendix",
         expect="bank:shap_family_size_dimension_share_pct",
         tol=("dp", 1),
     ),
@@ -903,14 +903,20 @@ CLAIMS: list[Claim] = [
     # checkable numeral at both sites that name the row.
     Claim(
         id="methods.probe.twin_dim",
-        anchor=r"constraints removed holds monotonicity on {v}\% of the dimension sweeps and",
+        anchor=r"against {v}\% of the dimension sweeps and",
         expect="bank:cons_probe_gart2_logit_v3hp_dimension_pct_nonincr_deployed",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="methods.probe.twin_n",
+        anchor=r"and {v}\% of the size sweeps for the same fit with the constraints removed",
+        expect="bank:cons_probe_gart2_logit_v3hp_n_customers_pct_nonincr_deployed",
         tol=("dp", 1),
     ),
     # -- Section 3.4, within-cell SHAP decomposition (shap_by_dimension.py) --
     Claim(
         id="shap.within.greedy_d2",
-        anchor=r"holds {v}\% of the within-cell SHAP variance at $d=2$",
+        anchor=r"greedy-to-MST ratio holds {v}\% of the SHAP variance at $d=2$",
         expect="bank:shap_band_d2_within_share_greedy_nn_over_mst_pct",
         tol=("dp", 1),
     ),
@@ -1122,7 +1128,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.greedy_gate.train_lo",
-        anchor=r"the training split alone spans the narrower $[{v},2.1295]$",
+        anchor=r"The training split alone spans the narrower $[{v},2.1295]$",
         no_generator=(
             "Minimum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv "
             "(69,768 rows): 1.046482. The released constant "
@@ -1136,7 +1142,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.greedy_gate.train_hi",
-        anchor=r"the training split alone spans the narrower $[{~},{v}]$",
+        anchor=r"The training split alone spans the narrower $[{~},{v}]$",
         no_generator=(
             "Maximum of greedy_nn_over_mst over split=='train' in tsp_features_v4.csv "
             "(69,768 rows): 2.129495. Companion to methods.greedy_gate.train_lo; "
@@ -1318,7 +1324,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.probe.gart_both_axes",
-        anchor=r"held-out instances accordingly returns {v}\% non-increasing sweeps on both axes",
+        anchor=r"held-out instances returns {v}\% non-increasing sweeps on both axes",
         expect="bank:cons_probe_gart_2_0_dimension_pct_nonincr_deployed",
         tol="printed",
         note="The dimension and node-count axes both read 100.0 with zero violations, "

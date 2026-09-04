@@ -2,27 +2,41 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-04T07:22:03+00:00",
+    "at": "2026-09-04T07:33:12+00:00",
     "kind": "update",
-    "reason": "pass 1 Section 2 (writer/critic, two cycles): six pairs applied; reword only",
+    "reason": "pass 1 Section 3 (writer/critic, two cycles): nine pairs applied; backlog contexts moved (30-feature block, axis census, probe size), no new values",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "50b07392cdfe56f903fc2c2550fcd6aebcaf77bbb740983dd8d0cf1a3aae8e4c",
+    "tex_sha256": "25d82d8fdb1c185c7ba671bf0bdf5fd7d00a5910feff509093b3e564c8f88a86",
     "production_model": "GART_2.0",
-    "n_entries": 219,
-    "n_keys": 219,
+    "n_entries": 217,
+    "n_keys": 217,
     "absorbed": [
-      "sec-theory :: 0.0762 :: tier1:precision :: ctx:08b8bef61417"
+      "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:5ab449a23f4b",
+      "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:0bf2d934c94c",
+      "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:0ef78c9ca15d",
+      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1781c2bfb114",
+      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:3dc68b851a8a",
+      "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:c4cff12281f8",
+      "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:a62f93c9bca6"
     ],
     "pruned": [
-      "sec-theory :: 0.0762 :: tier1:precision :: ctx:641b0710b234"
+      "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:4081c1b020e5",
+      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1356f53be115",
+      "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:55472f8f862f",
+      "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:5218471d0afd",
+      "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:5072e1d094c5",
+      "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:9348646e1482",
+      "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:0bb43e70bfe5",
+      "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b",
+      "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:3e816a28efe1"
     ],
     "claims_withdrawn": [],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 66,
-    "absorbed": 1301,
-    "pruned": 1673,
+    "records": 67,
+    "absorbed": 1308,
+    "pruned": 1682,
     "claims_withdrawn": 570,
     "mismatched_claims_withdrawn": 0
   },
@@ -992,10 +1006,10 @@
       "example": "...nt \\emph{and} dimension-scalable at once: all 31 features are defined for arbitrary $d$ throug...",
       "first_recorded": "2026-08-14T06:06:05+00:00"
     },
-    "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:4081c1b020e5": {
+    "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:5ab449a23f4b": {
       "count": 1,
-      "example": "...}$. It is the only input GART 2.0 adds to the 30-feature block it inherits. It is also a const...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...ree ratio. The one input GART 2.0 adds to the 30-feature block it inherits is \\texttt{greedy\\_...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
     "sec-methodology/subsec-dataset :: 10 :: tier2:unmarked :: ctx:5a21aae8b8cf": {
       "count": 1,
@@ -1012,15 +1026,15 @@
       "example": "...that mix. The full feature corpus comprises $106{,}272$ solved instances with node counts $n \\in [5,...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1356f53be115": {
+    "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1781c2bfb114": {
       "count": 1,
-      "example": "...corpus, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% normal, and 6.2\\% correlated. The multidime...",
-      "first_recorded": "2026-08-28T02:48:09+00:00"
+      "example": "...all $2{,}444{,}256$ axes, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% normal, and 6.2\\% correla...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
-    "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:55472f8f862f": {
+    "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:3dc68b851a8a": {
       "count": 1,
-      "example": "...}256$ axes in the corpus, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% normal, and 6.2\\% correla...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...$ axes, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% normal, and 6.2\\% correlated. The multidime...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
     "sec-methodology/subsec-dataset :: 15 :: tier2:unmarked :: ctx:e8fef7fcb5c6": {
       "count": 1,
@@ -1052,10 +1066,10 @@
       "example": "... $d \\in \\{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\\}$ (17 training-visible d...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:5218471d0afd": {
+    "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:0bf2d934c94c": {
       "count": 1,
-      "example": "...d topology varies by axis. Measured over all $2{,}444{,}256$ axes in the corpus, 68.7\\% are uniform, 12.5...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...tropic and topology varies by axis. Over all $2{,}444{,}256$ axes, 68.7\\% are uniform, 12.5\\% clustered, ...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
     "sec-methodology/subsec-dataset :: 30 :: tier2:unmarked :: ctx:99710e682b69": {
       "count": 1,
@@ -1082,15 +1096,15 @@
       "example": "..., 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50\\}$ (17 training-visible dimension values), pl...",
       "first_recorded": "2026-08-11T11:26:20+00:00"
     },
-    "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:5072e1d094c5": {
+    "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:c4cff12281f8": {
       "count": 1,
       "example": "...uniform, 12.5\\% clustered, 12.5\\% normal, and 6.2\\% correlated. The multidimensional results be...",
-      "first_recorded": "2026-08-28T02:48:09+00:00"
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
-    "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:9348646e1482": {
+    "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:0ef78c9ca15d": {
       "count": 1,
-      "example": "... over all $2{,}444{,}256$ axes in the corpus, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% norma...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "...aries by axis. Over all $2{,}444{,}256$ axes, 68.7\\% are uniform, 12.5\\% clustered, 12.5\\% norma...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
     "sec-methodology/subsec-dataset :: 69{,}768 :: tier2:unmarked :: ctx:2992b3a95209": {
       "count": 1,
@@ -1102,20 +1116,10 @@
       "example": "...inite inputs, and it is never binding. On the 16{,}920 multidimensional test predictions $\\hat\\alpha...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:0bb43e70bfe5": {
+    "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:a62f93c9bca6": {
       "count": 1,
-      "example": "...onicity on 8.40\\% of the dimension sweeps and 19.0\\% of the size sweeps. \\subsection{Feature ...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
-    },
-    "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b": {
-      "count": 1,
-      "example": "...aribus sweep of either variable; a probe over 1{,}000 held-out instances accordingly returns 100\\% ...",
-      "first_recorded": "2026-08-11T14:04:14+00:00"
-    },
-    "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:3e816a28efe1": {
-      "count": 1,
-      "example": "...Importance}\\label{subsec:shap} We assess the 31-feature set with mean absolute SHAP magnitude...",
-      "first_recorded": "2026-09-03T06:16:07+00:00"
+      "example": "... either variable is swept alone. A probe over 1{,}000 held-out instances returns 100\\% non-increasi...",
+      "first_recorded": "2026-09-04T07:33:12+00:00"
     },
     "sec-theory :: 0.0762 :: tier1:precision :: ctx:08b8bef61417": {
       "count": 1,
@@ -2579,6 +2583,13 @@
       "line": 174,
       "printed": 8.4,
       "expected": 8.4
+    },
+    "methods.probe.twin_n": {
+      "state": "MATCHED",
+      "expect": "bank:cons_probe_gart2_logit_v3hp_n_customers_pct_nonincr_deployed",
+      "line": 174,
+      "printed": 19.0,
+      "expected": 19.0
     },
     "methods.shap.dominance_share": {
       "state": "MATCHED",
@@ -13028,6 +13039,38 @@
       ],
       "pruned": [
         "sec-theory :: 0.0762 :: tier1:precision :: ctx:641b0710b234"
+      ],
+      "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-04T07:33:12+00:00",
+      "kind": "update",
+      "reason": "pass 1 Section 3 (writer/critic, two cycles): nine pairs applied; backlog contexts moved (30-feature block, axis census, probe size), no new values",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "25d82d8fdb1c185c7ba671bf0bdf5fd7d00a5910feff509093b3e564c8f88a86",
+      "production_model": "GART_2.0",
+      "n_entries": 217,
+      "n_keys": 217,
+      "absorbed": [
+        "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:5ab449a23f4b",
+        "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:0bf2d934c94c",
+        "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:0ef78c9ca15d",
+        "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1781c2bfb114",
+        "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:3dc68b851a8a",
+        "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:c4cff12281f8",
+        "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:a62f93c9bca6"
+      ],
+      "pruned": [
+        "sec-methodology/mst-edge-and-topological-features :: 30 :: tier2:unmarked :: ctx:4081c1b020e5",
+        "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:1356f53be115",
+        "sec-methodology/subsec-dataset :: 12.5 :: tier1:unit :: ctx:55472f8f862f",
+        "sec-methodology/subsec-dataset :: 2{,}444{,}256 :: tier2:unmarked :: ctx:5218471d0afd",
+        "sec-methodology/subsec-dataset :: 6.2 :: tier1:unit :: ctx:5072e1d094c5",
+        "sec-methodology/subsec-dataset :: 68.7 :: tier1:unit :: ctx:9348646e1482",
+        "sec-methodology/subsec-model-training :: 19.0 :: tier1:unit :: ctx:0bb43e70bfe5",
+        "sec-methodology/subsec-model-training :: 1{,}000 :: tier2:unmarked :: ctx:9e17b0f5d12b",
+        "sec-methodology/subsec-shap :: 31 :: tier2:unmarked :: ctx:3e816a28efe1"
       ],
       "claims_withdrawn": [],
       "mismatched_at_record": []
