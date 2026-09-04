@@ -417,13 +417,15 @@ Three refits vary only the training data, holding hyperparameters and seed fixed
 
 \subsection{Failure on Near-Collinear Geometry} \label{subsec:coverage}
 
-Section~\ref{subsec:results_2d} reports 10.8\% MAPE on the near-collinear Line Noise class against 1.47\% on the isotropic class, and the error is almost entirely one-sided: MSPE is $-10.8$, so the model under-predicts. The training split never shows the model this regime, and the feature set cannot represent it.
+Section~\ref{subsec:results_2d} reports 10.8\% MAPE on the near-collinear Line Noise class against 1.47\% on the isotropic class, and the error is almost entirely one-sided: MSPE is $-10.8$, so the model under-predicts.
 
-The training split contains zero instances with $\alpha>1.5$ at $n\ge200$, and every training instance with $\alpha>1.7$ has $n\le10$. Its $\alpha$ distribution has a 99th percentile of 1.54, and 54\% of the 210 benchmark Line Noise instances lie above that percentile. No tree can map large $n$ at high $\alpha$ onto a high $\hat\alpha$ when the fit never contains the combination. The symptom matches: regressing predicted $\alpha$ on true $\alpha$ over the 90 Line Noise instances at $n\ge200$ gives a slope of 0.36 against a correlation of 0.95, so the model ranks those instances almost perfectly and declines to move its $\alpha$ level.
+TreeSHAP on the released booster, run over the 2{,}580 diverse 2D benchmark instances, shows why. On the Isotropic class (840 instances) the Greedy-to-MST Ratio carries 28.7\% of the total mean $|\mathrm{SHAP}|$, the largest share of any feature; the MST Dominance Ratio is next at 19.3\%, then dimension at 8.16\%, $n$ at 7.97\%, and normalized MST diameter at 6.36\%. Isotropic predictions are unbiased: mean predicted $\alpha$ is 1.22 against a mean true $\alpha$ of 1.22.
 
-Holding hyperparameters and seed fixed, we vary the feature set, extending the 30-feature baseline with five degeneracy, local-intrinsic-dimension and MST-topology descriptors, and we vary the training support, adding 874 newly generated and solved instances at large $n$ and high $\alpha$ to the training split only. Measured by the Line Noise slope at $n\ge200$, features alone move the baseline from 0.294 to 0.569, support alone moves it to 0.332, and the two together reach 0.798. Neither intervention approaches sufficiency alone and the two are not additive, so the deficit is joint. The ladder is anchored on the 30-feature model, whose slope on this slice is 0.294; the released 31-feature model reaches 0.362 on the same slice, so these figures compare the two interventions against each other rather than against the released estimator.
+On Line Noise (210 instances) the same feature does not go silent and does not point the wrong way: its mean signed SHAP rises from $+0.417$ on Isotropic to $+0.732$ on Line Noise, and the MST Dominance Ratio's from $+0.105$ to $+0.369$, both correctly pushing $\alpha$ up. The prediction still falls short: mean predicted $\alpha$ is 1.38 against a mean true $\alpha$ of 1.56, a shortfall of 0.174, the largest of any class (the jittered-grid class is next at 0.0738). The training split itself contains zero instances with $\alpha>1.5$ at $n\ge200$; its $\alpha$ 99th percentile is 1.54, and 54\% of the 210 Line Noise instances exceed it.
 
-We attempted the repair twice against criteria fixed before either candidate was scored, and rejected both. Adding all 874 instances to the training split clears every one of nine pre-registered gates, moving 2D MAPE from 2.89\% to 2.04\%, Line Noise MAPE from 10.8\% to 5.83\% and the slope from 0.366, that experiment's own baseline reading, to 0.838. The slope is not a property of the model: eight permutations of the row order of the identical training rows, at one seed, span $[0.637,0.803]$, and the reported 0.838 lies above that entire band. And the gain is not a cross-family result, because the augmentation's $d=2$ lattice generator and the benchmark's \texttt{grid} generator place their sites, spacing, cell centers and $\pm5\%$ jitter identically, so half of the 2D gain is measured on the candidate's own training geometry. A de-contaminated second candidate, re-run over seven seeds fixed in advance, removes that overlap and clears ten of its own eleven gates at a median slope of 0.735, but forfeits the paper's one distribution-independent dispersion claim to do so: its Holm-adjusted advantage over the asymptotic ratio on TSPLIB reaches only $p=0.065$ at the median against 0.0048 for the released model. We did not make that trade. A per-family multiplicative constant, an oracle a deployed estimator does not have, recovers 97.9\% of the first candidate's Line Noise gain by itself, so most of what either candidate buys is a per-family offset rather than a repaired response to geometry. The released model is unchanged.
+The reason is support, on exactly the feature carrying the prediction. On the training split the Greedy-to-MST Ratio spans $[1.06,1.67]$ between its 1st and 99th percentiles; on Line Noise it averages 1.77, and 78.1\% of the class's rows fall outside that band. The other top features stay inside it: the MST Dominance Ratio is 14.3\% outside; dimension, $n$, and MST diameter are 0\% outside. A boosted tree cannot predict past the highest split value it saw in training, so the output saturates while the true $\alpha$ keeps rising.
+
+We tested two repairs against gates fixed before either candidate was scored, and rejected both. Extending the feature set moves the Line Noise slope at $n\ge200$ from 0.294 to 0.569; adding training support alone moves it to 0.332; the two together reach 0.798, so the deficit is joint, not additive; the released model, not part of this ladder, already reaches 0.362 on the same slice. Augmenting the training split with matched instances cleared its gates, but half of the gain came from a $d=2$ lattice generator identical to the benchmark's own \texttt{grid} generator, contaminating the result on the candidate's own geometry. A de-contaminated candidate cleared its gates too, but forfeited the paper's one distribution-independent dispersion claim: its advantage over the asymptotic ratio on TSPLIB fell to $p=0.065$, against 0.0048 for the released model. We did not make that trade. A per-family multiplicative constant, an oracle a deployed estimator does not have, recovers 97.9\% of the first candidate's gain by itself, so most of what either candidate buys is an offset, not a repaired response to geometry. The released model is unchanged.
 
 \subsection{Rank Agreement and Calibration} \label{subsec:discussion}
 
@@ -671,7 +673,7 @@ Four classes (isotropic, biased, geometric, clustered) follow conventions from t
 
 The full $(d, n)$ count grid of the 16{,}920-instance multidimensional benchmark:
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Multidimensional synthetic benchmark grid: instance count per $(d, n)$ bucket.}
 \label{tab:nd_grid_counts}
@@ -698,7 +700,7 @@ $d=100$ & 1{,}476 & 984 & 1{,}230 & 246 & 738 & 1{,}230 & \textbf{5{,}904} \\
 
 Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Tables~\ref{tab:edge_features} and~\ref{tab:topo_features} the 19 MST-derived ones, and Table~\ref{tab:greedy_features} the single constructive ratio, 31 in all (Section~\ref{subsec:features}). Listed complexities assume the MST has already been built; MST construction itself dominates the asymptotic cost and is analyzed in Section~\ref{sec:methodology}.
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Geometric and centroid feature specifications.}
 \label{tab:geo_features}
@@ -724,7 +726,7 @@ Table~\ref{tab:geo_features} lists the 11 geometric and centroid features, Table
 
 The moments are candidate predictors of the $\alpha$ ratio, not a tested causal mechanism.
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{MST edge distribution statistics (10 features).}
 \label{tab:edge_features}
@@ -746,7 +748,7 @@ The moments are candidate predictors of the $\alpha$ ratio, not a tested causal 
 
 We introduce the Dominance, Gap, and Normalized Diameter ratios as $O(n)$ candidate proxies for cluster, filament, and hub structure. The Leaf Ratio rests on the hypothesis that low-leaf trees are more common on linear manifolds than in isotropic clouds. This interpretation is not evaluated independently here.
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{Topological and clustering feature specifications (9 features).}
 \label{tab:topo_features}
@@ -840,11 +842,11 @@ The convex-hull plug-in uses the hull only for $d\le3$; above that we substitute
 
 We time GART 2.0 and the bound on the same instances as Table~\ref{tab:tsplib_by_size}, each estimator alone in its own process during a quiet window. We compare the two on 77 of the 78 EUC\_2D instances the bound's dense kernel covers; the one excluded instance is reported at the end of this subsection. The ms column is the median per-instance time, and the accuracy beside it is a MAPE and therefore a mean. $\times$ compares the bound's time with GART 2.0's: the ratio of the printed medians here and on the 2D and non-Euclidean ladders, and the median of back-to-back per-instance ratios on the multidimensional ladder. Raw is the incumbent $\hat w_k$. Cal.\ is $c_k\hat w_k$ with $c_k$ fitted per budget on the planar training split. Bold marks every cell both cheaper and more accurate than GART 2.0. A \emph{rung} is one budget row.
 
-Read on the median of per-instance medians across the corpus, the raw bound first matches GART 2.0's MAPE at an ascent budget of 50, where it costs 1.46 times GART 2.0 for a margin of 0.00408 percentage points, and where the paired win rate is exactly 50.0\%. At a budget of 25 the calibrated row costs 0.902 times GART 2.0 and reaches 2.00\% MAPE against 2.56\%: strict domination on both axes, on the same instances and the same protocol. That multiple is a ratio of typical-instance costs; summed over the corpus instead, the same pair reads 24.9, because the bound is cheap on the small instances that set the median and dear on the large ones that set the total. The ladders report the first statistic. GART 2.0 is therefore not on the cost/accuracy Pareto front under this median convention once the family is admitted.
+The calibrated bound dominates GART 2.0 on both cost and accuracy at an ascent budget of 25: 0.902 times the cost at 2.00\% MAPE against 2.56\%, on the same instances and protocol. The raw bound alone reaches parity at budget 50, at 1.46 times the cost and a margin of 0.00408 percentage points, with a paired win rate of exactly 50.0\%. Both readings use the median of per-instance costs, the statistic the ladders report throughout; summed over the corpus instead, the budget-25 pair costs 24.9 times as much, because the bound is cheap on the many small instances that set the median and expensive on the few large ones that set the total. GART 2.0 therefore leaves the cost/accuracy front once the bound family is admitted, under the median convention.
 
 On the 23 smallest instances the calibrated bound at that same budget costs 0.159 times GART 2.0 at 1.69\% MAPE against 2.01\%, and even the raw uncalibrated certificate reaches 22.2\% lower error at 0.463 times the cost. In the middle bucket nothing dominates, and the raw bound needs the top of the ladder to match at all. In the largest bucket the raw bound matches at 6.65 times the cost and again nothing dominates. The reversal is monotone in $n$.
 
-The bound is far more load-sensitive than GART 2.0, its median rising by a factor of 1.25 between a quiet and a noisy window at the crossing budget of 50 against 1.05 for GART 2.0, so every published repeat is from one quiet window and the noisy repeats are retained only as the control; mixing the two would have overstated the bound's cost and flattered GART 2.0. And the excluded instance is real cost, not a hidden exclusion: on \texttt{d18512}, above the bound's dense kernel switch, the bound costs 167 times GART 2.0 at the crossing budget and 2{,}078 times at the top of the ladder, 493 seconds against 237 milliseconds (the 239~ms of Section~\ref{subsec:cost_accounting} is the same work under the harness protocol).
+The bound is far more load-sensitive than GART 2.0: its median rises by a factor of 1.25 between a quiet and a noisy window at the crossing budget of 50, against 1.05 for GART 2.0. Every published repeat is therefore from one quiet window, with the noisy repeats retained only as a control; mixing the two would have overstated the bound's cost and flattered GART 2.0. On the excluded instance, \texttt{d18512}, above the bound's dense kernel switch, the bound costs 167 times GART 2.0 at the crossing budget and 2{,}078 times at the top of the ladder, 493 seconds against 237 milliseconds (the 239~ms of Section~\ref{subsec:cost_accounting} is the same work under the harness protocol).
 
 \begin{table}[!htbp]
 \centering
@@ -875,15 +877,15 @@ $k=500$ & 7.88 & 2.11 & 0.971 & 0.742 & 25.7 & 5.64 & 1.93 & 1.42 & 1{,}120 & 61
 
 \subsection{Results on the 2D Diverse and Non-Euclidean Benchmarks} \label{subsec:frontier_other}
 
-The remaining two ladders are measured on the protocol of Section~\ref{subsec:frontier_tsplib}, with one timing exception disclosed below.
+The remaining two ladders are measured on the protocol of Section~\ref{subsec:frontier_tsplib}.
 
-Table~\ref{tab:frontier_2d} gives the 2D diverse ladder. The raw bound passes GART 2.0 under the Volgenant--Jonker step at a budget of 50, at 0.230 times the cost with a paired win rate of 54.8\%; the calibrated row passes it a rung earlier. The reversal is monotone in $n$ and steeper than the one Section~\ref{subsec:frontier_tsplib} reports, because this corpus reaches down to five nodes. On the 360 instances with $n\le10$, the raw bound at a budget of 25 reads 0.439\% MAPE against GART 2.0's 3.21\% at 0.0699 times the cost, and wins 95.0\% of the paired comparisons. On the 610 instances with $n>500$, nothing on the ladder dominates: the raw bound is more accurate than GART 2.0 only at the top budget, and there it costs 26.1 times as much. 
+The raw bound passes GART 2.0 on the 2D diverse ladder (Table~\ref{tab:frontier_2d}) under the Volgenant--Jonker step at a budget of 50, at 0.230 times the cost and a paired win rate of 54.8\%; the calibrated row passes a rung earlier. The reversal is monotone in $n$ and steeper than on TSPLIB (Section~\ref{subsec:frontier_tsplib}), because this corpus reaches down to five nodes. On the 360 instances with $n\le10$, the raw bound at a budget of 25 reads 0.439\% MAPE against GART 2.0's 3.21\% at 0.0699 times the cost, winning 95.0\% of the paired comparisons. On the 610 instances with $n>500$, nothing dominates: the raw bound is more accurate only at the top budget, and there it costs 26.1 times as much.
 
-Table~\ref{tab:frontier_noneuc} gives the non-Euclidean ladder, where the estimator needs the MDS embedding of Section~\ref{sec:application} and the bound reads the distance matrix directly. Over the 29 instances both methods score, GART 2.0 costs 4.88~ms, of which the embedding is 9.21\%, at 3.81\% MAPE. The Polyak step at a budget of 500 reaches 0.509\% MAPE at 0.693 times that cost and wins all 29 paired comparisons; at a budget of 200 it reads 0.762\% for 0.339 times the cost, again on every instance. The cheapest domination by a bound row anywhere in this study is on this corpus: the Volgenant--Jonker step at a budget of 25 costs 0.0648 times GART 2.0 and reads 2.95\% against 3.81\%.
+On the non-Euclidean ladder (Table~\ref{tab:frontier_noneuc}), the estimator needs the MDS embedding of Section~\ref{sec:application} while the bound reads the distance matrix directly. Over the 29 instances both methods score, GART 2.0 costs 4.88~ms, of which the embedding is 9.21\%, at 3.81\% MAPE. The Polyak step at a budget of 500 reaches 0.509\% MAPE at 0.693 times that cost, winning all 29 paired comparisons; at a budget of 200 it reads 0.762\% for 0.339 times the cost, again on every instance. The cheapest domination by a bound row anywhere in this study is here: the Volgenant--Jonker step at a budget of 25 costs 0.0648 times GART 2.0 and reads 2.95\% against 3.81\%.
 
 The two step rules do not order the same way on the two corpora. Volgenant--Jonker leads Polyak at every 2D budget that runs an ascent except 200, where the two are separated by half a hundredth of a percentage point; the gap is widest at a budget of 25, 3.61\% against 7.52\%. Polyak leads from a budget of 200 on the non-Euclidean corpus, 0.762\% against 1.23\%.
 
-The timing sessions behind both ladders did not run on a quiet machine, and the two methods are not equally sensitive to that: a paired control against the published quiet-window measurements puts GART 2.0 at 1.48 times its published cost and the bound at 1.10 to 1.14 times, so every cost multiple above is between 0.740 and 0.768 of its quiet-box value. That direction runs against the bound, and correcting for it costs it exactly one domination, the raw Volgenant--Jonker row at a budget of 200 on the 2D corpus, whose 0.790 becomes 1.03. And the checkpointed protocol does not flatter the bound: running the released single-budget call once per rung, sharing nothing between rungs, costs 0.768 to 0.955 times the checkpointed ladder on the 2D corpus and 0.898 to 1.14 times on the non-Euclidean one.
+The timing sessions behind both ladders did not run on a quiet machine, and the two methods are not equally sensitive to that: a paired control against the published quiet-window measurements puts GART 2.0 at 1.48 times its published cost and the bound at 1.10 to 1.14 times, so every cost multiple above is between 0.740 and 0.768 of its quiet-box value. That direction runs against the bound: correcting for it costs exactly one domination, the raw Volgenant--Jonker row at a budget of 200 on the 2D corpus, whose 0.790 becomes 1.03. Running the released single-budget call once per rung instead of the checkpointed protocol, sharing nothing between rungs, costs 0.768 to 0.955 times the checkpointed ladder on the 2D corpus and 0.898 to 1.14 times on the non-Euclidean one.
 
 \begin{table}[tbp]
 \centering
@@ -911,7 +913,7 @@ $k=500$ & 9.42 & 1.88 & 1.27 & 1.10 & 7.15 & 1.43 & 1.45 & 1.33 \\
 
 \begin{table}[!htbp]
 \centering
-\caption{Non-EUC\_2D TSPLIB95 ladder over the 29 instances both methods score, nine of which violate the triangle inequality; conventions as in Section~\ref{subsec:frontier_tsplib}, except that the planar $c_k$ makes the Cal.\ columns indicative only.}
+\caption{Non-EUC\_2D TSPLIB95 ladder over the 29 instances both methods score, nine of which violate the triangle inequality; the planar $c_k$ makes the Cal.\ columns indicative only.}
 \label{tab:frontier_noneuc}
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.05}
@@ -935,9 +937,9 @@ $k=500$ & 5.27 & 1.08 & 1.14 & 0.995 & 3.38 & 0.693 & \textbf{0.509} & \textbf{0
 
 \section{Classical Estimator Benchmarks by Domain} \label{app:classical}
 
-The upper panels apply the two classical estimators to the complete 2D and TSPLIB EUC\_2D benchmarks, with the convex hull of each instance standing in for BHH's region measure, which is the only option on TSPLIB and the fairer option on the degenerate 2D classes. The lower panel restricts to the 210 i.i.d.\ uniform 2D instances, where the sampling region $[0,G]^2$ is exact and BHH receives it. \c{C}avdar--Sokol receives the same input in both, the rectangle covering the nodes, so only its instance set changes between the panels.
+The upper panels apply the two classical estimators to the complete 2D and TSPLIB EUC\_2D benchmarks, with the convex hull of each instance standing in for BHH's region measure, which is the only option on TSPLIB and the fairer option on the degenerate 2D classes. The lower panel restricts to the 210 independently drawn uniform 2D instances, where the sampling region $[0,G]^2$ is exact and BHH receives it. \c{C}avdar--Sokol receives the same input in both, the rectangle covering the nodes, so only its instance set changes between the panels.
 
-The four panels are released as tidy tables with the benchmark artifacts.
+
 
 \section{TSPLIB95 EUC\_2D Benchmark by Size} \label{app:detail_tsplib}
 
@@ -999,9 +1001,9 @@ $n$ range & Estimator & SDPE (\%) [95\% CI] & MAPE (\%) & $|$Median$|$ (\%) & MS
 
 \section{Trained Hyperparameters and Booster Statistics} \label{app:hyperparams}
 
-The search we rejected was Optuna's tree-structured Parzen estimator (TPE), 200 trials, 60 of them completed and 140 pruned, against in-distribution validation. The tuned booster reaches 0.611\% on the multidimensional test split against 0.623\% for the same booster on the frozen hyperparameters, and 2.64\% against 2.47\% on TSPLIB EUC\_2D; both are unconstrained and both are on the logit target, so the monotone constraint of the released model does not enter the difference, and scoring the tuned booster against the released model instead would confound the search with that constraint.
+A hyperparameter search does not improve on the frozen block enough to justify replacing it. Optuna's tree-structured Parzen estimator (TPE) ran 200 trials against in-distribution validation, 60 completed and 140 pruned; the tuned booster reaches 0.611\% on the multidimensional test split against 0.623\% for the frozen hyperparameters, and 2.64\% against 2.47\% on TSPLIB EUC\_2D. Both boosters are unconstrained and trained on the logit target, so the monotone constraint of the released model does not enter the difference; scoring the tuned booster against the released model instead would confound the search with that constraint.
 
-\begin{table}[H]
+\begin{table}[tbp]
 \centering
 \caption{GART 2.0 hyperparameters and trained-model statistics; the hyperparameter block is inherited and frozen.}
 \label{tab:hyperparams}
@@ -1048,11 +1050,11 @@ Two other learners were fitted on the same feature pipeline before the gradient-
 
 For TSPLIB ATT, GEO (geographic coordinates with great-circle distances), and EXPLICIT (distance matrix only) instances, classical MDS gives an approximate positive-eigenvalue Euclidean representation. CEIL\_2D uses native coordinates. The embedding dimension $\kappa$ is chosen by the rule of Section~\ref{sec:application}; this retained-mass rule is a dimension-selection heuristic, not a distance-preservation guarantee.
 
-Given an $n \times n$ distance matrix $D$, classical MDS computes the eigendecomposition of the doubly-centered matrix $B = -\frac{1}{2} J D^{(2)} J$ where $J = I - \frac{1}{n}\mathbf{1}\mathbf{1}^T$ and $D^{(2)}$ is the element-wise squared distance matrix. The embedding coordinates are $X = V_\kappa \Lambda_\kappa^{1/2}$ where $V_\kappa$ and $\Lambda_\kappa$ are the top $\kappa$ eigenvectors and eigenvalues.
 
-We embed into $\kappa$ dimensions, selecting the smallest $\kappa$ that retains $\ge$99.9\% of positive eigenvalue mass (capped at $\kappa = 100$). For GEO instances, the selected dimension ranges from 2 to 61; for screened EXPLICIT instances, from 10 to 100. The MST features (edge weights, degrees, diameter) are computed from the original distance matrix, while geometric features (centroid statistics, bounding volume, aspect ratio) use the approximate MDS coordinates. The dimension $\kappa$ is passed to the model as the \texttt{dimension} feature.
 
-Normalized distance stress is $\sqrt{\sum_{i<j}(D_{ij}-\hat D_{ij})^2/\sum_{i<j}D_{ij}^2}$, where $\hat D_{ij}$ is the Euclidean distance induced by the retained MDS coordinates; correlation is Pearson correlation between the same distance vectors; Table~\ref{tab:mds_diagnostics} reports their medians and ranges. CEIL\_2D stress measures only integer-ceiling distortion on a fixed-seed sample of 100{,}000--1{,}000{,}000 pairs; other rows use all pairs. Five capped instances do not reach the 99.9\% target: \texttt{att532}, \texttt{pa561}, \texttt{si175}, \texttt{si535}, and \texttt{si1032}.
+For GEO instances, the selected dimension ranges from 2 to 61; for screened EXPLICIT instances, from 10 to 100. The MST features (edge weights, degrees, diameter) are computed from the original distance matrix, while geometric features (centroid statistics, bounding volume, aspect ratio) use the approximate MDS coordinates.
+
+Normalized distance stress is $\sqrt{\sum_{i<j}(D_{ij}-\hat D_{ij})^2/\sum_{i<j}D_{ij}^2}$, where $\hat D_{ij}$ is the Euclidean distance induced by the retained MDS coordinates, and correlation is the Pearson correlation between the same distance vectors. Table~\ref{tab:mds_diagnostics} reports the median and range of each. CEIL\_2D stress measures only integer-ceiling distortion, on a fixed-seed sample of 100{,}000--1{,}000{,}000 pairs; other rows use all pairs. Five capped instances do not reach the 99.9\% target: \texttt{att532}, \texttt{pa561}, \texttt{si175}, \texttt{si535}, and \texttt{si1032}.
 
 \begin{table}[!ht]
 \centering
@@ -1072,6 +1074,6 @@ EXPLICIT screened & 7 & 10--100 & 0.0198 [0.0041, 0.1208] & 0.99954 [0.99598, 0.
 }
 \end{table}
 
-The screened application set excludes ten EXPLICIT matrices with structural triangle-inequality violations. Seven EXPLICIT matrices remain, including three with mild rounding-level violations. GART 2.0 declines one of them, \texttt{si1032}, and obtains 3.01\% MAPE on the six it accepts. Distortion varies substantially within type (maximum stress 0.236 for GEO and 0.121 for screened EXPLICIT), so we do not attribute between-type accuracy differences to the distance label alone.
+The screened application set excludes ten EXPLICIT matrices with structural triangle-inequality violations, leaving seven, three of them with mild rounding-level violations. GART 2.0 declines one of them, \texttt{si1032}, and obtains 3.01\% MAPE on the six it accepts. Distortion varies substantially within type, maximum stress 0.236 for GEO against 0.121 for screened EXPLICIT, so we do not attribute between-type accuracy differences to the distance label alone.
 
 \end{document}

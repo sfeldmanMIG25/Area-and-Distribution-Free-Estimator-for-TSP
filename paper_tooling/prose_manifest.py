@@ -874,7 +874,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="appendix.mds.geo_stress_max",
-        anchor=r"(maximum stress {v} for GEO and {~} for screened EXPLICIT)",
+        anchor=r"maximum stress {v} for GEO against {~} for screened EXPLICIT",
         no_generator=(
             "Maximum normalized_distance_stress over the GEO rows of "
             "paper_reference/mds_distortion_screened.csv, written by "
@@ -1083,7 +1083,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="appendix.classical.panel_b_n",
-        anchor=r"The lower panel restricts to the {v} i.i.d.",
+        anchor=r"The lower panel restricts to the {v} independently drawn",
         expect="bank:classical_b_random_gart_2_0_n",
         tol="exact",
     ),
@@ -1154,7 +1154,7 @@ CLAIMS: list[Claim] = [
     # -- N-J: the tuning comparison, and which two boosters it is over -------
     Claim(
         id="methods.optuna.trials_complete",
-        anchor=r"200 trials, {v} of them completed and 140 pruned",
+        anchor=r"validation, {v} completed and {~} pruned",
         no_generator=(
             "lgbm_model_v3/gart2_optuna.db, study 'gart2': "
             "SELECT state, COUNT(*) FROM trials GROUP BY state -> COMPLETE 60, "
@@ -1166,7 +1166,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.optuna.trials_pruned",
-        anchor=r"200 trials, {~} of them completed and {v} pruned",
+        anchor=r"validation, {~} completed and {v} pruned",
         no_generator=(
             "lgbm_model_v3/gart2_optuna.db, study 'gart2': PRUNED 140 of 200 trials. "
             "Companion to methods.optuna.trials_complete; settle the same way."
@@ -1175,7 +1175,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.optuna.tuned_nd",
-        anchor=r"The tuned booster reaches {v}\% on the multidimensional test split",
+        anchor=r"the tuned booster reaches {v}\% on the multidimensional test split",
         no_generator=(
             "paper_tooling/v4_study_allmodels_strata.csv, row model=GART2_logit_tuned, "
             "stratum=nd_test: mape 0.611239. Written by "
@@ -1187,7 +1187,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="methods.optuna.untuned_nd",
-        anchor=r"against {v}\% for the same booster on the frozen hyperparameters",
+        anchor=r"against {v}\% for the frozen hyperparameters",
         no_generator=(
             "paper_tooling/v4_study_allmodels_strata.csv, row model=GART2_logit_v3hp, "
             "stratum=nd_test: mape 0.622598. This is the control the tuning sentence "
@@ -1292,7 +1292,7 @@ CLAIMS: list[Claim] = [
     # withdrawn application.noneuc.reference_scored_n: caption N-accounting removed; the 22-of-23 accounting is asserted in the body of the non-Euclidean results section
     Claim(
         id="methods.optuna.n_trials",
-        anchor=r"estimator (TPE), {v} trials, 60 of them completed",
+        anchor=r"estimator (TPE) ran {v} trials against",
         no_generator=(
             "lgbm_model_v3/gart2_optuna.db, study 'gart2': SELECT COUNT(*) FROM trials "
             "-> 200. Settle as for methods.optuna.trials_complete."
@@ -1495,19 +1495,19 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.raw_crossing_k",
-        anchor=r"MAPE at an ascent budget of {v}, where it costs {~} times GART 2.0",
+        anchor=r"reaches parity at budget {v}, at {~} times the cost",
         expect="frontier:tsplib/crossing_ladder_k",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.raw_crossing_cost_x",
-        anchor=r"MAPE at an ascent budget of {~}, where it costs {v} times GART 2.0",
+        anchor=r"reaches parity at budget {~}, at {v} times the cost",
         expect="frontier:tsplib/crossing_cost_x_gart2",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.tsplib.raw_crossing_margin",
-        anchor=r"times GART 2.0 for a margin of {v} percentage points",
+        anchor=r"and a margin of {v} percentage points",
         expect="= {frontier:tsplib/gart2_mape_pct}"
                " - {frontier:tsplib/crossing_bound_mape_pct}",
         tol=("dp", 3),
@@ -1517,31 +1517,31 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.paired_win_rate",
-        anchor=r"where the paired win rate is exactly {v}\%",
+        anchor=r"with a paired win rate of exactly {v}\%",
         expect="frontier:tsplib/paired_win_rate_of_bound_at_crossing_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_k",
-        anchor=r"At a budget of {v} the calibrated row costs {~} times GART 2.0 and reaches",
+        anchor=r"on both cost and accuracy at an ascent budget of {v}: {~} times the cost",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/crossing_ladder_k",
         tol="exact",
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_cost_x",
-        anchor=r"At a budget of {~} the calibrated row costs {v} times GART 2.0 and reaches",
+        anchor=r"at an ascent budget of {~}: {v} times the cost at",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/x_gart2_by_k/25",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_mape",
-        anchor=r"times GART 2.0 and reaches {v}\% MAPE against {~}\%: strict domination",
+        anchor=r"times the cost at {v}\% MAPE against {~}\%, on the same instances",
         expect="frontier:tsplib_calibrated_bound/Total (all EUC_2D)/mape_pct_by_k/25",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.tsplib.cal_crossing_gart2",
-        anchor=r"times GART 2.0 and reaches {~}\% MAPE against {v}\%: strict domination",
+        anchor=r"times the cost at {~}\% MAPE against {v}\%, on the same instances",
         expect="frontier:tsplib/gart2_mape_pct",
         tol=("dp", 2),
     ),
@@ -1591,13 +1591,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.load_sensitivity_bound",
-        anchor=r"its median rising by a factor of {v} between a quiet and a noisy window",
+        anchor=r"its median rises by a factor of {v} between a quiet and a noisy window",
         expect="frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.tsplib.load_sensitivity_gart2",
-        anchor=r"at the crossing budget of 50 against {v} for GART 2.0",
+        anchor=r"against {v} for GART 2.0. Every published repeat",
         expect="frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
         tol=("dp", 2),
     ),
@@ -2234,7 +2234,7 @@ CLAIMS: list[Claim] = [
     # -- Section 5.2: what "corpus median" is a median of ---------------------
     Claim(
         id="frontier.tsplib.throughput_x",
-        anchor=r"the same pair reads {v}, because the bound is cheap",
+        anchor=r"pair costs {v} times as much, because the bound is cheap",
         expect="costfront:corpus_median_definition/tsplib_published/x_gart2_throughput_k25",
         tol="printed",
         note="The second aggregation of the same pair at the same budget: the sum "
@@ -2258,14 +2258,14 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.raw_crossing_cost_x",
-        anchor=r"at a budget of {~}, at {v} times the cost with a paired win rate",
+        anchor=r"at a budget of {~}, at {v} times the cost and a paired win rate",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/x_gart2_typical",
         tol=("dp", 2),
     ),
     # withdrawn frontier.2d.raw_crossing_mape: cut in the verbosity sweep; readback of a tab:frontier_2d cell; the table carries the value
     Claim(
         id="frontier.2d.raw_crossing_win",
-        anchor=r"with a paired win rate of {v}\%; the calibrated row",
+        anchor=r"and a paired win rate of {v}\%; the calibrated row passes",
         expect="costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/50/"
                "win_rate_vs_gart2_pct/raw",
         tol=("dp", 1),
@@ -2295,7 +2295,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.small_bucket_gart_mape",
-        anchor=r"MAPE against GART 2.0's {v}\% at {~} times the cost, and wins",
+        anchor=r"MAPE against GART 2.0's {v}\% at {~} times the cost, winning",
         expect="costfront:cells/2d/groups/n in [5,10]/gart2_MAPE_pct",
         note="The trailing ', and wins' keeps this anchor off the abstract's "
              "sentence about the multidimensional benchmark, which is otherwise "
@@ -2304,20 +2304,20 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.small_bucket_cost_x",
-        anchor=r"at {v} times the cost, and wins {~}\% of the paired comparisons",
+        anchor=r"at {v} times the cost, winning {~}\% of the paired comparisons",
         expect="costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/x_gart2_typical",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.2d.small_bucket_win",
-        anchor=r"and wins {v}\% of the paired comparisons. On the",
+        anchor=r"winning {v}\% of the paired comparisons. On the",
         expect="costfront:cells/2d/groups/n in [5,10]/ascents/vj_ckpt/25/"
                "win_rate_vs_gart2_pct/raw",
         tol=("dp", 1),
     ),
     Claim(
         id="frontier.2d.large_bucket_n",
-        anchor=r"On the {v} instances with $n>500$, nothing on the ladder",
+        anchor=r"On the {v} instances with $n>500$, nothing dominates",
         expect="costfront:cells/2d/groups/n in [501,1000]/N",
         tol="exact",
     ),
@@ -2381,7 +2381,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.noneuc.pk500_cost_x",
-        anchor=r"MAPE at {v} times that cost and wins all {~} paired comparisons",
+        anchor=r"MAPE at {v} times that cost, winning all {~} paired comparisons",
         expect="costfront:cells/noneuc/groups/Total (all non-EUC_2D)/ascents/"
                "polyak_ckpt/500/x_gart2_typical",
         tol=("dp", 2),
@@ -2390,7 +2390,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.noneuc.pk500_win_n",
-        anchor=r"and wins all {v} paired comparisons; at a budget of",
+        anchor=r"winning all {v} paired comparisons; at a budget of",
         expect="costfront:cells/noneuc/instance_accounting/matched",
         tol="exact",
         note="A 100% paired win rate, so the count of wins is the matched count.",
@@ -2556,7 +2556,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.load.flip_after",
-        anchor=r"whose {~} becomes {v}. And the checkpointed protocol",
+        anchor=r"whose {~} becomes {v}. Running the released",
         expect="= {costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/"
                "x_gart2_typical} / {costfront:load_control/bias_in_a_cost_ratio/200}",
         tol=("dp", 2),
@@ -2837,18 +2837,7 @@ CLAIMS: list[Claim] = [
             "E2: the ratio of the two mean signed errors, 0.51/0.28 = 1.8"),
         tol=("dp", 1),
     ),
-    Claim(
-        id="coverage.decontaminated_slope",
-        anchor=r"clears ten of its own eleven gates at a median slope of {v}, but forfeits",
-        no_generator=(
-            "Median dispersion slope of the de-contaminated augmentation "
-            "candidate over its seven pre-registered seeds: 0.735, from the "
-            "released repair-study statistics. Not exported into "
-            "paper_numbers.json. Settle by banking the repair-study gate "
-            "outcomes under repair_study_*."
-        ),
-        tol=("dp", 3),
-    ),
+    # withdrawn coverage.decontaminated_slope: near-collinear section compressed (author 2026-09-03); the median-slope figure of the de-contaminated candidate is gone
 
     # -- Section 4.6, rank agreement and calibration ------------------------
     # withdrawn rank.global.gart_2d_rho: cut in the verbosity sweep; readback of tab:rank; the table carries the values
@@ -3045,5 +3034,136 @@ CLAIMS: list[Claim] = [
         tol=("dp", 2),
         note="Adverse result kept explicit; the minus sign is in the anchor so "
              "a sign flip reports ANCHOR_MISSING.",
+    ),
+    # -----------------------------------------------------------------------
+    # Near-collinear section (author 2026-09-03): SHAP attribution of the released
+    # booster by 2D generator class, paper_tooling/shap_2d_summary.json, written
+    # by paper_tooling/shap_2d_by_class.py.
+    # -----------------------------------------------------------------------
+    Claim(
+        id="shap.n_instances",
+        anchor=r"run over the {v} diverse 2D benchmark instances",
+        expect="shap2d:n_instances",
+        tol="exact",
+    ),
+    Claim(
+        id="shap.isotropic.n",
+        anchor=r"On the Isotropic class ({v} instances)",
+        expect="shap2d:alpha/by_class/Isotropic/n",
+        tol="exact",
+    ),
+    Claim(
+        id="shap.isotropic.greedy_share",
+        anchor=r"Greedy-to-MST Ratio carries {v}\% of the total mean",
+        expect="shap2d:top5_by_class/Isotropic/0/share_pct",
+    ),
+    Claim(
+        id="shap.isotropic.dominance_share",
+        anchor=r"the MST Dominance Ratio is next at {v}\%",
+        expect="shap2d:top5_by_class/Isotropic/1/share_pct",
+    ),
+    Claim(
+        id="shap.isotropic.dimension_share",
+        anchor=r"then dimension at {v}\%",
+        expect="shap2d:top5_by_class/Isotropic/2/share_pct",
+    ),
+    Claim(
+        id="shap.isotropic.n_share",
+        anchor=r"$n$ at {v}\%, and normalized",
+        expect="shap2d:top5_by_class/Isotropic/3/share_pct",
+    ),
+    Claim(
+        id="shap.isotropic.diameter_share",
+        anchor=r"normalized MST diameter at {v}\%",
+        expect="shap2d:top5_by_class/Isotropic/4/share_pct",
+    ),
+    Claim(
+        id="shap.isotropic.pred_alpha",
+        anchor=r"Isotropic predictions are unbiased: mean predicted $\alpha$ is {v} against a mean true $\alpha$ of {~}",
+        expect="shap2d:alpha/by_class/Isotropic/mean_pred_alpha",
+    ),
+    Claim(
+        id="shap.isotropic.true_alpha",
+        anchor=r"Isotropic predictions are unbiased: mean predicted $\alpha$ is {~} against a mean true $\alpha$ of {v}",
+        expect="shap2d:alpha/by_class/Isotropic/mean_true_alpha",
+    ),
+    Claim(
+        id="shap.linenoise.n",
+        anchor=r"On Line Noise ({v} instances) the same feature",
+        expect="shap2d:alpha/by_class/LineNoise/n",
+        tol="exact",
+    ),
+    Claim(
+        id="shap.greedy.signed_iso",
+        anchor=r"rises from $+{v}$ on Isotropic to $+{~}$ on Line Noise",
+        expect="shap2d:line_noise_vs_isotropic_signed_shap/mean_signed_shap_isotropic/greedy_nn_over_mst",
+    ),
+    Claim(
+        id="shap.greedy.signed_ln",
+        anchor=r"rises from $+{~}$ on Isotropic to $+{v}$ on Line Noise",
+        expect="shap2d:line_noise_vs_isotropic_signed_shap/mean_signed_shap_linenoise/greedy_nn_over_mst",
+    ),
+    Claim(
+        id="shap.dominance.signed_iso",
+        anchor=r"MST Dominance Ratio's from $+{v}$ to $+{~}$, both",
+        expect="shap2d:line_noise_vs_isotropic_signed_shap/mean_signed_shap_isotropic/mst_dominance_ratio",
+    ),
+    Claim(
+        id="shap.dominance.signed_ln",
+        anchor=r"MST Dominance Ratio's from $+{~}$ to $+{v}$, both",
+        expect="shap2d:line_noise_vs_isotropic_signed_shap/mean_signed_shap_linenoise/mst_dominance_ratio",
+    ),
+    Claim(
+        id="shap.linenoise.pred_alpha",
+        anchor=r"The prediction still falls short: mean predicted $\alpha$ is {v} against a mean true $\alpha$ of {~}",
+        expect="shap2d:alpha/by_class/LineNoise/mean_pred_alpha",
+    ),
+    Claim(
+        id="shap.linenoise.true_alpha",
+        anchor=r"The prediction still falls short: mean predicted $\alpha$ is {~} against a mean true $\alpha$ of {v}",
+        expect="shap2d:alpha/by_class/LineNoise/mean_true_alpha",
+    ),
+    Claim(
+        id="shap.linenoise.shortfall",
+        anchor=r"a shortfall of {v}, the largest of any class",
+        expect="= -1 * {shap2d:alpha/by_class/LineNoise/mean_signed_error_pred_minus_true}",
+    ),
+    Claim(
+        id="shap.grid.shortfall",
+        anchor=r"the jittered-grid class is next at {v}",
+        expect="shap2d:alpha/by_class/GeometricGrid/mean_signed_error_pred_minus_true",
+    ),
+    Claim(
+        id="shap.train.greedy_p1",
+        anchor=r"Greedy-to-MST Ratio spans $[{v},{~}]$ between its 1st and 99th",
+        expect="shap2d:line_noise_out_of_training_support/train_p1_p99/greedy_nn_over_mst/0",
+    ),
+    Claim(
+        id="shap.train.greedy_p99",
+        anchor=r"Greedy-to-MST Ratio spans $[{~},{v}]$ between its 1st and 99th",
+        expect="shap2d:line_noise_out_of_training_support/train_p1_p99/greedy_nn_over_mst/1",
+    ),
+    Claim(
+        id="shap.linenoise.greedy_mean",
+        anchor=r"on Line Noise it averages {v}, and",
+        expect="shap2d:linenoise_feature_stats/greedy_nn_over_mst/mean",
+    ),
+    Claim(
+        id="shap.linenoise.greedy_outside",
+        anchor=r"and {v}\% of the class's rows fall outside that band",
+        expect="shap2d:line_noise_out_of_training_support/frac_linenoise_outside_train_p1_p99/greedy_nn_over_mst",
+        scale=100.0,
+    ),
+    Claim(
+        id="shap.linenoise.dominance_outside",
+        anchor=r"the MST Dominance Ratio is {v}\% outside",
+        expect="shap2d:line_noise_out_of_training_support/frac_linenoise_outside_train_p1_p99/mst_dominance_ratio",
+        scale=100.0,
+    ),
+    Claim(
+        id="shap.linenoise.others_outside",
+        anchor=r"dimension, $n$, and MST diameter are {v}\% outside",
+        expect="shap2d:line_noise_out_of_training_support/frac_linenoise_outside_train_p1_p99/dimension",
+        scale=100.0, tol="exact",
     ),
 ]
