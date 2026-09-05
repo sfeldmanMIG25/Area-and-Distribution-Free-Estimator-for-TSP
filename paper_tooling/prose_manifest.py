@@ -901,18 +901,8 @@ CLAIMS: list[Claim] = [
     # "GART 2.0 (V4 features)" until the internal version tags were taken out of
     # the manuscript; "32-feature variant" says what V4 meant, and puts a
     # checkable numeral at both sites that name the row.
-    Claim(
-        id="methods.probe.twin_dim",
-        anchor=r"against {v}\% of the dimension sweeps and",
-        expect="bank:cons_probe_gart2_logit_v3hp_dimension_pct_nonincr_deployed",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="methods.probe.twin_n",
-        anchor=r"and {v}\% of the size sweeps for the same fit with the constraints removed",
-        expect="bank:cons_probe_gart2_logit_v3hp_n_customers_pct_nonincr_deployed",
-        tol=("dp", 1),
-    ),
+    # withdrawn methods.probe.twin_dim: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
+    # withdrawn methods.probe.twin_n: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     # -- Section 3.4, within-cell SHAP decomposition (shap_by_dimension.py) --
     Claim(
         id="shap.within.greedy_d2",
@@ -1322,15 +1312,7 @@ CLAIMS: list[Claim] = [
         ),
         tol=("dp", 2),
     ),
-    Claim(
-        id="methods.probe.gart_both_axes",
-        anchor=r"held-out instances returns {v}\% non-increasing sweeps on both axes",
-        expect="bank:cons_probe_gart_2_0_dimension_pct_nonincr_deployed",
-        tol="printed",
-        note="The dimension and node-count axes both read 100.0 with zero violations, "
-             "so either key backs the sentence; the dimension one is named because it "
-             "is the axis the comparators fail worst on.",
-    ),
+    # withdrawn methods.probe.gart_both_axes: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     # withdrawn results_nd.bhh_region_mape: Total-row readback sentence cut 2026-09-03 (simple-stupid pass, author rule); the numeral survives at the head of the BHH paragraph, where results_nd.bhh_region_mape_restated checks it
     # withdrawn results_nd.bhh_region_sdpe: Total-row readback sentence cut 2026-09-03 (simple-stupid pass, author rule); the SDPE cell is machine-checked in tab:results_nd and appears in no surviving body sentence
     # withdrawn results_nd.sdpe_smallest_bucket: cut to the trend on 2026-09-02 after tab:results_nd / tab:results_2d took the values (author decision); the cells are machine-checked in the table
@@ -1591,12 +1573,7 @@ CLAIMS: list[Claim] = [
         expect="frontier:tsplib/capped_tail/hk_over_gart2_by_k/500",
         tol=("dp", 0),
     ),
-    Claim(
-        id="frontier.nd.load_sensitivity_gart2_body",
-        anchor=r"{~} against {v} between a quiet and a noisy window, so every published repeat",
-        expect="frontier:tsplib/load_sensitivity/GART_2.0/noisy_over_quiet",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.nd.load_sensitivity_gart2_body: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="costacct.d18512_bound_x_crossing",
         anchor=r"costs {v} times as much at the crossing budget and {~} times as much",
@@ -1611,12 +1588,7 @@ CLAIMS: list[Claim] = [
         scale=0.001,
         note="Bank stores milliseconds; the sentence prints seconds.",
     ),
-    Claim(
-        id="frontier.nd.load_sensitivity_bound_body",
-        anchor=r"{v} against {~} between a quiet and a noisy window, so every published repeat",
-        expect="frontier:tsplib/load_sensitivity/HK_1Tree_50/noisy_over_quiet",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.nd.load_sensitivity_bound_body: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.tsplib.capped_gart2_ms",
         anchor=r"GART 2.0 predicts it in {v}~ms, the median of 11 repeats.",
@@ -1695,36 +1667,11 @@ CLAIMS: list[Claim] = [
         tol=("dp", 2),
         note="The one dimension group on which GART 2.0 stays on the front.",
     ),
-    Claim(
-        id="frontier.nd.concorde_subset_n",
-        anchor=r"On the {v} scored instances whose label the generation run recorded as a Concorde-proven optimum",
-        expect="frontier:nd/concorde_subset/N",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.nd.concorde_gart2_mape",
-        anchor=r"GART 2.0 scores {v}\% against the bound's {~}\% at a budget of",
-        expect="frontier:nd/concorde_subset/gart2_mape_pct",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.nd.concorde_bound_mape",
-        anchor=r"GART 2.0 scores {~}\% against the bound's {v}\% at a budget of",
-        expect="frontier:nd/concorde_subset/bound_mape_pct_by_k/200",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.nd.concorde_budget",
-        anchor=r"against the bound's {~}\% at a budget of {v}. That status",
-        expect="frontier:nd/best_budget_k",
-        tol="exact",
-    ),
-    Claim(
-        id="frontier.nd.closes_exactly_pct",
-        anchor=r"The relaxation closes exactly on {v}\% of the scored multidimensional split",
-        expect="frontier:nd/relaxation_closes_exactly_pct",
-        tol=("dp", 1),
-    ),
+    # withdrawn frontier.nd.concorde_subset_n: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
+    # withdrawn frontier.nd.concorde_gart2_mape: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
+    # withdrawn frontier.nd.concorde_bound_mape: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
+    # withdrawn frontier.nd.concorde_budget: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
+    # withdrawn frontier.nd.closes_exactly_pct: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.nd.table_caption_n",
         anchor=r"cost/accuracy ladder, all {v} scored instances, Polyak ascent",
@@ -2621,7 +2568,7 @@ CLAIMS: list[Claim] = [
     # withdrawn metrics.sdpe.pct_factor: the prose gloss on the leading factor of 100 was cut in pass 1 (Section 4 lead, 2026-09-04); the 100 remains in the displayed SDPE formula
     Claim(
         id="metrics.ci.level_pct",
-        anchor=r"Each SDPE carries a {v}\% bootstrap confidence interval, suppressed",
+        anchor=r"Each SDPE carries a {v}\% confidence interval.",
         no_generator=(
             "Confidence level of the bootstrap intervals, fixed in "
             "build_paper_tables.py; a protocol constant, not a measurement. "
@@ -2874,12 +2821,7 @@ CLAIMS: list[Claim] = [
     ),
 
     # -- the ascent-budget-25 rung, at its three sites ----------------------
-    Claim(
-        id="abstract.frontier.budget25",
-        anchor=r"strictly better than the bound on both axes from an ascent budget of {v} upward. The reason is structural",
-        no_generator=_BUDGET25_REASON,
-        tol="exact",
-    ),
+    # withdrawn abstract.frontier.budget25: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.verdict.budget25",
         anchor=r"strictly better than the bound on both axes from an ascent budget of {v} upward in the plane",
@@ -3009,7 +2951,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="shap.linenoise.n",
-        anchor=r"On Line Noise ({v} instances) the same feature",
+        anchor=r"On Line Noise ({v} instances) its mean signed SHAP rises",
         expect="shap2d:alpha/by_class/LineNoise/n",
         tol="exact",
     ),
@@ -3113,12 +3055,7 @@ CLAIMS: list[Claim] = [
     # Pass 1, Section 4.6 (2026-09-04): the released model's TSPLIB paired p was
     # printed as 0.0048 (truncated) against 0.0049 in 4.7; corrected and registered.
     # -----------------------------------------------------------------------
-    Claim(
-        id="coverage.paired.tsplib_asym.p_restated",
-        anchor=r"against {v} for the released model",
-        expect="bank:paired_tsplib_by_size_total_asymptotic_mst_ratio_wilcoxon_p",
-        tol=("abs", 0.0001),  # p-values print at two figures; exempt from 3 s.f. (author, 2026-09-03)
-    ),
+    # withdrawn coverage.paired.tsplib_asym.p_restated: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     # -----------------------------------------------------------------------
     # Pass 1, Section 7 (2026-09-04): the conclusion restates four body figures
     # (Section 6 non-Euclidean bound vs GART 2.0; Section 4.6 class MAPEs).
