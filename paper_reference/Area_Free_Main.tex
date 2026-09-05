@@ -394,7 +394,7 @@ Every estimator degrades from the isotropic class to Line Noise. Near-collinear 
 
 On the full EUC\_2D benchmark GART 2.0 obtains 2.53\% MAPE and 2.92\% SDPE, against 3.53\%/4.74\% for the asymptotic ratio. This is the narrowest margin in the paper. $\alpha$ on these 78 instances has mean 1.13 and standard deviation 0.0558, so a single well-chosen constant is already close. The MAPE-minimizing constant on these instances is $1.13$ and reaches 3.52\%, so no constant multiplier does better on MAPE, and GART 2.0's 2.53\% improves on that bound by 0.99 percentage points. The dispersion gap is the larger one, 2.92\% SDPE against 4.74\%, but SDPE alone cannot carry that comparison: for $\hat L=cL_{\mathrm{MST}}$ the signed error is $c/\alpha-1$, so SDPE is proportional to $c$ and shrinking $c$ drives it to zero at ruinous MAPE. GART 2.0 attains the lower SDPE at the lower MAPE. Table~\ref{tab:tsplib_by_size} splits the 78 instances into three size buckets; the coarse $n>400$ bucket should not be read as a homogeneous asymptotic regime.
 
-In the coarse $n>400$ bucket the GART 2.0 and asymptotic-ratio SDPE intervals overlap, on $[3.20,3.62]$. In the post hoc $n>10{,}000$ slice of five instances GART 2.0 is lower on both metrics, 0.57\% MAPE and 0.72\% SDPE against the asymptotic ratio's 2.74\% and 1.46\%. The largest instance, \texttt{d18512}, is more than $18\times$ the training-size cap. For points drawn independently from a bounded density, normalized TSP and MST lengths each converge to dimension-dependent constants \citep{bhh1959,steele1988growth}, which motivates a fixed-ratio baseline but does not establish that the heterogeneous $n>400$ bucket is asymptotic; the advantage at extreme sizes is an observation on five instances and not proof of a convergence mechanism.
+In the coarse $n>400$ bucket the GART 2.0 and asymptotic-ratio SDPE intervals overlap, on $[3.20,3.62]$. In the post hoc $n>10{,}000$ slice of five instances GART 2.0 is lower on both metrics, 0.57\% MAPE and 0.72\% SDPE against the asymptotic ratio's 2.74\% and 1.46\%. The largest instance, \texttt{d18512}, is more than $18\times$ the training-size cap.
 
 Both classical estimators are far behind here. TSPLIB instances carry no uniform density on a known region, so each area-based estimator runs outside the conditions it was derived under. BHH receives a convex hull in place of a sampling region that does not exist. \c{C}avdar--Sokol is evaluated on graphs without a node at the corners of their covering rectangle, a property every one of its training graphs had. Both overpredict. These rows measure the cost of that mismatch, not the quality of the cited methods.
 
@@ -404,7 +404,7 @@ Estimators marketed across domains do better on these generalized benchmarks tha
 
 BHH falls from 23.8\% MAPE on the full 2D benchmark to 8.91\% here, and \c{C}avdar--Sokol from 18.2\% to 8.16\%. \c{C}avdar--Sokol itself did not change between panels, so its drop is a domain effect. BHH's region input changed with the instance set, so its drop combines the two effects and does not isolate the region input. What remains of BHH's error is a systematic underprediction, $-8.65$\% signed against 7.76\% SDPE, the direction an asymptotic constant takes at $n$ as low as 5. \c{C}avdar--Sokol carries the lower MAPE of the two on every corpus and the lower median absolute error here, 2.84\%, at the widest dispersion in the panel, 14.3\% SDPE. It is close on most uniform instances and badly wrong on a few.
 
-GART 2.0 beats both classical estimators on the matched domain, on both metrics. On the 210 uniform instances it obtains 1.31\% MAPE against \c{C}avdar--Sokol's 8.16\%, BHH's 8.91\% and the $\alpha=1$ floor's 15.6\%. 
+GART 2.0 beats both classical estimators on the matched domain, on both metrics. On the 210 uniform instances it obtains 1.31\% MAPE against \c{C}avdar--Sokol's 8.16\%, BHH's 8.91\% and the $\alpha=1$ floor's 15.6\%. Its SDPE is 2.07\% against \c{C}avdar--Sokol's 14.3\%, BHH's 7.76\% and the $\alpha=1$ floor's 7.70\%. 
 
 \subsection{Generalization Beyond the Training Grid} \label{subsec:generalization}
 
@@ -437,7 +437,7 @@ The $n>400$ TSPLIB bucket has $R^2_\alpha=-0.0710$. The model predicts $\alpha$ 
 
 Feature extraction dominates the estimator's cost. In the TSPLIB timing log GART 2.0 spends 92.9\% of its wall time on feature extraction and MST construction against 5.03\% on LightGBM inference. We time each instance as the median of 11 repeats, one estimator per process on a single thread. The Time column of Table~\ref{tab:tsplib_by_size} prints the median of those times across instances. Timed the same way, GART 2.0 costs roughly twice the MST-ratio family and an order of magnitude over the two classical closed forms, which compute a convex hull and then evaluate an algebraic expression. 
 
-Those multiples are ratios of medians, not of summed totals, and are the wrong comparison for deployment, where the alternative is a solve. On the multidimensional benchmark the median prediction and the median reference-tour generation cost the same, 121~ms against 122~ms, since most of those instances are small enough to solve outright. The argument holds only where the solve is expensive: at $n\in[501,1000]$ the reference tour takes 3{,}799~ms against GART 2.0's 460~ms, and on TSPLIB \texttt{d18512}, at $n=18{,}512$ and more than $18\times$ the largest training instance, GART 2.0 predicts in 239~ms against the known lower bound, which costs 167 times as much at the crossing budget and 2{,}078 times as much, 493 seconds, at the top of the ladder. 
+Those multiples are ratios of medians, not of summed totals, and are the wrong comparison for deployment, where the alternative is a solve. On the multidimensional benchmark the median prediction and the median reference-tour generation cost the same, 121~ms against 122~ms, since most of those instances are small enough to solve outright. The argument holds only where the solve is expensive: at $n\in[501,1000]$ the reference tour takes 3{,}799~ms against GART 2.0's 460~ms, and on TSPLIB \texttt{d18512}, at $n=18{,}512$ and more than $18\times$ the largest training instance, GART 2.0 predicts in 237~ms against the known lower bound, which costs 167 times as much at the crossing budget and 2{,}078 times as much, 493 seconds, at the top of the ladder. 
 
 \section{Comparison Against a Known Lower Bound} \label{sec:frontier}
 
@@ -501,29 +501,29 @@ $k=500$ & 50.8 & 4.92 & 0.384 & 4.51 & 1.38 & 0.0674 & 6.05 & 1.75 & 0.0114 & 1.
 \toprule
 $d$ & $n$ band & $N$ & GART 2.0 MAPE (\%) & GART 2.0 (ms) & Verdict against the ladder \\
 \midrule
-\multirow{3}{*}{$2$} & $[20,\,100]$ & 243 & 1.829 & 2.9 & bound dominates ($k=200,\,500$) \\
- & $[200,\,500]$ & 108 & 0.663 & 5.7 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200,\,500$) \\
+\multirow{3}{*}{$2$} & $[20,\,100]$ & 243 & 1.83 & 2.86 & bound dominates ($k=200,\,500$) \\
+ & $[200,\,500]$ & 108 & 0.662 & 5.70 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200,\,500$) \\
  & $[600,\,1{,}000]$ & 135 & 0.429 & 10.0 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200,\,500$) \\
 \midrule
-\multirow{3}{*}{$3$} & $[20,\,100]$ & 243 & 1.431 & 3.4 & bound dominates ($k=100,\,200,\,500$) \\
+\multirow{3}{*}{$3$} & $[20,\,100]$ & 243 & 1.43 & 3.41 & bound dominates ($k=100,\,200,\,500$) \\
  & $[200,\,500]$ & 108 & 0.459 & 12.2 & \textbf{GART 2.0 dominates} ($k=100,\,200$) \\
  & $[600,\,1{,}000]$ & 135 & 0.332 & 25.7 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200$) \\
 \midrule
-\multirow{3}{*}{$4$} & $[20,\,100]$ & 243 & 1.015 & 2.4 & bound dominates ($k=200$) \\
+\multirow{3}{*}{$4$} & $[20,\,100]$ & 243 & 1.02 & 2.42 & bound dominates ($k=200$) \\
  & $[200,\,500]$ & 108 & 0.403 & 14.2 & trade-off at every rung \\
  & $[600,\,1{,}000]$ & 135 & 0.251 & 58.2 & \textbf{GART 2.0 dominates} ($k=200$) \\
 \midrule
-\multirow{3}{*}{$10$} & $[20,\,100]$ & 243 & 0.566 & 2.4 & bound dominates ($k=200$) \\
+\multirow{3}{*}{$10$} & $[20,\,100]$ & 243 & 0.566 & 2.37 & bound dominates ($k=200$) \\
  & $[200,\,500]$ & 108 & 0.204 & 14.7 & trade-off at every rung \\
- & $[600,\,1{,}000]$ & 135 & 0.173 & 100.2 & trade-off at every rung \\
+ & $[600,\,1{,}000]$ & 135 & 0.173 & 100 & trade-off at every rung \\
 \midrule
-\multirow{3}{*}{$50$} & $[20,\,100]$ & 243 & 0.214 & 2.8 & bound dominates ($k=200$) \\
- & $[200,\,500]$ & 108 & 0.095 & 22.7 & trade-off at every rung \\
- & $[600,\,1{,}000]$ & 134 & 0.062 & 114.3 & trade-off at every rung \\
+\multirow{3}{*}{$50$} & $[20,\,100]$ & 243 & 0.214 & 2.79 & bound dominates ($k=200$) \\
+ & $[200,\,500]$ & 108 & 0.0951 & 22.7 & trade-off at every rung \\
+ & $[600,\,1{,}000]$ & 134 & 0.0622 & 114 & trade-off at every rung \\
 \midrule
-\multirow{3}{*}{$100$} & $[20,\,100]$ & 2{,}209 & 0.501 & 3.4 & bound dominates ($k=100,\,200$) \\
+\multirow{3}{*}{$100$} & $[20,\,100]$ & 2{,}209 & 0.501 & 3.37 & bound dominates ($k=100,\,200$) \\
  & $[200,\,500]$ & 977 & 0.723 & 26.8 & bound dominates ($k=50,\,100$) \\
- & $[600,\,1{,}000]$ & 1{,}185 & 0.824 & 120.4 & bound dominates ($k=50,\,100$) \\
+ & $[600,\,1{,}000]$ & 1{,}185 & 0.824 & 120 & bound dominates ($k=50,\,100$) \\
 \bottomrule
 \end{tabular}%
 }
@@ -571,7 +571,7 @@ Exact solver & $\Theta(n^{2}2^{n})$ for the Held--Karp dynamic program; branch-a
 \end{tabular}
 \end{table}
 
-Branch-and-cut admits no polynomial bound, and the Held--Karp dynamic program \citep{heldkarp1962} is $\Theta(n^{2}2^{n})$.
+
 
 \subsection{Operating Regime} \label{subsec:frontier_verdict}
 
@@ -632,7 +632,7 @@ The GART 2.0 framework, trained on synthetic data, is competitive on real-world 
 
 The estimator's advantage is scale. The known lower bound is cheaper and more accurate on the aggregate of all four benchmarks, and on TSPLIB EUC\_2D once a single training-split constant scales it. On the non-Euclidean instances it reads directly, the bound obtains 1.27\% MAPE at an ascent budget of 100 against GART 2.0's 3.81\%. Above a few hundred nodes, however, no ascent budget is both cheaper and more accurate than GART 2.0 at any dimension it was trained on. In the plane the measured cost exponents put the two families in different complexity classes (Section~\ref{sec:frontier}). Below a few hundred nodes, off the training grid in dimension, or given only a distance matrix, prefer the bound. The model weights, the scored benchmark outputs, and the scripts that regenerate every table and figure are released (Appendix~\ref{app:code}).
 
-Accuracy depends on geometry far more than on scale. Error on the near-collinear class is 10.8\% MAPE against 1.47\% on the isotropic class, and Section~\ref{subsec:coverage} traces it to a training-coverage gap and a feature gap at once. We tested two repairs against gates fixed before either candidate was scored, rejected both, and left the released model unchanged. Withholding a whole dimension or the large-$n$ range from training costs a fraction of a MAPE point and appears as a systematic offset, not as scatter. The estimator degrades predictably off its training grid, and we demonstrate no correction for that offset. The labels are not uniformly certificates. Some are proven optimal by a 1-tree bound that closes on the tour and some by exact dynamic programming (Appendix~\ref{app:labels}), and the remainder carry an upper bound whose residual on the scored test split is narrow but not zero.
+On the 2D diverse benchmark GART 2.0's MAPE runs from 1.47\% on the isotropic class to 10.8\% on the near-collinear Line Noise class across generator classes, and from 1.64\% at $n\in[501,1000]$ to 4.07\% at $n\in[11,50]$ across size bands. Section~\ref{subsec:coverage} traces the Line Noise error to a training-coverage gap and a feature gap at once. We tested two repairs against gates fixed before either candidate was scored, rejected both, and left the released model unchanged. Withholding a whole dimension or the large-$n$ range from training costs a fraction of a MAPE point and appears as a systematic offset, not as scatter. The estimator degrades predictably off its training grid, and we demonstrate no correction for that offset. The labels are not uniformly certificates. Some are proven optimal by a 1-tree bound that closes on the tour and some by exact dynamic programming (Appendix~\ref{app:labels}), and the remainder carry an upper bound.
 
 Can a learned estimator understand the relationship between the MST and the TSP to create an efficient tour-length estimator?
 
@@ -834,7 +834,7 @@ The calibrated bound dominates GART 2.0 on both cost and accuracy at an ascent b
 
 On the 23 smallest instances the calibrated bound at that same budget costs 0.159 times GART 2.0 at 1.69\% MAPE against 2.01\%, and even the raw uncalibrated certificate reaches 22.2\% lower error at 0.463 times the cost. In the middle bucket nothing dominates, and the raw bound needs the top of the ladder to match at all. In the largest bucket the raw bound matches at 6.65 times the cost and again nothing dominates. The reversal is monotone in $n$.
 
-Every published repeat is from one quiet window, with the noisy repeats retained only as a control. The excluded instance is \texttt{d18512}, whose node count is above that cap, so the bound runs its coordinate kernel there instead. GART 2.0 predicts it in 237~ms, the median of 11 repeats in this ladder's session; Section~\ref{subsec:cost_accounting} prints 239~ms for the same instance, the median of 11 repeats in the session behind Table~\ref{tab:tsplib_by_size}.
+Every published repeat is from one quiet window, with the noisy repeats retained only as a control. The excluded instance is \texttt{d18512}, whose node count is above that cap, so the bound runs its coordinate kernel there instead. GART 2.0 predicts it in 237~ms, the median of 11 repeats.
 
 \begin{table}[!htbp]
 \centering

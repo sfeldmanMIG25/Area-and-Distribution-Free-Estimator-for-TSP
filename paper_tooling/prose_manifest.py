@@ -697,19 +697,19 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="matched.uniform_domain.cavdar_mape",
-        anchor=r"against \c{C}avdar--Sokol's {v}\%, BHH's",
+        anchor=r"MAPE against \c{C}avdar--Sokol's {v}\%, BHH's",
         expect="bank:classical_b_random_cavdar_sokol_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="matched.uniform_domain.bhh_mape",
-        anchor=r"\c{C}avdar--Sokol's {~}\%, BHH's {v}\% and the",
+        anchor=r"MAPE against \c{C}avdar--Sokol's {~}\%, BHH's {v}\% and the",
         expect="bank:classical_b_random_bhh_sampling_region_mape_pct",
         tol=("dp", 2),
     ),
     Claim(
         id="matched.uniform_domain.floor_mape",
-        anchor=r"and the $\alpha=1$ floor's {v}\%.",
+        anchor=r"BHH's 8.91\% and the $\alpha=1$ floor's {v}\%.",
         expect="bank:classical_b_random_l_mathrm_mst_alpha_1_mape_pct",
         tol="printed",
     ),
@@ -1455,19 +1455,9 @@ CLAIMS: list[Claim] = [
     Claim(
         id="discussion.d18512_gart2_time",
         anchor=r"GART 2.0 predicts in {v}~ms",
-        no_generator=(
-            "GART 2.0's total time on TSPLIB d18512 as recorded by the "
-            "published benchmark harness: 239 ms, "
-            "tsplib_benchmark/results/all_models_tsplib_repaired.csv, row "
-            "instance=d18512 model=GART_2.0, column total_time_s. That column "
-            "is not aggregated into paper_numbers.json, which carries bucket "
-            "medians only. The solo three-repeat re-measurement of the same "
-            "work is 237.42 ms and is quoted separately in "
-            "Section~\\ref{subsec:frontier_tsplib}; the two are different "
-            "protocols, not a disagreement. Settle by exporting a "
-            "per-instance timing table under tsplib_instance_*_time_ms keys."
-        ),
+        expect="frontier:tsplib/capped_tail/gart2_ms",
         tol=("dp", 0),
+        note="Author ruling 2026-09-04: one figure for d18512, the machine-sourced 237 ms (ladder session, median of 11 repeats); the 239 ms harness figure is retired.",
     ),
 
     # -- 5.1 the bound and the ascent ----------------------------------------
@@ -1629,24 +1619,11 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.capped_gart2_ms",
-        anchor=r"GART 2.0 predicts it in {v}~ms, the median of 11 repeats in this ladder's session",
+        anchor=r"GART 2.0 predicts it in {v}~ms, the median of 11 repeats.",
         expect="frontier:tsplib/capped_tail/gart2_ms",
         tol=("dp", 0),
     ),
-    Claim(
-        id="frontier.tsplib.harness_d18512_ms",
-        anchor=r"prints {v}~ms for the same instance, the median of 11 repeats",
-        no_generator=(
-            "Same 239 ms as discussion.d18512_gart2_time, cross-referenced here "
-            "so that two figures for one instance -- 237.42 ms solo, 239 ms "
-            "published harness -- read as two protocols rather than as a "
-            "disagreement. Source: "
-            "tsplib_benchmark/results/all_models_tsplib_repaired.csv, row "
-            "instance=d18512 model=GART_2.0, column total_time_s. Same "
-            "settle-by: export a per-instance timing table."
-        ),
-        tol=("dp", 0),
-    ),
+    # withdrawn frontier.tsplib.harness_d18512_ms: author ruling 2026-09-04: one figure for d18512 (237 ms, frontier bank); the 239 ms harness figure is retired everywhere
     Claim(
         id="frontier.tsplib.table_caption_n",
         anchor=r"cost/accuracy ladder over the {v} matched instances",
@@ -3160,13 +3137,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="conclusion.coverage.linenoise_mape",
-        anchor=r"Error on the near-collinear class is {v}\% MAPE against",
+        anchor=r"to {v}\% on the near-collinear Line Noise class",
         expect="bank:2d_by_genclass_linenoise_gart_2_0_mape_pct",
         tol=("dp", 1),
     ),
     Claim(
         id="conclusion.coverage.isotropic_mape",
-        anchor=r"MAPE against {v}\% on the isotropic class",
+        anchor=r"MAPE runs from {v}\% on the isotropic class",
         expect="bank:2d_by_genclass_isotropic_gart_2_0_mape_pct",
         tol=("dp", 2),
     ),
@@ -3194,14 +3171,50 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.repeats_ladder_restated",
-        anchor=r"the median of {v} repeats in this ladder's session",
+        anchor=r"predicts it in 237~ms, the median of {v} repeats.",
         expect="frontier:tsplib/repeats",
         tol="exact",
     ),
+    # withdrawn frontier.tsplib.repeats_body_restated: the 239 ms clause left Appendix I (author ruling 2026-09-04)
+    # -----------------------------------------------------------------------
+    # Author rulings (2026-09-04): SDPE support for the matched-domain claim in 4.4;
+    # the conclusion's geometry-against-size statement now carries the 2D class and
+    # size-band MAPE extremes.
+    # -----------------------------------------------------------------------
     Claim(
-        id="frontier.tsplib.repeats_body_restated",
-        anchor=r"the median of {v} repeats in the session behind Table",
-        expect="frontier:tsplib/repeats",
-        tol="exact",
+        id="matched.uniform_domain.gart_sdpe",
+        anchor=r"Its SDPE is {v}\% against \c{C}avdar--Sokol's",
+        expect="bank:classical_b_random_gart_2_0_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="matched.uniform_domain.cavdar_sdpe",
+        anchor=r"Its SDPE is {~}\% against \c{C}avdar--Sokol's {v}\%",
+        expect="bank:classical_b_random_cavdar_sokol_sdpe_pct",
+        tol=("dp", 1),
+    ),
+    Claim(
+        id="matched.uniform_domain.bhh_sdpe",
+        anchor=r"Sokol's 14.3\%, BHH's {v}\% and the $\alpha=1$ floor's",
+        expect="bank:classical_b_random_bhh_sampling_region_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="matched.uniform_domain.floor_sdpe",
+        anchor=r"BHH's 7.76\% and the $\alpha=1$ floor's {v}\%",
+        expect="bank:classical_b_random_l_mathrm_mst_alpha_1_sdpe_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="conclusion.size.large_mape",
+        anchor=r"and from {v}\% at $n\in[501,1000]$",
+        expect="bank:2d_by_size_501_1000_gart_2_0_mape_pct",
+        tol=("dp", 2),
+    ),
+    Claim(
+        id="conclusion.size.small_mape",
+        anchor=r"to {v}\% at $n\in[11,50]$ across size bands",
+        expect="bank:2d_by_size_11_50_gart_2_0_mape_pct",
+        tol=("dp", 2),
     ),
 ]
