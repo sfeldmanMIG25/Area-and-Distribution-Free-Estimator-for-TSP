@@ -530,12 +530,12 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="sizestrat.d100.large.mape",
-        anchor=r"its own accuracy degrades to {v}\% against {~}\% at $d=50$",
+        anchor=r"GART 2.0's own accuracy degrades to {v}\% against {~}\% at $d=50$",
         expect="sizestrat:cell/d100/n600_1000/gart_mape_pct",
     ),
     Claim(
         id="sizestrat.d50.large.mape",
-        anchor=r"its own accuracy degrades to {~}\% against {v}\% at $d=50$",
+        anchor=r"GART 2.0's own accuracy degrades to {~}\% against {v}\% at $d=50$",
         expect="sizestrat:cell/d50/n600_1000/gart_mape_pct",
     ),
     # -- corpus sizes: integers, exact tolerance, two different sources -------
@@ -1045,7 +1045,7 @@ CLAIMS: list[Claim] = [
     # moves these sentences instead of silently disagreeing with them.
     Claim(
         id="appendix.cavdar.n_below_fit",
-        anchor=r"binds on this benchmark: {v} of the {~} 2D instances have",
+        anchor=r"On this benchmark {v} of the {~} 2D instances have",
         expect="bank:cavdar_corr_2d_n_below_min",
         tol="exact",
         note="Adverse disclosure: the source's own correction is out of range on "
@@ -1055,7 +1055,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="appendix.cavdar.benchmark_n",
-        anchor=r"binds on this benchmark: {~} of the {v} 2D instances have",
+        anchor=r"On this benchmark {~} of the {v} 2D instances have",
         expect="bank:cavdar_corr_2d_n_total",
         tol="exact",
     ),
@@ -1544,7 +1544,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.small_raw_accuracy_gain",
-        anchor=r"uncalibrated certificate reaches {v}\% lower error at {~} times the cost. In the middle bucket",
+        anchor=r"even the raw bound reaches {v}\% lower error at {~} times the cost. In the middle bucket",
         expect="= 100 * (1 - {frontier:tsplib/n in [51,150]/crossing_bound_over_gart2_mape})",
         tol=("dp", 1),
         note="The uncalibrated, certified bound against the released estimator "
@@ -1552,7 +1552,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.small_raw_cost_x",
-        anchor=r"uncalibrated certificate reaches {~}\% lower error at {v} times the cost. In the middle bucket",
+        anchor=r"even the raw bound reaches {~}\% lower error at {v} times the cost. In the middle bucket",
         expect="frontier:tsplib/n in [51,150]/crossing_cost_x_gart2",
         tol=("dp", 2),
     ),
@@ -1606,7 +1606,7 @@ CLAIMS: list[Claim] = [
     # -- 5.3 multidimensional ------------------------------------------------
     Claim(
         id="frontier.nd.best_budget",
-        anchor=r"At an ascent budget of {v} (Table~\ref{tab:frontier_nd}) the bound reaches",
+        anchor=r"At an ascent budget of {v} (Table~\ref{tab:frontier_nd}, a \emph{ladder}",
         expect="frontier:nd/best_budget_k",
         tol="exact",
     ),
@@ -1624,19 +1624,19 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.nd.accuracy_factor",
-        anchor=r"a factor of {v}, at {~} times the cost, and it wins the paired comparison",
+        anchor=r"a factor of {v}, at {~} times the cost, and it is the more accurate of the two",
         expect="frontier:nd/accuracy_factor_at_best_budget",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.nd.cost_x",
-        anchor=r"a factor of {~}, at {v} times the cost, and it wins the paired comparison",
+        anchor=r"a factor of {~}, at {v} times the cost, and it is the more accurate of the two",
         expect="frontier:nd/bound_x_gart2_by_k/200",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.nd.paired_win_rate",
-        anchor=r"wins the paired comparison on {v}\% of instances",
+        anchor=r"it is the more accurate of the two on {v}\% of instances",
         expect="frontier:nd/paired_win_rate_pct_by_k/200",
         tol=("dp", 1),
     ),
@@ -1682,13 +1682,13 @@ CLAIMS: list[Claim] = [
     # -- 5.4 complexity ------------------------------------------------------
     Claim(
         id="frontier.complexity.delaunay_vectors",
-        anchor=r"At {v} potential vectors drawn from real ascent trajectories",
+        anchor=r"At {v} potential vectors drawn from real ascent runs",
         expect="frontier:complexity/delaunay_pi_vectors",
         tol="exact",
     ),
     Claim(
         id="frontier.complexity.delaunay_heavier",
-        anchor=r"heavier than the exact one at {v} of them",
+        anchor=r"heavier than the unrestricted one at {v} of them",
         expect="frontier:complexity/delaunay_heavier_count",
         tol="exact",
         note="Refutes the shortcut rather than assuming it is unavailable; this "
@@ -1696,7 +1696,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.complexity.gart2_exponent",
-        anchor=r"cost exponents in $n$ agree: {v} for GART 2.0 above a thousand nodes",
+        anchor=r"agrees with both: {v} for GART 2.0 above a thousand nodes",
         expect="frontier:complexity/gart2_slope_n_ge_1000",
         tol=("dp", 3),
     ),
@@ -1726,13 +1726,13 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.complexity.ratio_at_1000",
-        anchor=r"the ratio moves from {v} at a thousand nodes to {~} at sixteen thousand",
+        anchor=r"the 1-tree at a fixed budget costs {v} times GART 2.0 at a thousand nodes and {~} times at sixteen thousand",
         expect="frontier:complexity/ledger_d2/n_1000/onetree_k50_over_gart2",
         tol=("dp", 1),
     ),
     Claim(
         id="frontier.complexity.ratio_at_16000",
-        anchor=r"the ratio moves from {~} at a thousand nodes to {v} at sixteen thousand",
+        anchor=r"the 1-tree at a fixed budget costs {~} times GART 2.0 at a thousand nodes and {v} times at sixteen thousand",
         expect="frontier:complexity/ledger_d2/n_16000/onetree_k50_over_gart2",
         tol="exact",
     ),
@@ -1754,20 +1754,20 @@ CLAIMS: list[Claim] = [
         id="frontier.complexity.nd_bound_lo",
         # Re-anchored 2026-08-12: the sentence named a function, \texttt{compute\_mst},
         # and now describes what it does. Same number, same sentence, same claim.
-        anchor=r"against {v}--{~} for the bound, because the MST construction",
+        anchor=r"against {v}--{~} for the bound, because from $d=4$ upward",
         expect="frontier:complexity/nd_slopes/onetree_nd_lo",
         tol="printed",
     ),
     Claim(
         id="frontier.complexity.nd_bound_hi",
         # Re-anchored 2026-08-12: see nd_bound_lo above.
-        anchor=r"against {~}--{v} for the bound, because the MST construction",
+        anchor=r"against {~}--{v} for the bound, because from $d=4$ upward",
         expect="frontier:complexity/nd_slopes/onetree_nd_hi",
         tol="printed",
     ),
     Claim(
         id="frontier.complexity.nd_gart2_planar",
-        anchor=r"that exponent is {v}. On that benchmark both families are quadratic",
+        anchor=r"that exponent is {v}. Both families are quadratic on that benchmark",
         expect="frontier:complexity/nd_slopes/gart2_d_2_3",
         tol=("dp", 2),
     ),
@@ -1817,7 +1817,7 @@ CLAIMS: list[Claim] = [
     # -- 5.7 verdict ---------------------------------------------------------
     Claim(
         id="frontier.verdict.cheaper_above_n",
-        anchor=r"cheaper than a 1-tree bound above roughly {v} nodes in the plane",
+        anchor=r"cheaper than a 1-tree bound above roughly {v} nodes and more expensive",
         no_generator=(
             "Upper edge of the TSPLIB size buckets of Table "
             "\\ref{tab:tsplib_by_size}, n=400, quoted as the size above which "
@@ -1832,7 +1832,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.verdict.dearer_below_n",
-        anchor=r"in the plane and dearer below roughly {v} (Appendix Table~\ref{tab:frontier_tsplib})",
+        anchor=r"and more expensive below roughly {v} (Appendix Table~\ref{tab:frontier_tsplib})",
         no_generator=(
             "Upper edge of the smallest TSPLIB size bucket, n=150, quoted as "
             "the size below which the certified bound wins on both axes. Same "
@@ -1843,20 +1843,20 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.verdict.margin_over_mst_ratio",
-        anchor=r"separated by {v} percentage points on the full {~}-instance EUC\_2D set",
+        anchor=r"on the full {~}-instance EUC\_2D set it is {v} percentage points better than the MST-ratio family",
         expect="= {frontier:tsplib78/asymptotic_mst_mape_pct}"
                " - {frontier:tsplib78/gart2_mape_pct}",
         tol=("dp", 2),
     ),
     Claim(
         id="frontier.verdict.euc2d_n",
-        anchor=r"percentage points on the full {v}-instance EUC\_2D set",
+        anchor=r"on the full {v}-instance EUC\_2D set it is",
         expect="frontier:tsplib78/N",
         tol="exact",
     ),
     Claim(
         id="frontier.verdict.margin_to_converged_bound",
-        anchor=r"EUC\_2D set, against {v} points from the converged bound on the same set",
+        anchor=r"and {v} points worse than the bound run to convergence",
         expect="= {frontier:tsplib78/gart2_mape_pct}"
                " - {frontier:tsplib78/bound_converged_mape_pct}",
         tol=("dp", 2),
@@ -2824,7 +2824,7 @@ CLAIMS: list[Claim] = [
     # withdrawn abstract.frontier.budget25: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.verdict.budget25",
-        anchor=r"strictly better than the bound on both axes from an ascent budget of {v} upward in the plane",
+        anchor=r"cheaper and more accurate than the bound from an ascent budget of {v} upward in the plane",
         no_generator=_BUDGET25_REASON,
         tol="exact",
     ),
