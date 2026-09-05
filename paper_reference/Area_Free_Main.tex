@@ -426,7 +426,7 @@ The $n>400$ TSPLIB bucket has $R^2_\alpha=-0.0710$. The model predicts $\alpha$ 
 
 Feature extraction dominates the estimator's cost. GART 2.0 spends 92.9\% of its wall time on feature extraction and MST construction against 5.03\% on LightGBM inference. We time each instance as the median of 11 repeats, one estimator per process on a single thread. The Time column of Table~\ref{tab:tsplib_by_size} prints the median of those times across instances. Timed the same way, GART 2.0 costs roughly twice the MST-ratio family and an order of magnitude over the two classical closed forms, which compute a convex hull and then evaluate an algebraic expression. 
 
-Those multiples are ratios of medians, not of summed totals, and are the wrong comparison for deployment, where the alternative is a solve. On the multidimensional benchmark the median prediction and the median reference-tour generation cost the same, 121~ms against 122~ms, since most of those instances are small enough to solve outright. The argument holds only where the solve is expensive: at $n\in[501,1000]$ the reference tour takes 3{,}799~ms against GART 2.0's 460~ms, and on TSPLIB \texttt{d18512}, at $n=18{,}512$ and more than $18\times$ the largest training instance, GART 2.0 predicts in 237~ms against the known lower bound, which costs 167 times as much at the crossing budget and 2{,}078 times as much, 493 seconds, at the top of the ladder. 
+Those multiples are ratios of medians, not of summed totals, and are the wrong comparison for deployment, where the alternative is a solve. On the multidimensional benchmark the median prediction and the median reference-tour generation cost the same, 121~ms against 122~ms, since most of those instances are small enough to solve outright. The argument holds only where the solve is expensive: at $n\in[501,1000]$ the reference tour takes 3{,}799~ms against GART 2.0's 460~ms, and on TSPLIB \texttt{d18512}, at $n=18{,}512$ and more than $18\times$ the largest training instance, GART 2.0 predicts in 237~ms against the known lower bound, which costs 167 times as much at the crossing budget and 2{,}078 times as much, 493 seconds, at the largest ascent budget. 
 
 \section{Comparison Against a Known Lower Bound} \label{sec:frontier}
 
@@ -439,7 +439,7 @@ Both ascents run on all four benchmarks, and each headline table reports the arm
 
 \subsection{Results on the Multidimensional Benchmark} \label{subsec:frontier_nd}
 
-At an ascent budget of 200 (Table~\ref{tab:frontier_nd}, a \emph{ladder} that lists the bound at each budget, one \emph{rung} per budget) the bound reaches 0.111\% MAPE against GART 2.0's 0.618\%, a factor of 5.56, at 0.709 times the cost, and it is the more accurate of the two on 82.9\% of instances. It first overtakes GART 2.0 at a budget of 100, where it costs 0.400 times as much.
+At an ascent budget of 200 (Table~\ref{tab:frontier_nd}) the bound reaches 0.111\% MAPE against GART 2.0's 0.618\%, a factor of 5.56, at 0.709 times the cost, and it is the more accurate of the two on 82.9\% of instances. It first overtakes GART 2.0 at a budget of 100, where it costs 0.400 times as much.
 
 The bound is both cheaper and more accurate than GART 2.0 in every dimension group except $d\in\{2,3\}$, and its lead is widest where the estimator was never trained. At $d\in\{2,3\}$ matching GART 2.0's accuracy costs the bound 1.27 times as much.
 
@@ -451,7 +451,7 @@ Roughly one instance in seven exhausts the largest budget we ran, so at the top 
 
 \begin{table}[!htbp]
 \centering
-\caption{Multidimensional cost/accuracy ladder, all 16{,}846 scored instances, Polyak ascent; conventions as in Appendix~\ref{subsec:frontier_tsplib}. Only the raw bound is reported, the calibration constant being planar-fitted.}
+\caption{Multidimensional cost and accuracy by ascent budget, all 16{,}846 scored instances, Polyak ascent; conventions as in Appendix~\ref{subsec:frontier_tsplib}. Only the raw bound is reported, the calibration constant being planar-fitted.}
 \label{tab:frontier_nd}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.05}
@@ -486,7 +486,7 @@ $k=500$ & 50.8 & 4.92 & 0.384 & 4.51 & 1.38 & 0.0674 & 6.05 & 1.75 & 0.0114 & 1.
 \footnotesize
 \begin{tabular}{@{}l l r r r l@{}}
 \toprule
-$d$ & $n$ band & $N$ & GART 2.0 MAPE (\%) & GART 2.0 (ms) & Verdict against the ladder \\
+$d$ & $n$ band & $N$ & GART 2.0 MAPE (\%) & GART 2.0 (ms) & Verdict against the bound \\
 \midrule
 \multirow{3}{*}{$2$} & $[20,\,100]$ & 243 & 1.83 & 2.86 & bound dominates ($k=200,\,500$) \\
  & $[200,\,500]$ & 108 & 0.662 & 5.70 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200,\,500$) \\
@@ -497,16 +497,16 @@ $d$ & $n$ band & $N$ & GART 2.0 MAPE (\%) & GART 2.0 (ms) & Verdict against the 
  & $[600,\,1{,}000]$ & 135 & 0.332 & 25.7 & \textbf{GART 2.0 dominates} ($k=25,\,50,\,100,\,200$) \\
 \midrule
 \multirow{3}{*}{$4$} & $[20,\,100]$ & 243 & 1.02 & 2.42 & bound dominates ($k=200$) \\
- & $[200,\,500]$ & 108 & 0.403 & 14.2 & trade-off at every rung \\
+ & $[200,\,500]$ & 108 & 0.403 & 14.2 & trade-off at every budget \\
  & $[600,\,1{,}000]$ & 135 & 0.251 & 58.2 & \textbf{GART 2.0 dominates} ($k=200$) \\
 \midrule
 \multirow{3}{*}{$10$} & $[20,\,100]$ & 243 & 0.566 & 2.37 & bound dominates ($k=200$) \\
- & $[200,\,500]$ & 108 & 0.204 & 14.7 & trade-off at every rung \\
- & $[600,\,1{,}000]$ & 135 & 0.173 & 100 & trade-off at every rung \\
+ & $[200,\,500]$ & 108 & 0.204 & 14.7 & trade-off at every budget \\
+ & $[600,\,1{,}000]$ & 135 & 0.173 & 100 & trade-off at every budget \\
 \midrule
 \multirow{3}{*}{$50$} & $[20,\,100]$ & 243 & 0.214 & 2.79 & bound dominates ($k=200$) \\
- & $[200,\,500]$ & 108 & 0.0951 & 22.7 & trade-off at every rung \\
- & $[600,\,1{,}000]$ & 134 & 0.0622 & 114 & trade-off at every rung \\
+ & $[200,\,500]$ & 108 & 0.0951 & 22.7 & trade-off at every budget \\
+ & $[600,\,1{,}000]$ & 134 & 0.0622 & 114 & trade-off at every budget \\
 \midrule
 \multirow{3}{*}{$100$} & $[20,\,100]$ & 2{,}209 & 0.501 & 3.37 & bound dominates ($k=100,\,200$) \\
  & $[200,\,500]$ & 977 & 0.723 & 26.8 & bound dominates ($k=50,\,100$) \\
@@ -611,7 +611,7 @@ Distance type & Count & Estimator & $N$ & SDPE (\%) [95\% CI] & MAPE (\%) & $|$M
 
 $\alpha$ ranges from 1.01 to 1.51 across the set, and a single multiplier cannot track that spread without trading one metric against the other. On the two ATT instances the fixed constant has the lower MAPE, and on CEIL\_2D the two estimators are close in SDPE. Groups of two and four instances cannot separate estimators. GART 2.0 declines \texttt{si1032} instead of extrapolating below the greedy-to-MST ratio it was trained on. We do not estimate the relationship between per-instance embedding distortion and prediction error, so this remains a feasibility study for the hybrid pipeline.
 
-The Held--Karp relaxation never invokes the triangle inequality, so it is defined on any symmetric matrix and reads these instances directly. On the 29 instances both methods score over all 33 non-EUC\_2D files --- a set wider than the metric screen above, since the lower bound tolerates non-metric input --- GART 2.0 obtains 3.81\% MAPE against 1.27\% for the raw bound at an ascent budget of 100 under the Volgenant--Jonker step. At a budget of 500 the Polyak step reaches 0.509\%, a factor of 7.50 against GART 2.0. The bound also scores \texttt{brg180} and \texttt{si1032}. 
+The Held--Karp relaxation never invokes the triangle inequality, so it is defined on any symmetric matrix and reads these instances directly. On the 29 instances both methods score over all 33 non-EUC\_2D files, GART 2.0 obtains 3.81\% MAPE against 1.27\% for the raw bound at an ascent budget of 100 under the Volgenant--Jonker step. At a budget of 500 the Polyak step reaches 0.509\%, a factor of 7.50 against GART 2.0. The bound also scores \texttt{brg180} and \texttt{si1032}. 
 
 \section{Conclusion}\label{sec:conclusion}
 
@@ -633,7 +633,7 @@ Can a learned estimator understand the relationship between the MST and the TSP 
 
 \section{Code and Data Availability} \label{app:code}
 
-Our implementation, trained model weights, and benchmark scripts are available at \url{https://github.com/sfeldmanMIG25/Area-and-Distribution-Free-Estimator-for-TSP}. We release the per-class, per-dimension, per-size, rank-agreement, and paired-test grids as tidy tables with the per-instance predictions, and the provided scripts regenerate the synthetic instances, the MDS diagnostics of Appendix~\ref{app:mds}, and every table and figure. A verification pass re-derives all 425 benchmark table cells against the typeset value, and a second pass does the same for the 182 cells of the cost/accuracy ladders of Section~\ref{sec:frontier}. We transcribe the remaining tables and the scalars quoted in the running prose by hand from the same artifacts, and neither check covers them.
+Our implementation, trained model weights, and benchmark scripts are available at \url{https://github.com/sfeldmanMIG25/Area-and-Distribution-Free-Estimator-for-TSP}. We release the per-class, per-dimension, per-size, rank-agreement, and paired-test grids as tidy tables with the per-instance predictions, and the provided scripts regenerate the synthetic instances, the MDS diagnostics of Appendix~\ref{app:mds}, and every table and figure. A verification pass re-derives all 425 benchmark table cells against the typeset value, and a second pass does the same for the 182 cells of the cost and accuracy tables of Section~\ref{sec:frontier}. We transcribe the remaining tables and the scalars quoted in the running prose by hand from the same artifacts, and neither check covers them.
 Two released rows carry a raw $\alpha$ outside the $[1,2]$ target interval and enter the fit at the clipped value: \path{N1000_D15_G100_pchergphhtgncoe_59} (training, raw $\alpha=0.975$) and \path{N5_D2_G100_oc_33} (validation, raw $\alpha=2.06$).
 
 The GART 2.0 pipeline uses SciPy \citep{scipy2020} for Delaunay triangulation \citep{delaunay1934} and MST construction, Numba \citep{numba2015} for centroid-distance computation, NumPy \citep{harris2020numpy} symmetric eigendecomposition for classical MDS, LightGBM \citep{ke2017lightgbm} for regression, and scikit-learn \citep{sklearn2011} for metric computation. Estimator timings were collected on one Intel i7 13th Gen machine with 64\,GB RAM and Windows 11. Concorde 03.12.19 and LKH-3 3.0.13 generated the stored reference tour costs.
@@ -793,7 +793,7 @@ BHH assumes points drawn independently from a density $f$ of bounded support: $L
 
 \subsection{\c{C}avdar--Sokol}
 
-\c{C}avdar--Sokol takes $A$ as the area of the rectangle covering the nodes; $\bar c_j$ and $\mathrm{cstdev}_j$ are the mean and standard deviation of the absolute distances from the nodes to that rectangle's midpoint line on axis $j$, not to the sample mean. The estimator assumes an axis-aligned rectangle and is not rotation invariant, so we rotate each instance into its minimum-area enclosing rectangle by scanning convex-hull edges \citep{freeman1975determining}. We then divide the raw estimate by the finite-$n$ correction $0.9325e^{0.00005298n}-0.2972e^{-0.01452n}$, Eq.~(21) of \citet{cavdar2014dissertation}, fitted over $n\in\{100,125,\dots,975\}$ at $R^2=0.987$. \citet{choi2021adjustment} records that the uncorrected estimator underestimates for $n<1000$, the direction this correction moves it. The correction is bounded to the range it was fitted over. On this benchmark 1{,}320 of the 2{,}580 2D instances have $n<100$, and we evaluate the ratio at the $n=100$ endpoint for them instead of extrapolating below it. The dissertation's own figures show the ratio falling toward $0.4$ as $n$ approaches 10, but publish no fitted form there. Above $n=975$ we apply no correction, because Eq.~(21) grows without bound ($E/T=1.22$ at $n=5000$), leaving a 1.84\% step at the upper boundary where the fitted ratio reads 0.982. The source regression targets Lin--Kernighan tour lengths, not optima, and every training graph carries a node at each corner of its rectangle, pinning the graph area to the covering rectangle in a way our instances do not.
+We rotate each instance into its minimum-area enclosing rectangle by scanning convex-hull edges \citep{freeman1975determining}, because \c{C}avdar--Sokol assumes an axis-aligned rectangle. $A$ is the area of that rectangle, and $\bar c_j$ and $\mathrm{cstdev}_j$ are the mean and standard deviation of the absolute distances from the nodes to its midpoint line on axis $j$, not to the sample mean. We divide the raw estimate by the finite-$n$ correction $0.9325e^{0.00005298n}-0.2972e^{-0.01452n}$, Eq.~(21) of \citet{cavdar2014dissertation}, fitted over $n\in\{100,125,\dots,975\}$ at $R^2=0.987$, and we bound the correction to that range. On this benchmark 1{,}320 of the 2{,}580 2D instances have $n<100$, and we evaluate the ratio at the $n=100$ endpoint for them instead of extrapolating below it. Above $n=975$ we apply no correction, leaving a 1.84\% step at the upper boundary where the fitted ratio reads 0.982. The source regression targets Lin--Kernighan tour lengths, not optima.
 
 \subsection{Constant-Ratio References}
 
@@ -811,21 +811,21 @@ The custom Hilbert sort orders nodes by a $d$-dimensional Hilbert index \citep{h
 
 The convex-hull plug-in uses the hull only for $d\le3$; above that we substitute the coordinate bounding box. QHull's output size grows as $n^{\lfloor d/2\rfloor}$, the blow-up of Section~\ref{sec:intro}. At $d=8$ with $n=1000$ a single hull dominates the entire benchmark's runtime.
 
-\section{Held--Karp Bound Ladders} \label{app:ladders}
+\section{Held--Karp Bound by Ascent Budget} \label{app:ladders}
 
 \subsection{Results on TSPLIB95 EUC\_2D} \label{subsec:frontier_tsplib}
 
-We time GART 2.0 and the bound on the same instances as Table~\ref{tab:tsplib_by_size}, each estimator alone in its own process during a quiet window. The comparison runs on the 77 of 78 EUC\_2D instances that fall under the released code's cap of 16{,}384 nodes on the dense distance matrix. The ms column is the median per-instance time and the accuracy beside it is a MAPE. $\times$ compares the bound's time with GART 2.0's: the ratio of the printed medians here and on the 2D and non-Euclidean ladders, and the median of back-to-back per-instance ratios on the multidimensional ladder. Raw is the incumbent $\hat w_k$ and Cal.\ is $c_k\hat w_k$. Bold marks every cell both cheaper and more accurate than GART 2.0. A \emph{rung} is one budget row.
+We time GART 2.0 and the bound on the same instances as Table~\ref{tab:tsplib_by_size}, each estimator alone in its own process during a quiet window. The comparison runs on the 77 of 78 EUC\_2D instances that fall under the released code's cap of 16{,}384 nodes on the dense distance matrix. The ms column is the median per-instance time and the accuracy beside it is a MAPE. $\times$ compares the bound's time with GART 2.0's: the ratio of the printed medians here and in the 2D and non-Euclidean tables, and the median of back-to-back per-instance ratios in the multidimensional table. Raw is the incumbent $\hat w_k$ and Cal.\ is $c_k\hat w_k$. Bold marks every cell both cheaper and more accurate than GART 2.0.
 
 The calibrated bound dominates GART 2.0 on both cost and accuracy at an ascent budget of 25: 0.902 times the cost at 2.00\% MAPE against 2.56\%. The raw bound alone reaches parity at budget 50, at 1.46 times the cost and a margin of 0.00408 percentage points, with a paired win rate of 50.0\%. Summed over the corpus instead of read as a median, the budget-25 pair costs 24.9 times as much, because the bound is cheap on the many small instances that set the median and expensive on the few large ones that set the total.
 
-On the 23 smallest instances the calibrated bound at that same budget costs 0.159 times GART 2.0 at 1.69\% MAPE against 2.01\%, and even the raw bound reaches 22.2\% lower error at 0.463 times the cost. In the middle bucket nothing dominates, and the raw bound needs the top of the ladder to match at all. In the largest bucket the raw bound matches at 6.65 times the cost and again nothing dominates. The reversal is monotone in $n$.
+On the 23 smallest instances the calibrated bound at that same budget costs 0.159 times GART 2.0 at 1.69\% MAPE against 2.01\%, and even the raw bound reaches 22.2\% lower error at 0.463 times the cost. The reversal is monotone in $n$.
 
-The excluded instance is \texttt{d18512}, whose node count is above that cap, so the bound runs its coordinate kernel there instead. GART 2.0 predicts it in 237~ms, the median of 11 repeats.
+The excluded instance is \texttt{d18512}, whose node count is above that cap, so the bound runs its coordinate kernel there instead. GART 2.0 predicts it in 237~ms.
 
 \begin{table}[!htbp]
 \centering
-\caption{TSPLIB95 EUC\_2D cost/accuracy ladder over the 77 matched instances.}
+\caption{TSPLIB95 EUC\_2D cost and accuracy by ascent budget over the 77 matched instances.}
 \label{tab:frontier_tsplib}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.05}
@@ -852,17 +852,17 @@ $k=500$ & 7.88 & 2.11 & 0.971 & 0.742 & 25.7 & 5.64 & 1.93 & 1.42 & 1{,}120 & 61
 
 \subsection{Results on the 2D Diverse and Non-Euclidean Benchmarks} \label{subsec:frontier_other}
 
-The raw bound passes GART 2.0 on the 2D diverse ladder (Table~\ref{tab:frontier_2d}) under the Volgenant--Jonker step at a budget of 50, at 0.230 times the cost and a paired win rate of 54.8\%; the calibrated row passes a rung earlier. The reversal is monotone in $n$ and steeper than on TSPLIB (Section~\ref{subsec:frontier_tsplib}), because this corpus reaches down to five nodes. On the 360 instances with $n\le10$, the raw bound at a budget of 25 reads 0.439\% MAPE against GART 2.0's 3.21\% at 0.0699 times the cost, winning 95.0\% of the paired comparisons. On the 610 instances with $n>500$, nothing dominates: the raw bound is more accurate only at the top budget, and there it costs 26.1 times as much.
+The raw bound passes GART 2.0 on the 2D diverse corpus (Table~\ref{tab:frontier_2d}) under the Volgenant--Jonker step at a budget of 50, at 0.230 times the cost and a paired win rate of 54.8\%; the calibrated row passes one budget earlier. The reversal is monotone in $n$ and steeper than on TSPLIB (Section~\ref{subsec:frontier_tsplib}), because this corpus reaches down to five nodes. On the 360 instances with $n\le10$, the raw bound at a budget of 25 reads 0.439\% MAPE against GART 2.0's 3.21\% at 0.0699 times the cost, winning 95.0\% of the paired comparisons. On the 610 instances with $n>500$, nothing dominates: the raw bound is more accurate only at the top budget, and there it costs 26.1 times as much.
 
-On the non-Euclidean ladder (Table~\ref{tab:frontier_noneuc}), the estimator needs the MDS embedding of Section~\ref{sec:application} while the bound reads the distance matrix directly. Over the 29 instances both methods score, GART 2.0 costs 4.88~ms, of which the embedding is 9.21\%, at 3.81\% MAPE. The Polyak step at a budget of 500 reaches 0.509\% MAPE at 0.693 times that cost, winning all 29 paired comparisons; at a budget of 200 it reads 0.762\% for 0.339 times the cost, again on every instance. The cheapest domination by a raw bound row anywhere in this study is here: the Volgenant--Jonker step at a budget of 25 costs 0.0648 times GART 2.0 and reads 2.95\% against 3.81\%.
+On the non-Euclidean corpus (Table~\ref{tab:frontier_noneuc}), the estimator needs the MDS embedding of Section~\ref{sec:application} while the bound reads the distance matrix directly. Over the 29 instances both methods score, GART 2.0 costs 4.88~ms, of which the embedding is 9.21\%, at 3.81\% MAPE. The Polyak step at a budget of 500 reaches 0.509\% MAPE at 0.693 times that cost, winning all 29 paired comparisons; at a budget of 200 it reads 0.762\% for 0.339 times the cost, again on every instance. The cheapest domination by a raw bound row anywhere in this study is here: the Volgenant--Jonker step at a budget of 25 costs 0.0648 times GART 2.0 and reads 2.95\% against 3.81\%.
 
 The two step rules do not order the same way on the two corpora. Volgenant--Jonker leads Polyak at every 2D budget that runs an ascent except 200, where the two are separated by half a hundredth of a percentage point; the gap is widest at a budget of 25, 3.61\% against 7.52\%. Polyak leads from a budget of 200 on the non-Euclidean corpus, 0.762\% against 1.23\%.
 
-The timing sessions behind both ladders did not run on a quiet machine. Re-timing the TSPLIB EUC\_2D instances against their published per-instance quiet-window costs puts GART 2.0 at 1.48 times its published cost and the bound at 1.10 to 1.14 times, so every cost multiple above is between 0.740 and 0.768 of its quiet-machine value. Correcting for that costs one domination, the raw Volgenant--Jonker row at a budget of 200 on the 2D corpus, whose 0.790 becomes 1.03. Running the released single-budget call once per budget row, with no ascent state carried between rows, costs 0.768 to 0.955 times the ladder on the 2D corpus and 0.898 to 1.14 times on the non-Euclidean one.
+The timing sessions behind the 2D diverse and non-Euclidean tables did not run on a quiet machine. Re-timing the TSPLIB EUC\_2D instances against their published per-instance quiet-window costs puts GART 2.0 at 1.48 times its published cost and the bound at 1.10 to 1.14 times, so every cost multiple above is between 0.740 and 0.768 of its quiet-machine value. Correcting for that costs one domination, the raw Volgenant--Jonker row at a budget of 200 on the 2D corpus, whose 0.790 becomes 1.03.
 
 \begin{table}[tbp]
 \centering
-\caption{2D diverse cost/accuracy ladder, all 2{,}580 instances, both step rules.}
+\caption{2D diverse cost and accuracy by ascent budget, all 2{,}580 instances, both step rules.}
 \label{tab:frontier_2d}
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.05}
@@ -886,7 +886,7 @@ $k=500$ & 9.42 & 1.88 & 1.27 & 1.10 & 7.15 & 1.43 & 1.45 & 1.33 \\
 
 \begin{table}[!htbp]
 \centering
-\caption{Non-EUC\_2D TSPLIB95 ladder over the 29 instances both methods score, nine of which violate the triangle inequality; the planar $c_k$ makes the Cal.\ columns indicative only.}
+\caption{Non-EUC\_2D TSPLIB95 cost and accuracy by ascent budget over the 29 instances both methods score, nine of which violate the triangle inequality; the planar $c_k$ makes the Cal.\ columns indicative only.}
 \label{tab:frontier_noneuc}
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.05}
@@ -972,7 +972,7 @@ $n$ range & Estimator & SDPE (\%) [95\% CI] & MAPE (\%) & $|$Median$|$ (\%) & MS
 
 \section{Trained Hyperparameters and Booster Statistics} \label{app:hyperparams}
 
-Optuna's tree-structured Parzen estimator (TPE) ran 200 trials against in-distribution validation, 60 completed and 140 pruned; the tuned booster reaches 0.611\% on the multidimensional test split against 0.623\% for the frozen hyperparameters, and 2.64\% against 2.47\% on TSPLIB EUC\_2D. Both boosters are unconstrained and trained on the logit target, so the monotone constraint of the released model does not enter the difference.
+Optuna's tree-structured Parzen estimator (TPE) ran 200 trials against in-distribution validation; the tuned booster reaches 0.611\% on the multidimensional test split against 0.623\% for the frozen hyperparameters, and 2.64\% against 2.47\% on TSPLIB EUC\_2D. Both boosters are unconstrained and trained on the logit target, so the monotone constraint of the released model does not enter the difference.
 
 \begin{table}[!htb]
 \centering
@@ -1015,7 +1015,7 @@ Optuna's tree-structured Parzen estimator (TPE) ran 200 trials against in-distri
 \end{tabular}
 \end{table}
 
-Two other learners were fitted on the same feature pipeline before the gradient-boosted ensemble was frozen, and neither displaced it. Neither is a control on the released feature vector: the network was fitted on 30 columns and the linear model on 28 against the released block's 31, and neither was fitted on the released feature table. The 2D benchmark times one call per instance inside a shared thread pool and averages over instances, so its milliseconds are not comparable with the per-process medians of Appendix~\ref{app:ladders}. On that timing a residual feed-forward network, predicting the same $\alpha$ from the same MST-and-geometry descriptors, costs 138 to 146~ms per instance against GART 2.0's 103 to 148~ms, slower on five of the six generator classes and slower in aggregate. It reads 2.98\% MAPE overall against 2.89\% and is less accurate on every class but the near-collinear Line Noise, which it wins at 9.14\% against 10.8\%, and it reads 4.61\% SDPE against 4.68\%. An ordinary least-squares fit is the cheapest of the three at 61.9 to 92.1~ms and reaches 17.9\% MAPE on the clustered class against 2.24\%, eight times the released model's error, at $R^2_\alpha=-9.53$.
+
 
 \section{MDS Embedding for Non-Euclidean Instances} \label{app:mds}
 
@@ -1045,6 +1045,6 @@ EXPLICIT screened & 7 & 10--100 & 0.0198 [0.0041, 0.1208] & 0.99954 [0.99598, 0.
 }
 \end{table}
 
-The screened application set excludes ten EXPLICIT matrices with structural triangle-inequality violations, leaving seven, three of them with mild rounding-level violations. GART 2.0 declines one of them, \texttt{si1032}, and obtains 3.01\% MAPE on the six it accepts. Distortion varies substantially within type, maximum stress 0.236 for GEO against 0.121 for screened EXPLICIT, so we do not attribute between-type accuracy differences to the distance label alone.
+Distortion varies substantially within type, maximum stress 0.236 for GEO against 0.121 for screened EXPLICIT, so we do not attribute between-type accuracy differences to the distance label alone.
 
 \end{document}

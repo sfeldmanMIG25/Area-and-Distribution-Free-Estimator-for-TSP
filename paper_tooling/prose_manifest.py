@@ -855,7 +855,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="appendix.code.frontier_table_cells",
-        anchor=r"does the same for the {v} cells of the cost/accuracy",
+        anchor=r"does the same for the {v} cells of the cost and accuracy",
         expect="bank:frontier_table_cells",
         tol="exact",
         note="check_frontier_tables.py banks its own banner count the same way "
@@ -863,15 +863,7 @@ CLAIMS: list[Claim] = [
              "verification counts the appendix quotes is generated rather than "
              "typed.",
     ),
-    Claim(
-        id="appendix.mds.explicit_gart_mape",
-        anchor=r"and obtains {v}\% MAPE on the six it accepts",
-        expect="bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-        tol=("dp", 2),
-        note="R1: the EXPLICIT stratum is GART 2.0's own row, N=6. The "
-             "seven-instance figure it was transposed with before 2026-08-11 "
-             "belonged to a row the manuscript no longer reports.",
-    ),
+    # withdrawn appendix.mds.explicit_gart_mape: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (screened-set readback of Section 6)
     Claim(
         id="appendix.mds.geo_stress_max",
         anchor=r"maximum stress {v} for GEO against {~} for screened EXPLICIT",
@@ -1059,12 +1051,7 @@ CLAIMS: list[Claim] = [
         expect="bank:cavdar_corr_2d_n_total",
         tol="exact",
     ),
-    Claim(
-        id="appendix.cavdar.extrap_ratio_5000",
-        anchor=r"grows without bound ($E/T={v}$ at",
-        expect="bank:cavdar_corr_ratio_extrap_5000",
-        tol=("dp", 2),
-    ),
+    # withdrawn appendix.cavdar.extrap_ratio_5000: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (Cavdar-Sokol rebuilt around the rotation)
     Claim(
         id="appendix.cavdar.boundary_step",
         anchor=r"leaving a {v}\% step at the upper boundary",
@@ -1143,27 +1130,8 @@ CLAIMS: list[Claim] = [
     # withdrawn application.greedy_gate.train_lo: caption statement removed; the training-split range [1.0465,2.1295] is asserted in subsec:features
 
     # -- N-J: the tuning comparison, and which two boosters it is over -------
-    Claim(
-        id="methods.optuna.trials_complete",
-        anchor=r"validation, {v} completed and {~} pruned",
-        no_generator=(
-            "lgbm_model_v3/gart2_optuna.db, study 'gart2': "
-            "SELECT state, COUNT(*) FROM trials GROUP BY state -> COMPLETE 60, "
-            "PRUNED 140, total 200. The study database is not read by any exporter. "
-            "Settle by having a small exporter emit the trial census under "
-            "optuna_gart2_trials_*."
-        ),
-        tol="exact",
-    ),
-    Claim(
-        id="methods.optuna.trials_pruned",
-        anchor=r"validation, {~} completed and {v} pruned",
-        no_generator=(
-            "lgbm_model_v3/gart2_optuna.db, study 'gart2': PRUNED 140 of 200 trials. "
-            "Companion to methods.optuna.trials_complete; settle the same way."
-        ),
-        tol="exact",
-    ),
+    # withdrawn methods.optuna.trials_complete: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (Optuna trial bookkeeping)
+    # withdrawn methods.optuna.trials_pruned: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (Optuna trial bookkeeping)
     Claim(
         id="methods.optuna.tuned_nd",
         anchor=r"the tuned booster reaches {v}\% on the multidimensional test split",
@@ -1544,7 +1512,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.small_raw_accuracy_gain",
-        anchor=r"even the raw bound reaches {v}\% lower error at {~} times the cost. In the middle bucket",
+        anchor=r"even the raw bound reaches {v}\% lower error at {~} times the cost. The reversal",
         expect="= 100 * (1 - {frontier:tsplib/n in [51,150]/crossing_bound_over_gart2_mape})",
         tol=("dp", 1),
         note="The uncalibrated, certified bound against the released estimator "
@@ -1552,16 +1520,11 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.tsplib.small_raw_cost_x",
-        anchor=r"even the raw bound reaches {~}\% lower error at {v} times the cost. In the middle bucket",
+        anchor=r"even the raw bound reaches {~}\% lower error at {v} times the cost. The reversal",
         expect="frontier:tsplib/n in [51,150]/crossing_cost_x_gart2",
         tol=("dp", 2),
     ),
-    Claim(
-        id="frontier.tsplib.large_raw_cost_x",
-        anchor=r"the raw bound matches at {v} times the cost and again nothing dominates",
-        expect="frontier:tsplib/n > 400/crossing_cost_x_gart2",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.tsplib.large_raw_cost_x: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (middle/largest bucket readback; the table prints the cells)
     # withdrawn frontier.tsplib.load_sensitivity_bound: the 1.25/1.05 load-sensitivity pair left Appendix I in pass 1 (2026-09-04); the body copy at 5.1 lives
     # withdrawn frontier.tsplib.load_sensitivity_gart2: the 1.25/1.05 load-sensitivity pair left Appendix I in pass 1 (2026-09-04); the body copy at 5.1 lives
     # withdrawn frontier.tsplib.capped_x_at_crossing: the 167/2,078/493 s comparators left Appendix I in pass 1 (2026-09-04); the body copy at 4.8 lives
@@ -1582,7 +1545,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="costacct.d18512_bound_top_s",
-        anchor=r"times as much, {v} seconds, at the top of the ladder",
+        anchor=r"times as much, {v} seconds, at the largest ascent budget",
         expect="frontier:tsplib/capped_tail/hk_ms_by_k/500",
         tol=("dp", 0),
         scale=0.001,
@@ -1591,14 +1554,14 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.nd.load_sensitivity_bound_body: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.tsplib.capped_gart2_ms",
-        anchor=r"GART 2.0 predicts it in {v}~ms, the median of 11 repeats.",
+        anchor=r"GART 2.0 predicts it in {v}~ms.",
         expect="frontier:tsplib/capped_tail/gart2_ms",
         tol=("dp", 0),
     ),
     # withdrawn frontier.tsplib.harness_d18512_ms: author ruling 2026-09-04: one figure for d18512 (237 ms, frontier bank); the 239 ms harness figure is retired everywhere
     Claim(
         id="frontier.tsplib.table_caption_n",
-        anchor=r"cost/accuracy ladder over the {v} matched instances",
+        anchor=r"cost and accuracy by ascent budget over the {v} matched instances",
         expect="frontier:tsplib/N_matched",
         tol="exact",
     ),
@@ -1606,7 +1569,7 @@ CLAIMS: list[Claim] = [
     # -- 5.3 multidimensional ------------------------------------------------
     Claim(
         id="frontier.nd.best_budget",
-        anchor=r"At an ascent budget of {v} (Table~\ref{tab:frontier_nd}, a \emph{ladder}",
+        anchor=r"At an ascent budget of {v} (Table~\ref{tab:frontier_nd}) the bound reaches",
         expect="frontier:nd/best_budget_k",
         tol="exact",
     ),
@@ -1674,7 +1637,7 @@ CLAIMS: list[Claim] = [
     # withdrawn frontier.nd.closes_exactly_pct: author cut the sentence on Overleaf (commit f35742d, 2026-09-05)
     Claim(
         id="frontier.nd.table_caption_n",
-        anchor=r"cost/accuracy ladder, all {v} scored instances, Polyak ascent",
+        anchor=r"cost and accuracy by ascent budget, all {v} scored instances, Polyak ascent",
         expect="frontier:nd/N",
         tol="exact",
     ),
@@ -2081,7 +2044,7 @@ CLAIMS: list[Claim] = [
     # carries no bound row for this corpus.
     Claim(
         id="application.bound.like_for_like_n",
-        anchor=r"On the {v} instances both methods score over all {~} non-EUC\_2D files --- a set wider",
+        anchor=r"On the {v} instances both methods score over all {~} non-EUC\_2D files, GART 2.0",
         expect="allbench:cells/noneuc/like_for_like_vs_GART2/N",
         tol="exact",
         note="Instances scored by both GART 2.0 and the 1-tree bound; the bound "
@@ -2217,7 +2180,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.2d.caption_n",
-        anchor=r"cost/accuracy ladder, all {v} instances, both step rules",
+        anchor=r"cost and accuracy by ascent budget, all {v} instances, both step rules",
         expect="costfront:cells/2d/groups/Total (all 2D)/N",
         tol="exact",
     ),
@@ -2334,7 +2297,7 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.noneuc.caption_n",
-        anchor=r"ladder over the {v} instances both methods score",
+        anchor=r"by ascent budget over the {v} instances both methods score",
         expect="costfront:cells/noneuc/instance_accounting/matched",
         tol="exact",
     ),
@@ -2442,37 +2405,17 @@ CLAIMS: list[Claim] = [
     ),
     Claim(
         id="frontier.load.flip_after",
-        anchor=r"whose {~} becomes {v}. Running the released",
+        anchor=r"whose {~} becomes {v}.",
         expect="= {costfront:cells/2d/groups/Total (all 2D)/ascents/vj_ckpt/200/"
                "x_gart2_typical} / {costfront:load_control/bias_in_a_cost_ratio/200}",
         tol=("dp", 2),
         note="Stated as the corrected multiple, so the correction is what is "
              "checked rather than a hand-computed constant.",
     ),
-    Claim(
-        id="frontier.amort.2d_lo",
-        anchor=r"with no ascent state carried between rows, costs {v} to {~} times the ladder on the 2D corpus",
-        expect="costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.amort.2d_hi",
-        anchor=r"with no ascent state carried between rows, costs {~} to {v} times the ladder on the 2D corpus",
-        expect="costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.amort.noneuc_lo",
-        anchor=r"on the 2D corpus and {v} to {~} times on the non-Euclidean one",
-        expect="costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
-        tol=("dp", 2),
-    ),
-    Claim(
-        id="frontier.amort.noneuc_hi",
-        anchor=r"and {~} to {v} times on the non-Euclidean one",
-        expect="costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
-        tol=("dp", 2),
-    ),
+    # withdrawn frontier.amort.2d_lo: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (single-budget-call timing variant)
+    # withdrawn frontier.amort.2d_hi: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (single-budget-call timing variant)
+    # withdrawn frontier.amort.noneuc_lo: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (single-budget-call timing variant)
+    # withdrawn frontier.amort.noneuc_hi: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (single-budget-call timing variant)
 
     # =======================================================================
     # Editorial restructure of 2026-08-26.  The process/journey narrative was
@@ -2877,26 +2820,9 @@ CLAIMS: list[Claim] = [
     # withdrawn appendix.lit.chien_daganzo_choi: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
     # withdrawn appendix.lit.chien_review_coeff: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
     # withdrawn appendix.lit.chien_formula_coeff: Appendix F rewritten wholesale (author 2026-09-03): coefficient discussion gone
-    Claim(
-        id="appendix.controls.linear_clustered_mape",
-        anchor=r"reaches {v}\% MAPE on the clustered class against {~}\%, eight times",
-        expect="bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="appendix.controls.released_clustered_mape",
-        anchor=r"on the clustered class against {v}\%, eight times the released model's error",
-        expect="bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-        tol=("dp", 1),
-    ),
-    Claim(
-        id="appendix.controls.linear_clustered_r2alpha",
-        anchor=r"eight times the released model's error, at $R^2_\alpha=-{v}$",
-        expect="= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-        tol=("dp", 2),
-        note="Adverse result kept explicit; the minus sign is in the anchor so "
-             "a sign flip reports ANCHOR_MISSING.",
-    ),
+    # withdrawn appendix.controls.linear_clustered_mape: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (two-other-learners paragraph)
+    # withdrawn appendix.controls.released_clustered_mape: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (two-other-learners paragraph)
+    # withdrawn appendix.controls.linear_clustered_r2alpha: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (two-other-learners paragraph)
     # -----------------------------------------------------------------------
     # Near-collinear section (author 2026-09-03): SHAP attribution of the released
     # booster by 2D generator class, paper_tooling/shap_2d_summary.json, written
@@ -3106,12 +3032,7 @@ CLAIMS: list[Claim] = [
         no_generator=("data_pipeline/instance_io.py generate_1d_correlated: noise scale = grid_size / 10. Code constant."),
         tol="exact",
     ),
-    Claim(
-        id="frontier.tsplib.repeats_ladder_restated",
-        anchor=r"predicts it in 237~ms, the median of {v} repeats.",
-        expect="frontier:tsplib/repeats",
-        tol="exact",
-    ),
+    # withdrawn frontier.tsplib.repeats_ladder_restated: author ruling 2026-09-05: the experiment's claim is already clear, so the write-up is cut (repeat count is timing bookkeeping)
     # withdrawn frontier.tsplib.repeats_body_restated: the 239 ms clause left Appendix I (author ruling 2026-09-04)
     # -----------------------------------------------------------------------
     # Author rulings (2026-09-04): SDPE support for the matched-domain claim in 4.4;

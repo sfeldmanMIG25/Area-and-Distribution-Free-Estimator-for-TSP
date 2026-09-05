@@ -2,85 +2,165 @@
   "schema": 2,
   "_warning": "Recorded backlog of unverified prose numbers. Adding an entry here stops check_prose_numbers.py from blocking on it. Do not edit by hand and do not regenerate to make a red run green -- every entry added is a number the paper asserts and nothing verifies. Entries are occurrence-addressed: the ctx: component is a digest of the surrounding prose, so a slot cannot be filled by a different sentence. See ledger[] for every finding this file has ever absorbed and every claim ever withdrawn from the manifest.",
   "recorded": {
-    "at": "2026-09-05T16:08:53+00:00",
+    "at": "2026-09-05T18:06:05+00:00",
     "kind": "update",
-    "reason": "2026-09-05 Section 5 plain-language rewrite and appendix author-pattern pass: reworded contexts, no value changed",
+    "reason": "2026-09-05 author rulings: ladder/rung jargon removed, experiment write-ups cut; contexts moved, no value changed",
     "tex": "paper_reference\\Area_Free_Main.tex",
-    "tex_sha256": "b36aecfe00722228feaed901fedca2e44dbe18a1de345cf5fda52aac52d62ee5",
+    "tex_sha256": "3eea6a3f4d20d4a6d8115cea84ff7d2c4cf93547ddaa639710e4b1d867788816",
     "production_model": "GART_2.0",
-    "n_entries": 193,
-    "n_keys": 193,
+    "n_entries": 173,
+    "n_keys": 173,
     "absorbed": [
-      "sec-frontier/subsec-frontier-nd :: 100 :: tier2:unmarked :: ctx:c85e04d5898e",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:64d3217e9e38",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:766eb95cdc5c",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:d984fb47b7c0",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:54f2608c3613",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:54f2608c3613",
-      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:f7921477614f",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:1a319c069ca9",
-      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:c3f706799368",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:7699935ca4ba",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:320fb897bb02",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:b0230307a5c7",
-      "appendix:app-training/training-corpus :: 16{,}920 :: tier2:unmarked :: ctx:f5b0af537c6a",
-      "appendix:app-training/training-corpus :: 15.9 :: tier1:unit :: ctx:2e3a01fc0b64",
-      "appendix:app-training/training-corpus :: 100 :: tier2:unmarked :: ctx:0beb43f84b8e",
-      "appendix:app-training/training-corpus :: 1{,}000 :: tier2:unmarked :: ctx:f6ad7ecce190",
-      "appendix:app-training/training-corpus :: 10{,}000 :: tier2:unmarked :: ctx:cc21a3c84100",
-      "appendix:app-shap :: 5{,}000 :: tier2:unmarked :: ctx:b16b7e46a4f7",
-      "appendix:app-shap :: 16{,}920 :: tier2:unmarked :: ctx:0990f94fab77",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:8460b02ca846",
-      "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:dbc7cac631f3",
-      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:65410ea16bf9",
-      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:326ebfbf870a",
-      "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:5fa5730183b7",
-      "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:95e4dde2f180",
-      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:88f31540c03a",
-      "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:7599981abc7f",
-      "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:5b3d5e087a65",
-      "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:dd18fd6d7137",
-      "appendix:app-bench-details/convex-hull-cap :: 1000 :: tier2:unmarked :: ctx:47274e8c6983"
+      "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:0b71f7fc47d4",
+      "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:4a6f3b18a2b1",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:5e1195bdf1ba",
+      "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:ac602a58275b",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a6173f6059da",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:d186b1b47c0d",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:e36048d9884b"
     ],
     "pruned": [
-      "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:bbe8d0b25e4a",
-      "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:af3a4b3c2199",
-      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a32039128b0b",
-      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:fb4f37e6779b",
-      "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:1d5f1eca87a9",
-      "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:6704657e0ad1",
-      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:8ee0512ea334",
-      "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:839a6909da37",
-      "appendix:app-bench-details/convex-hull-cap :: 1000 :: tier2:unmarked :: ctx:25c130795a32",
-      "appendix:app-labels :: 184 :: tier2:unmarked :: ctx:2c08c2829892",
-      "appendix:app-shap :: 16{,}920 :: tier2:unmarked :: ctx:b2365fbbc210",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:d7976345b6e8",
-      "appendix:app-shap :: 31 :: tier2:unmarked :: ctx:e0d18427ae62",
-      "appendix:app-shap :: 5{,}000 :: tier2:unmarked :: ctx:2719698c93aa",
-      "appendix:app-training/training-corpus :: 100 :: tier2:unmarked :: ctx:19fa647ad5d8",
-      "appendix:app-training/training-corpus :: 10{,}000 :: tier2:unmarked :: ctx:4d15a3d7044c",
-      "appendix:app-training/training-corpus :: 15.9 :: tier1:unit :: ctx:e142192c35ec",
-      "appendix:app-training/training-corpus :: 16{,}920 :: tier2:unmarked :: ctx:50da5e4c9879",
-      "appendix:app-training/training-corpus :: 1{,}000 :: tier2:unmarked :: ctx:6870bb042c1e",
-      "sec-frontier/subsec-frontier-nd :: 100 :: tier2:unmarked :: ctx:54aa55db5190",
-      "sec-frontier/subsec-frontier-nd :: 1000 :: tier2:unmarked :: ctx:19f52100c331",
-      "sec-frontier/subsec-frontier-nd :: 108 :: tier2:unmarked :: ctx:3c3a761b6868",
-      "sec-frontier/subsec-frontier-nd :: 20 :: tier2:unmarked :: ctx:836cf68a28b4",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:28eb2c706900",
-      "sec-frontier/subsec-frontier-nd :: 200 :: tier2:unmarked :: ctx:ec9197aff2dd",
-      "sec-frontier/subsec-frontier-nd :: 2{,}209 :: tier2:unmarked :: ctx:b67c9bf04d06",
-      "sec-frontier/subsec-frontier-nd :: 500 :: tier2:unmarked :: ctx:bf578971a6b1",
-      "sec-frontier/subsec-frontier-nd :: 600 :: tier2:unmarked :: ctx:19f52100c331",
-      "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c"
+      "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:5fa5730183b7",
+      "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f",
+      "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:95e4dde2f180",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:326ebfbf870a",
+      "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:65410ea16bf9",
+      "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d",
+      "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b",
+      "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:7599981abc7f",
+      "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:5b3d5e087a65",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111",
+      "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:88f31540c03a",
+      "appendix:app-hyperparams :: 10.8 :: tier1:unit :: ctx:a642bfa6423e",
+      "appendix:app-hyperparams :: 103 :: tier1:range :: ctx:478faf8adb91",
+      "appendix:app-hyperparams :: 138 :: tier1:range :: ctx:a86a02b7a73c",
+      "appendix:app-hyperparams :: 146 :: tier1:unit :: ctx:369588cda6da",
+      "appendix:app-hyperparams :: 148 :: tier1:unit :: ctx:12fcfec701c4",
+      "appendix:app-hyperparams :: 2.89 :: tier1:unit :: ctx:4e949708707e",
+      "appendix:app-hyperparams :: 2.98 :: tier1:unit :: ctx:76f78fe62194",
+      "appendix:app-hyperparams :: 28 :: tier2:unmarked :: ctx:ba9750fa6270",
+      "appendix:app-hyperparams :: 30 :: tier2:unmarked :: ctx:81040fbf3427",
+      "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:97092ce9e407",
+      "appendix:app-hyperparams :: 4.61 :: tier1:unit :: ctx:c40aab35481c",
+      "appendix:app-hyperparams :: 4.68 :: tier1:unit :: ctx:a694ceafcfe9",
+      "appendix:app-hyperparams :: 61.9 :: tier1:range :: ctx:865f705e2827",
+      "appendix:app-hyperparams :: 9.14 :: tier1:unit :: ctx:21acdbcbfab8",
+      "appendix:app-hyperparams :: 92.1 :: tier1:unit :: ctx:8f7066980d7d",
+      "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:64feb592f0e4"
     ],
-    "claims_withdrawn": [],
+    "claims_withdrawn": [
+      {
+        "id": "appendix.cavdar.extrap_ratio_5000",
+        "state": "MATCHED",
+        "expect": "bank:cavdar_corr_ratio_extrap_5000",
+        "line": 796,
+        "printed": 1.22,
+        "expected": 1.215328
+      },
+      {
+        "id": "appendix.controls.linear_clustered_mape",
+        "state": "MATCHED",
+        "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
+        "line": 1018,
+        "printed": 17.9,
+        "expected": 17.871637
+      },
+      {
+        "id": "appendix.controls.linear_clustered_r2alpha",
+        "state": "MATCHED",
+        "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
+        "line": 1018,
+        "printed": 9.53,
+        "expected": 9.526199
+      },
+      {
+        "id": "appendix.controls.released_clustered_mape",
+        "state": "MATCHED",
+        "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
+        "line": 1018,
+        "printed": 2.24,
+        "expected": 2.241039
+      },
+      {
+        "id": "appendix.mds.explicit_gart_mape",
+        "state": "MATCHED",
+        "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
+        "line": 1048,
+        "printed": 3.01,
+        "expected": 3.01277
+      },
+      {
+        "id": "frontier.amort.2d_hi",
+        "state": "MATCHED",
+        "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
+        "line": 861,
+        "printed": 0.955,
+        "expected": 0.9547131318103961
+      },
+      {
+        "id": "frontier.amort.2d_lo",
+        "state": "MATCHED",
+        "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
+        "line": 861,
+        "printed": 0.768,
+        "expected": 0.7677804310172007
+      },
+      {
+        "id": "frontier.amort.noneuc_hi",
+        "state": "MATCHED",
+        "expect": "costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
+        "line": 861,
+        "printed": 1.14,
+        "expected": 1.1446414297273981
+      },
+      {
+        "id": "frontier.amort.noneuc_lo",
+        "state": "MATCHED",
+        "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
+        "line": 861,
+        "printed": 0.898,
+        "expected": 0.8975749547378266
+      },
+      {
+        "id": "frontier.tsplib.large_raw_cost_x",
+        "state": "MATCHED",
+        "expect": "frontier:tsplib/n > 400/crossing_cost_x_gart2",
+        "line": 822,
+        "printed": 6.65,
+        "expected": 6.649239892362413
+      },
+      {
+        "id": "frontier.tsplib.repeats_ladder_restated",
+        "state": "MATCHED",
+        "expect": "frontier:tsplib/repeats",
+        "line": 824,
+        "printed": 11.0,
+        "expected": 11.0
+      },
+      {
+        "id": "methods.optuna.trials_complete",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 975,
+        "printed": 60.0,
+        "expected": null
+      },
+      {
+        "id": "methods.optuna.trials_pruned",
+        "state": "NO_GENERATOR",
+        "expect": "(no generator)",
+        "line": 975,
+        "printed": 140.0,
+        "expected": null
+      }
+    ],
     "mismatched_at_record": []
   },
   "lifetime": {
-    "records": 77,
-    "absorbed": 1431,
-    "pruned": 1829,
-    "claims_withdrawn": 593,
+    "records": 78,
+    "absorbed": 1438,
+    "pruned": 1856,
+    "claims_withdrawn": 606,
     "mismatched_claims_withdrawn": 0
   },
   "entries": {
@@ -94,65 +174,40 @@
       "example": "...t form on the matched domain. We use $\\beta_2=0.7124\\pm0.0002$ \\citep{johnson1996asymptotic} and $...",
       "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:5fa5730183b7": {
+    "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:ac602a58275b": {
       "count": 1,
-      "example": "...'s own figures show the ratio falling toward $0.4$ as $n$ approaches 10, but publish no fitted ...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
+      "example": "...tted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$, and we bound the correction to that range. ...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f": {
-      "count": 1,
-      "example": "...tted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021adjustment} records that the...",
-      "first_recorded": "2026-09-04T06:45:31+00:00"
-    },
-    "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:95e4dde2f180": {
-      "count": 1,
-      "example": "... ratio falling toward $0.4$ as $n$ approaches 10, but publish no fitted form there. Above $n=9...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
-    },
-    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:326ebfbf870a": {
-      "count": 1,
-      "example": "... $n<100$, and we evaluate the ratio at the $n=100$ endpoint for them instead of extrapolating b...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
-    },
-    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:65410ea16bf9": {
+    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a6173f6059da": {
       "count": 1,
       "example": "...k 1{,}320 of the 2{,}580 2D instances have $n<100$, and we evaluate the ratio at the $n=100$ en...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d": {
+    "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:d186b1b47c0d": {
       "count": 1,
-      "example": "...t{cavdar2014dissertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021a...",
-      "first_recorded": "2026-09-04T06:45:31+00:00"
+      "example": "... $n<100$, and we evaluate the ratio at the $n=100$ endpoint for them instead of extrapolating b...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b": {
+    "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:4a6f3b18a2b1": {
       "count": 1,
-      "example": "...e uncorrected estimator underestimates for $n<1000$, the direction this correction moves it. The...",
-      "first_recorded": "2026-09-04T06:45:31+00:00"
-    },
-    "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:7599981abc7f": {
-      "count": 1,
-      "example": "... $n=975$ we apply no correction, because Eq.~(21) grows without bound ($E/T=1.22$ at $n=5000$)...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
+      "example": "...t{cavdar2014dissertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$, and we bound the...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
     "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:e32847e2219f": {
       "count": 1,
       "example": "...325e^{0.00005298n}-0.2972e^{-0.01452n}$, Eq.~(21) of \\citet{cavdar2014dissertation}, fitted ov...",
       "first_recorded": "2026-09-04T06:45:31+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:5b3d5e087a65": {
+    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:5e1195bdf1ba": {
       "count": 1,
-      "example": "...q.~(21) grows without bound ($E/T=1.22$ at $n=5000$), leaving a 1.84\\% step at the upper boundar...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
+      "example": "...ssertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$, and we bound the correctio...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
-    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111": {
+    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:e36048d9884b": {
       "count": 1,
-      "example": "...ssertation}, fitted over $n\\in\\{100,125,\\dots,975\\}$ at $R^2=0.987$. \\citet{choi2021adjustment}...",
-      "first_recorded": "2026-09-04T06:45:31+00:00"
-    },
-    "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:88f31540c03a": {
-      "count": 1,
-      "example": "...0, but publish no fitted form there. Above $n=975$ we apply no correction, because Eq.~(21) gro...",
-      "first_recorded": "2026-09-05T16:08:53+00:00"
+      "example": "...m instead of extrapolating below it. Above $n=975$ we apply no correction, leaving a 1.84\\% ste...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
     "appendix:app-bench-details/constant-ratio-references :: 0.6331 :: tier1:precision :: ctx:dd18fd6d7137": {
       "count": 1,
@@ -212,81 +267,6 @@
     "appendix:app-features :: 31 :: tier2:unmarked :: ctx:f92cb154ea3f": {
       "count": 1,
       "example": "...eedy_features} the single constructive ratio, 31 in all (Section~\\ref{subsec:features}). The L...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 10.8 :: tier1:unit :: ctx:a642bfa6423e": {
-      "count": 1,
-      "example": "...r Line Noise, which it wins at 9.14\\% against 10.8\\%, and it reads 4.61\\% SDPE against 4.68\\%. A...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 103 :: tier1:range :: ctx:478faf8adb91": {
-      "count": 1,
-      "example": "...138 to 146~ms per instance against GART 2.0's 103 to 148~ms, slower on five of the six generato...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 138 :: tier1:range :: ctx:a86a02b7a73c": {
-      "count": 1,
-      "example": "... the same MST-and-geometry descriptors, costs 138 to 146~ms per instance against GART 2.0's 103...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 146 :: tier1:unit :: ctx:369588cda6da": {
-      "count": 1,
-      "example": "...me MST-and-geometry descriptors, costs 138 to 146~ms per instance against GART 2.0's 103 to 148...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 148 :: tier1:unit :: ctx:12fcfec701c4": {
-      "count": 1,
-      "example": "...146~ms per instance against GART 2.0's 103 to 148~ms, slower on five of the six generator class...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 2.89 :: tier1:unit :: ctx:4e949708707e": {
-      "count": 1,
-      "example": "...gregate. It reads 2.98\\% MAPE overall against 2.89\\% and is less accurate on every class but the...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 2.98 :: tier1:unit :: ctx:76f78fe62194": {
-      "count": 1,
-      "example": "...tor classes and slower in aggregate. It reads 2.98\\% MAPE overall against 2.89\\% and is less acc...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 28 :: tier2:unmarked :: ctx:ba9750fa6270": {
-      "count": 1,
-      "example": "... fitted on 30 columns and the linear model on 28 against the released block's 31, and neither ...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 30 :: tier2:unmarked :: ctx:81040fbf3427": {
-      "count": 1,
-      "example": "...sed feature vector: the network was fitted on 30 columns and the linear model on 28 against th...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:97092ce9e407": {
-      "count": 1,
-      "example": "...near model on 28 against the released block's 31, and neither was fitted on the released featu...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 4.61 :: tier1:unit :: ctx:c40aab35481c": {
-      "count": 1,
-      "example": "...t wins at 9.14\\% against 10.8\\%, and it reads 4.61\\% SDPE against 4.68\\%. An ordinary least-squa...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 4.68 :: tier1:unit :: ctx:a694ceafcfe9": {
-      "count": 1,
-      "example": "...inst 10.8\\%, and it reads 4.61\\% SDPE against 4.68\\%. An ordinary least-squares fit is the cheap...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 61.9 :: tier1:range :: ctx:865f705e2827": {
-      "count": 1,
-      "example": "...t-squares fit is the cheapest of the three at 61.9 to 92.1~ms and reaches 17.9\\% MAPE on the clu...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 9.14 :: tier1:unit :: ctx:21acdbcbfab8": {
-      "count": 1,
-      "example": "...e near-collinear Line Noise, which it wins at 9.14\\% against 10.8\\%, and it reads 4.61\\% SDPE ag...",
-      "first_recorded": "2026-09-04T08:34:45+00:00"
-    },
-    "appendix:app-hyperparams :: 92.1 :: tier1:unit :: ctx:8f7066980d7d": {
-      "count": 1,
-      "example": "...s fit is the cheapest of the three at 61.9 to 92.1~ms and reaches 17.9\\% MAPE on the clustered c...",
       "first_recorded": "2026-09-04T08:34:45+00:00"
     },
     "appendix:app-labels :: 106{,}272 :: tier2:unmarked :: ctx:fa3e2c609829": {
@@ -489,10 +469,10 @@
       "example": "... \\centering \\caption{Paired evaluation on the 23 screened non-EUC\\_2D instances. GART 2.0 decl...",
       "first_recorded": "2026-09-03T06:16:07+00:00"
     },
-    "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:64feb592f0e4": {
+    "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:0b71f7fc47d4": {
       "count": 1,
-      "example": "... the 29 instances both methods score over all 33 non-EUC\\_2D files --- a set wider than the me...",
-      "first_recorded": "2026-08-27T05:13:14+00:00"
+      "example": "... the 29 instances both methods score over all 33 non-EUC\\_2D files, GART 2.0 obtains 3.81\\% MA...",
+      "first_recorded": "2026-09-05T18:06:05+00:00"
     },
     "sec-application/results-on-non-euclidean-tsplib95 :: 500 :: tier2:unmarked :: ctx:228591857151": {
       "count": 1,
@@ -1079,13 +1059,6 @@
       "printed": 1.84,
       "expected": 1.839804
     },
-    "appendix.cavdar.extrap_ratio_5000": {
-      "state": "MATCHED",
-      "expect": "bank:cavdar_corr_ratio_extrap_5000",
-      "line": 796,
-      "printed": 1.22,
-      "expected": 1.215328
-    },
     "appendix.cavdar.n_below_fit": {
       "state": "MATCHED",
       "expect": "bank:cavdar_corr_2d_n_below_min",
@@ -1106,34 +1079,6 @@
       "line": 636,
       "printed": 425.0,
       "expected": 425.0
-    },
-    "appendix.controls.linear_clustered_mape": {
-      "state": "MATCHED",
-      "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
-      "line": 1018,
-      "printed": 17.9,
-      "expected": 17.871637
-    },
-    "appendix.controls.linear_clustered_r2alpha": {
-      "state": "MATCHED",
-      "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
-      "line": 1018,
-      "printed": 9.53,
-      "expected": 9.526199
-    },
-    "appendix.controls.released_clustered_mape": {
-      "state": "MATCHED",
-      "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
-      "line": 1018,
-      "printed": 2.24,
-      "expected": 2.241039
-    },
-    "appendix.mds.explicit_gart_mape": {
-      "state": "MATCHED",
-      "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
-      "line": 1048,
-      "printed": 3.01,
-      "expected": 3.01277
     },
     "appendix.mds.geo_stress_max": {
       "state": "NO_GENERATOR",
@@ -1512,34 +1457,6 @@
       "line": 855,
       "printed": 95.0,
       "expected": 95.0
-    },
-    "frontier.amort.2d_hi": {
-      "state": "MATCHED",
-      "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 861,
-      "printed": 0.955,
-      "expected": 0.9547131318103961
-    },
-    "frontier.amort.2d_lo": {
-      "state": "MATCHED",
-      "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 861,
-      "printed": 0.768,
-      "expected": 0.7677804310172007
-    },
-    "frontier.amort.noneuc_hi": {
-      "state": "MATCHED",
-      "expect": "costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
-      "line": 861,
-      "printed": 1.14,
-      "expected": 1.1446414297273981
-    },
-    "frontier.amort.noneuc_lo": {
-      "state": "MATCHED",
-      "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
-      "line": 861,
-      "printed": 0.898,
-      "expected": 0.8975749547378266
     },
     "frontier.complexity.bound_exponent_hi": {
       "state": "MATCHED",
@@ -1989,13 +1906,6 @@
       "printed": 78.0,
       "expected": 78.0
     },
-    "frontier.tsplib.large_raw_cost_x": {
-      "state": "MATCHED",
-      "expect": "frontier:tsplib/n > 400/crossing_cost_x_gart2",
-      "line": 822,
-      "printed": 6.65,
-      "expected": 6.649239892362413
-    },
     "frontier.tsplib.matched_n": {
       "state": "MATCHED",
       "expect": "frontier:tsplib/N_matched",
@@ -2035,13 +1945,6 @@
       "state": "MATCHED",
       "expect": "frontier:tsplib/repeats",
       "line": 427,
-      "printed": 11.0,
-      "expected": 11.0
-    },
-    "frontier.tsplib.repeats_ladder_restated": {
-      "state": "MATCHED",
-      "expect": "frontier:tsplib/repeats",
-      "line": 824,
       "printed": 11.0,
       "expected": 11.0
     },
@@ -2407,20 +2310,6 @@
       "expect": "(no generator)",
       "line": 166,
       "printed": 0.011,
-      "expected": null
-    },
-    "methods.optuna.trials_complete": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 975,
-      "printed": 60.0,
-      "expected": null
-    },
-    "methods.optuna.trials_pruned": {
-      "state": "NO_GENERATOR",
-      "expect": "(no generator)",
-      "line": 975,
-      "printed": 140.0,
       "expected": null
     },
     "methods.optuna.tsplib_cost_pp": {
@@ -13586,6 +13475,161 @@
         "sec-frontier/subsec-frontier-verdict :: 200 :: tier2:unmarked :: ctx:a3f70ea4b13c"
       ],
       "claims_withdrawn": [],
+      "mismatched_at_record": []
+    },
+    {
+      "at": "2026-09-05T18:06:05+00:00",
+      "kind": "update",
+      "reason": "2026-09-05 author rulings: ladder/rung jargon removed, experiment write-ups cut; contexts moved, no value changed",
+      "tex": "paper_reference\\Area_Free_Main.tex",
+      "tex_sha256": "3eea6a3f4d20d4a6d8115cea84ff7d2c4cf93547ddaa639710e4b1d867788816",
+      "production_model": "GART_2.0",
+      "n_entries": 173,
+      "n_keys": 173,
+      "absorbed": [
+        "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:0b71f7fc47d4",
+        "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:4a6f3b18a2b1",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:5e1195bdf1ba",
+        "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:ac602a58275b",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:a6173f6059da",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:d186b1b47c0d",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:e36048d9884b"
+      ],
+      "pruned": [
+        "appendix:app-bench-details/cavdar-sokol :: 0.4 :: tier2:unmarked :: ctx:5fa5730183b7",
+        "appendix:app-bench-details/cavdar-sokol :: 0.987 :: tier1:precision :: ctx:43e404c16e9f",
+        "appendix:app-bench-details/cavdar-sokol :: 10 :: tier2:unmarked :: ctx:95e4dde2f180",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:326ebfbf870a",
+        "appendix:app-bench-details/cavdar-sokol :: 100 :: tier2:unmarked :: ctx:65410ea16bf9",
+        "appendix:app-bench-details/cavdar-sokol :: 100,125 :: tier2:unmarked :: ctx:641935dab85d",
+        "appendix:app-bench-details/cavdar-sokol :: 1000 :: tier2:unmarked :: ctx:74733534fa8b",
+        "appendix:app-bench-details/cavdar-sokol :: 21 :: tier2:unmarked :: ctx:7599981abc7f",
+        "appendix:app-bench-details/cavdar-sokol :: 5000 :: tier2:unmarked :: ctx:5b3d5e087a65",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:39cf8d3aa111",
+        "appendix:app-bench-details/cavdar-sokol :: 975 :: tier2:unmarked :: ctx:88f31540c03a",
+        "appendix:app-hyperparams :: 10.8 :: tier1:unit :: ctx:a642bfa6423e",
+        "appendix:app-hyperparams :: 103 :: tier1:range :: ctx:478faf8adb91",
+        "appendix:app-hyperparams :: 138 :: tier1:range :: ctx:a86a02b7a73c",
+        "appendix:app-hyperparams :: 146 :: tier1:unit :: ctx:369588cda6da",
+        "appendix:app-hyperparams :: 148 :: tier1:unit :: ctx:12fcfec701c4",
+        "appendix:app-hyperparams :: 2.89 :: tier1:unit :: ctx:4e949708707e",
+        "appendix:app-hyperparams :: 2.98 :: tier1:unit :: ctx:76f78fe62194",
+        "appendix:app-hyperparams :: 28 :: tier2:unmarked :: ctx:ba9750fa6270",
+        "appendix:app-hyperparams :: 30 :: tier2:unmarked :: ctx:81040fbf3427",
+        "appendix:app-hyperparams :: 31 :: tier2:unmarked :: ctx:97092ce9e407",
+        "appendix:app-hyperparams :: 4.61 :: tier1:unit :: ctx:c40aab35481c",
+        "appendix:app-hyperparams :: 4.68 :: tier1:unit :: ctx:a694ceafcfe9",
+        "appendix:app-hyperparams :: 61.9 :: tier1:range :: ctx:865f705e2827",
+        "appendix:app-hyperparams :: 9.14 :: tier1:unit :: ctx:21acdbcbfab8",
+        "appendix:app-hyperparams :: 92.1 :: tier1:unit :: ctx:8f7066980d7d",
+        "sec-application/results-on-non-euclidean-tsplib95 :: 33 :: tier2:unmarked :: ctx:64feb592f0e4"
+      ],
+      "claims_withdrawn": [
+        {
+          "id": "appendix.cavdar.extrap_ratio_5000",
+          "state": "MATCHED",
+          "expect": "bank:cavdar_corr_ratio_extrap_5000",
+          "line": 796,
+          "printed": 1.22,
+          "expected": 1.215328
+        },
+        {
+          "id": "appendix.controls.linear_clustered_mape",
+          "state": "MATCHED",
+          "expect": "bank:2d_by_genclass_clustered_linear_28_feature_block_mape_pct",
+          "line": 1018,
+          "printed": 17.9,
+          "expected": 17.871637
+        },
+        {
+          "id": "appendix.controls.linear_clustered_r2alpha",
+          "state": "MATCHED",
+          "expect": "= -1 * {2d_by_genclass_clustered_linear_28_feature_block_r2_alpha}",
+          "line": 1018,
+          "printed": 9.53,
+          "expected": 9.526199
+        },
+        {
+          "id": "appendix.controls.released_clustered_mape",
+          "state": "MATCHED",
+          "expect": "bank:2d_by_genclass_clustered_gart_2_0_mape_pct",
+          "line": 1018,
+          "printed": 2.24,
+          "expected": 2.241039
+        },
+        {
+          "id": "appendix.mds.explicit_gart_mape",
+          "state": "MATCHED",
+          "expect": "bank:tsplib_nonEuc_explicit_gart_2_0_mape_pct",
+          "line": 1048,
+          "printed": 3.01,
+          "expected": 3.01277
+        },
+        {
+          "id": "frontier.amort.2d_hi",
+          "state": "MATCHED",
+          "expect": "costfront:cells/2d/amortisation_control/vj/500/median_direct_over_ckpt",
+          "line": 861,
+          "printed": 0.955,
+          "expected": 0.9547131318103961
+        },
+        {
+          "id": "frontier.amort.2d_lo",
+          "state": "MATCHED",
+          "expect": "costfront:cells/2d/amortisation_control/polyak/25/median_direct_over_ckpt",
+          "line": 861,
+          "printed": 0.768,
+          "expected": 0.7677804310172007
+        },
+        {
+          "id": "frontier.amort.noneuc_hi",
+          "state": "MATCHED",
+          "expect": "costfront:cells/noneuc/amortisation_control/vj/500/median_direct_over_ckpt",
+          "line": 861,
+          "printed": 1.14,
+          "expected": 1.1446414297273981
+        },
+        {
+          "id": "frontier.amort.noneuc_lo",
+          "state": "MATCHED",
+          "expect": "costfront:cells/noneuc/amortisation_control/polyak/25/median_direct_over_ckpt",
+          "line": 861,
+          "printed": 0.898,
+          "expected": 0.8975749547378266
+        },
+        {
+          "id": "frontier.tsplib.large_raw_cost_x",
+          "state": "MATCHED",
+          "expect": "frontier:tsplib/n > 400/crossing_cost_x_gart2",
+          "line": 822,
+          "printed": 6.65,
+          "expected": 6.649239892362413
+        },
+        {
+          "id": "frontier.tsplib.repeats_ladder_restated",
+          "state": "MATCHED",
+          "expect": "frontier:tsplib/repeats",
+          "line": 824,
+          "printed": 11.0,
+          "expected": 11.0
+        },
+        {
+          "id": "methods.optuna.trials_complete",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 975,
+          "printed": 60.0,
+          "expected": null
+        },
+        {
+          "id": "methods.optuna.trials_pruned",
+          "state": "NO_GENERATOR",
+          "expect": "(no generator)",
+          "line": 975,
+          "printed": 140.0,
+          "expected": null
+        }
+      ],
       "mismatched_at_record": []
     }
   ]
