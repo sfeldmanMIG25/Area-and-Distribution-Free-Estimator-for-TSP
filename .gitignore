@@ -27,6 +27,8 @@ paper_reference/*.lot
 paper_reference/*.fls
 paper_reference/*.fdb_latexmk
 paper_reference/*.synctex.gz
+paper_reference/*.loc
+paper_reference/*.soc
 paper_reference/_minted-*
 paper_reference/tmp/
 tmp/

@@ -158,6 +158,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import prose_baseline  # noqa: E402
+import tracked_changes  # noqa: E402
 from model_registry import GART, PRODUCTION_SIDECAR, REPO_ROOT  # noqa: E402
 from prose_manifest import CLAIMS, INCIDENTAL_PATTERNS, Claim  # noqa: E402
 
@@ -1567,6 +1568,11 @@ def main() -> int:
         return 1 if selftest_tolerance() else 0
 
     text = args.tex.read_text(encoding="utf-8")
+    # Proposed edits carried as changes-package markup are checked as if accepted:
+    # struck-out text is not in the paper the reader will get, proposed text is.
+    if tracked_changes.has_markup(text):
+        print("tracked changes present: checking the all-accepted view")
+        text = tracked_changes.final_view(text)
     spans = mask_regions(text)
     mask = build_mask(text, spans)
     src = Sources()
