@@ -44,7 +44,8 @@
 % \fancyhead[RE]{Firstauthor and Secondauthor} % Firstauthor et al. if more than 2 - must use \documentclass[twoside]{article}
 \usepackage[hidelinks]{hyperref} % load last so float anchors are patched once
 
-  
+  \newcommand{\note}[1]{\textbf{\textcolor{red}{[#1]}}}
+
 %% Title
 \title{Distribution-Independent Tour-Length Estimation for the Traveling Salesman Problem Across Dimensions
 %%%% Cite as
@@ -85,7 +86,8 @@
 \maketitle
 
 \begin{abstract}
-We present the Geometrically Assisted Regression Tree (GART) 2.0, an improved estimator, to demonstrate that a learned model can give a reliable tour-length estimate with bounded complexity across dimensions and distributions. Existing estimators either assume a known sampling density or depend on planar geometry that becomes unstable as dimension grows. GART 2.0 is a LightGBM regressor that predicts the instance-specific ratio of tour length to minimum-spanning-tree length. This iteration improves on the initial estimator by avoiding features that scale poorly in high dimensions. Trained on synthetic instances alone, it transfers to TSPLIB95 and, through a multidimensional-scaling embedding, to non-Euclidean instances. GART 2.0 compared favorably to 7 other estimators across 4 distinct benchmarks. Comparison against the known Held--Karp 1-tree lower bound, demonstrates the GART 2.0 approaches the frontier of prediction quality and performance, especially in large cases. The reason is structural: the bound pays a quadratic price in instance size for a fixed accuracy in every dimension, while the estimator's cost carries no accuracy term---so the estimator sharpens exactly where an exact solve becomes infeasible. Comparing GART 2.0's performance to classical estimators and bounds shows it has a niche in high-throughput tour-length estimation for large instances. However, it requires further refinement to perform better on non-Euclidean real-world data.
+We present the Geometrically Assisted Regression Tree (GART) 2.0, an improved estimator, to demonstrate that a learned model can give a reliable tour-length estimate with bounded complexity across dimensions and distributions. Existing estimators either assume a known sampling density or depend on planar geometry that becomes unstable as dimension grows. GART 2.0 is a LightGBM regressor that predicts the instance-specific ratio of tour length to minimum-spanning-tree length. This iteration improves on the initial estimator by avoiding features that scale poorly in high dimensions. Trained on synthetic instances alone, it transfers to TSPLIB95 and, through a multidimensional-scaling embedding, to non-Euclidean instances. GART 2.0 compared favorably to 7 other estimators across 4 distinct benchmarks. Comparison against the known Held--Karp 1-tree lower bound, demonstrates the GART 2.0 approaches the frontier of prediction quality and performance, especially in large cases. The reason is structural: the bound pays a quadratic price in instance size for a fixed accuracy in every dimension, while the estimator's cost carries no accuracy term---so the estimator sharpens exactly where an exact solve becomes infeasible. Comparing GART 2.0's performance to classical estimators and bounds shows it has a niche in high-throughput tour-length estimation for large instances. However, it requires further refinement to perform better on non-Euclidean real-world data. 
+\note{this needs to be written starting from more general to more specific. it starts with the mode name with no background. abstract should  communicate why people should read this paper and what to expect what to learn from it. technical details are not needed generally.}
 \end{abstract}
 
 % keywords can be removed
@@ -95,25 +97,59 @@ We present the Geometrically Assisted Regression Tree (GART) 2.0, an improved es
 
 \section{Introduction}\label{sec:intro}
 
-The Traveling Salesman Problem (TSP) is NP-hard \citep{karp1972, papadimitriou1977} and appears throughout logistics operations planning, network design, and resource allocation \citep{chien1992operational, concorde2006}. It often enters as a subproblem of a larger optimization, where only its cost is needed. A facility-location decision, for example, requires the route cost of every candidate, so a full solve is paid once per candidate.
 
-\subsection{Background and Motivation}
+\note{@Stephen and James: Please use track changes when editing the document. }
 
-Last-mile delivery accounts for approximately 53\% of total shipping costs by one industry estimate \citep{finmile2025}, and the UPS ORION system is reported to save roughly 100 million miles and \$300--400 million annually through route optimization \citep{holland2017ups}. In such systems orders arrive continuously and routes are long, so the cost of a full solve is paid many times over. An estimator replaces that solve wherever only the relative cost of candidate routes matters.
+The Traveling Salesman Problem (TSP) %is NP-hard \citep{karp1972, papadimitriou1977} and 
+appears in wide of of decision-making, including but not limited to logistics operations planning, network design, and resource allocation \citep{chien1992operational, concorde2006}. 
+When solving the TSP, we may have different goals. 
+In some situations, we need to determine the actual travel tour to be able to dispatch the resources accordingly.
+In others, we need to compute only the cost of the tour.
+Such cases occur when the TSP emerges as a subproblem of a larger optimization, where only its cost is needed. 
+In such cases, rather than solving the computationally expensive TSP, the tour length estimation models can be used to predict the cost of the optimal tour with much smaller computational effort.
+For instance, a facility-location decision problems we wish to compute the expected route cost associated with every candidate to evaluate the corresponding future logistics costs.
+In these traditional settings, the graph is generally on a plane.
+However, there are many more contemporary applications where this is not the case.
+%The same estimation problem recurs wherever a TSP appears as a subproblem, and it rarely arrives in the plane. 
+Examples include, but are not limited to the following: Radiation hybrid mapping orders genetic markers by a TSP over an abstract similarity metric \citep{agarwala2000fast}. Mobile-sink routing in wireless sensor networks contains a TSP through the data-collection locations \citep{yuan2010racetrack}. UAV structural inspection places viewpoints around a three-dimensional structure and solves a TSP through them \citep{bircher2016threedimensional}. Large-scale routing methods partition an instance into sub-TSPs and compare candidate partitions \citep{frontiers2021}, and \citet{aaai2023} learn a hierarchical policy that repeatedly selects node subsets and routes through them. 
+Each of these planners needs the cheaper option predicted as cheaper, so the estimator must be accurate and rank-preserving.
 
-The same estimation problem recurs wherever a TSP appears as a subproblem, and it rarely arrives in the plane. Radiation hybrid mapping orders genetic markers by a TSP over an abstract similarity metric \citep{agarwala2000fast}. Mobile-sink routing in wireless sensor networks contains a TSP through the data-collection locations \citep{yuan2010racetrack}. UAV structural inspection places viewpoints around a three-dimensional structure and solves a TSP through them \citep{bircher2016threedimensional}. Large-scale routing methods partition an instance into sub-TSPs and compare candidate partitions \citep{frontiers2021}, and \citet{aaai2023} learn a hierarchical policy that repeatedly selects node subsets and routes through them. Each of these planners needs the cheaper option predicted as cheaper, so the estimator must be accurate and rank-preserving.
 
- Most classical tour-length estimators, however, are built for planar Euclidean inputs and become unstable or intractable as dimension grows \citep{chazelle1993}. An estimator for these settings must be defined for arbitrary $d$ without using features that scale poorly. A distance matrix admits a Euclidean representation of bounded distortion once enough dimensions are allowed \citep{bourgain1985}, so an estimator that stays accurate at those dimensions can consume the embedding.
+%\subsection{Background and Motivation}
 
-\subsection{Limitations of the Current Estimators} \label{subsec:related}
+%Last-mile delivery accounts for approximately 53\% of total shipping costs by one industry estimate \citep{finmile2025}, and the UPS ORION system is reported to save roughly 100 million miles and \$300--400 million annually through route optimization \citep{holland2017ups}. In such systems orders arrive continuously and routes are long, so the cost of a full solve is paid many times over. An estimator replaces that solve wherever only the relative cost of candidate routes matters.
+
+
+ Most classical tour-length estimators, however, are built for planar Euclidean inputs and become unstable or intractable as dimension grows \citep{chazelle1993}\note{this claim requires a new citation- things might have changed since 1993}. 
+ Addressing this gap, in this paper we develop a new tour length estimation mode for arbitrary graph dimension $d$.
+ Our estimation model is called the Geometrically Assisted Regression Tree (GART) 2.0 \note{why is this 2?}.
+ Our approach leverages the relationship between the TSP and the Minimum Spanning Tree (MST).
+ Rather than predicting the TSP tour length directly, we predict the ratio between the optimal TSP and MST for each instance, which we denote by $\hat{\alpha}$.
+This is because, we observe that this ratio can be estimated more accurately in general dimensions and computing the MST solution is fast.
+Once we estimate the $\hat{\alpha}$ for each instance, we then estimate the TSP tour length.
+Our estimation model is based on LightGBM regressor. % \citep{ke2017lightgbm} and predicts a per-instance scaling factor $\hat{\alpha}$ rather than applying a fixed constant \note{what is this scaling factor? from readers perspective this does not have a meaning yet. }. 
+ It is distribution-independent and supports arbitrary dimensions: all 31 features are defined for arbitrary dimension $d$ through MST topology, centroid dispersion and coordinate ranges. GART 2.0 gives stronger accuracy and precision than classical tour-length estimators across a broad range of cases, at higher computational cost. However, compared with the known lower bound, it is the more efficient instrument on large instances (Section~\ref{sec:frontier}). 
+ \note{Stephen, please include a summary of our main findings - avoid jargon and being too specific in the introduction. }
+
+The rest of this section is organized as follow. In Section \ref{subsec:related}, we review the related literature and and identify the limitations of the current model.
+In Section \ref{sec:theory}, we present the theoretical foundations for our estimation approach.
+\note{.....}
+
+ %By achieve this by using graph attributes that remains to scale well even when the dimension grows in our estimation model.
+% An estimator for these settings must be defined for arbitrary $d$  without using features that scale poorly. A distance matrix admits a Euclidean representation of bounded distortion once enough dimensions are allowed \citep{bourgain1985}, so an estimator that stays accurate at those dimensions can consume the embedding.
+
+\section{Limitations of the Current Estimators} \label{subsec:related}
+\note{The literature is missing a lot of recent papers. The organization is not clear to me in the paragraphs. }
+
+
 No published estimator reaches high-dimensional or non-Euclidean instances without losing calibration or requiring an embedding. The Held--Karp 1-tree bound reaches both directly, but it is a known bound, rather than a classical estimator. The Beardwood--Halton--Hammersley (BHH) theorem \citep{bhh1959} is stated for arbitrary dimension, but it is asymptotic in $n$ and its calibrating constants and density integral are not recoverable from an arbitrary finite point set. Published constants exist for $d=2$ \citep{johnson1996asymptotic} and $d=3$ \citep{percus1996finite}, and above that only a large-$d$ approximation \citep{bertsimas1990asymptotic}. The estimators of \citet{chien1992operational} are planar and depend on particular depot and covering-region definitions. A parallel line of work is tuned to the 2D Euclidean case: \citet{daganzo1984b} gives a strip-based construction, \citet{kwon1995tsp} fit regression and neural models on rectangular-region predictors, and \citet{cavdar2015distribution} propose a distribution-free estimator built from per-axis spread statistics about the covering rectangle. Space-filling heuristics such as the planar construction of \citet{bartholdi1982heuristic} instead build a tour outright in $O(n\log n)$. Embedding a non-Euclidean instance therefore returns the classical estimators above to the dimensions where their geometric inputs are unstable. 
 
 Recent neural approaches address the same gap from the learning side. \citet{varol2023neural} report sub-1\% deviation on standard distributions by combining a multilayer perceptron (MLP) with domain-knowledge features, but their pipeline requires solution-level features, which are computationally expensive and challenging to generalize across all instance sizes. \citet{kou2022standard} use the standard deviation of random feasible tour lengths as a single-feature, distribution-independent predictor on Euclidean and non-Euclidean instances, but the repeated tour sampling raises its per-instance cost. \citet{kou2024randomization} extend this principle beyond the TSP to the vehicle-routing (VRP), MST, and matching problems, again from the standard deviation of random feasible solutions. We exclude that sampling cost on the same grounds as solution-level features. The closest methodological neighbor is \citet{kou2023sammon}, which pairs a Sammon-map embedding with a distribution-independent estimator on non-Euclidean TSPLIB95 instances. Our pipeline uses classical metric MDS for the embedding and computes MST-topology features on the original distance matrix, not on the embedded coordinates.
 
  \citet{heldkarp1970,heldkarp1971} relax the Hamiltonian-cycle constraint to a \emph{1-tree}, a spanning tree on all but one node plus any two edges at that node. The minimum 1-tree under any vector of node penalties yields a proven lower bound on the optimal tour. The bound uses no training data and no distributional assumption, and it does not invoke the triangle inequality: it is defined for any symmetric distance matrix, including the non-Euclidean instances Section~\ref{sec:application} reaches only through an embedding. Its cost is quadratic in $n$ per ascent iteration.  In the plane and at $d=3$, Section~\ref{sec:frontier} shows that GART 2.0 beats this bound at large $n$: feature extraction is subquadratic while the ascent is quadratic in every dimension, and the accuracy it gives up is small.
 
-\subsection{Contribution}
-We present the Geometrically Assisted Regression Tree (GART) 2.0, a LightGBM regressor \citep{ke2017lightgbm} that predicts a per-instance scaling factor $\hat{\alpha}$ rather than applying a fixed constant. It is distribution-independent and supports arbitrary dimensions: all 31 features are defined for arbitrary $d$ through MST topology, centroid dispersion and coordinate ranges. GART 2.0 gives stronger accuracy and precision than classical tour-length estimators across a broad range of cases, at higher computational cost. However, compared with the known lower bound, it is the more efficient instrument on large instances (Section~\ref{sec:frontier}). 
+% \subsection{Contribution}
+% We present the Geometrically Assisted Regression Tree (GART) 2.0, a LightGBM regressor \citep{ke2017lightgbm} that predicts a per-instance scaling factor $\hat{\alpha}$ rather than applying a fixed constant. It is distribution-independent and supports arbitrary dimensions: all 31 features are defined for arbitrary $d$ through MST topology, centroid dispersion and coordinate ranges. GART 2.0 gives stronger accuracy and precision than classical tour-length estimators across a broad range of cases, at higher computational cost. However, compared with the known lower bound, it is the more efficient instrument on large instances (Section~\ref{sec:frontier}). 
 
 
 

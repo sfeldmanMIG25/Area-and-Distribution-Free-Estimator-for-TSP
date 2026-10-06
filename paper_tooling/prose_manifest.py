@@ -2428,16 +2428,7 @@ CLAIMS: list[Claim] = [
     # =======================================================================
 
     # -- introduction: two literature figures -------------------------------
-    Claim(
-        id="intro.lastmile.share_pct",
-        anchor=r"accounts for approximately {v}\% of total shipping costs by one industry estimate",
-        no_generator=(
-            "Literature figure quoted from the cited industry estimate "
-            "(finmile2025), not a quantity this project generates. Settle only "
-            "against the source itself; no artifact can back it."
-        ),
-        tol="exact",
-    ),
+    # withdrawn intro.lastmile.share_pct: co-author commented out the last-mile paragraph (Overleaf 495a2b6, accepted by the author 2026-10-05)
     Claim(
         id="related.varol.sub1pct",
         anchor=r"report sub-{v}\% deviation on standard distributions",
